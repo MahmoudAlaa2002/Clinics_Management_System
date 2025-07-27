@@ -168,6 +168,9 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-clock"></i></span>
                                     </div>
+
+                                    {{-- {{ dump($clinic->opening_time) }}
+                                    {{ dd($clinic->closing_time) }} edit it--}}
                                     <select name="work_end_time" id="work_end_time" class="form-control">
                                         <option disabled selected hidden>Select End Time</option>
                                     </select>

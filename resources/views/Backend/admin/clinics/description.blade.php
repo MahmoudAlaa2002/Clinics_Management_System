@@ -61,7 +61,7 @@
                 @if($clinic->doctors && $clinic->doctors->count() > 0)
                     <ul>
                         @foreach($clinic->doctors as $doctor)
-                            <li>{{ $doctor->name }}</li>
+                            <a href="{{ route('profile_doctor', $doctor->id) }}"><li>{{ $doctor->name }}</li></a>
                         @endforeach
                     </ul>
                 @else

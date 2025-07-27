@@ -88,7 +88,19 @@
                     <img class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" width="24" alt="Admin">
                     <span class="status online"></span>
                 </span>
-                <span>Admin</span>
+                <span>
+                    @if(Auth::user()->hasRole('admin'))
+                        Admin
+                    @elseif(Auth::user()->hasRole('clinic_manager'))
+                        Clinic Manager
+                    @elseif(Auth::user()->hasRole('doctor'))
+                        Doctor
+                    @elseif(Auth::user()->hasRole('employee'))
+                        Employee
+                    @else
+                        Patient
+                    @endif
+                </span>
             </a>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="profile.html">My Profile</a>

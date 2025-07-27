@@ -110,7 +110,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-lock"></i></span>
                                 </div>
-                                <input type="password" name="password" class="form-control" placeholder="Enter new password (optional)">
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password (optional)">
                             </div>
                         </div>
 
@@ -202,16 +202,16 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Working Days <span class="text-danger">*</span></label>
                                 <div class="row gx-1">
                                     @php
                                         $all_days = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-                                        $selected_days = old('working_days', $working_days ?? []);
+                                        $selected_days = old('working_days', isset($working_days) ? (is_array($working_days) ? $working_days : explode(',', $working_days)) : []);
                                     @endphp
-                        
+
                                     <div class="col-6">
                                         @foreach(array_slice($all_days, 0, 4) as $day)
                                             <div class="form-check">
@@ -221,7 +221,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                        
+
                                     <div class="col-6">
                                         @foreach(array_slice($all_days, 4) as $day)
                                             <div class="form-check">
@@ -306,7 +306,7 @@
                 let short_biography = $('#short_biography').val().trim();
                 let status = $('input[name="status"]:checked').val();
                 let image = document.querySelector('#image').files[0];
-
+                console.log(password);
                 let workingDays = [];
                 $('input[name="working_days[]"]:checked').each(function () {
                     workingDays.push($(this).val());

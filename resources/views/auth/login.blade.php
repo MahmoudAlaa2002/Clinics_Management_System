@@ -66,7 +66,7 @@
                             </div>
 
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <div class="form-check mb-0">
+                                <div class="mb-0 form-check">
                                     <input type="checkbox" class="form-check-input" id="remember" name="remember">
                                     <label class="form-check-label" for="remember">Remember Me</label>
                                 </div>
@@ -143,7 +143,7 @@
                             window.location.href = '/doctor/dashboard';
 
                         }else if(response.data == 4){
-                            window.location.href = '/staff/dashboard';
+                            window.location.href = '/employee/dashboard';
 
                         }else if(response.data == 5){
                             let userId = response.user_id;

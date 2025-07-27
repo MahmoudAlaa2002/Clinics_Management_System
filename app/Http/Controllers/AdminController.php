@@ -31,7 +31,7 @@ use App\Models\SpecialtyPatient;
 use Illuminate\Support\Facades\Hash;
 use Database\Seeders\DosageFormSeeder;
 
-class BackendController extends Controller{
+class AdminController extends Controller{
 
     public function adminDashboard(){
         $clinic_count = Clinic::count();
@@ -305,6 +305,7 @@ class BackendController extends Controller{
     //Doctor
     public function addDoctor(){
         $specialties = Specialty::all();
+        // $s = ClinicSpecialty
         $clinics = Clinic::all();
         return view('Backend.admin.doctors.add' , compact('specialties' , 'clinics'));
     }
@@ -421,14 +422,20 @@ class BackendController extends Controller{
                 'short_biography' => $request->short_biography,
             ]);
 
+            $password = $user->password;
+            if ($request->filled('password')) {
+                $password = Hash::make($request->password);
+            }
+
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->filled('password') ? Hash::make($request->password) : $user->password,
+                'password' => $password ,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'image' => $imageName,
             ]);
+
             return response()->json(['data' => 1]);
         }
     }
@@ -643,10 +650,15 @@ class BackendController extends Controller{
                 $file->move(public_path('patients'), $imageName);
             }
 
+            $password = $user->password;
+            if ($request->filled('password')){
+                $password = Hash::make($request->password);
+            }
+
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->filled('password') ? Hash::make($request->password) : $user->password,
+                'password' => $password,
                 'phone' => $request->phone,
                 'address' => $request->filled('address') ? $request->address : null,
                 'image' => $imageName,
@@ -1175,9 +1187,15 @@ class BackendController extends Controller{
                 $file->move(public_path('employees'), $imageName);
             }
 
+            $password = $user->password;
+            if ($request->filled('password')) {
+                $password = Hash::make($request->password);
+            }
+
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
+                'password' => $password,
                 'phone' => $request->phone,
                 'address' => $request->filled('address') ? $request->address : null,
                 'image' => $imageName,
@@ -1853,5 +1871,15 @@ class BackendController extends Controller{
             'ip_address' => $request->ip(),
         ]);
         return response()->json(['success' => true]);
+    }
+
+
+
+
+
+    //reports
+    public function viewReports(){
+        // $reports = Report::orderBy('id', 'asc')->paginate(12);
+        return view('Backend.admin.reports.view');
     }
 }

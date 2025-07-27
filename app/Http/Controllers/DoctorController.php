@@ -28,4 +28,9 @@ class DoctorController extends Controller{
         $clinic = Clinic::findOrFail($id);
         return response()->json($clinic->working_days);
     }
+
+
+    public function doctorDashboard(){
+        return view('Backend.doctors.dashboard');
+    }
 }

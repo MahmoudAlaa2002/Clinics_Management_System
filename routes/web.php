@@ -2,11 +2,12 @@
 
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\BackendController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\ClinicManagerController;
 
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/login' , 'login')->name('login');
@@ -32,7 +33,7 @@ Route::controller(FrontendController::class)->group(function () {
 
 
 
-Route::controller(BackendController::class)->group(function () {
+Route::controller(AdminController::class)->group(function () {
     Route::middleware(['auth' , 'verified' ,'role:admin'])->group(function () {
         Route::get('/admin/dashboard' , 'adminDashboard')->name('admin_dashboard');
 
@@ -236,6 +237,15 @@ Route::get('/get-doctor-info/{id}', [PatientController::class, 'getDoctorInfo'])
 Route::get('/doctor-working-days/{id}', [PatientController::class, 'getWorkingDays']);  // يرجع أيام الدكتور للحجز معاه
 
 
+
+
+Route::controller(ClinicManagerController::class)->group(function () {
+    Route::middleware(['auth' , 'verified' ,'role:clinic_manager'])->group(function () {
+
+        Route::get('/clinic_manager/dashboard' , 'clinicManagerDashboard')->name('clinic_manager_dashboard');
+
+    });
+});
 
 
 

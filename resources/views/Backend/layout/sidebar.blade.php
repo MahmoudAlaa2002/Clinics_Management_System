@@ -143,13 +143,21 @@
                 </li>
 
 
-                <li class="submenu">
+                <li class="submenu {{ Request::is('view/invoices') || Request::is('view/payments') || Request::is('view/vendors/invoices') || Request::is('view/expenses') ? 'active' : '' }}">
                     <a href="#"><i class="fa fa-money"></i> <span> Finance </span> <span class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li><a href="{{ route('view_invoices') }}">Patient Invoices</a></li>
-                        <li><a href="{{ route('view_payments') }}">Patient Payments</a></li>
-                        <li><a href="{{ route('view_vendors_invoices') }}">Vendor Invoices</a></li>
-                        <li><a href="{{ route('view_expenses') }}">Expenses</a></li>
+                    <ul style="{{ Request::is('view/invoices') || Request::is('view/payments') || Request::is('view/vendors/invoices') || Request::is('view/expenses') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('view_invoices') }}" class="{{ Request::is('view/invoices') ? 'active' : '' }}">Patient Invoices</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_payments') }}" class="{{ Request::is('view/payments') ? 'active' : '' }}">Patient Payments</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_vendors_invoices') }}" class="{{ Request::is('view/vendors/invoices') ? 'active' : '' }}">Vendor Invoices</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_expenses') }}" class="{{ Request::is('view/expenses') ? 'active' : '' }}">Expenses</a>
+                        </li>
                     </ul>
                 </li>
 

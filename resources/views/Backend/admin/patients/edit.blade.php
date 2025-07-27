@@ -115,7 +115,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-lock"></i></span>
                                     </div>
-                                    <input type="password" name="password" class="form-control" placeholder="Enter new password (optional)">
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password (optional)">
                                 </div>
                             </div>
 
