@@ -304,10 +304,8 @@ class AdminController extends Controller{
 
     //Doctor
     public function addDoctor(){
-        $specialties = Specialty::all();
-        // $s = ClinicSpecialty
-        $clinics = Clinic::all();
-        return view('Backend.admin.doctors.add' , compact('specialties' , 'clinics'));
+        $clinics = Clinic::with('specialties')->get();
+        return view('Backend.admin.doctors.add' , compact('clinics'));
     }
 
 
@@ -347,7 +345,7 @@ class AdminController extends Controller{
                 'status' => $request->status,
                 'work_start_time' => $request->work_start_time,
                 'work_end_time' => $request->work_end_time,
-                'working_days' => json_encode($request->working_days),
+                'working_days' => $request->working_days,
             ]);
 
             return response()->json(['data' => 1]);

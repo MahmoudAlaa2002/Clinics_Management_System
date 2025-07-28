@@ -1,7 +1,10 @@
 <div class="header">
     <div class="header-left">
         <a href="{{ Route('admin_dashboard') }}" class="logo">
-            <img src="{{ asset('assets/img/logo.png') }}" width="35" height="35" alt=""> <span>Preclinic</span>
+            <div class="d-flex align-items-center">
+                <img src="{{ asset('assets/img/logo.png') }}" width="35" height="35" alt="">
+                <<span><strong>CMS</strong></span>
+            </div>
         </a>
     </div>
     <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>

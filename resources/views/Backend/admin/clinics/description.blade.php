@@ -2,6 +2,18 @@
 @section('title', 'Clinic Details')
 
 @section('content')
+
+    <style>
+        li a {
+            color: #5e6973;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            }
+
+            li a:hover {
+            color: #00a2ff;
+            }
+    </style>
     <div class="page-wrapper">
         <div class="content">
             <div class="row">
@@ -51,7 +63,7 @@
                 <h4 class="card-title"><i class="fa fa-stethoscope text-primary me-2"></i> Specialties</h4>
                 <ul>
                     @foreach($clinic->specialties as $specialty)
-                        <li>{{ $specialty->name }}</li>
+                        <li><a href="{{ route('description_specialty', $specialty->id) }}">{{ $specialty->name }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -61,7 +73,7 @@
                 @if($clinic->doctors && $clinic->doctors->count() > 0)
                     <ul>
                         @foreach($clinic->doctors as $doctor)
-                            <a href="{{ route('profile_doctor', $doctor->id) }}"><li>{{ $doctor->name }}</li></a>
+                            <li><a href="{{ route('profile_doctor', $doctor->id) }}">{{ $doctor->name }}</a></li>
                         @endforeach
                     </ul>
                 @else

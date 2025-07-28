@@ -215,7 +215,6 @@ Route::controller(AdminController::class)->group(function () {
 
 
 
-
 // حتى عندما أختار العيادة المحددة يحضر لي فقط تخصصاتها في فورم إضافة طبيب
 Route::get('/get-specialties-by-clinic/{clinic_id}', [DoctorController::class, 'getSpecialtiesByClinic']);
 
@@ -239,10 +238,27 @@ Route::get('/doctor-working-days/{id}', [PatientController::class, 'getWorkingDa
 
 
 
+
+
+
+
 Route::controller(ClinicManagerController::class)->group(function () {
     Route::middleware(['auth' , 'verified' ,'role:clinic_manager'])->group(function () {
 
         Route::get('/clinic_manager/dashboard' , 'clinicManagerDashboard')->name('clinic_manager_dashboard');
+
+    });
+});
+
+
+
+
+
+
+Route::controller(DoctorController::class)->group(function () {
+    Route::middleware(['auth' , 'verified' ,'role:doctor'])->group(function () {
+
+        Route::get('/doctor/dashboard' , 'doctorDashboard')->name('doctor_dashboard');
 
     });
 });

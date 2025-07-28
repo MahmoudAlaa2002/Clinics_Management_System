@@ -3,6 +3,18 @@
 @section('title', 'Specialty Details')
 
 @section('content')
+
+<style>
+    li a {
+        color: #5e6973;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    li a:hover {
+        color: #049cf5;
+    }
+</style>
 <div class="page-wrapper">
     <div class="content">
 
@@ -28,11 +40,11 @@
             @if($specialty->clinics->isNotEmpty())
                 <ul class="mb-0">
                     @foreach($specialty->clinics as $clinic)
-                        <li>{{ $clinic->name }}</li>
+                        <li><a href="{{ route('description_clinic', $clinic->id) }}">{{ $clinic->name }}</a></li>
                     @endforeach
                 </ul>
             @else
-                <p>No clinics are available for this specialty.</p>
+                <p>No clinics are available for this specialty</p>
             @endif
         </div>
 
@@ -41,11 +53,11 @@
             @if($specialty->doctors->isNotEmpty())
                 <ul class="mb-0">
                     @foreach($specialty->doctors as $doctor)
-                        <li>{{ $doctor->name }}</li>
+                        <li><a href="{{ route('profile_doctor', $doctor->id) }}">{{ $doctor->name }}</a></li>
                     @endforeach
                 </ul>
             @else
-                <p>There are no doctors available at the moment.</p>
+                <p>There are no doctors available at the moment</p>
             @endif
         </div>
 
