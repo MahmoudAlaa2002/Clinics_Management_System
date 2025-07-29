@@ -132,7 +132,7 @@
                         </tbody>
                     </table>
                     <div class="mb-3 d-flex justify-content-end" style="margin-top: 25px;">
-                        <a href="{{ Route('admin_dashboard') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
+                        <a href="{{ Route('dashboard') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
                             Back
                         </a>
                     </div>

@@ -91,10 +91,7 @@
 @endsection
 
 @section('js')
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
     $(document).ready(function () {
@@ -124,30 +121,31 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
 
-                    success: function (response) {
+                    success: function(response) {
+                        if (response.data === 0) {
+                            Swal.fire('Error', 'Invalid Email or Password', 'error');
 
-                        if (response.data == 0) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Email Or Password Is Wrong',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }else if(response.data == 1){
+                        } else if (response.data === 1) {
                             window.location.href = '/admin/dashboard';
 
-                        }else if(response.data == 2){
-                            window.location.href = '/clinic_manager/dashboard';
-
-                        }else if(response.data == 3){
-                            window.location.href = '/doctor/dashboard';
-
-                        }else if(response.data == 4){
-                            window.location.href = '/employee/dashboard';
-
-                        }else if(response.data == 5){
+                        } else if (response.data === 2) {
                             let userId = response.user_id;
-                            window.location.href = '/patient/dashboard/'+ userId;
+                            window.location.href = '/clinic-manager/dashboard/' + userId;
+
+                        } else if (response.data === 3) {
+                            let userId = response.user_id;
+                            window.location.href = '/doctor/dashboard/' + userId;
+
+                        } else if (response.data === 4) {
+                            let userId = response.user_id;
+                            window.location.href = '/employee/dashboard/' + userId;
+
+                        } else if (response.data === 5) {
+
+                            let userId = response.user_id;
+                            window.location.href = '/patient/dashboard/' + userId;
+                        } else {
+                            Swal.fire('Error', 'Unexpected response from server', 'error');
                         }
                     }
                 });

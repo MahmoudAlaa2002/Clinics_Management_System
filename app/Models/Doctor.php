@@ -8,14 +8,11 @@ class Doctor extends Model{
 
     protected $fillable = [
         'name',
-        'date_of_birth',
         'specialty_id',
         'image',
-        'gender',
         'work_start_time',
         'work_end_time',
         'working_days',
-        'short_biography',
         'is_in_charge',
         'clinic_id',
         'user_id',

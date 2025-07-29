@@ -260,7 +260,7 @@
                         } else if (response.data === 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Clinic has been updated successfully',
+                                text: 'Clinic Has Been Updated Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

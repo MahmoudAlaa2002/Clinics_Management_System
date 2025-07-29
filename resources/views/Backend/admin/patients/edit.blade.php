@@ -48,7 +48,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
                                     </div>
-                                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $patient->date_of_birth }}">
+                                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $patient->user->date_of_birth }}">
                                 </div>
                             </div>
 
@@ -168,12 +168,12 @@
                                     <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $patient->gender == 'male' ? 'checked' : '' }}>Male
+                                            <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $patient->user->gender == 'male' ? 'checked' : '' }}>Male
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label">
-                                            <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $patient->gender == 'female' ? 'checked' : '' }}>Female
+                                            <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $patient->user->gender == 'female' ? 'checked' : '' }}>Female
                                         </label>
                                     </div>
                                 </div>
@@ -205,7 +205,7 @@
 
                         <div class="form-group">
                             <label>Short Biography <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $patient->short_biography }}</textarea>
+                            <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $patient->user->short_biography }}</textarea>
                         </div>
 
                         <div class="text-center m-t-20">
@@ -290,6 +290,7 @@
         let selectedSpecialtyId = "{{ $patient->specialties->first()->id ?? '' }}";
         let selectedDoctorId = "{{ $patient->doctors->first()->id ?? '' }}";
 
+        
         // Set initial clinic
         $('#clinic_id').val(currentClinicId);
 
@@ -383,13 +384,21 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
-                    let msg = response.data == 0 ? 'The patient already exists, but the data was updated successfully' : 'Patient has been updated successfully';
-                    Swal.fire({
-                        title: 'Success',
-                        text: msg,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => window.location.href = '/view/patients');
+                    if(response.data == 0){
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'The Patient Already Exists, But The Data Was Updated Successfully',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    } else if(response.data == 1){
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Patient Has Been Updated Successfully',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => window.location.href = '/view/patients');
+                    }
                 }
             });
         });

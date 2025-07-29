@@ -47,7 +47,6 @@
                                 <tr>
                                     <th>id</th>
                                     <th>Patient Name</th>
-                                    <th>Date Of Birth</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Address</th>
@@ -60,7 +59,6 @@
                                         <tr>
                                             <td>{{ $patient->id }}</td>
                                             <td>{{ $patient->name }}</td>
-                                            <td>{{ $patient->date_of_birth }}</td>
                                             <td>{{ $patient->user->email }}</td>
                                             <td>{{ $patient->user->phone }}</td>
                                             <td>{{ $patient->user->address }}</td>

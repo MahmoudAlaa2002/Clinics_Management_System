@@ -38,7 +38,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user-md"></i></span>
                                 </div>
-                              <input type="text" class="form-control" id="name" name="name" value="{{ $doctor->name }}">
+                              <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
                             </div>
                         </div>
 
@@ -48,7 +48,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
                                 </div>
-                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $doctor->date_of_birth }}">
+                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $user->date_of_birth }}">
                             </div>
                         </div>
 
@@ -240,12 +240,12 @@
                                 <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $doctor->gender == 'male' ? 'checked' : '' }}>Male
+                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $user->gender == 'male' ? 'checked' : '' }}>Male
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $doctor->gender == 'female' ? 'checked' : '' }}>Female
+                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $user->gender == 'female' ? 'checked' : '' }}>Female
                                     </label>
                                 </div>
                             </div>
@@ -254,7 +254,7 @@
 
                     <div class="form-group">
                         <label>Short Biography <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $doctor->short_biography }}</textarea>
+                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $user->short_biography }}</textarea>
                     </div>
 
 
@@ -367,7 +367,7 @@
                         } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Doctor Has Been Added Successfully',
+                                text: 'Doctor Has Been Updated Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

@@ -47,7 +47,7 @@
                                 <tr>
                                     <th>id</th>
                                     <th>Employee Name</th>
-                                    <th>Date Of Birth</th>
+                                    <th>Job Title</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Address</th>
@@ -60,7 +60,7 @@
                                         <tr>
                                             <td>{{ $employee->id }}</td>
                                             <td>{{ $employee->name }}</td>
-                                            <td>{{ $employee->date_of_birth }}</td>
+                                            <td>{{ $employee->job_title->name }}</td>
                                             <td>{{ $employee->user->email }}</td>
                                             <td>{{ $employee->user->phone }}</td>
                                             <td>{{ $employee->user->address }}</td>

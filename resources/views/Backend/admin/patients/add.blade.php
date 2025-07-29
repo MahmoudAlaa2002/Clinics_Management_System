@@ -287,7 +287,7 @@
                 }else if (password !== confirm_password){
                     Swal.fire({
                         title: 'Error!',
-                        text: 'The password does not match the confirmation password',
+                        text: 'The Password Does Not Match The Confirmation Password',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -306,14 +306,14 @@
                         if (response.data == 0) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'Email is already used by another person',
+                                text: 'Email Is Already Used By Another Person',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
                         }else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'The patient already exists but was added to the new clinic successfully',
+                                text: 'The Patient Already Exists But Was Added To The New Clinic Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
@@ -322,7 +322,7 @@
                         } else if (response.data == 2) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Patient has been added successfully',
+                                text: 'Patient Has Been Added Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

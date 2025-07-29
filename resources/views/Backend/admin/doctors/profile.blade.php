@@ -73,7 +73,7 @@
                         <div class="mb-3 col-md-6 profile-item">
                             <i class="fas fa-venus-mars me-2 text-primary"></i>
                             <strong>Gender:</strong>&nbsp;
-                            <span class="text-muted">{{ ucfirst($doctor->gender) }}</span>
+                            <span class="text-muted">{{ ucfirst($doctor->user->gender) }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
@@ -103,7 +103,7 @@
                         <div class="mb-3 col-md-6 profile-item">
                             <i class="fa fa-calendar me-2 text-primary"></i>
                             <strong>Birth Date:</strong>&nbsp;
-                            <span class="text-muted">{{ $doctor->date_of_birth }}</span>
+                            <span class="text-muted">{{ $doctor->user->date_of_birth }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
@@ -135,7 +135,7 @@
                         </h5>
 
                         <div style="background-color: #f9f9f9; border-left: 4px solid #03A9F4; padding: 15px; border-radius: 10px; min-height: 100px; margin-left:20px;">
-                            <p class="mb-0 text-muted">{{ $doctor->short_biography ?? 'No biography provided.' }}</p>
+                            <p class="mb-0 text-muted">{{ $doctor->user->short_biography ?? 'No biography provided.' }}</p>
                         </div>
                     </div>
 

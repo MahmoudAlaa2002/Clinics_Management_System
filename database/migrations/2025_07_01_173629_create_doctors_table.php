@@ -13,13 +13,10 @@ return new class extends Migration
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->date('date_of_birth');
             $table->boolean('is_in_charge')->default(false);
-            $table->enum('gender', ['male', 'female']);
             $table->time('work_start_time');
             $table->time('work_end_time');
             $table->json('working_days');
-            $table->text('short_biography')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('clinic_id')->constrained('clinics')->onDelete('cascade');

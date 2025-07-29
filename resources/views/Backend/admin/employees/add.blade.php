@@ -266,7 +266,7 @@
                 }else if (password !== confirm_password){
                     Swal.fire({
                         title: 'Error!',
-                        text: 'The password does not match the confirmation password',
+                        text: 'The Password Does Not Match The Confirmation Password',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -292,7 +292,7 @@
                         } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Employee has been added successfully',
+                                text: 'Employee Has Been Added Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

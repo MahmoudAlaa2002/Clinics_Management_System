@@ -26,6 +26,9 @@ class User extends Authenticatable{
         'address',
         'role',
         'image',
+        'date_of_birth',
+        'gender',
+        'short_biography',
     ];
 
     public function doctor(){

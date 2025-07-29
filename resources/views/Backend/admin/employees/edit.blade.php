@@ -49,7 +49,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
                                 </div>
-                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $employee->date_of_birth }}">
+                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $employee->user->date_of_birth }}">
                             </div>
                         </div>
 
@@ -170,12 +170,12 @@
                                 <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $employee->gender == 'male' ? 'checked' : '' }}>Male
+                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $employee->user->gender == 'male' ? 'checked' : '' }}>Male
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" alue="female" {{ $employee->gender == 'female' ? 'checked' : '' }}>Female
+                                        <input type="radio" id="gender" name="gender" class="form-check-input" alue="female" {{ $employee->user->gender == 'female' ? 'checked' : '' }}>Female
                                     </label>
                                 </div>
                             </div>
@@ -184,7 +184,7 @@
 
                     <div class="form-group">
                         <label>Short Biography </label>
-                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $employee->short_biography }}</textarea>
+                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $employee->user->short_biography }}</textarea>
                     </div>
 
 
@@ -268,7 +268,7 @@
                 }else if (password !== confirm_password){
                     Swal.fire({
                         title: 'Error!',
-                        text: 'The password does not match the confirmation password',
+                        text: 'The Password Does Not Match The Confirmation Password',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -294,7 +294,7 @@
                         } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Employee has been added successfully',
+                                text: 'Employee Has Been Added Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

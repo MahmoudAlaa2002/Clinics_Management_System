@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
 
     <!-- Twitter -->
     <meta name="twitter:site" content="@themepixels">
@@ -38,6 +39,7 @@
     <link href="{{ asset('Backend/lib/select2/css/select2.min.css') }}" rel="stylesheet">
 
 
+
     <!-- Starlight CSS -->
     <link rel="stylesheet" href="{{ asset('Backend/css/starlight.css') }}">
   </head>
@@ -46,7 +48,7 @@
 
     @yield('content')
 
-    <script src="{{ asset('Backend/lib/jquery/jquery.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('Backend/lib/popper.js/popper.js') }}"></script>
     <script src="{{ asset('Backend/lib/bootstrap/bootstrap.js') }}"></script>
     <script src="{{ asset('Backend/lib/select2/js/select2.min.js') }}"></script>

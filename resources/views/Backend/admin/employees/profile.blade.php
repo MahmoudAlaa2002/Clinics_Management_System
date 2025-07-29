@@ -39,12 +39,12 @@
                     <table class="table table-borderless" style="margin-bottom:50px;">
                         <tr>
                             <th><i class="fas fa-calendar-alt text-primary me-2"></i> Date of Birth:</th>
-                            <td>{{ $employee->date_of_birth }}</td>
+                            <td>{{ $employee->user->date_of_birth }}</td>
                         </tr>
 
                         <tr>
                             <th><i class="fas fa-venus-mars text-primary me-2"></i> Gender:</th>
-                            <td>{{ $employee->gender }}</td>
+                            <td>{{ $employee->user->gender }}</td>
                         </tr>
 
                         <tr>
@@ -72,7 +72,7 @@
                     <div class="mb-4 shadow-sm card rounded-3">
                         <div class="card-body" style="background-color: #ebeaea;">
                             <p class="mb-0" style="font-size: 15px; color: #333;">
-                                {{ $employee->short_biography ? $employee->short_biography : 'No biography available yet.' }}
+                                {{ $employee->user->short_biography ? $employee->user->short_biography : 'No biography available yet.' }}
                             </p>
                         </div>
                     </div>

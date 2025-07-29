@@ -140,14 +140,14 @@
             } else if (password !== password_confirmation) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'The password and confirmation password do not match',
+                    text: 'The Password And Confirmation Password Do Not Match',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
             } else {
                 $.ajax({
                     method: 'post',
-                    url: '/new_account',
+                    url: '/register',
                     data: {
                         name: name,
                         email: email,

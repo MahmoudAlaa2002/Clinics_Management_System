@@ -1,6 +1,6 @@
 <div class="header">
     <div class="header-left">
-        <a href="{{ Route('admin_dashboard') }}" class="logo">
+        <a href="{{ Route('dashboard') }}" class="logo">
             <div class="d-flex align-items-center">
                 <img src="{{ asset('assets/img/logo.png') }}" width="35" height="35" alt="">
                 <<span><strong>CMS</strong></span>
@@ -88,8 +88,7 @@
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" width="24" alt="Admin">
-                    <span class="status online"></span>
+                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset('admin/admin.jpg') }}" alt="Admin">
                 </span>
                 <span>
                     @if(Auth::user()->hasRole('admin'))
@@ -106,8 +105,8 @@
                 </span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="profile.html">My Profile</a>
-                <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+                <a class="dropdown-item" href="{{ route('my_profile') }}">My Profile</a>
+                <a class="dropdown-item" href="{{ route('edit_profile') }}">Edit Profile</a>
                 <a class="dropdown-item" href="{{ Route('logout') }}">Logout</a>
             </div>
         </li>

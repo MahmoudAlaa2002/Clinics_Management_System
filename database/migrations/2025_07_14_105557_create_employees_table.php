@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('date_of_birth');
-            $table->enum('gender', ['male', 'female']);
             $table->foreignId('job_title_id')->constrained('job_titles')->onDelete('cascade');
-            $table->text('short_biography')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('clinic_id')->constrained('clinics')->onDelete('cascade');

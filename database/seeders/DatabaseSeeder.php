@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             'phone' => '0592226120',
             'address' => 'Gaza',
             'role' => 'admin',
+            'date_of_birth' => '2002-03-13',
+            'gender' => 'male',
         ]);
 
         $admin->assignRole('admin');
