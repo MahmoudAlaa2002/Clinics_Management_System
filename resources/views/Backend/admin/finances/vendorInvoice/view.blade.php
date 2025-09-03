@@ -58,7 +58,7 @@
                             <select id="search_filter" class="form-control">
                                 <option value="patient">Patient Name</option>
                                 <option value="clinic">Clinic Name</option>
-                                <option value="specialty">Specialty Name</option>
+                                <option value="department">Department Name</option>
                                 <option value="doctor">Doctor Name</option>
                                 <option value="date">Appointment Date</option>
                                 <option value="status">Status</option>
@@ -151,7 +151,7 @@
 <script>
     $(document).on('click', '.delete-vendorInvoice', function () {
         let vendorInvoiceId = $(this).data('id');
-        let url = `/delete/vendor/invoice/${vendorInvoiceId}`;
+        let url = `/admin/delete/vendor/invoice/${vendorInvoiceId}`;
 
         Swal.fire({
             title: 'Are you sure?',

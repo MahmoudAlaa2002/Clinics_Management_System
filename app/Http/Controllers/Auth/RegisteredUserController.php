@@ -7,11 +7,9 @@ use App\Models\User;
 use App\Models\Patient;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 
 class RegisteredUserController extends Controller
@@ -41,8 +39,9 @@ class RegisteredUserController extends Controller
             $user->created_at = Carbon::now();
             $user->save();
 
+            $user->assignRole(['patient']);
+
             Patient::create([
-                'name' => $request->name,
                 'user_id' => $user->id,
             ]);
 

@@ -702,7 +702,7 @@ textarea.form-control {
 -----------------------*/
 
 .header {
-	background-color: #009efb;
+	background-color: #00A8FF;
 	left: 0;
 	position: fixed;
 	right: 0;
@@ -3222,6 +3222,49 @@ html.menu-opened body {
 	padding: 10px 20px;
 }
 
+
+/*----------------------
+	Clinics Managers
+-----------------------*/
+
+.clinics-managers-img {
+	cursor: pointer;
+	height: 80px;
+	margin: 0 auto 15px;
+	position: relative;
+	width: 80px;
+}
+.clinics-managers-img .avatar {
+	font-size: 24px;
+	height: 80px;
+	line-height: 80px;
+	margin: 0;
+	width: 80px;
+}
+.doc-prof {
+	color: #777;
+	font-size: 12px;
+	margin-bottom: 10px;
+}
+.clinics-managers-name {
+	margin: 0;
+}
+.clinics-managers-name a {
+	color: #333;
+}
+.see-all {
+	margin-top: 30px;
+	text-align: center;
+}
+.see-all .see-all-btn {
+	border: 1px solid #e2e2e2;
+	border-radius: 5px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+	color: #777;
+	display: inline-block;
+	padding: 10px 20px;
+}
+
 /*-----------------
 	26. Add Doctor
 -----------------------*/
@@ -4913,4 +4956,5 @@ blockquote p {
 		margin: 0 auto;
 		margin-bottom: 10px;
 	}
+
 }

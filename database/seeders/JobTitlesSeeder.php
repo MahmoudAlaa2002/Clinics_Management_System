@@ -13,6 +13,9 @@ class JobTitlesSeeder extends Seeder
      */
     public function run(): void{
         DB::table('job_titles')->insert([
+            ['name' => 'Clinic Manager'],
+            ['name' => 'Department Manager'],
+            ['name' => 'Doctor'],
             ['name' => 'Receptionist'],
             ['name' => 'Nurse'],
             ['name' => 'Accountant'],

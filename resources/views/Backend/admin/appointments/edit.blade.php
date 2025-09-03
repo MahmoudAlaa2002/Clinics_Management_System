@@ -78,13 +78,13 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Assigned to Specialty <span class="text-danger">*</span></label>
+                                    <label>Assigned to Department <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
                                         </div>
-                                        <select id="specialty_id" name="specialty_id" class="form-control">
-                                            <option value="" disabled selected hidden>Select Specialty</option>
+                                        <select id="department_id" name="department_id" class="form-control">
+                                            <option value="" disabled selected hidden>Select Department</option>
                                         </select>
                                     </div>
                                 </div>
@@ -159,12 +159,12 @@
         return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
     }
 
-    function loadDoctors(clinicId, specialtyId, selectedDoctorId = '') {
+    function loadDoctors(clinicId, departmentId, selectedDoctorId = '') {
         $('#doctor_id').empty().append('<option value="" disabled hidden>Select Doctor</option>');
-        if (clinicId && specialtyId) {
-            $.get('/get-doctors-by-clinic-and-specialty', {
+        if (clinicId && departmentId) {
+            $.get('/get-doctors-by-clinic-and-department', {
                 clinic_id: clinicId,
-                specialty_id: specialtyId
+                department_id: departmentId
             }, function (doctors) {
                 doctors.forEach(function (doctor) {
                     $('#doctor_id').append(`<option value="${doctor.id}" ${doctor.id == selectedDoctorId ? 'selected' : ''}>${doctor.name}</option>`);
@@ -216,43 +216,43 @@
 
     $(document).ready(function () {
         let currentClinicId = "{{ $appointment->clinic_id ?? '' }}";
-        let selectedSpecialtyId = "{{ $appointment->specialty_id ?? '' }}";
+        let selectedDepartmentId = "{{ $appointment->department_id ?? '' }}";
         let selectedDoctorId = "{{ $appointment->doctor_id ?? '' }}";
 
         // Set initial clinic
         $('#clinic_id').val(currentClinicId);
 
-        // Load specialties
-        $.get('/get-specialties-by-clinic/' + currentClinicId, function (specialties) {
-            let specialtySelect = $('#specialty_id');
-            specialtySelect.empty().append('<option value="" disabled hidden>Select Specialty</option>');
+        // Load departments
+        $.get('/get-departments-by-clinic/' + currentClinicId, function (departments) {
+            let departmentSelect = $('#department_id');
+            departmentSelect.empty().append('<option value="" disabled hidden>Select Department</option>');
 
-            specialties.forEach(function (specialty) {
-                specialtySelect.append(`<option value="${specialty.id}" ${specialty.id == selectedSpecialtyId ? 'selected' : ''}>${specialty.name}</option>`);
+            sdepartments.forEach(function (department) {
+                departmentSelect.append(`<option value="${department.id}" ${department.id == selectedDepartmentId ? 'selected' : ''}>${department.name}</option>`);
             });
 
-            // Load doctors if specialty selected
-            if (selectedSpecialtyId) loadDoctors(currentClinicId, selectedSpecialtyId, selectedDoctorId);
+            // Load doctors if department selected
+            if (selectedDepartmentId) loadDoctors(currentClinicId, selectedDepartmentId, selectedDoctorId);
         });
 
         // On change clinic
         $('#clinic_id').on('change', function () {
             let clinicId = $(this).val();
-            $('#specialty_id').empty().append('<option value="" disabled selected hidden>Select Specialty</option>');
+            $('#department_id').empty().append('<option value="" disabled selected hidden>Select Department</option>');
             $('#doctor_id').empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
 
-            $.get('/get-specialties-by-clinic/' + clinicId, function (specialties) {
-                specialties.forEach(function (specialty) {
-                    $('#specialty_id').append(`<option value="${specialty.id}">${specialty.name}</option>`);
+            $.get('/get-departments-by-clinic/' + clinicId, function (departments) {
+                departments.forEach(function (department) {
+                    $('#department_id').append(`<option value="${department.id}">${department.name}</option>`);
                 });
             });
         });
 
-        // On change specialty
-        $('#specialty_id').on('change', function () {
+        // On change department
+        $('#department_id').on('change', function () {
             let clinicId = $('#clinic_id').val();
-            let specialtyId = $(this).val();
-            loadDoctors(clinicId, specialtyId);
+            let departmentId = $(this).val();
+            loadDoctors(clinicId, departmentId);
         });
 
         // On change doctor
@@ -269,7 +269,7 @@
             formData.append('_method', 'PUT');
             formData.append('patient_id', $('#patient_id').val());
             formData.append('clinic_id', $('#clinic_id').val());
-            formData.append('specialty_id', $('#specialty_id').val());
+            formData.append('department_id', $('#department_id').val());
             formData.append('doctor_id', $('#doctor_id').val());
             formData.append('appointment_time', $('#appointment_time').val());
             formData.append('appointment_day', $('#appointment_day').val());
@@ -277,7 +277,7 @@
 
 
 
-            if (!isValidSelectValue('patient_id') || !isValidSelectValue('clinic_id') || !isValidSelectValue('specialty_id') ||
+            if (!isValidSelectValue('patient_id') || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') ||
                 !isValidSelectValue('doctor_id') || !isValidSelectValue('appointment_time') || !isValidSelectValue('appointment_day')) {
                 Swal.fire({
                     title: 'Error!',

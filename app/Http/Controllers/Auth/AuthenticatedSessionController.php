@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\View\View;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
-use App\Http\Requests\Auth\LoginRequest;
+
 
 class AuthenticatedSessionController extends Controller{
 
@@ -24,12 +23,14 @@ class AuthenticatedSessionController extends Controller{
                 return response()->json(['data' => 1]);
             }else if(Auth::user()->hasRole('clinic_manager')){
                 return response()->json(['data' => 2 , 'user_id' => Auth::user()->id]);
-            }else if(Auth::user()->hasRole('doctor')){
+            }else if(Auth::user()->hasRole('department_manager')){
                 return response()->json(['data' => 3 , 'user_id' => Auth::user()->id]);
-            }else if(Auth::user()->hasRole('employee')){
+            }else if(Auth::user()->hasRole('doctor')){
                 return response()->json(['data' => 4 , 'user_id' => Auth::user()->id]);
-            }else{
+            }else if(Auth::user()->hasRole('employee')){
                 return response()->json(['data' => 5 , 'user_id' => Auth::user()->id]);
+            }else{
+                return response()->json(['data' => 6 , 'user_id' => Auth::user()->id]);
             }
         }else{
             return response()->json(['data' => 0]);

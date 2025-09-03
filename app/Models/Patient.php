@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Patient extends Model{
 
     protected $fillable = [
-        'name',
+        'blood_type',
+        'emergency_contact',
+        'allergies',
+        'chronic_diseases',
         'user_id',
     ];
 
@@ -19,8 +22,8 @@ class Patient extends Model{
         return $this->belongsToMany(Clinic::class, 'clinic_patients');
     }
 
-    public function specialties(){
-        return $this->belongsToMany(Specialty::class, 'specialty_patients');
+    public function departments(){
+        return $this->belongsToMany(Department::class, 'department_patients');
     }
 
     public function appointments(){

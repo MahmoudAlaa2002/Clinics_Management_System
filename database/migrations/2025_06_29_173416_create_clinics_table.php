@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('location');
-            $table->unsignedBigInteger('doctor_in_charge')->nullable();
-            $table->string('clinic_phone');
+            $table->string('email')->unique();
+            $table->string('phone');
             $table->time('opening_time');
             $table->time('closing_time');
             $table->json('working_days');
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('manager_employee_id')->nullable()->constrained('employees')->nullOnDelete();         
             $table->timestamps();
         });
     }

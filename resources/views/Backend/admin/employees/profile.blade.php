@@ -28,7 +28,7 @@
                 <div class="text-center col-md-4">
                     <img src="{{ $employee->user->image ? asset($employee->user->image) : asset('assets/img/user.jpg') }}" alt="Employee Image"
                             class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
-                    <h4 class="mt-3">{{ $employee->name }}</h4>
+                    <h4 class="mt-3">{{ $employee->user->name }}</h4>
                 </div>
 
                 <div class="col-md-8">
@@ -72,7 +72,7 @@
                     <div class="mb-4 shadow-sm card rounded-3">
                         <div class="card-body" style="background-color: #ebeaea;">
                             <p class="mb-0" style="font-size: 15px; color: #333;">
-                                {{ $employee->user->short_biography ? $employee->user->short_biography : 'No biography available yet.' }}
+                                {{ $employee->short_biography ? $employee->short_biography : 'No biography available yet.' }}
                             </p>
                         </div>
                     </div>

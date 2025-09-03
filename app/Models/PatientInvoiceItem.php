@@ -8,8 +8,9 @@ class PatientInvoiceItem extends Model{
     protected $fillable = [
         'invoice_id',
         'service_name',
-        'service_type',
-        'amount',
+        'quantity',
+        'unit_price',
+        'total_amount',
     ];
 
     public function invoice(){

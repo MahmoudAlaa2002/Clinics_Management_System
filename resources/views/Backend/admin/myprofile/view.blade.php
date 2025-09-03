@@ -70,6 +70,12 @@
                     <div class="mb-4 row" style="margin-left:5px;">
 
                         <div class="mb-3 col-md-6 profile-item">
+                            <i class="fa fa-envelope me-2 text-primary"></i>
+                            <strong>Email :</strong>&nbsp;
+                            <span class="text-muted">{{ $user->email }}</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6 profile-item">
                             <i class="fa fa-calendar me-2 text-primary"></i>
                             <strong>Birth Date:</strong>&nbsp;
                             <span class="text-muted">{{ $user->date_of_birth }}</span>
@@ -93,29 +99,12 @@
                             <span class="text-muted">{{ $user->address }}</span>
                         </div>
 
-                        <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-envelope me-2 text-primary"></i>
-                            <strong>Email :</strong>&nbsp;
-                            <span class="text-muted">{{ $user->email }}</span>
-                        </div>
-
                     </div>
-
-                    <div class="mb-4" style="margin-top:30px;">
-                        <h5 class="mb-3 profile-section-title" style="font-size: 18px;">
-                            <i class="fa fa-align-left text-primary me-2"></i> Biography
-                        </h5>
-
-                        <div style="background-color: #f9f9f9; border-left: 4px solid #03A9F4; padding: 15px; border-radius: 10px; min-height: 100px; margin-left:20px;">
-                            <p class="mb-0 text-muted">{{ $user->short_biography ?? 'No biography provided.' }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 d-flex justify-content-end">
-                        <a href="{{ Route('dashboard') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
-                            Back
-                        </a>
-                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-end" style="margin-top:15px;">
+                    <a href="{{ Route('dashboard') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
+                        Back
+                    </a>
                 </div>
             </div>
         </div>

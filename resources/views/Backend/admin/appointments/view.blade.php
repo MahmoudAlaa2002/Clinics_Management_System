@@ -61,7 +61,7 @@
                             <select id="search_filter" class="form-control">
                                 <option value="patient">Patient Name</option>
                                 <option value="clinic">Clinic Name</option>
-                                <option value="specialty">Specialty Name</option>
+                                <option value="department">Department Name</option>
                                 <option value="doctor">Doctor Name</option>
                                 <option value="date">Appointment Date</option>
                                 <option value="status">Status</option>
@@ -74,7 +74,7 @@
                                 <th>id</th>
                                 <th>Patient Name</th>
                                 <th>Clinic Name</th>
-                                <th>specialty Name</th>
+                                <th>Department Name</th>
                                 <th>Doctor Name</th>
                                 <th>Appointment Date</th>
                                 <th>Appointment Time</th>
@@ -89,7 +89,7 @@
                                         <td>{{ $appointment->id }}</td>
                                         <td>{{ $appointment->patient->name }}</td>
                                         <td>{{ $appointment->clinic->name }}</td>
-                                        <td>{{ $appointment->specialty->name }}</td>
+                                        <td>{{ $appointment->department->name }}</td>
                                         <td>{{ $appointment->doctor->name }}</td>
                                         <td>{{ $appointment->appointment_date }}</td>
                                         <td>{{ $appointment->appointment_time }}</td>

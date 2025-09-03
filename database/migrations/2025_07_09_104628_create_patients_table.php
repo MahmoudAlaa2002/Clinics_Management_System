@@ -10,8 +10,11 @@ return new class extends Migration
     public function up(): void{
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('blood_type')->nullable();     // فصيلة الدم
+            $table->string('emergency_contact')->nullable();  // رقم للطوارئ
+            $table->text('allergies')->nullable();            // الجساسية
+            $table->text('chronic_diseases')->nullable();     // أمراض مزمنة
             $table->timestamps();
         });
     }

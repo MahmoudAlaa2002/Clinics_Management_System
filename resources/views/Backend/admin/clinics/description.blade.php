@@ -28,10 +28,10 @@
                     <div class="col-md-4">
                         <p><strong>Clinic Name:</strong> {{ $clinic->name }}</p>
                         <p><strong>Location:</strong> {{ $clinic->location }}</p>
-                        <p><strong>Phone:</strong> {{ $clinic->clinic_phone }}</p>
+                        <p><strong>Email:</strong> {{ $clinic->email }}</p>
                     </div>
                     <div class="col-md-4">
-                        <p><strong>Doctor In Charge:</strong> {{ $clinic->doctor->name ?? 'Not Available' }}</p>
+                        <p><strong>Phone:</strong> {{ $clinic->phone }}</p>
                         <p><strong>Available Time:</strong> {{ $clinic->opening_time }} AM  -  {{ $clinic->closing_time }} PM</p>
                         <p><strong>Status:</strong>
                             @if($clinic->status == 'active')
@@ -42,7 +42,7 @@
                         </p>
                     </div>
                     <div class="col-md-4">
-                        <p><strong>Specialties Count:</strong> {{ optional($clinic->specialties)->count() ?? 0 }}</p>
+                        <p><strong>Departments Count:</strong> {{ optional($clinic->departments)->count() ?? 0 }}</p>
                         <p><strong>Doctors Count:</strong> {{ optional($clinic->doctors)->count() ?? 0 }}</p>
                     </div>
                 </div>
@@ -60,11 +60,15 @@
             </div>
 
             <div class="card-box">
-                <h4 class="card-title"><i class="fa fa-stethoscope text-primary me-2"></i> Specialties</h4>
+                <h4 class="card-title"><i class="fa fa-stethoscope text-primary me-2"></i> Departments</h4>
                 <ul>
-                    @foreach($clinic->specialties as $specialty)
-                        <li><a href="{{ route('description_specialty', $specialty->id) }}">{{ $specialty->name }}</a></li>
-                    @endforeach
+                    @if($clinic->departments && $clinic->departments->count() > 0)
+                        @foreach($clinic->departments as $department)
+                            <li><a href="{{ route('description_department', $department->id) }}">{{ $department->name }}</a></li>
+                        @endforeach
+                    @else
+                    <p>No Departments Available Yet</p>
+                    @endif
                 </ul>
             </div>
 
@@ -73,11 +77,11 @@
                 @if($clinic->doctors && $clinic->doctors->count() > 0)
                     <ul>
                         @foreach($clinic->doctors as $doctor)
-                            <li><a href="{{ route('profile_doctor', $doctor->id) }}">{{ $doctor->name }}</a></li>
+                            <li><a href="{{ route('profile_doctor', $doctor->id) }}">{{ $doctor->employee->user->name }}</a></li>
                         @endforeach
                     </ul>
                 @else
-                    <p>No doctors available yet.</p>
+                    <p>No Doctors Available Yet</p>
                 @endif
             </div>
 

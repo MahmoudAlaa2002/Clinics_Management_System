@@ -68,13 +68,13 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Assigned to Specialty <span class="text-danger">*</span></label>
+                                    <label>Assigned to Department <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
                                         </div>
-                                        <select class="form-control" id="specialty_id" name="specialty_id" required>
-                                            <option value="" disabled selected hidden>Select Specialty</option>
+                                        <select class="form-control" id="department_id" name="department_id" required>
+                                            <option value="" disabled selected hidden>Select Department</option>
                                         </select>
                                     </div>
                                 </div>
@@ -149,7 +149,7 @@
 
                 let patient_id = $('#patient_id').val();
                 let clinic_id = $('#clinic_id').val();
-                let specialty_id = $('#specialty_id').val();
+                let department_id = $('#department_id').val();
                 let doctor_id = $('#doctor_id').val();
                 let appointment_time = $('#appointment_time').val();
                 let appointment_day = $('#appointment_day').val();
@@ -162,14 +162,14 @@
                 let formData = new FormData();
                 formData.append('patient_id', patient_id);
                 formData.append('clinic_id', clinic_id);
-                formData.append('specialty_id', specialty_id);
+                formData.append('department_id', department_id);
                 formData.append('doctor_id', doctor_id);
                 formData.append('appointment_time', appointment_time);
                 formData.append('appointment_day', appointment_day);
                 formData.append('notes', notes);
 
 
-                if (!isValidSelectValue('patient_id') || !isValidSelectValue('clinic_id') || !isValidSelectValue('specialty_id') || !isValidSelectValue('doctor_id') || !isValidSelectValue('appointment_time') || !isValidSelectValue('appointment_day')) {
+                if (!isValidSelectValue('patient_id') || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || !isValidSelectValue('doctor_id') || !isValidSelectValue('appointment_time') || !isValidSelectValue('appointment_day')) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
@@ -202,7 +202,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = '/add/appointment';
+                                window.location.href = '/admin/add/appointment';
                             });
                         }
                     }
@@ -221,34 +221,34 @@
         if (clinicId) {
             // جلب التخصصات من العيادة
             $.ajax({
-                url: '/get-specialties-by-clinic/' + clinicId,
+                url: '/get-departments-by-clinic/' + clinicId,
                 type: 'GET',
                 success: function (data) {
-                    let specialtySelect = $('#specialty_id');
-                    specialtySelect.empty().append('<option value="" disabled selected hidden>Select Specialty</option>');
+                    let departmentSelect = $('#department_id');
+                    departmentSelect.empty().append('<option value="" disabled selected hidden>Select Department</option>');
 
                     let doctorSelect = $('#doctor_id');
                     doctorSelect.empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
 
-                    $.each(data, function (key, specialty) {
-                        specialtySelect.append('<option value="' + specialty.id + '">' + specialty.name + '</option>');
+                    $.each(data, function (key, department) {
+                        departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
                     });
                 }
             });
         }
     });
 
-    $('#specialty_id').on('change', function () {
-            var specialtyId = $(this).val();
+    $('#department_id').on('change', function () {
+            var departmentId = $(this).val();
             var clinicId = $('#clinic_id').val(); // مهم جداً
 
-            if (specialtyId && clinicId) {
+            if (departmentId && clinicId) {
                 $.ajax({
-                    url: '/get-doctors-by-clinic-and-specialty',
+                    url: '/get-doctors-by-clinic-and-department',
                     type: 'GET',
                     data: {
                         clinic_id: clinicId,
-                        specialty_id: specialtyId
+                        department_id: departmentId
                     },
                     success: function (data) {
                         let doctorSelect = $('#doctor_id');

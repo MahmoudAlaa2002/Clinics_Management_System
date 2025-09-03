@@ -1,32 +1,45 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ClinicController;
-// use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\DoctorController;
-use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\PatientController;
-use App\Http\Controllers\Admin\EmployeeController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\SpecialtyController;
-use App\Http\Controllers\Admin\MedicationController;
-use App\Http\Controllers\Admin\AppointmentController;
-use App\Http\Controllers\Admin\PrescriptionController;
+use App\Http\Controllers\Backend\Admin\ClinicController;
+use App\Http\Controllers\Backend\Admin\DoctorController;
+use App\Http\Controllers\Backend\Admin\ReportController;
+use App\Http\Controllers\Backend\Admin\PatientController;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Backend\Admin\EmployeeController;
+use App\Http\Controllers\Backend\Admin\DashboardController;
+use App\Http\Controllers\Backend\Admin\DepartmentController;
+use App\Http\Controllers\Backend\Admin\MedicationController;
+use App\Http\Controllers\Backend\Admin\AppointmentController;
+use App\Http\Controllers\Backend\Admin\PrescriptionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Admin\Finance\ExpenseController;
-use App\Http\Controllers\Admin\Finance\PaymentController;
-use App\Http\Controllers\Admin\MedicationStockController;
+use App\Http\Controllers\Backend\Admin\Finance\ExpenseController;
+use App\Http\Controllers\Backend\Admin\Finance\PaymentController;
+use App\Http\Controllers\Backend\Admin\MedicationStockController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\Finance\VendorInvoiceController;
-use App\Http\Controllers\Admin\Finance\PatientInvoiceController;
+use App\Http\Controllers\Backend\Admin\Finance\VendorInvoiceController;
+use App\Http\Controllers\Backend\Admin\Finance\PatientInvoiceController;
 
-//Auth
-Route::get('/login', [AuthenticatedSessionController::class, 'login'])->name('login')->middleware('guest');
-Route::post('/user/login', [AuthenticatedSessionController::class, 'userLogin'])->name('user_login')->middleware('guest');
-Route::get('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest')->name('register');
-Route::post('/register', [RegisteredUserController::class, 'store'])->name('register')->middleware('guest');
+
+Route::prefix('clinics-management')->group(function () {
+
+    //Home
+    Route::get('/home', [HomeController::class, 'home'])->name('home');
+    Route::post('/contact', [HomeController::class, 'send'])->name('contact_send');
+
+
+    //Auth
+    Route::get('/login', [AuthenticatedSessionController::class, 'login'])->name('login')->middleware('guest');
+    Route::post('/user/login', [AuthenticatedSessionController::class, 'userLogin'])->name('user_login')->middleware('guest');
+    Route::get('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout')->middleware('auth');
+
+    Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest')->name('register');
+    Route::post('/register', [RegisteredUserController::class, 'store'])->name('register')->middleware('guest');
+
+});
+
+
 
 
 //Admin
@@ -43,27 +56,36 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/add/clinic' ,[ClinicController::class , 'addClinic'])->name('add_clinic');
     Route::post('/store/clinic' ,[ClinicController::class , 'storeClinic'])->name('store_clinic');
     Route::get('/view/clinics' ,[ClinicController::class , 'viewClinics'])->name('view_clinics');
+    Route::get('/search/clinics',[ClinicController::class , 'searchClinics'])->name('search_clinics');
     Route::get('/description/clinic/{id}' ,[ClinicController::class , 'descriptionClinic'])->name('description_clinic');
     Route::get('/edit/clinic/{id}' ,[ClinicController::class , 'editClinic'])->name('edit_clinic');
     Route::put('/update/clinic/{id}' ,[ClinicController::class , 'updateClinic'])->name('update_clinic');
     Route::delete('/delete/clinic/{id}' ,[ClinicController::class , 'deleteClinic'])->name('delete_clinic');
 
+    Route::get('/view/clinics/managers' ,[ClinicController::class , 'viewClinicsManagers'])->name('view_clinics_managers');
+    Route::get('/search/clinics/managers',[ClinicController::class , 'searchClinicsManagers'])->name('search_clinics_managers');
+    Route::get('/profile/clinics/managers/{id}',[ClinicController::class , 'profileClinicsManagers'])->name('profile_clinics_managers');
+    Route::get('/edit/clinics/managers/{id}' ,[ClinicController::class , 'editClinicsManagers'])->name('edit_clinics_managers');
+    Route::put('/update/clinics/managers/{id}' ,[ClinicController::class , 'updateClinicsManagers'])->name('update_clinics_managers');
+    Route::delete('/delete/clinics/managers/{id}' ,[ClinicController::class , 'deleteClinicsManagers'])->name('delete_clinics_managers');
 
-    //Specialty
-    Route::get('/add/specialty' ,[SpecialtyController::class , 'addSpecialty'])->name('add_specialty');
-    Route::post('/store/specialty' ,[SpecialtyController::class , 'storeSpecialty'])->name('store_specialty');
-    Route::get('/view/specialties' ,[SpecialtyController::class , 'viewSpecialties'])->name('view_specialties');
-    Route::get('/description/specialty/{id}' ,[SpecialtyController::class , 'descriptionSpecialty'])->name('description_specialty');
-    Route::get('/edit/specialty/{id}' ,[SpecialtyController::class , 'editSpecialty'])->name('edit_specialty');
-    Route::put('/update/specialty/{id}' ,[SpecialtyController::class , 'updateSpecialty'])->name('update_specialty');
-    Route::delete('/delete/specialty/{id}' ,[SpecialtyController::class , 'deleteSpecialty'])->name('delete_specialty');
+    //Department
+    Route::get('/add/department' ,[DepartmentController::class , 'addDepartment'])->name('add_department');
+    Route::post('/store/department' ,[DepartmentController::class , 'storeDepartment'])->name('store_department');
+    Route::get('/view/departments' ,[DepartmentController::class , 'viewDepartments'])->name('view_departments');
+    Route::get('/description/department/{id}' ,[DepartmentController::class , 'descriptionDepartment'])->name('description_department');
+    Route::get('/edit/department/{id}' ,[DepartmentController::class , 'editDepartment'])->name('edit_department');
+    Route::put('/update/department/{id}' ,[DepartmentController::class , 'updateDepartment'])->name('update_department');
+    Route::delete('/delete/department/{id}' ,[DepartmentController::class , 'deleteDepartment'])->name('delete_department');
+
+    Route::get('admin/view/department-managers', [DepartmentController::class, 'viewDepartmentsManagers'])->name('view_department_managers');
 
 
     //Doctor
     Route::get('/add/doctor' ,[DoctorController::class , 'addDoctor'])->name('add_doctor');
     Route::post('/store/doctor',[DoctorController::class , 'storeDoctor'])->name('store_doctor');
     Route::get('/view/doctors' ,[DoctorController::class , 'viewDoctors'])->name('view_doctors');
-    Route::get('/view/clinic/managers' ,[DoctorController::class , 'viewClinicManagers'])->name('view_clinic_managers');
+    Route::get('/search/doctors',[DoctorController::class , 'searchDoctors'])->name('search_doctors');
     Route::get('/profile/doctor/{id}',[DoctorController::class , 'profileDoctor'])->name('profile_doctor');
     Route::get('/edit/doctor/{id}' ,[DoctorController::class , 'editDoctor'])->name('edit_doctor');
     Route::put('/update/doctor/{id}' ,[DoctorController::class , 'updateDoctor'])->name('update_doctor');
@@ -72,23 +94,23 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/search/doctor/schedules',[DoctorController::class ,  'searchDoctorSchedules']);
     Route::post('/search/doctor/schedules',[DoctorController::class , 'searchDoctchedules'])->name('search_doctor_schedules');
 
-    Route::get('/get-specialties-by-clinic/{clinic_id}', [DoctorController::class, 'getSpecialtiesByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط تخصصاتها في فورم إضافة طبيب
+    Route::get('/get-departments-by-clinic/{clinic_id}', [DoctorController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط تخصصاتها في فورم إضافة طبيب
     Route::get('/get-clinic-info/{id}', [DoctorController::class, 'getClinicInfo']);  // بحضر لي أوقات العيادة في فورم الطبيب عشان أختار أوقات الطبيب بناء ع وقت العيادة
     Route::get('/clinic-working-days/{id}', [DoctorController::class, 'getWorkingDays']);    // برجع الأيام المحددة
-
 
 
     //Patient
     Route::get('/add/patient' ,[PatientController::class , 'addPatient'])->name('add_patient');
     Route::post('/store/patient',[PatientController::class , 'storePatient'])->name('store_patient');
     Route::get('/view/patients' ,[PatientController::class , 'viewPatients'])->name('view_patients');
+    Route::get('/search/patients' ,[PatientController::class , 'searchPatients'])->name('search_patients');
     Route::get('/profile/patient/{id}',[PatientController::class , 'profilePatient'])->name('profile_patient');
     Route::get('/edit/patient/{id}' ,[PatientController::class , 'editPatient'])->name('edit_patient');
     Route::put('/update/patient/{id}' ,[PatientController::class , 'updatePatient'])->name('update_patient');
     Route::delete('/delete/patient/{id}' ,[PatientController::class , 'deletePatient'])->name('delete_patient');
 
-    Route::get('/get-specialties-by-clinic/{clinic_id}', [PatientController::class, 'getSpecialtiesByClinic']);    // عند اختيار العيادة – جلب التخصصات المرتبطة بها فقط
-    Route::get('/get-doctors-by-clinic-and-specialty', [PatientController::class, 'getDoctorsByClinicAndSpecialty']);   //  عند اختيار التخصص – جلب الأطباء الذين ينتمون لهذا التخصص فقط ومن نفس العيادة فقط
+    Route::get('/get-departments-by-clinic/{clinic_id}', [PatientController::class, 'getDepartmentsByClinic']);    // عند اختيار العيادة – جلب التخصصات المرتبطة بها فقط
+    Route::get('/get-doctors-by-clinic-and-department', [PatientController::class, 'getDoctorsByClinicAndDepartment'])->name('get_doctors_by_clinic_and_department');  //  عند اختيار التخصص – جلب الأطباء الذين ينتمون لهذا التخصص فقط ومن نفس العيادة فقط
     Route::get('/get-doctor-info/{id}', [PatientController::class, 'getDoctorInfo']);   // يرجع أوقات الدكتور للحجز معاه
     Route::get('/doctor-working-days/{id}', [PatientController::class, 'getWorkingDays']);  // يرجع أيام الدكتور للحجز معاه
 

@@ -40,12 +40,12 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label><i class="fas fa-stethoscope text-primary"></i> Specialty</label>
-                            <select class="form-control" name="specialty_id" id="specialty_id" required>
-                                <option value="" disabled {{ !isset($specialty_id) ? 'selected' : '' }} hidden>Select Specialty</option>
-                                @foreach($Specialties as $specialty)
-                                    <option value="{{ $specialty->id }}" {{ (isset($specialty_id) && $specialty_id == $specialty->id) ? 'selected' : '' }}>
-                                        {{ $specialty->name }}
+                            <label><i class="fas fa-stethoscope text-primary"></i> Department</label>
+                            <select class="form-control" name="department_id" id="department_id" required>
+                                <option value="" disabled {{ !isset($department_id) ? 'selected' : '' }} hidden>Select Department</option>
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" {{ (isset($department_id) && $department_id == $department->id) ? 'selected' : '' }}>
+                                        {{ $department->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -57,7 +57,7 @@
                                 <option value="" disabled {{ !isset($doctor_id) ? 'selected' : '' }} hidden>Select Doctor</option>
                                 @foreach($doctors as $doctor)
                                     <option value="{{ $doctor->id }}" {{ (isset($doctor_id) && $doctor_id == $doctor->id) ? 'selected' : '' }}>
-                                        {{ $doctor->name }}
+                                        {{ $doctor->employee->user->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -76,7 +76,7 @@
 
                     {{-- العنوان الثابت --}}
                     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top">
-                        <h5 class="mb-0">Weekly Schedule for Dr. {{ $selectedDoctor->name }}</h5>
+                        <h5 class="mb-0">Weekly Schedule for Dr. {{ $selectedDoctor->employee->user->name }}</h5>
                     </div>
 
                     <div class="card-body p-3">
@@ -109,8 +109,8 @@
                         <div class="table-responsive">
                             <table class="table table-bordered text-center align-middle mb-0" style="min-width: 1000px; font-size: 14px;">
                                 @php
-                                    $startTime = \Carbon\Carbon::parse($selectedDoctor->work_start_time);
-                                    $endTime = \Carbon\Carbon::parse($selectedDoctor->work_end_time);
+                                    $startTime = \Carbon\Carbon::parse($selectedDoctor->employee->work_start_time);
+                                    $endTime = \Carbon\Carbon::parse($selectedDoctor->employee->work_end_time);
                                     $timeSlots = [];
 
                                     while ($startTime <= $endTime) {
@@ -118,12 +118,12 @@
                                         $startTime->addMinutes(30);
                                     }
 
-                                    $workingDays = is_string($selectedDoctor->working_days)
-                                        ? json_decode($selectedDoctor->working_days)
-                                        : $selectedDoctor->working_days;
+                                    $workingDays = is_string($selectedDoctor->employee->working_days)
+                                        ? json_decode($selectedDoctor->employee->working_days)
+                                        : $selectedDoctor->employee->working_days;
 
                                     $appointmentsGrouped = $appointments->groupBy(function($a) {
-                                        return \Carbon\Carbon::parse($a->appointment_date)->format('l') . '-' . $a->appointment_time;
+                                        return \Carbon\Carbon::parse($a->date)->format('l') . '-' . $a->time;
                                     });
                                 @endphp
 
@@ -171,111 +171,147 @@
 
 @section('js')
     <script>
+        // عند تغيير العيادة: نفرّغ ونُعطّل التابعين، ثم نحمّل الأقسام
         $('#clinic_id').on('change', function () {
             var clinicId = $(this).val();
 
             // إخفاء خيار "Select Clinic"
             $(this).find('option:first').hide();
 
+            let departmentSelect = $('#department_id');
+            let doctorSelect     = $('#doctor_id');
+
+            // صفّر وعطّل التابعين
+            departmentSelect.prop('disabled', true).empty()
+                .append('<option value="" disabled selected hidden>Select Department</option>');
+            doctorSelect.prop('disabled', true).empty()
+                .append('<option value="" disabled selected hidden>Select Doctor</option>');
+
             if (clinicId) {
-                // جلب التخصصات من العيادة
                 $.ajax({
-                    url: '/get-specialties-by-clinic/' + clinicId,
+                    url: '/admin/get-departments-by-clinic/' + clinicId,
                     type: 'GET',
                     success: function (data) {
-                        let specialtySelect = $('#specialty_id');
-                        specialtySelect.empty().append('<option value="" disabled selected hidden>Select Specialty</option>');
-
-                        let doctorSelect = $('#doctor_id');
-                        doctorSelect.empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
-
-                        $.each(data, function (key, specialty) {
-                            specialtySelect.append('<option value="' + specialty.id + '">' + specialty.name + '</option>');
+                        // عبّي الأقسام وفعّل القائمة
+                        $.each(data, function (key, department) {
+                            departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
                         });
+                        departmentSelect.prop('disabled', false);
                     }
                 });
             }
         });
 
-        $('#specialty_id').on('change', function () {
-            var specialtyId = $(this).val();
-            var clinicId = $('#clinic_id').val(); // مهم جداً
+        // عند تغيير التخصّص: نفرّغ ونُعطّل الأطباء، ثم نحمّلهم حسب (العيادة + التخصص)
+        $('#department_id').on('change', function () {
+            var departmentId = $(this).val();
+            var clinicId     = $('#clinic_id').val();
 
-            if (specialtyId && clinicId) {
+            let doctorSelect = $('#doctor_id');
+            doctorSelect.prop('disabled', true).empty()
+                .append('<option value="" disabled selected hidden>Select Doctor</option>');
+
+            if (departmentId && clinicId) {
                 $.ajax({
-                    url: '/get-doctors-by-clinic-and-specialty',
+                    url: '/admin/get-doctors-by-clinic-and-department',
                     type: 'GET',
                     data: {
                         clinic_id: clinicId,
-                        specialty_id: specialtyId
+                        department_id: departmentId
                     },
                     success: function (data) {
-                        let doctorSelect = $('#doctor_id');
-                        doctorSelect.empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
-
                         $.each(data, function (key, doctor) {
                             doctorSelect.append('<option value="' + doctor.id + '">' + doctor.name + '</option>');
                         });
+                        doctorSelect.prop('disabled', false);
                     }
                 });
             }
         });
 
+        // إخفاء خيار "Select Doctor" عند الاختيار
         $('#doctor_id').on('change', function () {
-            // إخفاء خيار "Select Doctor"
             $(this).find('option:first').hide();
         });
 
+        // تهيئة الصفحة: عطّل القوائم التابعة إذا لا يوجد عيادة محددة
         $(document).ready(function () {
-            const selectedClinicId = $('#clinic_id').val();
-            const selectedSpecialtyId = '{{ $specialty_id ?? '' }}';
-            const selectedDoctorId = '{{ $doctor_id ?? '' }}';
+            const selectedClinicId     = $('#clinic_id').val();
+            const selectedDepartmentId = '{{ $department_id ?? '' }}';
+            const selectedDoctorId     = '{{ $doctor_id ?? '' }}';
 
-            if (selectedClinicId) {
-                // جلب التخصصات بناءً على العيادة
-                $.ajax({
-                    url: '/get-specialties-by-clinic/' + selectedClinicId,
-                    type: 'GET',
-                    success: function (data) {
-                        let specialtySelect = $('#specialty_id');
-                        specialtySelect.empty().append('<option value="" disabled hidden>Select Specialty</option>');
-
-                        $.each(data, function (key, specialty) {
-                            let selected = (specialty.id == selectedSpecialtyId) ? 'selected' : '';
-                            specialtySelect.append('<option value="' + specialty.id + '" ' + selected + '>' + specialty.name + '</option>');
-                        });
-
-                        // إذا كان يوجد تخصص محدد مسبقًا، جلب الأطباء
-                        if (selectedSpecialtyId) {
-                            $.ajax({
-                                url: '/get-doctors-by-clinic-and-specialty',
-                                type: 'GET',
-                                data: {
-                                    clinic_id: selectedClinicId,
-                                    specialty_id: selectedSpecialtyId
-                                },
-                                success: function (doctors) {
-                                    let doctorSelect = $('#doctor_id');
-                                    doctorSelect.empty().append('<option value="" disabled hidden>Select Doctor</option>');
-
-                                    $.each(doctors, function (key, doctor) {
-                                        let selected = (doctor.id == selectedDoctorId) ? 'selected' : '';
-                                        doctorSelect.append('<option value="' + doctor.id + '" ' + selected + '>' + doctor.name + '</option>');
-                                    });
-                                }
-                            });
-                        }
-                    }
-                });
+            if (!selectedClinicId) {
+                $('#department_id').prop('disabled', true).empty()
+                    .append('<option value="" disabled selected hidden>Select Department</option>');
+                $('#doctor_id').prop('disabled', true).empty()
+                    .append('<option value="" disabled selected hidden>Select Doctor</option>');
+                return;
             }
+
+            // في حالة التعديل: حمّل الأقسام للعيادة المحددة ثم عيّن التخصص المختار
+            $.ajax({
+                url: '/admin/get-departments-by-clinic/' + selectedClinicId,
+                type: 'GET',
+                success: function (data) {
+                    let departmentSelect = $('#department_id');
+                    departmentSelect.empty().append('<option value="" disabled hidden>Select Department</option>');
+
+                    $.each(data, function (key, department) {
+                        let selected = (department.id == selectedDepartmentId) ? 'selected' : '';
+                        departmentSelect.append('<option value="' + department.id + '" ' + selected + '>' + department.name + '</option>');
+                    });
+                    departmentSelect.prop('disabled', false);
+
+                    // إذا كان يوجد تخصص محدد مسبقًا، حمّل الأطباء واضبط المختار
+                    if (selectedDepartmentId) {
+                        $.ajax({
+                            url: '/admin/get-doctors-by-clinic-and-department',
+                            type: 'GET',
+                            data: {
+                                clinic_id: selectedClinicId,
+                                department_id: selectedDepartmentId
+                            },
+                            success: function (doctors) {
+                                let doctorSelect = $('#doctor_id');
+                                doctorSelect.empty().append('<option value="" disabled hidden>Select Doctor</option>');
+
+                                $.each(doctors, function (key, doctor) {
+                                    let selected = (doctor.id == selectedDoctorId) ? 'selected' : '';
+                                    doctorSelect.append('<option value="' + doctor.id + '" ' + selected + '>' + doctor.name + '</option>');
+                                });
+                                doctorSelect.prop('disabled', false);
+                            }
+                        });
+                    } else {
+                        // ما في تخصص محدد مسبقًا: خلّي قائمة الأطباء معطّلة
+                        $('#doctor_id').prop('disabled', true).empty()
+                            .append('<option value="" disabled selected hidden>Select Doctor</option>');
+                    }
+                }
+            });
         });
 
         function changeWeek(direction) {
-            event.preventDefault();
-            let offsetField = document.getElementById('week_offset');
-            let currentOffset = parseInt(offsetField.value);
-            offsetField.value = currentOffset + direction;
-            document.getElementById('doctor-schedule-form').submit();
-        }
-    </script>
+            // تأكد إنهم مش disabled عشان يروحوا مع POST
+            $('#department_id, #doctor_id').prop('disabled', false);
+
+            var form        = document.getElementById('doctor-schedule-form');
+            var offsetField = document.getElementById('week_offset');
+
+            // لو (offset) مش موجود لأي سبب، أنشئه
+            if (!offsetField) {
+                offsetField       = document.createElement('input');
+                offsetField.type  = 'hidden';
+                offsetField.name  = 'offset';
+                offsetField.id    = 'week_offset';
+                offsetField.value = '0';
+                form.appendChild(offsetField);
+            }
+
+            var current = parseInt(offsetField.value || '0', 10);
+            offsetField.value = (isNaN(current) ? 0 : current) + Number(direction);
+
+            form.submit();
+            }
+        </script>
 @endsection

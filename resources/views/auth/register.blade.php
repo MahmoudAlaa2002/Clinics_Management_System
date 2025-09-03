@@ -147,7 +147,7 @@
             } else {
                 $.ajax({
                     method: 'post',
-                    url: '/register',
+                    url: "{{ route('register') }}",
                     data: {
                         name: name,
                         email: email,
@@ -170,7 +170,7 @@
                             let userId = response.user_id;
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Account has been created successfully',
+                                text: 'Account Has Been Created Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
@@ -184,3 +184,6 @@
     });
 </script>
 @endsection
+
+
+

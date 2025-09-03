@@ -9,28 +9,34 @@ class Clinic extends Model{
     protected $fillable = [
         'name',
         'location',
-        'doctor_in_charge',
-        'clinic_phone',
+        'email',
+        'phone',
         'opening_time',
         'closing_time',
         'working_days',
-        'specialties',
         'description',
         'status',
     ];
 
 
-    public function specialties(){
-        return $this->belongsToMany(Specialty::class, 'clinic_specialties'); // اسم الجدول الوسيط
+    public function departments(){
+        return $this->belongsToMany(Department::class, 'clinic_department'); // اسم الجدول الوسيط
+    }
+
+    public function clinicDepartments() {
+        return $this->hasMany(ClinicDepartment::class);
     }
 
 
     public function doctors(){
-        return $this->hasMany(Doctor::class);
-    }
-
-    public function doctor(){
-        return $this->belongsTo(Doctor::class, 'doctor_in_charge');
+        return $this->hasManyThrough(
+            Doctor::class,
+            Employee::class,
+            'clinic_id',       // مفتاح خارجي في employees يشير إلى العيادة
+            'employee_id',     // مفتاح خارجي في doctors يشير إلى الموظف
+            'id',              // المفتاح الأساسي في clinics
+            'id'               // المفتاح الأساسي في employees
+        );
     }
 
 

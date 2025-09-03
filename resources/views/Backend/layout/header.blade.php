@@ -3,7 +3,7 @@
         <a href="{{ Route('dashboard') }}" class="logo">
             <div class="d-flex align-items-center">
                 <img src="{{ asset('assets/img/logo.png') }}" width="35" height="35" alt="">
-                <<span><strong>CMS</strong></span>
+                <span><strong>CMS</strong></span>
             </div>
         </a>
     </div>
@@ -105,6 +105,7 @@
                 </span>
             </a>
             <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ route('home') }}">Home</a>
                 <a class="dropdown-item" href="{{ route('my_profile') }}">My Profile</a>
                 <a class="dropdown-item" href="{{ route('edit_profile') }}">Edit Profile</a>
                 <a class="dropdown-item" href="{{ Route('logout') }}">Logout</a>

@@ -53,6 +53,16 @@
                         </div>
 
                         <div class="col-sm-6">
+                            <label>Phone <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
                             <label>Email <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -79,16 +89,6 @@
                                     <span class="input-group-text"><i class="fa fa-lock"></i></span>
                                 </div>
                                 <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Enter new confirm password (optional)">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Phone <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
                             </div>
                         </div>
 
@@ -133,11 +133,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Short Biography <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $user->short_biography }}</textarea>
-                    </div>
-
                     <div class="text-center m-t-20">
                         <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">Edit Admin Profile</button>
                     </div>
@@ -162,9 +157,8 @@
                 let phone = $('#phone').val().trim();
                 let address = $('#address').val().trim();
                 let gender = $('input[name="gender"]:checked').val();
-                let short_biography = $('#short_biography').val().trim();
                 let image = document.querySelector('#image').files[0];
-                
+
 
                 if (name == '' || date_of_birth == '' || email == '' || phone == '' || address == '' || gender == undefined) {
                     Swal.fire({
@@ -186,7 +180,6 @@
                 formData.append('phone', phone);
                 formData.append('address', address);
                 formData.append('gender', gender);
-                formData.append('short_biography', short_biography);
                 if (image) {
                     formData.append('image', image);
                 }
@@ -209,7 +202,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = '/my_profile';
+                                window.location.href = '/admin/my_profile';
                             });
                         }
                     }

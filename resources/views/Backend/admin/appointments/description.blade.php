@@ -130,8 +130,8 @@
                         </div>
 
                         <div class="detail-box">
-                            <div class="detail-title"><i class="fas fa-stethoscope"></i> Specialty</div>
-                            <div class="detail-value">{{ $appointment->specialty->name }}</div>
+                            <div class="detail-title"><i class="fas fa-stethoscope"></i> Department</div>
+                            <div class="detail-value">{{ $appointment->department->name }}</div>
                         </div>
 
                         <div class="detail-box">

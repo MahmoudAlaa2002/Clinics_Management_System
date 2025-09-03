@@ -4,7 +4,7 @@
             <td style="font-weight: bold;">{{ $appointment->id }}</td>
             <td>{{ $appointment->patient->name }}</td>
             <td>{{ $appointment->clinic->name }}</td>
-            <td>{{ $appointment->specialty->name }}</td>
+            <td>{{ $appointment->department->name }}</td>
             <td>{{ $appointment->doctor->name }}</td>
             <td>
                 <span class="badge badge-light" style="font-size: 14px;">
@@ -40,7 +40,7 @@
 @else
     <tr>
         <td colspan="9" class="p-4 text-center">
-            <strong style="font-size: 18px; color: gray;">No appointments found</strong>
+            <strong style="font-size: 18px; color: gray;">No Appointments Found</strong>
         </td>
     </tr>
 @endif

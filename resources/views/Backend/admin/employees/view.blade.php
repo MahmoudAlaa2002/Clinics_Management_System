@@ -59,7 +59,7 @@
                                     @foreach ($employees as $employee)
                                         <tr>
                                             <td>{{ $employee->id }}</td>
-                                            <td>{{ $employee->name }}</td>
+                                            <td>{{ $employee->user->name }}</td>
                                             <td>{{ $employee->job_title->name }}</td>
                                             <td>{{ $employee->user->email }}</td>
                                             <td>{{ $employee->user->phone }}</td>
@@ -99,7 +99,7 @@
     <script>
         $(document).on('click', '.delete-employee', function () {
             let employeeId = $(this).data('id');
-            let url = `/delete/employee/${employeeId}`;
+            let url = `/admin/delete/employee/${employeeId}`;
 
             Swal.fire({
                 title: 'Are you sure?',

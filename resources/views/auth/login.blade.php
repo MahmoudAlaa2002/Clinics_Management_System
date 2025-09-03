@@ -112,7 +112,7 @@
             } else {
                 $.ajax({
                     method: 'post',
-                    url: '/user/login',
+                    url: "{{ route('user_login') }}",
                     data: {
                         email: email,
                         password: password
@@ -134,14 +134,17 @@
 
                         } else if (response.data === 3) {
                             let userId = response.user_id;
-                            window.location.href = '/doctor/dashboard/' + userId;
+                            window.location.href = '/department-manager/dashboard/' + userId;
 
                         } else if (response.data === 4) {
                             let userId = response.user_id;
-                            window.location.href = '/employee/dashboard/' + userId;
+                            window.location.href = '/doctor/dashboard/' + userId;
 
                         } else if (response.data === 5) {
+                            let userId = response.user_id;
+                            window.location.href = '/employee/dashboard/' + userId;
 
+                        } else if (response.data === 6) {
                             let userId = response.user_id;
                             window.location.href = '/patient/dashboard/' + userId;
                         } else {
@@ -154,4 +157,15 @@
     });
 </script>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
 

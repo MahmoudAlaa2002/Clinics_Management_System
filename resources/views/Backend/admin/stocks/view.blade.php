@@ -99,7 +99,7 @@
 <script>
     $(document).on('click', '.delete-medication-stock', function () {
         let medicationStockId = $(this).data('id');
-        let url = `/delete/stock/${medicationStockId}`;
+        let url = `/admin/delete/stock/${medicationStockId}`;
 
         Swal.fire({
             title: 'Are you sure?',

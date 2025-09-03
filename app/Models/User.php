@@ -21,15 +21,21 @@ class User extends Authenticatable{
     protected $fillable = [
         'name',
         'email',
-        'password',
         'phone',
-        'address',
-        'role',
+        'password',
         'image',
+        'address',
         'date_of_birth',
         'gender',
-        'short_biography',
     ];
+
+    protected static function booted(){
+        static::deleting(function ($user) {
+            $user->roles()->detach();     // هذا السطر يحذف الإدخالات من جدول model_has_roles
+        });
+    }
+
+
 
     public function doctor(){
         return $this->hasOne(Doctor::class);

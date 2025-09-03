@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class VendorInvoice extends Model{
-    
+
     protected $fillable = [
         'vendor_id',
         'clinic_id',
@@ -26,5 +26,9 @@ class VendorInvoice extends Model{
 
     public function expenses(){
         return $this->hasMany(Expense::class, 'vendor_invoice_id');
+    }
+
+    public function items(){
+        return $this->hasMany(VendorInvoiceItem::class, 'invoice_id');
     }
 }

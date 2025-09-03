@@ -14,8 +14,7 @@
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
-                <li class="menu-title">Main</li>
-
+                <li class="menu-title">Core Modules</li>
 
                 <li class="{{ Request::is('admin/dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}">
@@ -23,41 +22,83 @@
                     </a>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/add/clinic') || Request::is('admin/view/clinics') || Request::is('admin/edit/clinic/*') || Request::is('admin/description/clinic/*') ? 'active' : '' }}">
+                <li class="submenu {{
+                    Request::is('admin/add/clinic') ||
+                    Request::is('admin/view/clinics') ||
+                    Request::is('admin/edit/clinic/*') ||
+                    Request::is('admin/description/clinic/*') ||
+                    Request::is('admin/view/clinics/managers') ||
+                    Request::is('admin/profile/clinics/managers/*') ||
+                    Request::is('admin/edit/clinics/managers/*')
+                    ? 'active' : ''
+                }}">
                     <a href="#"><i class="fa fa-hospital"></i> <span> Clinics </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/clinic') || Request::is('admin/view/clinics') || Request::is('admin/edit/clinic/*') || Request::is('admin/description/clinic/*') ? '' : 'display: none;' }}">
+
+                    <ul style="{{
+                        Request::is('admin/add/clinic') ||
+                        Request::is('admin/view/clinics') ||
+                        Request::is('admin/edit/clinic/*') ||
+                        Request::is('admin/description/clinic/*') ||
+                        Request::is('admin/view/clinics/managers') ||
+                        Request::is('admin/profile/clinics/managers/*') ||
+                        Request::is('admin/edit/clinics/managers/*')
+                        ? '' : 'display: none;'
+                    }}">
                         <li>
-                            <a href="{{ route('add_clinic') }}" class="{{ Request::is('admin/add/clinic') ? 'active' : '' }}">Add Clinic</a>
+                            <a href="{{ route('add_clinic') }}"
+                               class="{{ Request::is('admin/add/clinic') ? 'active' : '' }}">
+                               Add Clinic
+                            </a>
                         </li>
+
                         <li>
-                            <a href="{{ route('view_clinics') }}" class="{{ Request::is('admin/view/clinics') || Request::is('admin/edit/clinic/*') || Request::is('admin/description/clinic/*') ? 'active' : '' }}">View Clinics</a>
+                            <a href="{{ route('view_clinics') }}"
+                               class="{{ Request::is('admin/view/clinics') || Request::is('admin/edit/clinic/*') || Request::is('admin/description/clinic/*') ? 'active' : '' }}">
+                               View Clinics
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('view_clinics_managers') }}"
+                               class="{{ Request::is('admin/view/clinics/managers') || Request::is('admin/profile/clinics/managers/*') || Request::is('admin/edit/clinics/managers/*') ? 'active' : '' }}">
+                               View Clinics Managers
+                            </a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/add/specialty') || Request::is('admin/view/specialties') || Request::is('admin/edit/specialty/*') || Request::is('admin/description/specialty/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fas fa-stethoscope"></i> <span> Specialty </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/specialty') || Request::is('admin/view/specialties') || Request::is('admin/edit/specialty/*') || Request::is('admin/description/specialty/*') ? '' : 'display: none;' }}">
+                <li class="submenu {{ Request::is('admin/add/department') || Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/description/department/*') || Request::is('admin/view/department-managers') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-stethoscope"></i> <span> Departments </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/add/department') || Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/description/department/*') || Request::is('admin/view/department-managers') ? '' : 'display: none;' }}">
+
                         <li>
-                            <a href="{{ route('add_specialty') }}" class="{{ Request::is('admin/add/specialty') ? 'active' : '' }}">Add Specialty</a>
+                            <a href="{{ route('add_department') }}" class="{{ Request::is('admin/add/department') ? 'active' : '' }}">
+                                Add Department
+                            </a>
                         </li>
+
                         <li>
-                            <a href="{{ route('view_specialties') }}" class="{{ Request::is('admin/view/specialties') || Request::is('admin/edit/specialty/*') || Request::is('admin/description/specialty/*') ? 'active' : '' }}">View Specialty</a>
+                            <a href="{{ route('view_departments') }}" class="{{ Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/description/department/*') ? 'active' : '' }}">
+                                View Department
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('view_department_managers') }}" class="{{ Request::is('admin/view/department-managers') ? 'active' : '' }}">
+                                Department Managers
+                            </a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*') || Request::is('admin/view/clinic/managers') || Request::is('admin/search/doctor/schedules') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/doctor/schedules') ? 'active' : '' }}">
                     <a href="#"><i class="fa-solid fa-user-doctor"></i> <span> Doctors </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*') || Request::is('admin/view/clinic/managers') || Request::is('admin/search/doctor/schedules') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/doctor/schedules') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('add_doctor') }}" class="{{ Request::is('admin/add/doctor') ? 'active' : '' }}">Add Doctor</a>
                         </li>
                         <li>
                             <a href="{{ route('view_doctors') }}" class="{{ Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*') ? 'active' : '' }}">View Doctors</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_clinic_managers') }}" class="{{ Request::is('admin/view/clinic/managers') ? 'active' : '' }}">View Clinic Managers</a>
                         </li>
                         <li>
                             <a href="{{ route('search_doctor_schedules') }}" class="{{ Request::is('admin/search/doctor/schedules') ? 'active' : '' }}">Doctor Schedules</a>
@@ -73,6 +114,18 @@
                         </li>
                         <li>
                             <a href="{{ route('view_patients') }}" class="{{ Request::is('admin/view/patients') || Request::is('admin/edit/patient/*') || Request::is('admin/profile/patient/*') ? 'active' : '' }}">View Patients</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="submenu {{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-user"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('add_employee') }}" class="{{ Request::is('admin/add/employee') ? 'active' : '' }}">Add Employee</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_employees') }}" class="{{ Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">View Employee</a>
                         </li>
                     </ul>
                 </li>
@@ -93,81 +146,6 @@
                     </ul>
                 </li>
 
-
-                <li class="submenu {{ Request::is('admin/add/medication') || Request::is('admin/view/medications') || Request::is('admin/edit/medication/*') || Request::is('admin/description/medication/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fas fa-capsules"></i> <span> Medications </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/medication') || Request::is('admin/view/medications') || Request::is('admin/edit/medication/*') || Request::is('admin/description/medication/*') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('add_medication') }}" class="{{ Request::is('admin/add/medication') ? 'active' : '' }}">Add Medication</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_medications') }}" class="{{ Request::is('admin/view/medications') || Request::is('admin/edit/medication/*') || Request::is('admin/description/medication/*') ? 'active' : '' }}">View Medications</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="submenu {{ Request::is('admin/view/prescriptions') || Request::is('admin/prescription_items/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fa fa-file-medical"></i> <span> Prescriptions </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/view/prescriptions') || Request::is('admin/prescription_items/*') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('view_prescriptions') }}" class="{{ Request::is('admin/view/prescriptions') ? 'active' : '' }}">View Prescriptions</a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="submenu {{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fas fa-user"></i> <span> Employee </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('add_employee') }}" class="{{ Request::is('admin/add/employee') ? 'active' : '' }}">Add Employee</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_employees') }}" class="{{ Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">View Employee</a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="submenu {{ Request::is('admin/add/toStock') || Request::is('admin/view/stocks') || Request::is('admin/expired/alerts') || Request::is('admin/edit/stock/*') || Request::is('admin/description/stock/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fas fa-warehouse"></i> <span> Medicine Stock </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/toStock') || Request::is('admin/view/stocks') || Request::is('admin/expired/alerts') || Request::is('admin/edit/stock/*') || Request::is('admin/description/stock/*') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('add_to_stock') }}" class="{{ Request::is('admin/add/toStock') ? 'active' : '' }}">Add Stock</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_stocks') }}" class="{{ Request::is('admin/view/stocks') || Request::is('admin/edit/stock/*') || Request::is('admin/description/stock/*') ? 'active' : '' }}">View Stock</a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="submenu {{ Request::is('admin/view/invoices') || Request::is('admin/view/payments') || Request::is('admin/view/vendors/invoices') || Request::is('admin/view/expenses') ? 'active' : '' }}">
-                    <a href="#"><i class="fa fa-money"></i> <span> Finance </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/view/invoices') || Request::is('admin/view/payments') || Request::is('admin/view/vendors/invoices') || Request::is('admin/view/expenses') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('view_invoices') }}" class="{{ Request::is('admin/view/invoices') ? 'active' : '' }}">Patient Invoices</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_payments') }}" class="{{ Request::is('admin/view/payments') ? 'active' : '' }}">Patient Payments</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_vendors_invoices') }}" class="{{ Request::is('admin/view/vendors/invoices') ? 'active' : '' }}">Vendor Invoices</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('view_expenses') }}" class="{{ Request::is('admin/view/expenses') ? 'active' : '' }}">Expenses</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="submenu {{ Request::is('admin/view/reports') ? 'active' : '' }}">
-                    <a href="#"><i class="fa fa-file-alt"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/view/reports') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('view_reports') }}" class="{{ Request::is('admin/view/reports') ? 'active' : '' }}">View Reports</a>
-                        </li>
-                    </ul>
-                </li>
 
                 {{-- <li class="submenu">
                     <a href="#"><i class="fa fa-book"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
@@ -302,6 +280,159 @@
                     </ul>
                 </li> --}}
             </ul>
+
+            <ul>
+                <li class="menu-title">Medical Operations</li>
+
+                {{-- <li class="submenu {{ Request::is('admin/add/ervice') || Request::is('admin/view/services') || Request::is('admin/edit/ervice/*') || Request::is('admin/profile/service/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-procedures"></i> <span> Services </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/add/service') || Request::is('admin/view/services') || Request::is('admin/edit/service/*') || Request::is('admin/profile/service/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('add_service') }}" class="{{ Request::is('admin/add/service') ? 'active' : '' }}">Add Service</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_services') }}" class="{{ Request::is('admin/view/services') || Request::is('admin/edit/service/*') || Request::is('admin/profile/service/*') ? 'active' : '' }}">View Service</a>
+                        </li>
+                    </ul>
+                </li> --}}
+
+                <li class="submenu {{ Request::is('admin/add/medication') || Request::is('admin/view/medications') || Request::is('admin/edit/medication/*') || Request::is('admin/description/medication/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-capsules"></i> <span> Medications </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/add/medication') || Request::is('admin/view/medications') || Request::is('admin/edit/medication/*') || Request::is('admin/description/medication/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('add_medication') }}" class="{{ Request::is('admin/add/medication') ? 'active' : '' }}">Add Medication</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_medications') }}" class="{{ Request::is('admin/view/medications') || Request::is('admin/edit/medication/*') || Request::is('admin/description/medication/*') ? 'active' : '' }}">View Medications</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="submenu {{ Request::is('admin/view/prescriptions') || Request::is('admin/prescription_items/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fa fa-file-medical"></i> <span> Prescriptions </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/view/prescriptions') || Request::is('admin/prescription_items/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('view_prescriptions') }}" class="{{ Request::is('admin/view/prescriptions') ? 'active' : '' }}">View Prescriptions</a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="submenu {{ Request::is('admin/add/toStock') || Request::is('admin/view/stocks') || Request::is('admin/expired/alerts') || Request::is('admin/edit/stock/*') || Request::is('admin/description/stock/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-warehouse"></i> <span> Medicine Stock </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/add/toStock') || Request::is('admin/view/stocks') || Request::is('admin/expired/alerts') || Request::is('admin/edit/stock/*') || Request::is('admin/description/stock/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('add_to_stock') }}" class="{{ Request::is('admin/add/toStock') ? 'active' : '' }}">Add Stock</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_stocks') }}" class="{{ Request::is('admin/view/stocks') || Request::is('admin/edit/stock/*') || Request::is('admin/description/stock/*') ? 'active' : '' }}">View Stock</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul>
+                <li class="menu-title">Administration</li>
+
+                <li class="submenu {{
+                    Request::is('admin/view/invoices') ||
+                    Request::is('admin/details/invoice/*') ||
+                    Request::is('admin/edit/invoice/*') ||
+                    Request::is('admin/view/payments') ||
+                    Request::is('admin/details/payment/*') ||
+                    Request::is('admin/edit/payment/*') ||
+                    Request::is('admin/edit/payment/Details/*') ||
+                    Request::is('admin/view/vendors/invoices') ||
+                    Request::is('admin/details/vendor/invoice/*') ||
+                    Request::is('admin/edit/vendor/invoice/*') ||
+                    Request::is('admin/view/expenses') ||
+                    Request::is('admin/details/expense/*') ||
+                    Request::is('admin/edit/expense/*') ||
+                    Request::is('admin/edit/expense/Details/*')
+                    ? 'active' : '' }}">
+
+                    <a href="#"><i class="fa fa-money"></i> <span> Finance </span> <span class="menu-arrow"></span></a>
+
+                    <ul style="{{
+                        Request::is('admin/view/invoices') ||
+                        Request::is('admin/details/invoice/*') ||
+                        Request::is('admin/edit/invoice/*') ||
+                        Request::is('admin/view/payments') ||
+                        Request::is('admin/details/payment/*') ||
+                        Request::is('admin/edit/payment/*') ||
+                        Request::is('admin/edit/payment/Details/*') ||
+                        Request::is('admin/view/vendors/invoices') ||
+                        Request::is('admin/details/vendor/invoice/*') ||
+                        Request::is('admin/edit/vendor/invoice/*') ||
+                        Request::is('admin/view/expenses') ||
+                        Request::is('admin/details/expense/*') ||
+                        Request::is('admin/edit/expense/*') ||
+                        Request::is('admin/edit/expense/Details/*')
+                        ? '' : 'display: none;' }}">
+
+                        <li>
+                            <a href="{{ route('view_invoices') }}"
+                                class="{{ Request::is('admin/view/invoices') || Request::is('admin/details/invoice/*') || Request::is('admin/edit/invoice/*') ? 'active' : '' }}">
+                                Patient Invoices
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_payments') }}"
+                                class="{{ Request::is('admin/view/payments') || Request::is('admin/details/payment/*') || Request::is('admin/edit/payment/*') || Request::is('admin/edit/payment/Details/*') ? 'active' : '' }}">
+                                Patient Payments
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_vendors_invoices') }}"
+                                class="{{ Request::is('admin/view/vendors/invoices') || Request::is('admin/details/vendor/invoice/*') || Request::is('admin/edit/vendor/invoice/*') ? 'active' : '' }}">
+                                Vendor Invoices
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_expenses') }}"
+                                class="{{ Request::is('admin/view/expenses') || Request::is('admin/details/expense/*') || Request::is('admin/edit/expense/*') || Request::is('admin/edit/expense/Details/*') ? 'active' : '' }}">
+                                Expenses
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="submenu {{ Request::is('admin/view/reports') ? 'active' : '' }}">
+                    <a href="#"><i class="fa fa-file-alt"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/view/reports') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('view_reports') }}" class="{{ Request::is('admin/view/reports') ? 'active' : '' }}">View Reports</a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul>
+                <li class="menu-title">System</li>
+
+                <li class="submenu {{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('add_employee') }}" class="{{ Request::is('admin/add/employee') ? 'active' : '' }}">Add Employee</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('view_employees') }}" class="{{ Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">View Employee</a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
         </div>
     </div>
 </div>
+
+
+
+{{-- System
+- Settings
+- Notifications
+- Audit Logs
+- Support Tickets --}}

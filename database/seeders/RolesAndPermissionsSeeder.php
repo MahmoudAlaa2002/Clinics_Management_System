@@ -30,6 +30,7 @@ class RolesAndPermissionsSeeder extends Seeder{
         // Create roles
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $clinicManager = Role::firstOrCreate(['name' => 'clinic_manager']);
+        $departmentManager = Role::firstOrCreate(['name' => 'department_manager']);
         $doctor = Role::firstOrCreate(['name' => 'doctor']);
         $employee = Role::firstOrCreate(['name' => 'employee']);
         $patient = Role::firstOrCreate(['name' => 'patient']);
@@ -39,6 +40,14 @@ class RolesAndPermissionsSeeder extends Seeder{
 
         $clinicManager->syncPermissions([
             'manage clinics',
+            'view appointments',
+            'create appointments',
+            'edit patients',
+            'view reports',
+            'access dashboard',
+        ]);
+
+        $departmentManager->syncPermissions([
             'view appointments',
             'create appointments',
             'edit patients',

@@ -39,7 +39,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-user"></i></span>
                                 </div>
-                              <input type="text" class="form-control" id="name" name="name" value="{{ $employee->name }}">
+                              <input type="text" class="form-control" id="name" name="name" value="{{ $employee->user->name }}">
                             </div>
                         </div>
 
@@ -72,13 +72,13 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Specialty <span class="text-danger">*</span></label>
+                                <label>Department <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
                                     </div>
-                                    <select id="specialty_id" name="specialty_id" class="form-control">
-                                        <option disabled selected hidden>Select Specialty</option>
+                                    <select id="department_id" name="department_id" class="form-control">
+                                        <option disabled selected hidden>Select Department</option>
                                     </select>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" alue="female" {{ $employee->user->gender == 'female' ? 'checked' : '' }}>Female
+                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $employee->user->gender == 'female' ? 'checked' : '' }}>Female
                                     </label>
                                 </div>
                             </div>
@@ -184,7 +184,7 @@
 
                     <div class="form-group">
                         <label>Short Biography </label>
-                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $employee->user->short_biography }}</textarea>
+                        <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $employee->short_biography }}</textarea>
                     </div>
 
 
@@ -224,7 +224,7 @@
                 let name = $('#name').val().trim();
                 let date_of_birth = $('#date_of_birth').val().trim();
                 let clinic_id = $('#clinic_id').val();
-                let specialty_id = $('#specialty_id').val();
+                let department_id = $('#department_id').val();
                 let job_title_id = $('#job_title_id').val();
                 let email = $('#email').val();
                 let password = $('#password').val();
@@ -243,7 +243,7 @@
                 formData.append('name', name);
                 formData.append('date_of_birth', date_of_birth);
                 formData.append('clinic_id', clinic_id);
-                formData.append('specialty_id', specialty_id);
+                formData.append('department_id', department_id);
                 formData.append('job_title_id', job_title_id);
                 formData.append('email', email);
                 formData.append('password', password);
@@ -257,7 +257,7 @@
                     formData.append('image', image);
                 }
 
-                if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('specialty_id') || !isValidSelectValue('job_title_id') || email === '' || phone === '' ||address === '' || gender === undefined) {
+                if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || !isValidSelectValue('job_title_id') || email === '' || phone === '' ||address === '' || gender === undefined) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
@@ -294,11 +294,11 @@
                         } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Employee Has Been Added Successfully',
+                                text: 'Employee Has Been Edited Successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = '/view/employees';
+                                window.location.href = '/admin/view/employees';
                             });
                         }
                     }
@@ -307,19 +307,19 @@
         });
 
         let currentClinicId = $('#clinic_id').val();
-        let selectedSpecialtyId = "{{ $employee->specialty_id }}";
+        let selectedDepartmentId = "{{ $employee->department_id }}";
 
         if (currentClinicId) {
             $.ajax({
-                url: '/get-specialties-by-clinic/' + currentClinicId,
+                url: '/admin/get-departments-by-clinic/' + currentClinicId,
                 type: 'GET',
                 success: function (data) {
-                    let specialtySelect = $('#specialty_id');
-                    specialtySelect.empty().append('<option value="" disabled hidden>Select Specialty</option>');
+                    let departmentSelect = $('#department_id');
+                    departmentSelect.empty().append('<option value="" disabled hidden>Select Department</option>');
 
-                    $.each(data, function (index, specialty) {
-                        let selected = specialty.id == selectedSpecialtyId ? 'selected' : '';
-                        specialtySelect.append('<option value="' + specialty.id + '" ' + selected + '>' + specialty.name + '</option>');
+                    $.each(data, function (index, department) {
+                        let selected = department.id == selectedDepartmentId ? 'selected' : '';
+                        departmentSelect.append('<option value="' + department.id + '" ' + selected + '>' + department.name + '</option>');
                     });
                 }
             });
@@ -331,14 +331,14 @@
 
         if (clinicId) {
             $.ajax({
-                url: '/get-specialties-by-clinic/' + clinicId,
+                url: '/admin/get-departments-by-clinic/' + clinicId,
                 type: 'GET',
                 success: function (data) {
-                    let specialtySelect = $('#specialty_id');
-                    specialtySelect.empty().append('<option value="" disabled selected hidden>Select Specialty</option>');
+                    let departmentSelect = $('#department_id');
+                    departmentSelect.empty().append('<option value="" disabled selected hidden>Select Department</option>');
 
-                    $.each(data, function (index, specialty) {
-                        specialtySelect.append('<option value="' + specialty.id + '">' + specialty.name + '</option>');
+                    $.each(data, function (index, department) {
+                        departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
                     });
                 }
             });

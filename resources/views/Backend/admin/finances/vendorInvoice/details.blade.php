@@ -134,13 +134,13 @@
 
 <div class="invoice-card">
     <div class="invoice-header">
-        <img src="{{ asset($vendorInvoice->vendor->logo) }}" alt="Clinic Logo">
+        <img src="{{ asset($vendorInvoices->vendor->logo) }}" alt="Clinic Logo">
         <div class="invoice-title">Vendor Invoice</div>
     </div>
 
     <div class="invoice-meta">
-        <div style="color: black;">Invoice ID : <strong>#IN{{ $vendorInvoice->id }}</strong></div>
-        <div style="color: black;">Issue Date : <strong>{{ \Carbon\Carbon::parse($vendorInvoice->invoice_date)->format('Y-m-d') }}</strong></div>
+        <div style="color: black;">Invoice ID : <strong>#IN{{ $vendorInvoices->id }}</strong></div>
+        <div style="color: black;">Issue Date : <strong>{{ \Carbon\Carbon::parse($vendorInvoices->invoice_date)->format('Y-m-d') }}</strong></div>
     </div>
 
     <hr style="margin-top: 40px; border: 1.5px solid #111827;">
@@ -149,60 +149,61 @@
 
         <div class="invoice-item">
             <div class="label">vendor Name</div>
-            <div class="value">{{ $vendorInvoice->vendor->name ?? '---' }}</div>
+            <div class="value">{{ $vendorInvoices->vendor->name ?? '---' }}</div>
         </div>
 
         <div class="invoice-item">
             <div class="label">Clinic Name</div>
-            <div class="value">{{ $vendorInvoice->clinic->name ?? '---' }}</div>
+            <div class="value">{{ $vendorInvoices->clinic->name ?? '---' }}</div>
         </div>
 
         <div class="invoice-item">
             <div class="label">Total Amount</div>
-            <div class="value">$ {{ number_format($vendorInvoice->total_amount, 2) }}</div>
+            <div class="value">$ {{ number_format($vendorInvoices->total_amount, 2) }}</div>
         </div>
 
         <div class="invoice-item">
             <div class="label">Discount</div>
-            <div class="value">$ {{ number_format($vendorInvoice->discount, 2) }}</div>
+            <div class="value">$ {{ number_format($vendorInvoices->discount, 2) }}</div>
         </div>
 
         <div class="invoice-item">
             <div class="label">Final Amount</div>
-            <div class="value">$ {{ number_format($vendorInvoice->final_amount, 2) }}</div>
+            <div class="value">$ {{ number_format($vendorInvoices->final_amount, 2) }}</div>
         </div>
     </div>
 
-    {{-- @if($vendorInvoices->items && $vendorInvoices->items->count())
+    @if($vendorInvoices->items && $vendorInvoices->items->count())
         <h4 style="margin-top: 30px; font-weight: bold; color: #374151;">Vendor Invoice Items</h4>
         <table class="invoice-table">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Service</th>
-                    <th>Type</th>
-                    <th>Amount</th>
+                    <th>Service Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Amount</th>
                 </tr>
             </thead>
             <tbody>
                 @php $total = 0; @endphp
-                @foreach($patientInvoice->items as $index => $item)
-                    @php $total += $item->amount; @endphp
+                @foreach($vendorInvoices->items as $index => $item)
+                    @php $total += $item->total_amount; @endphp
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->service_name }}</td>
-                        <td style="text-transform: capitalize;">{{ $item->service_type }}</td>
-                        <td>${{ number_format($item->amount, 2) }}</td>
+                        <td style="text-transform: capitalize;">{{ $item->quantity }}</td>
+                        <td>${{ number_format($item->unit_price, 2) }}</td>
+                        <td>${{ number_format($item->total_amount, 2) }}</td>
                     </tr>
                 @endforeach
-                <!-- صف المجموع الكلي -->
                 <tr>
-                    <td colspan="3" style="border: none;"></td>
+                    <td colspan="4" style="border: none;"></td>
                     <td style="text-align: center; font-weight: bold;">Total = ${{ number_format($total, 2) }}</td>
                 </tr>
             </tbody>
         </table>
-    @endif --}}
+    @endif
 
     <div class="notes">
         <strong>Notes:</strong><br>

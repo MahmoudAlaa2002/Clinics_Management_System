@@ -178,37 +178,37 @@
     </div>
 
     @if($patientInvoice->items && $patientInvoice->items->count())
-    <h4 style="margin-top: 30px; font-weight: bold; color: #374151;">Invoice Items</h4>
-    <table class="invoice-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Service Name</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php $total = 0; @endphp
-            @foreach($patientInvoice->items as $index => $item)
-                @php $total += $item->total_amount; @endphp
+        <h4 style="margin-top: 30px; font-weight: bold; color: #374151;">Invoice Items</h4>
+        <table class="invoice-table">
+            <thead>
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->service_name }}</td>
-                    <td style="text-transform: capitalize;">{{ $item->quantity }}</td>
-                    <td>${{ number_format($item->unit_price, 2) }}</td>
-                    <td>${{ number_format($item->total_amount, 2) }}</td>
+                    <th>#</th>
+                    <th>Service Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Amount</th>
                 </tr>
-            @endforeach
-            <!-- صف المجموع الكلي -->
-            <tr>
-                <td colspan="4" style="border: none;"></td>
-                <td style="text-align: center; font-weight: bold;">Total = ${{ number_format($total, 2) }}</td>
-            </tr>
-        </tbody>
-    </table>
-@endif
+            </thead>
+            <tbody>
+                @php $total = 0; @endphp
+                @foreach($patientInvoice->items as $index => $item)
+                    @php $total += $item->total_amount; @endphp
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $item->service_name }}</td>
+                        <td style="text-transform: capitalize;">{{ $item->quantity }}</td>
+                        <td>${{ number_format($item->unit_price, 2) }}</td>
+                        <td>${{ number_format($item->total_amount, 2) }}</td>
+                    </tr>
+                @endforeach
+                <!-- صف المجموع الكلي -->
+                <tr>
+                    <td colspan="4" style="border: none;"></td>
+                    <td style="text-align: center; font-weight: bold;">Total = ${{ number_format($total, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    @endif
 
     <div class="notes">
         <strong>Notes:</strong><br>
