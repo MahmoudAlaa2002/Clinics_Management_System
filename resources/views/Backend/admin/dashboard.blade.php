@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'Admin Dashboard')
 
@@ -18,10 +18,20 @@
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
-                            <span class="dash-widget-bg4"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
+                            <span class="dash-widget-bg4"><i class="fas fa-building" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
                                 <h3>{{ $department_count }}</h3>
                                 <span class="widget-title4">Departments <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg3" style="background-color: #814e34;"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
+                            <div class="text-right dash-widget-info">
+                                <h3>{{ $specialty_count }}</h3>
+                                <span class="widget-title3" style="background-color: #814e34;">Specialty <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
@@ -68,15 +78,6 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
-                            <span class="dash-widget-bg3" style="background-color: #814e34;"><i class="fas fa-warehouse" aria-hidden="true"></i></span>
-                            <div class="text-right dash-widget-info">
-                                <h3>{{ $medicine_stock_count }}</h3>
-                                <span class="widget-title3" style="background-color: #814e34;">Service <i class="fa fa-check" aria-hidden="true"></i></span>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">

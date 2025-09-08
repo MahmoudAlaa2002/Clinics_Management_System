@@ -8,18 +8,13 @@ class Medication extends Model{
 
     protected $fillable = [
         'name',
-        'dosage_form_id',
-        'strength',
-        'image',
-        'description',
-        'purchase_price',
+        'form',
+        'category',
         'selling_price',
+        'expiration_date',
+        'description',
     ];
 
-
-    public function dosageForm(){
-        return $this->belongsTo(DosageForm::class);
-    }
 
     public function medicineStocks(){
         return $this->hasMany(MedicineStock::class);

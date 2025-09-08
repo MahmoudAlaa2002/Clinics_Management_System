@@ -13,6 +13,7 @@ class Appointment extends Model{
         'time',
         'status',
         'notes',
+        'consultation_fee',
     ];
 
     public function clinic(){

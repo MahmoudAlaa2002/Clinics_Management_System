@@ -7,10 +7,11 @@ use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Employee;
+use App\Models\JobTitle;
 use App\Models\Department;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-use App\Models\ClinicDepartment;
+use App\Models\EmployeeJobTitle;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,10 +30,11 @@ class DoctorController extends Controller{
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $imageName = 'doctors/' . time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('doctors'), $imageName);
+                $imageName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('assets/img/doctors'), $imageName);
+                $imagePath = 'assets/img/doctors/' . $imageName;
             } else {
-                $imageName = null;
+                $imagePath = null;
             }
 
             $user = User::create([
@@ -41,7 +43,7 @@ class DoctorController extends Controller{
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
                 'address' => $request->address,
-                'image' => $imageName,
+                'image' => $imagePath,
                 'date_of_birth' => $request->date_of_birth,
                 'gender' => $request->gender,
             ]);
@@ -50,21 +52,26 @@ class DoctorController extends Controller{
             $employee = Employee::create([
                 'user_id' => $user->id,
                 'clinic_id' => $request->clinic_id,
-                'job_title_id' => 3,
+                'department_id' => $request->department_id,
                 'work_start_time' => $request->work_start_time,
                 'work_end_time' => $request->work_end_time,
                 'working_days' => $request->working_days,
-                'hire_date' => now()->toDateString(),
                 'status' => $request->status,
                 'short_biography' => $request->short_biography,
             ]);
 
-            $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
+            $job_title_Id = JobTitle::where('name', 'doctor')->pluck('id')->first();
+            EmployeeJobTitle::create([
+                'employee_id' => $employee->id,
+                'job_title_id' => $job_title_Id ,
+                'hire_date' => now()->toDateString(),
+            ]);
+
             Doctor::create([
                 'employee_id' => $employee->id,
-                'clinic_department_id' => $clinicDepartmentId,
                 'qualification' => $request->qualification,
                 'experience_years' => $request->experience_years,
+                'specialty_id'       => $request->specialty_id,
             ]);
 
             return response()->json(['data' => 1]);
@@ -89,43 +96,53 @@ class DoctorController extends Controller{
         $filter  = $request->input('filter', '');
 
         $doctors = Doctor::with([
-            'clinicDepartment.clinic:id,name',
-            'clinicDepartment.department:id,name',
-            'employee:id,user_id,working_days,status',
-            'employee.user:id,name,address',
+            'specialty:id,name',
+            'employee:id,user_id,working_days,status,clinic_id,department_id',
+            'employee.user:id,name,address,image',
+            'employee.clinic:id,name',
+            'employee.department:id,name',
         ]);
 
         if ($keyword !== '') {
-            $lowerKeyword = strtolower($keyword);
-
             switch ($filter) {
-                case 'name':
+                case 'name': // البحث باسم المستخدم
                     $doctors->whereHas('employee.user', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', $keyword.'%');
+                        $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'clinic':
-                    $doctors->whereHas('clinicDepartment.clinic', function ($q) use ($keyword) {
-              $q->where('name', 'LIKE', $keyword.'%');
+                case 'clinic': // البحث باسم العيادة
+                    $doctors->whereHas('employee.clinic', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'department':
-                    $doctors->whereHas('clinicDepartment.department', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', $keyword.'%');
+                case 'department': // البحث باسم القسم
+                    $doctors->whereHas('employee.department', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'status':
+                case 'status': // البحث حسب حالة الموظف
                     $doctors->whereHas('employee', function ($q) use ($keyword) {
-                        $q->where('status', 'LIKE', $keyword.'%');
+                        $q->where('status', 'LIKE', "{$keyword}%");
                     });
+                    break;
+
+                case 'specialty': // البحث باسم التخصص
+                    $doctors->whereHas('specialty', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "{$keyword}%");
+                    });
+                    break;
+
+                case 'qualification': // البحث بالمؤهل العلمي
+                    $doctors->where('qualification', 'LIKE', "{$keyword}%");
                     break;
             }
         }
 
         $doctors = $doctors->orderBy('id')->paginate(12);
+
         $view = view('Backend.admin.doctors.searchDoctor', compact('doctors'))->render();
         $pagination = $doctors->total() > 12 ? $doctors->links('pagination::bootstrap-4')->render() : '';
 
@@ -141,8 +158,11 @@ class DoctorController extends Controller{
 
 
 
+
     public function profileDoctor($id){
-        $doctor = Doctor::with(['clinic','department','employee'])->findOrFail($id);
+        $doctor = Doctor::with(['employee.user','employee.department','employee.clinic'])->findOrFail($id);
+
+        // dd($doctor->employee->user->name);
         return view('Backend.admin.doctors.profile', compact('doctor'));
     }
 
@@ -170,11 +190,12 @@ class DoctorController extends Controller{
         if (User::where('name', $request->name)->where('id', '!=', $currentUserId)->exists() || User::where('email', $request->email)->where('id', '!=', $currentUserId)->exists()) {
             return response()->json(['data' => 0]);
         }else{
-            $imageName = $user->image;
+            $imagePath = $user->image;
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $imageName = 'doctors/' . time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('doctors'), $imageName);
+                $imageName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('assets/img/doctors'), $imageName);
+                $imagePath = 'assets/img/doctors/' . $imageName;
             }
 
 
@@ -188,7 +209,7 @@ class DoctorController extends Controller{
                 'email' => $request->email ,
                 'phone' => $request->phone,
                 'password' => $password,
-                'image' => $imageName,
+                'image' => $imagePath,
                 'address' => $request->address,
                 'date_of_birth' => $request->date_of_birth,
                 'gender' => $request->gender,
@@ -196,22 +217,29 @@ class DoctorController extends Controller{
 
             $employee->update([
                 'user_id' => $user->id ,
-                'clinic_id' => $request->clinic_id ,
+                'clinic_id' => $request->clinic_id,
+                'department_id' => $request->department_id,
                 'status' => $request->status,
                 'work_start_time' => $request->work_start_time,
                 'work_end_time' => $request->work_end_time,
                 'working_days' => $request->working_days,
-                'hire_date' => $request->hire_date,
                 'short_biography' => $request->short_biography,
             ]);
 
-            $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
+            $job_title_Id = JobTitle::where('name', 'doctor')->pluck('id')->first();
+            EmployeeJobTitle::updateOrCreate(
+                ['employee_id' => $employee->id],
+                [
+                    'job_title_id' => $job_title_Id,
+                    'hire_date' => $request->hire_date ?? now()->toDateString(),
+                ]
+            );
 
             $doctor->update([
                 'employee_id' => $employee->id ,
-                'clinic_department_id' => $clinicDepartmentId ,
                 'qualification' => $request->qualification,
                 'experience_years' => $request->experience_years,
+                'specialty_id'       => $request->specialty_id,
             ]);
 
             return response()->json(['data' => 1]);
@@ -293,6 +321,12 @@ class DoctorController extends Controller{
     }
 
 
+    public function getSpecialtiesByDepartment($department_id){
+        $department = Department::with('specialties')->findOrFail($department_id);
+        return response()->json($department->specialties);
+    }
+
+
     public function getClinicInfo($id){
         $clinic = Clinic::findOrFail($id);
         return response()->json([
@@ -305,14 +339,14 @@ class DoctorController extends Controller{
     public function getWorkingTimes($doctor_id){
         $doctor = Doctor::findOrFail($doctor_id);
 
-        $workingDays = json_decode($doctor->working_days, true);
+        $workingDays = json_decode($doctor->employee->working_days, true);
         $times = [];
 
         foreach ($workingDays as $day) {
             $times[] = [
                 'day' => $day,
-                'from' => $doctor->work_start_time,
-                'to' => $doctor->work_end_time,
+                'from' => $doctor->employee->work_start_time,
+                'to' => $doctor->employee->work_end_time,
             ];
         }
 
@@ -321,7 +355,9 @@ class DoctorController extends Controller{
 
     public function getWorkingDays($id) {
         $clinic = Clinic::findOrFail($id);
-        return response()->json(json_decode($clinic->working_days));
+        return response()->json([
+            'working_days' => $clinic->working_days,
+        ]);
     }
 
 }

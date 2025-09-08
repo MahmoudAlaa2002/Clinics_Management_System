@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title', 'Department Details')
 
@@ -30,21 +30,39 @@
                 <div class="col-md-6">
                     <p><strong>Department Name:</strong> {{ $department->name }}</p>
                     <p><strong>Clinics offering this Department:</strong> {{ $count_clinics }}</p>
+                    <p><strong>Specialties in this Department:</strong> {{ $count_specialties }}</p>
                     <p><strong>Doctors in this Department:</strong> {{ $count_doctor }}</p>
                 </div>
             </div>
         </div>
 
         <div class="card-box">
-            <h4 class="mb-3 card-title"><i class="fa fa-stethoscope text-primary me-2"></i> Associated Clinics</h4>
+            <h4 class="mb-3 card-title"><i class="fa fa-hospital text-primary me-2"></i> Associated Clinics</h4>
             @if($department->clinics->isNotEmpty())
                 <ul class="mb-0">
                     @foreach($department->clinics as $clinic)
-                        <li><a href="{{ route('description_clinic', $clinic->id) }}">{{ $clinic->name }}</a></li>
+                        <li>
+                            <a href="{{ route('description_clinic', $clinic->id) }}">
+                                {{ $clinic->name }}
+                            </a>
+                        </li>
                     @endforeach
                 </ul>
             @else
                 <p>No Clinics Are Available For This Department</p>
+            @endif
+        </div>
+
+        <div class="card-box">
+            <h4 class="mb-3 card-title"><i class="fas fa-stethoscope text-primary me-2"></i> Associated Specialties</h4>
+            @if($department->specialties->isNotEmpty())
+                <ul class="mb-0">
+                    @foreach($department->specialties as $specialty)
+                        <li><a href="{{ route('description_specialty', $specialty->id) }}">{{ $specialty->name }}</a></li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No specialties Are Available For This Department</p>
             @endif
         </div>
 
@@ -62,18 +80,18 @@
         </div>
 
 
-            <div class="card-box">
-                <h4 class="card-title"><i class="fa fa-align-left text-primary me-2"></i> Description</h4>
+        <div class="card-box">
+            <h4 class="card-title"><i class="fa fa-align-left text-primary me-2"></i> Description</h4>
                 <div class="row">
                     <div class="col-md-12">
-                        @if(!empty($department->description))
-                            <p style="line-height: 1.8; font-size: 16px;">{{ $department->description }}</p>
-                        @else
-                        <p style="line-height: 1.8; font-size: 16px;">Description Not Available Yet</p>
-                        @endif
-                    </div>
+                    @if(!empty($department->description))
+                        <p style="line-height: 1.8; font-size: 16px;">{{ $department->description }}</p>
+                    @else
+                    <p style="line-height: 1.8; font-size: 16px;">Description Not Available Yet</p>
+                    @endif
                 </div>
             </div>
+        </div>
 
         <div class="mb-3 d-flex justify-content-end">
             <a href="{{ route('view_departments') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">

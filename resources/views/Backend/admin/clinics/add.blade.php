@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'Add New Clinic')
 
@@ -156,6 +156,7 @@
                     <div class="card">
                         <div class="card-header">Departments</div>
                         <div class="card-body">
+                            <label>Departments <span class="text-danger">*</span></label>
                             <div class="row gx-1">
                                 @php
                                     $split = ceil($departments->count() / 2);
@@ -232,8 +233,8 @@
             let email = $('#email').val().trim();
             let phone = $('#phone').val().trim();
             let doctor_id = $('#doctor_id').val();
-            let openingTime = $('#opening_time').val();
-            let closingTime = $('#closing_time').val();
+            let opening_time = $('#opening_time').val();
+            let closing_time = $('#closing_time').val();
             let description = $('#description').val().trim();
             let status = $('input[name="status"]:checked').val();
 
@@ -257,8 +258,8 @@
             formData.append('email', email);
             formData.append('phone', phone);
             formData.append('doctor_id', doctor_id);
-            formData.append('opening_time', openingTime);
-            formData.append('closing_time', closingTime);
+            formData.append('opening_time', opening_time);
+            formData.append('closing_time', closing_time);
             formData.append('description', description);
             formData.append('status', status);
 

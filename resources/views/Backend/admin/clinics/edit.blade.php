@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'Edit Clinic')
 
@@ -167,6 +167,7 @@
                     <div class="card">
                         <div class="card-header">Departments</div>
                         <div class="card-body">
+                            <label>Departments <span class="text-danger">*</span></label>
                             <div class="row gx-1">
                                 @php
                                     $split = ceil($all_departments->count() / 2);

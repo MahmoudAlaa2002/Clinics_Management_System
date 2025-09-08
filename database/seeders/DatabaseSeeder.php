@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void{
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(DepartmentSeeder::class);
-        $this->call(DosageFormSeeder::class);
+        $this->call(SpecialtySeeder::class);
+        $this->call(DepartmentSpecialtySeeder::class);
         $this->call(JobTitlesSeeder::class);
 
         // Create Admin user
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '0592226120',
             'address' => 'Gaza',
             'date_of_birth' => '2002-03-13',
+            'image' => 'assets/img/admin/admin.jpg',
             'gender' => 'male',
         ]);
 

@@ -129,24 +129,34 @@
                             window.location.href = '/admin/dashboard';
 
                         } else if (response.data === 2) {
-                            let userId = response.user_id;
-                            window.location.href = '/clinic-manager/dashboard/' + userId;
+                            window.location.href = '/clinic-manager/dashboard';
 
                         } else if (response.data === 3) {
-                            let userId = response.user_id;
-                            window.location.href = '/department-manager/dashboard/' + userId;
+                            window.location.href = '/department-manager/dashboard';
 
                         } else if (response.data === 4) {
-                            let userId = response.user_id;
-                            window.location.href = '/doctor/dashboard/' + userId;
+                            window.location.href = '/doctor/dashboard';
 
                         } else if (response.data === 5) {
-                            let userId = response.user_id;
-                            window.location.href = '/employee/dashboard/' + userId;
+                            let position = response.position;
+
+                            if (position === 'Receptionist') {
+                                window.location.href = '/employee/receptionist/dashboard';
+                            } else if (position === 'Nurse') {
+                                window.location.href = '/employee/nurse/dashboard';
+                            } else if (position === 'Pharmacist') {
+                                window.location.href = '/employee/pharmacist/dashboard';
+                            } else if (position === 'Accountant') {
+                                window.location.href = '/employee/accountant/dashboard';
+                            } else if (position === 'Store Supervisor') {
+                                window.location.href = '/employee/store-supervisor/dashboard';
+                            } else {
+                                window.location.href = '/employee/dashboard';
+                            }
 
                         } else if (response.data === 6) {
-                            let userId = response.user_id;
-                            window.location.href = '/patient/dashboard/' + userId;
+                            window.location.href = '/patient/dashboard';
+
                         } else {
                             Swal.fire('Error', 'Unexpected response from server', 'error');
                         }

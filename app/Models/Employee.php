@@ -8,7 +8,7 @@ class Employee extends Model{
     protected $fillable = [
         'user_id',
         'clinic_id',
-        'job_title_id',
+        'department_id',
         'work_start_time',
         'work_end_time',
         'working_days',
@@ -26,14 +26,21 @@ class Employee extends Model{
     }
 
     public function doctor(){
-        return $this->hasOne(Doctor::class);
+        return $this->hasOne(Doctor::class, 'employee_id');
     }
+
+
 
     public function clinic(){
-        return $this->belongsTo(Clinic::class);
+        return $this->belongsTo(Clinic::class, 'clinic_id');
     }
 
-    public function job_title(){
-        return $this->belongsTo(JobTitle::class);
+    public function department(){
+        return $this->belongsTo(Department::class, 'department_id');
     }
+
+    public function jobTitles(){
+        return $this->belongsToMany(JobTitle::class, 'employee_job_titles');
+    }
+
 }

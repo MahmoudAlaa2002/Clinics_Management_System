@@ -15,7 +15,6 @@ return new class extends Migration
             $table->unsignedBigInteger('patient_id');
             $table->unsignedBigInteger('doctor_id');
             $table->unsignedBigInteger('appointment_id')->nullable();
-            $table->date('prescribed_at');
             $table->text('notes')->nullable();
             $table->timestamps();
 

@@ -15,14 +15,18 @@ class Department extends Model{
         return $this->belongsToMany(Clinic::class, 'clinic_department');
     }
 
+    public function specialties() {
+        return $this->belongsToMany(Specialty::class, 'department_specialty');
+    }
+
     public function doctors(){
         return $this->hasManyThrough(
-            Doctor::class,
-            ClinicDepartment::class,
-            'department_id', // المفتاح الخارجي في جدول clinic_department الذي يشير إلى هذا القسم
-            'clinic_department_id', // المفتاح في جدول doctors الذي يشير إلى clinic_department
-            'id', // المفتاح الأساسي في جدول departments
-            'id' // المفتاح الأساسي في جدول clinic_department
+            Doctor::class,       // الموديل النهائي
+            Employee::class,     // الموديل الوسيط
+            'department_id',     // المفتاح في جدول employees
+            'employee_id',       // المفتاح في جدول doctors
+            'id',                // المفتاح في جدول departments
+            'id'                 // المفتاح في جدول employees
         );
     }
 

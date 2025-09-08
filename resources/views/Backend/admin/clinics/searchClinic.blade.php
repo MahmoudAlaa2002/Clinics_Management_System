@@ -34,30 +34,10 @@
             {{-- Clinic Phone --}}
             <td>{{ $clinic->phone ?? '—' }}</td>
 
-            {{-- Available Days --}}
-            <td>
-                @php
-                    $days = json_decode($clinic->working_days, true) ?? [];
-                @endphp
-
-                @if(!empty($days))
-                    {{ implode(' , ', $days) }}
-                @else
-                    <span class="text-muted">—</span>
-                @endif
-            </td>
-
-            {{-- Available Time --}}
-            <td>
-                {{ $clinic->opening_time ? $clinic->opening_time . ' AM' : '—' }}
-                -
-                {{ $clinic->closing_time ? $clinic->closing_time . ' PM' : '—' }}
-            </td>
-
             {{-- Status --}}
             <td>
                 @if($clinic->status === 'active')
-                    <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #15ef70; color: white;">
+                    <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #13ee29; color: white;">
                         Active
                     </span>
                 @else

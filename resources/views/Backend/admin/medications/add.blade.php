@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'Add New Medication')
 
@@ -35,38 +35,23 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-vial"></i></span>
                                     </div>
-                                    <select class="form-control" id="dosage_form_id" name="dosage_form_id">
+                                    <select class="form-control" id="form" name="form" required>
                                         <option value="" disabled selected hidden>Select Form</option>
-                                        @foreach($dosageForms as $form)
-                                            <option value="{{ $form->id }}">{{ $form->name }}</option>
-                                        @endforeach
+                                        <option value="Tablet">Tablet</option>
+                                        <option value="Capsule">Capsule</option>
+                                        <option value="Syrup">Syrup</option>
+                                        <option value="Injection">Injection</option>
+                                        <option value="Suppository">Suppository</option>
+                                        <option value="Ointment">Ointment</option>
+                                        <option value="Cream">Cream</option>
+                                        <option value="Drop">Drop</option>
+                                        <option value="Spray">Spray</option>
+                                        <option value="Powder">Powder</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Strength <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-balance-scale"></i></span>
-                                    </div>
-                                    <input class="form-control" type="text" id="strength" name="strength">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Image</label>
-                                <div class="profile-upload">
-                                    <div class="upload-input">
-                                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="col-sm-6">
                             <div class="form-group">

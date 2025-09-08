@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class PatientInvoice extends Model{
+
     protected $fillable = [
         'patient_id',
         'clinic_id',

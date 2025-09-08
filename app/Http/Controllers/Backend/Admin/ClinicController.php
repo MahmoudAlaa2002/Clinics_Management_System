@@ -66,7 +66,6 @@ class ClinicController extends Controller{
             'departments:id,name',
             'clinicDepartments:id,clinic_id,department_id',
             'clinicDepartments.doctors:id,clinic_department_id,employee_id',
-            'clinicDepartments.doctors.employee:id,user_id,working_days',
             'clinicDepartments.doctors.employee.user:id,name',
         ]);
 
@@ -77,9 +76,6 @@ class ClinicController extends Controller{
                     break;
                 case 'location':
                     $clinics->where('location', 'like', "{$keyword}%");
-                    break;
-                case 'day':
-                    $clinics->whereJsonContains('working_days', ucfirst(strtolower($keyword)));
                     break;
                 case 'status':
                     $clinics->where('status', 'like', "{$keyword}%");
@@ -114,7 +110,7 @@ class ClinicController extends Controller{
 
     public function editClinic($id){
         $clinic = Clinic::with(['departments'])->findOrFail($id);
-        $working_days = json_decode($clinic->working_days, true);
+        $working_days = $clinic->working_days ;
         $all_departments = Department::all();
         $clinic_departments = $clinic->departments->pluck('id')->toArray();
         return view('Backend.admin.clinics.edit', compact('clinic','working_days','all_departments','clinic_departments' ));
@@ -138,7 +134,7 @@ class ClinicController extends Controller{
                 'closing_time' => $request->closing_time,
                 'description' => $request->description,
                 'status' => $request->status,
-                'working_days' => json_encode($request->working_days),
+                'working_days' => $request->working_days,
             ]);
 
             $clinic->departments()->sync($request->input('departments', []));

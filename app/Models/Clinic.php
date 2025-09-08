@@ -18,6 +18,9 @@ class Clinic extends Model{
         'status',
     ];
 
+    protected $casts = [
+        'working_days' => 'array',
+    ];
 
     public function departments(){
         return $this->belongsToMany(Department::class, 'clinic_department'); // اسم الجدول الوسيط
@@ -27,6 +30,9 @@ class Clinic extends Model{
         return $this->hasMany(ClinicDepartment::class);
     }
 
+    public function employees(){
+        return $this->hasMany(Employee::class, 'clinic_id');
+    }
 
     public function doctors(){
         return $this->hasManyThrough(

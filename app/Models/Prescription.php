@@ -10,7 +10,6 @@ class Prescription extends Model{
         'patient_id',
         'doctor_id',
         'appointment_id',
-        'prescribed_at',
         'notes',
     ];
 

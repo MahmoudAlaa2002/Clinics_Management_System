@@ -1,19 +1,39 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
-@section('title', 'Edit Doctor')
+@section('title' , 'Edit Doctor')
 
 @section('content')
 
 <style>
-  .col-sm-6{ margin-bottom:20px; }
-  input[type="date"]{ direction:ltr; text-align:left; }
-  .card + .card{ margin-top:20px; }
-  .card-header{ font-weight:600; }
-  .small-gutter > [class^="col-"]{ padding-left:30px !important; margin-top:15px !important; }
-  .card{ border:1px solid #ddd !important; border-radius:8px !important; box-shadow:0 4px 10px rgba(0,0,0,.08) !important; overflow:hidden !important; }
-  .card-header{ background-color:#00A8FF !important; color:#fff !important; font-weight:600 !important; padding:12px 15px !important; font-size:16px !important; border-bottom:1px solid #ddd !important; }
-  .card-body{ background-color:#fff; padding:20px; }
-  .profile-upload .upload-img img{ width:80px; height:80px; object-fit:cover; border-radius:8px; }
+    .col-sm-6{ margin-bottom:20px; }
+    input[type="date"]{ direction:ltr; text-align:left; }
+    .card + .card{ margin-top:20px; }
+    .card-header{ font-weight:600; }
+    .small-gutter > [class^="col-"] {
+        padding-left: 30px !important;
+        margin-top: 15px !important;
+    }
+    .card {
+        border: 1px solid #ddd !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
+        overflow: hidden !important;
+    }
+    .card-header {
+        background-color: #00A8FF !important;
+        color: #fff !important;
+        font-weight: 600 !important;
+        padding: 12px 15px !important;
+        font-size: 16px !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+    .card-body {
+        background-color: #fff;
+        padding: 20px;
+    }
+    .profile-upload .upload-img img{
+        width:80px; height:80px; object-fit:cover; border-radius:8px;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -35,7 +55,6 @@
             <div class="card-header">Doctor Information</div>
             <div class="card-body">
               <div class="row">
-                {{-- Name --}}
                 <div class="col-sm-6">
                   <label>Doctor Name <span class="text-danger">*</span></label>
                   <div class="input-group">
@@ -44,7 +63,6 @@
                   </div>
                 </div>
 
-                {{-- DOB --}}
                 <div class="col-sm-6">
                   <label>Date of Birth <span class="text-danger">*</span></label>
                   <div class="input-group">
@@ -53,7 +71,6 @@
                   </div>
                 </div>
 
-                {{-- Phone --}}
                 <div class="col-sm-6">
                   <label>Phone <span class="text-danger">*</span></label>
                   <div class="input-group">
@@ -62,7 +79,6 @@
                   </div>
                 </div>
 
-                {{-- Email --}}
                 <div class="col-sm-6">
                   <label>Email <span class="text-danger">*</span></label>
                   <div class="input-group">
@@ -71,7 +87,6 @@
                   </div>
                 </div>
 
-                {{-- Password --}}
                 <div class="col-sm-6">
                   <label>Password</label>
                   <div class="input-group">
@@ -80,16 +95,14 @@
                   </div>
                 </div>
 
-                {{-- Confirm --}}
                 <div class="col-sm-6">
                   <label>Confirm Password</label>
                   <div class="input-group">
                     <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
-                    <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Enter Confirm new password">
+                    <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
                   </div>
                 </div>
 
-                {{-- Address --}}
                 <div class="col-sm-6">
                   <label>Address <span class="text-danger">*</span></label>
                   <div class="input-group">
@@ -98,7 +111,6 @@
                   </div>
                 </div>
 
-                {{-- Avatar --}}
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>Avatar</label>
@@ -113,7 +125,6 @@
                   </div>
                 </div>
 
-                {{-- Gender --}}
                 <div class="col-sm-6">
                   <div class="form-group gender-select">
                     <label class="gen-label">Gender: <span class="text-danger">*</span></label>
@@ -139,31 +150,23 @@
             <div class="card-header">Professional Information</div>
             <div class="card-body">
               <div class="row">
-                {{-- Qualification --}}
                 <div class="col-sm-6">
                   <label>Qualification <span class="text-danger">*</span></label>
-                  <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user-graduate"></i></span></div>
+                  <select class="form-control" id="qualification" name="qualification">
                     @php
                       $qualifications = ['MBBS','MD','DO','BDS','PhD','MSc','Fellowship','Diploma'];
                       $selectedQualification = old('qualification', $doctor->qualification ?? null);
                     @endphp
-                    <select class="form-control" id="qualification" name="qualification">
-                      <option disabled {{ $selectedQualification ? '' : 'selected' }} hidden>Select Qualification</option>
-                      @foreach($qualifications as $q)
-                        <option value="{{ $q }}" @selected($selectedQualification === $q)>{{ $q }}</option>
-                      @endforeach
-                    </select>
-                  </div>
+                    <option disabled {{ $selectedQualification ? '' : 'selected' }} hidden>Select Qualification</option>
+                    @foreach($qualifications as $q)
+                      <option value="{{ $q }}" @selected($selectedQualification === $q)>{{ $q }}</option>
+                    @endforeach
+                  </select>
                 </div>
 
-                {{-- Experience --}}
                 <div class="col-sm-6">
                   <label>Experience Years <span class="text-danger">*</span></label>
-                  <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-briefcase"></i></span></div>
-                    <input class="form-control" type="number" min="0" id="experience_years" name="experience_years" value="{{ old('experience_years', $doctor->experience_years ?? '') }}">
-                  </div>
+                  <input class="form-control" type="number" min="0" id="experience_years" name="experience_years" value="{{ old('experience_years', $doctor->experience_years ?? '') }}">
                 </div>
               </div>
             </div>
@@ -174,43 +177,29 @@
             <div class="card-header">Assignment</div>
             <div class="card-body">
               <div class="row">
-                {{-- Clinic --}}
                 <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>Clinic Name <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-hospital-alt"></i></span></div>
-                      <select id="clinic_id" name="clinic_id" class="form-control">
-                        <option disabled hidden>Select Clinic</option>
-                        @foreach($clinics as $clinic)
-                          <option value="{{ $clinic->id }}" {{ optional($doctor->employee)->clinic_id == $clinic->id ? 'selected' : '' }}>
-                            {{ $clinic->name }}
-                          </option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
+                  <label>Clinic Name <span class="text-danger">*</span></label>
+                  <select id="clinic_id" name="clinic_id" class="form-control">
+                    <option disabled hidden>Select Clinic</option>
+                    @foreach($clinics as $clinic)
+                      <option value="{{ $clinic->id }}" {{ optional($doctor->employee)->clinic_id == $clinic->id ? 'selected' : '' }}>{{ $clinic->name }}</option>
+                    @endforeach
+                  </select>
                 </div>
 
-                {{-- Department --}}
                 <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>Department <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-stethoscope"></i></span></div>
-                      <select id="department_id" name="department_id" class="form-control">
-                        @php
-                          $currentDepartmentId = $doctor->clinicDepartment->department_id ?? null;
-                          $currentDepartmentName = $doctor->clinicDepartment->department->name ?? 'Select Department';
-                        @endphp
-                        <option value="{{ $currentDepartmentId }}" {{ $currentDepartmentId ? 'selected' : '' }}>
-                          {{ $currentDepartmentName }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
+                  <label>Department <span class="text-danger">*</span></label>
+                  <select id="department_id" name="department_id" class="form-control">
+                    <option value="{{ $doctor->department->id ?? '' }}" selected>{{ $doctor->department->name ?? 'Select Department' }}</option>
+                  </select>
                 </div>
 
+                <div class="col-sm-6">
+                  <label>Speciality <span class="text-danger">*</span></label>
+                  <select id="specialty_id" name="specialty_id" class="form-control">
+                    <option value="{{ $doctor->specialty->id ?? '' }}" selected>{{ $doctor->specialty->name ?? 'Select Specialty' }}</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -220,67 +209,53 @@
             <div class="card-header">Work Schedule</div>
             <div class="card-body">
               <div class="row">
-                {{-- Start --}}
                 <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>Work Start Time <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-clock"></i></span></div>
-                      <select name="work_start_time" id="work_start_time" class="form-control">
-                        @php $start = old('work_start_time', $doctor->work_start_time ?? null); @endphp
-                        <option disabled hidden>Select Start Time</option>
-                        @if($start)<option value="{{ $start }}" selected>{{ $start }}</option>@endif
-                      </select>
-                    </div>
-                  </div>
+                  <label>Work Start Time</label>
+                  <select name="work_start_time" id="work_start_time" class="form-control">
+                    <option disabled hidden>Select Start Time</option>
+                    @if($doctor->employee->work_start_time)
+                      <option value="{{ $doctor->employee->work_start_time }}" selected>{{ $doctor->employee->work_start_time }}</option>
+                    @endif
+                  </select>
                 </div>
 
-                {{-- End --}}
                 <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>Work End Time <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                      <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-clock"></i></span></div>
-                      <select name="work_end_time" id="work_end_time" class="form-control">
-                        @php $end = old('work_end_time', $doctor->work_end_time ?? null); @endphp
-                        <option disabled hidden>Select End Time</option>
-                        @if($end)<option value="{{ $end }}" selected>{{ $end }}</option>@endif
-                      </select>
-                    </div>
-                  </div>
+                  <label>Work End Time</label>
+                  <select name="work_end_time" id="work_end_time" class="form-control">
+                    <option disabled hidden>Select End Time</option>
+                    @if($doctor->employee->work_end_time)
+                      <option value="{{ $doctor->employee->work_end_time }}" selected>{{ $doctor->employee->work_end_time }}</option>
+                    @endif
+                  </select>
                 </div>
 
-                {{-- Working Days --}}
-                <div class="row small-gutter" style="width:100%; margin:0;">
-                  <div class="col-sm-12">
-                    <label>Working Days <span class="text-danger">*</span></label>
-                    @php
-                      $all_days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
-                      $selectedDays = old('working_days', $working_days ?? []); // مرّر $working_days من الكنترولر
-                    @endphp
-                    <div class="row gx-1">
-                      <div class="col-6">
-                        @foreach(array_slice($all_days,0,4) as $day)
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}"
-                                   {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
+                <div class="row small-gutter">
+                    <div class="col-sm-12" id="working_days">
+                        <label>Working Days <span class="text-danger">*</span></label>
+                        @php
+                          $all_days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+                          $selectedDays = old('working_days', $doctor->working_days ?? []);
+                        @endphp
+                        <div class="row">
+                          <div class="col-6">
+                            @foreach(array_slice($all_days,0,4) as $day)
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}" {{ in_array($day,$selectedDays) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
+                              </div>
+                            @endforeach
                           </div>
-                        @endforeach
-                      </div>
-                      <div class="col-6">
-                        @foreach(array_slice($all_days,4) as $day)
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}"
-                                   {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
+                          <div class="col-6">
+                            @foreach(array_slice($all_days,4) as $day)
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}" {{ in_array($day,$selectedDays) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
+                              </div>
+                            @endforeach
                           </div>
-                        @endforeach
+                        </div>
                       </div>
-                    </div>
-                  </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -289,274 +264,275 @@
           <div class="card">
             <div class="card-header">Short Biography & Status</div>
             <div class="card-body">
-              <div class="row">
-                {{-- Bio --}}
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>Short Biography</label>
-                    <textarea class="form-control" id="short_biography" name="short_biography" rows="3">{{ old('short_biography', $doctor->employee->short_biography ?? '') }}</textarea>
-                  </div>
-                </div>
-
-                {{-- Status --}}
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label class="display-block">Status</label>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="status" id="doctor_active" value="active" {{ old('status', $doctor->status ?? 'active') === 'active' ? 'checked' : '' }}>
-                      <label class="form-check-label" for="doctor_active">Active</label>
+                <div class="row">
+                    {{-- Short Biography --}}
+                    <div class="mb-3 col-sm-12">
+                        <label for="short_biography">Short Biography</label>
+                        <div class="input-group">
+                            <textarea id="short_biography"
+                                      name="short_biography"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Write a short bio...">{{ old('short_biography', $doctor->employee->short_biography ?? '') }}</textarea>
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="status" id="doctor_inactive" value="inactive" {{ old('status', $doctor->status ?? '') === 'inactive' ? 'checked' : '' }}>
-                      <label class="form-check-label" for="doctor_inactive">Inactive</label>
-                    </div>
-                  </div>
-                </div>
 
-              </div>
+                    {{-- Account Status --}}
+                    <div class="mb-3 col-sm-12">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="employee_active" value="active"
+                            {{ old('status', $doctor->employee->status ?? 'active') === 'active' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="employee_active">Active</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="employee_inactive" value="inactive"
+                            {{ old('status', $doctor->employee->status ?? '') === 'inactive' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="employee_inactive">Inactive</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
 
-          {{-- Submit --}}
-          <div class="text-center m-t-20" style="margin-top:20px;">
-            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform:none !important;">Edit Doctor</button>
-          </div>
+        <div class="text-center" style="margin-top:20px;">
+            <button type="button" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
+                Edit Doctor
+            </button>
+        </div>
 
         </form>
       </div>
     </div>
-
   </div>
 </div>
 @endsection
 
 @section('js')
-@php
-  $workStart = old('work_start_time', $doctor->employee->work_start_time ?? '');
-  $workEnd   = old('work_end_time',   $doctor->employee->work_end_time   ?? '');
-  $currentClinicId = optional($doctor->employee)->clinic_id ?? '';
-  $selectedDepartmentId =  $doctor->department->id ?? '';
-
-
-@endphp
-
 <script>
-  // Helper: ensure select has a non-empty value
-  function isValidSelectValue(id) {
-    const el = document.getElementById(id);
-    if (!el) return false;
-    const v = el.value;
-    return v !== '' && v !== null && v !== undefined;
-  }
-
-  // Load departments for a clinic
-  function loadDepartments(clinicId, selectedDepartmentId = '') {
-    $('#department_id').empty().append('<option value="" disabled hidden>Select Department</option>');
-    if (!clinicId) return;
-    $.get('/admin/get-departments-by-clinic/' + clinicId, function (departments) {
-      departments.forEach(function (d) {
-        const sel = (String(d.id) === String(selectedDepartmentId)) ? 'selected' : '';
-        $('#department_id').append(`<option value="${d.id}" ${sel}>${d.name}</option>`);
-      });
-    });
-  }
-
-  // Load working days allowed by clinic and mark selected ones
-  function loadWorkingDaysForClinic(clinicId, selectedDays = []) {
-    $.get('/admin/clinic-working-days/' + clinicId, function (clinicDays) {
-      const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
-      const $daysContainer = $('#working_days');
-      $daysContainer.empty();
-
-
-      const $col1 = $('<div class="col-6"></div>');
-      const $col2 = $('<div class="col-6"></div>');
-
-      allDays.forEach((day, idx) => {
-        const isAvailable = clinicDays.includes(day);
-        const isSelected  = selectedDays.includes(day);
-        const checkbox = `
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox"
-              name="working_days[]" value="${day}"
-              id="day_${day}" ${isSelected ? 'checked' : ''} ${!isAvailable ? 'disabled' : ''}>
-            <label class="form-check-label ${!isAvailable ? 'text-muted' : ''}" for="day_${day}">
-              ${day}
-            </label>
-          </div>
-        `;
-        (idx < 4 ? $col1 : $col2).append(checkbox);
-      });
-
-      $daysContainer.append($col1, $col2);
-    });
-  }
-
-  // Load work times based on clinic opening/closing
-  function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
-    if (!clinicId) return;
-    $.get('/admin/get-clinic-info/' + clinicId, function (data) {
-      const openingTime = (data.opening_time || '08:00:00').substring(0,5); // "HH:MM"
-      const closingTime = (data.closing_time || '16:00:00').substring(0,5);
-
-      const startHour = parseInt(openingTime.substring(0,2));
-      const endHour   = parseInt(closingTime.substring(0,2));
-
-      const $start = $('#work_start_time');
-      const $end   = $('#work_end_time');
-      $start.empty().append('<option disabled hidden>Select Start Time</option>');
-      $end.empty().append('<option disabled hidden>Select End Time</option>');
-
-      for (let hour = startHour; hour <= endHour; hour++) {
-        const hh = hour.toString().padStart(2,'0');
-        const opt = `${hh}:00`;
-        $start.append(`<option value="${opt}">${opt}</option>`);
-        $end.append(`<option value="${opt}">${opt}</option>`);
-      }
-
-      if (selectedStart) $start.val(selectedStart.substring(0,5));
-      if (selectedEnd)   $end.val(selectedEnd.substring(0,5));
-    });
-  }
-
-  $(document).ready(function () {
-    // if jQuery/SweetAlert not globally loaded in master, make sure to include them there.
-
-    const currentClinicId = "{{ $currentClinicId }}";
-    const selectedDepartmentId = "{{ $selectedDepartmentId }}";
-    const selectedDays = {!! json_encode($doctor->working_days ?? $working_days ?? []) !!};
-    const selectedStart = "{{ $workStart }}";
-    const selectedEnd   = "{{ $workEnd }}";
-
-
-    if (currentClinicId) {
-      $('#clinic_id').val(String(currentClinicId));
-      loadDepartments(currentClinicId, selectedDepartmentId);
-      loadWorkingDaysForClinic(currentClinicId, selectedDays);
-      loadWorkingTimes(currentClinicId, selectedStart, selectedEnd);
+    function isValidSelectValue(selectId) {      // هذا الميثود حتى أتجنب خداع الفيكفيار
+        let val = $(`#${selectId}`).val();
+        return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
     }
 
-    $('#clinic_id').on('change', function () {
-      const clinicId = $(this).val();
-      $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
-      loadDepartments(clinicId);
-      loadWorkingTimes(clinicId);
-      loadWorkingDaysForClinic(clinicId, []); // reset selected days on clinic change
-    });
+    $(document).ready(function () {
+        $('.editBtn').click(function (e) {
+                    e.preventDefault();
 
-    // Submit via AJAX with validation
-    $('.addBtn').on('click', function (e) {
-      e.preventDefault();
+                    let name = $('#name').val().trim();
+                    let date_of_birth = $('#date_of_birth').val().trim();
+                    let clinic_id = $('#clinic_id').val();
+                    let department_id = $('#department_id').val();
+                    let specialty_id = $('#specialty_id').val();
+                    let email = $('#email').val();
+                    let password = $('#password').val();
+                    let confirm_password = $('#confirm_password').val();
+                    let phone = $('#phone').val().trim();
+                    let address = $('#address').val().trim();
+                    let work_start_time = $('#work_start_time').val();
+                    let work_end_time = $('#work_end_time').val();
+                    let qualification = $('#qualification').val();
+                    let experience_years = $('#experience_years').val();
 
-      const name = $('#name').val().trim();
-      const date_of_birth = $('#date_of_birth').val().trim();
-      const clinic_id = $('#clinic_id').val();
-      const department_id = $('#department_id').val();
-      const email = $('#email').val();
-      const password = $('#password').val();
-      const confirm_password = $('#confirm_password').val();
-      const phone = $('#phone').val().trim();
-      const address = $('#address').val().trim();
-      const work_start_time = $('#work_start_time').val();
-      const work_end_time = $('#work_end_time').val();
-      const gender = $('input[name="gender"]:checked').val();
-      const short_biography = $('#short_biography').val().trim();
-      const status = $('input[name="status"]:checked').val();
-      const image = document.querySelector('#image').files[0];
-      const qualification = $('#qualification').val().trim();
-      const experience_years = $('#experience_years').val();
+                    let gender = $('input[name="gender"]:checked').val();
+                    let short_biography = $('#short_biography').val().trim();
+                    let status = $('input[name="status"]:checked').val();
+                    let image = document.querySelector('#image').files[0];
 
-      let workingDays = [];
-      $('input[name="working_days[]"]:checked').each(function () {
-        workingDays.push($(this).val());
-      });
+                    let jobTitles = [];
+                    $('input[name="job_title_id[]"]:checked').each(function () {
+                        jobTitles.push($(this).val());
+                    });
 
-      if (!name || !date_of_birth || !clinic_id || !department_id || !email || !phone || !address || !isValidSelectValue('qualification') || !experience_years ||
-          !gender || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') ||
-          workingDays.length === 0) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Please Enter All Required Fields',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-        return;
-      }
+                    let workingDays = [];
+                    $('input[name="working_days[]"]:checked').each(function () {
+                        workingDays.push($(this).val());
+                    });
 
-      if (password && password !== confirm_password) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Password confirmation does not match',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-        return;
-      }
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('date_of_birth', date_of_birth);
-      formData.append('clinic_id', clinic_id);
-      formData.append('department_id', department_id);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('confirm_password', confirm_password);
-      formData.append('phone', phone);
-      formData.append('address', address);
-      formData.append('work_start_time', work_start_time);
-      formData.append('work_end_time', work_end_time);
-      formData.append('qualification', qualification);
-      formData.append('experience_years', experience_years);
-      formData.append('gender', gender);
-      formData.append('short_biography', short_biography);
-      formData.append('status', status);
-      if (image) formData.append('image', image);
-      workingDays.forEach(d => formData.append('working_days[]', d));
+                    // ✅ استخدم FormData
+                    let formData = new FormData();
+                    formData.append('_method', 'PUT');
+                    formData.append('name', name);
+                    formData.append('date_of_birth', date_of_birth);
+                    formData.append('clinic_id', clinic_id);
+                    formData.append('department_id', department_id);
+                    formData.append('specialty_id', specialty_id);
+                    formData.append('email', email);
+                    formData.append('password', password);
+                    formData.append('confirm_password', confirm_password);
+                    formData.append('phone', phone);
+                    formData.append('address', address);
+                    formData.append('qualification', qualification);
+                    formData.append('experience_years', experience_years);
+                    formData.append('work_start_time', work_start_time);
+                    formData.append('work_end_time', work_end_time);
+                    formData.append('gender', gender);
+                    formData.append('short_biography', short_biography);
+                    formData.append('status', status);
+                    if (image) {
+                        formData.append('image', image);
+                    }
 
-      $.ajax({
-        type: 'POST',
-        url: "{{ route('update_doctor', ['id' => $doctor->id]) }}",
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          'X-HTTP-Method-Override': 'PUT'
-        },
-        success: function (response) {
-          if (response.data == 0) {
-            Swal.fire({
-              title: 'Error!',
-              text: 'This Doctor Already Exists',
-              icon: 'error',
-              confirmButtonText: 'OK'
+                    jobTitles.forEach(function (id) {
+                        formData.append('job_title_id[]', id);
+                    });
+
+
+                    workingDays.forEach(function (day) {
+                        formData.append('working_days[]', day);
+                    });
+
+
+                    if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
+                    !isValidSelectValue('department_id') || !isValidSelectValue('specialty_id') ||
+                    email === '' || phone === '' || address === '' ||
+                    !isValidSelectValue('qualification') ||
+                    experience_years === '' || !isValidSelectValue('work_start_time') ||
+                    !isValidSelectValue('work_end_time') || gender === undefined ||
+                    workingDays.length === 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Enter All Required Fields',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }else if (password !== confirm_password){
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'The Password Does Not Match The Confirmation Password',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }else if (work_start_time >= work_end_time){
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'The Timing Is Incorrect, Please Correct It',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }else{
+                        $.ajax({
+                            method: 'POST',
+                            url: "{{ route('update_doctor', ['id' => $doctor->id]) }}",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                'X-HTTP-Method-Override': 'PUT'
+                            },
+                        success: function (response) {
+                            if (response.data == 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This Doctor Already Exists',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Doctor Has Been Added Successfully',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    window.location.href = '/admin/view/doctors';
+                                });
+                            }
+                        }
+                    });
+                }
             });
-          } else if (response.data == 1) {
-            Swal.fire({
-              title: 'Success',
-              text: 'Doctor Has Been Updated Successfully',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            }).then(() => window.location.href = '/admin/view/doctors');
-          } else {
-            Swal.fire({
-              title: 'Notice',
-              text: 'Unexpected response. Please try again.',
-              icon: 'info',
-              confirmButtonText: 'OK'
-            });
-          }
-        },
-        error: function(xhr){
-          Swal.fire({
-            title: 'Error!',
-            text: (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Request failed',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+
+
+        const currentClinicId = "{{ optional($doctor->employee)->clinic_id ?? '' }}";
+        const selectedDays = {!! json_encode($doctor->employee->working_days ?? []) !!};
+
+
+        if (currentClinicId) {
+        loadDepartments(currentClinicId, "{{ $doctor->employee->department->id ?? '' }}");
+        loadSpecialties("{{ $doctor->employee->department->id ?? '' }}", "{{ $doctor->specialty->id ?? '' }}");
+        loadWorkingTimes(currentClinicId, "{{ $doctor->employee->work_start_time ?? '' }}", "{{ $doctor->employee->work_end_time ?? '' }}");
+        loadWorkingDaysForClinic(currentClinicId, selectedDays);
         }
-      });
+
+        $('#clinic_id').on('change', function () {
+        const clinicId = $(this).val();
+        loadDepartments(clinicId);
+        loadWorkingTimes(clinicId);
+        loadWorkingDaysForClinic(clinicId, []);
+        });
+
+        $('#department_id').on('change', function () {
+        const depId = $(this).val();
+        loadSpecialties(depId);
+        });
+
+        function loadDepartments(clinicId, selected = '') {
+        $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
+        $.get('/admin/get-departments-by-clinic/' + clinicId, function (data) {
+            data.forEach(d => {
+            $('#department_id').append(`<option value="${d.id}" ${d.id == selected ? 'selected':''}>${d.name}</option>`);
+            });
+        });
+        }
+
+        function loadSpecialties(depId, selected = '') {
+        $('#specialty_id').empty().append('<option disabled selected hidden>Select Specialty</option>');
+        $.get('/admin/get-specialties-by-department/' + depId, function (data) {
+            data.forEach(s => {
+            $('#specialty_id').append(`<option value="${s.id}" ${s.id == selected ? 'selected':''}>${s.name}</option>`);
+            });
+        });
+        }
+
+        function loadWorkingTimes(clinicId, start='', end='') {
+            $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+                const sHour = parseInt(data.opening_time.split(':')[0]);
+                const eHour = parseInt(data.closing_time.split(':')[0]);
+
+                const $s = $('#work_start_time');
+                const $e = $('#work_end_time');
+
+                $s.empty().append('<option disabled hidden>Select Start Time</option>');
+                $e.empty().append('<option disabled hidden>Select End Time</option>');
+
+                for (let h = sHour; h <= eHour; h++) {
+                let hh = (h < 10 ? '0' : '') + h;
+                let value = hh + ':00:00';   // صيغة كاملة مع الثواني
+                let label = hh + ':00';      // للعرض فقط
+
+                // قائمة البداية
+                $s.append(`<option value="${value}" ${value === start ? 'selected' : ''}>${label}</option>`);
+
+                // قائمة النهاية
+                $e.append(`<option value="${value}" ${value === end ? 'selected' : ''}>${label}</option>`);
+                }
+            });
+        }
+
+
+        function loadWorkingDaysForClinic(clinicId, selectedDays) {
+            $.get('/admin/clinic-working-days/' + clinicId, function (resp) {
+                const clinicDays = resp.working_days || [];
+                const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+
+                allDays.forEach(day=>{
+                const $cb = $('#day_'+day);
+                if ($cb.length) {
+                    if (clinicDays.includes(day)) {
+                    $cb.prop('disabled',false);
+                    if (selectedDays.includes(day)) $cb.prop('checked',true);
+                    } else {
+                    $cb.prop('disabled',true).prop('checked',false);
+                    }
+                }
+                });
+            });
+        }
     });
-  });
 </script>
 @endsection

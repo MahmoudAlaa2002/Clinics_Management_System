@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('medications', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('dosage_form_id')->constrained()->onDelete('cascade');
-            $table->string('strength');                // التركيز
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->decimal('purchase_price', 8, 2)->nullable();
-            $table->decimal('selling_price', 8, 2)->nullable();
+            $table->string('name');      // اسم الدواء (تجاري شامل التركيز)
+            $table->string('form');   // شكل  الدواء
+            $table->string('category')->nullable(); // الفئة (مضاد حيوي، مسكن...)
+            $table->decimal('selling_price', 8, 2)->nullable(); // السعر
+            $table->date('expiration_date')->nullable(); // تاريخ الانتهاء
+            $table->text('description')->nullable(); // وصف للدواء إن وجد
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

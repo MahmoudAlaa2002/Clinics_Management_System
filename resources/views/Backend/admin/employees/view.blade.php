@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'View Employees')
 
@@ -60,7 +60,7 @@
                                         <tr>
                                             <td>{{ $employee->id }}</td>
                                             <td>{{ $employee->user->name }}</td>
-                                            <td>{{ $employee->job_title->name }}</td>
+                                            <td>{{ $employee->jobTitles->pluck('name')->implode(' , ') }}</td>
                                             <td>{{ $employee->user->email }}</td>
                                             <td>{{ $employee->user->phone }}</td>
                                             <td>{{ $employee->user->address }}</td>
@@ -77,7 +77,7 @@
                                     <tr>
                                         <td colspan="7" class="text-center">
                                             <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
-                                                No employees available at the moment
+                                                No Employees Available At The Moment
                                             </div>
                                         </td>
                                     </tr>

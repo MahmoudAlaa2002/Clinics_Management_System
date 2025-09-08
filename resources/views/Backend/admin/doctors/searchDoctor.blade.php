@@ -2,37 +2,46 @@
     @foreach ($doctors as $doctor)
         <div class="col-md-4 col-sm-4 col-lg-3">
             <div class="profile-widget">
+                <!-- Doctor Image -->
                 <div class="doctor-img">
-                    <a class="avatar" href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}">
-                        <img src="{{ optional(optional($doctor->employee)->user)->image
-                            ? asset(optional($doctor->employee->user)->image)
-                            : asset('default-avatar.png') }}" alt="">
+                    <a class="avatar" href="{{ route('profile_doctor', ['id' => $doctor->id]) }}">
+                        <img src="{{ $doctor->employee->user->image
+                            ? asset($doctor->employee->user->image)
+                            : asset('assets/img/default-avatar.png') }}"
+                             alt="Doctor Image">
                     </a>
                 </div>
 
+                <!-- Actions Dropdown -->
                 <div class="dropdown profile-action">
                     <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-ellipsis-v"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="{{ Route('edit_doctor' , ['id' => $doctor->id]) }}">
+                        <a class="dropdown-item" href="{{ route('edit_doctor', ['id' => $doctor->id]) }}">
                             <i class="fa fa-pencil m-r-5"></i> Edit
                         </a>
                         <a class="dropdown-item delete-doctor"
                            data-id="{{ $doctor->id }}"
-                           href="{{ Route('delete_doctor' , ['id' => $doctor->id]) }}"
+                           href="{{ route('delete_doctor', ['id' => $doctor->id]) }}"
                            data-toggle="modal" data-target="#delete_doctor">
                             <i class="fa fa-trash-o m-r-5"></i> Delete
                         </a>
                     </div>
                 </div>
 
+                <!-- Doctor Info -->
                 <h4 class="doctor-name text-ellipsis">
-                    <a href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}">{{ $doctor->employee->user->name }}</a>
+                    <a href="{{ route('profile_doctor', ['id' => $doctor->id]) }}">
+                        {{ $doctor->employee->user->name }}
+                    </a>
                 </h4>
-                <div class="doc-prof">{{ optional($doctor->department)->name }}</div>
+                <div class="doc-prof">
+                    {{ optional($doctor->employee->department)->name }}
+                </div>
                 <div class="user-country">
-                    <i class="fa fa-map-marker"></i> {{ $doctor->employee->user->address }}
+                    <i class="fa fa-map-marker"></i>
+                    {{ $doctor->employee->user->address ?? 'No Address Available' }}
                 </div>
             </div>
         </div>

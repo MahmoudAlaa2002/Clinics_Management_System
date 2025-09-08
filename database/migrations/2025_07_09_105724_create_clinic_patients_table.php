@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
             $table->foreignId('clinic_id')->constrained()->onDelete('cascade');
-            $table->date('visit_date');
             $table->timestamps();
         });
     }

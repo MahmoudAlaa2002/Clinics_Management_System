@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title', 'Employee Profile')
 
@@ -38,16 +38,6 @@
 
                     <table class="table table-borderless" style="margin-bottom:50px;">
                         <tr>
-                            <th><i class="fas fa-calendar-alt text-primary me-2"></i> Date of Birth:</th>
-                            <td>{{ $employee->user->date_of_birth }}</td>
-                        </tr>
-
-                        <tr>
-                            <th><i class="fas fa-venus-mars text-primary me-2"></i> Gender:</th>
-                            <td>{{ $employee->user->gender }}</td>
-                        </tr>
-
-                        <tr>
                             <th><i class="fas fa-envelope text-primary me-2"></i> Email:</th>
                             <td>{{ $employee->user->email ?? '-' }}</td>
                         </tr>
@@ -58,8 +48,76 @@
                         </tr>
 
                         <tr>
+                            <th><i class="fas fa-calendar-alt text-primary me-2"></i> Date of Birth:</th>
+                            <td>{{ $employee->user->date_of_birth }}</td>
+                        </tr>
+
+                        <tr>
+                            <th><i class="fas fa-venus-mars text-primary me-2"></i> Gender:</th>
+                            <td>{{ $employee->user->gender }}</td>
+                        </tr>
+
+                        <tr>
                             <th><i class="fas fa-map-marker-alt text-primary me-2"></i> Address:</th>
                             <td>{{ $employee->user->address ?? '-' }}</td>
+                        </tr>
+                    </table>
+
+
+                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:10px;">
+                        <i class="fas fa-briefcase me-2 text-primary"></i> Employment Details
+                    </h5>
+
+                    <table class="table table-borderless" style="margin-bottom:50px;">
+                        <tr>
+                            <th><i class="fa fa-hospital text-primary me-2"></i> Clinic:</th>
+                            <td>{{ $employee->clinic->name  }}</td>
+                        </tr>
+
+                        <tr>
+                            <th><i class="fas fa-building text-primary me-2"></i> Department:</th>
+                            <td>{{ $employee->department->name  }}</td>
+                        </tr>
+
+                        <tr>
+                            <th><i class="fas fa-briefcase text-primary me-2"></i> Job Title:</th>
+                            <td>{{ $employee->jobTitles->pluck('name')->implode(' , ') }}</td>
+                        </tr>
+
+                        <tr>
+                            <th><i class="fas fa-calendar-alt text-primary me-2"></i> Hire Date:</th>
+                            <td>{{ $employee->jobTitles->pluck('hire_date')->map(fn($date) => \Carbon\Carbon::parse($date)->format('d/m/Y'))->implode(' , ') }}</td>
+                        </tr>
+                    </table>
+
+                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:10px;">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i> Work Schedule
+                    </h5>
+
+                    <table class="table table-borderless" style="margin-bottom:50px;">
+                        <tr>
+                            <th><i class="fas fa-clock text-primary me-2"></i> Work Start Time:</th>
+                            <td>{{ \Carbon\Carbon::parse($employee->work_start_time)->format('H:i') ?? '-' }}</td>
+                        </tr>
+
+                        <tr>
+                            <th><i class="fas fa-clock text-primary me-2"></i> Work End Time:</th>
+                            <td>{{ \Carbon\Carbon::parse($employee->work_end_time)->format('H:i') ?? '-' }}</td>
+                        </tr>
+
+                        <tr>
+                            <th><i class="fas fa-calendar-day text-primary me-2"></i> Working Days:</th>
+                            <td>
+                                @if(!empty($employee->working_days) && is_array($employee->working_days))
+                                    <ul style="padding-left:20px; margin:0;">
+                                        @foreach($employee->working_days as $day)
+                                            <li>{{ ucfirst($day) }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    -
+                                @endif
+                            </td>
                         </tr>
                     </table>
 

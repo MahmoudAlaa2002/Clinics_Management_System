@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 @section('title', 'Clinic Details')
 
 @section('content')
@@ -29,38 +29,83 @@
                         <p><strong>Clinic Name:</strong> {{ $clinic->name }}</p>
                         <p><strong>Location:</strong> {{ $clinic->location }}</p>
                         <p><strong>Email:</strong> {{ $clinic->email }}</p>
-                    </div>
-                    <div class="col-md-4">
                         <p><strong>Phone:</strong> {{ $clinic->phone }}</p>
-                        <p><strong>Available Time:</strong> {{ $clinic->opening_time }} AM  -  {{ $clinic->closing_time }} PM</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <p><strong>Departments Count:</strong> {{ optional($clinic->departments)->count() ?? 0 }}</p>
+                        <p><strong>Specialties Count:</strong> {{ $clinic->departments->flatMap->specialties->unique('id')->count() ?? 0 }}</p>
+                        <p><strong>Doctors Count:</strong> {{ optional($clinic->doctors)->count() ?? 0 }}</p>
+                        <p><strong>Patients Count:</strong> {{ optional($clinic->patients)->count() ?? 0 }}</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <p><strong>Employees Count:</strong> {{ optional($clinic->employees)->count() ?? 0 }}</p>
+                        <p><strong>Clinic Manager:</strong> -</p>
+
                         <p><strong>Status:</strong>
                             @if($clinic->status == 'active')
-                                <span class="badge badge-success" style="padding: 6px 15px; border-radius: 30px; background-color: #00c853;">Active</span>
+                                <span class="badge badge-success" style="padding: 6px 15px; border-radius: 30px; background-color: #13ee29;">Active</span>
                             @else
                                 <span class="badge badge-danger" style="padding: 6px 15px; border-radius: 30px; background-color: #f90d25;">Inactive</span>
                             @endif
                         </p>
                     </div>
-                    <div class="col-md-4">
-                        <p><strong>Departments Count:</strong> {{ optional($clinic->departments)->count() ?? 0 }}</p>
-                        <p><strong>Doctors Count:</strong> {{ optional($clinic->doctors)->count() ?? 0 }}</p>
-                    </div>
+
                 </div>
             </div>
 
             <div class="card-box">
-                <h4 class="card-title"><i class="fa fa-calendar-alt text-primary me-2"></i> Available Days</h4>
+                <h4 class="card-title">
+                    <i class="fa fa-calendar-alt text-primary me-2"></i> Clinic Schedule
+                </h4>
                 @if($clinic->working_days)
-                    <ul>
-                        @foreach(json_decode($clinic->working_days) as $day)
-                            <li>{{ $day }}</li>
-                        @endforeach
-                    </ul>
+                    <table class="table mt-3 text-center table-bordered">
+                        <thead style="background-color:#00A8FF; color:#fff;">
+                            {{-- صف الوقت --}}
+                            @if($clinic->opening_time && $clinic->closing_time)
+                                <tr>
+                                    <th colspan="2">
+                                        [ {{  \Carbon\Carbon::parse($clinic->opening_time)->format('h:i A') }}
+                                        -
+                                        {{ \Carbon\Carbon::parse($clinic->closing_time)->format('h:i A') }} ]
+                                    </th>
+                                </tr>
+                            @endif
+
+                            {{-- صف العناوين --}}
+                            <tr>
+                                <th style="width: 200px;">Day</th>
+                                <th>Availability</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach(['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'] as $day)
+                                <tr>
+                                    <td>{{ $day }}</td>
+                                    <td>
+                                        @if(in_array($day, $clinic->working_days))
+                                            <span class="badge"
+                                                style="background-color:#13ee29; font-size:14px; padding:8px 15px; border-radius:20px;">
+                                                    Available
+                                            </span>
+                                        @else
+                                            <span class="badge"
+                                                style="background-color:#f90d25; font-size:14px; padding:8px 15px; border-radius:20px;">
+                                                    Closed
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 @endif
             </div>
 
             <div class="card-box">
-                <h4 class="card-title"><i class="fa fa-stethoscope text-primary me-2"></i> Departments</h4>
+                <h4 class="card-title"><i class="fas fa-building text-primary me-2"></i> Departments</h4>
                 <ul>
                     @if($clinic->departments && $clinic->departments->count() > 0)
                         @foreach($clinic->departments as $department)
@@ -71,6 +116,28 @@
                     @endif
                 </ul>
             </div>
+
+            <div class="card-box">
+                <h4 class="card-title"><i class="fas fa-stethoscope text-primary me-2"></i> Specialties</h4>
+                <ul>
+                    @php
+                        $specialties = $clinic->departments->flatMap->specialties->unique('id');
+                    @endphp
+
+                    @if($specialties->count() > 0)
+                        @foreach($specialties as $specialty)
+                            <li>
+                                <a href="{{ route('description_specialty', $specialty->id) }}">
+                                    {{ $specialty->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @else
+                        <p>No Specialties Available Yet</p>
+                    @endif
+                </ul>
+            </div>
+
 
             <div class="card-box">
                 <h4 class="card-title"><i class="fa fa-user-md text-primary me-2"></i> Doctors</h4>

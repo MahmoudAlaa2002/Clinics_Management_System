@@ -13,15 +13,14 @@ class JobTitlesSeeder extends Seeder
      */
     public function run(): void{
         DB::table('job_titles')->insert([
-            ['name' => 'Clinic Manager'],
-            ['name' => 'Department Manager'],
-            ['name' => 'Doctor'],
-            ['name' => 'Receptionist'],
-            ['name' => 'Nurse'],
-            ['name' => 'Accountant'],
-            ['name' => 'Security Officer'],
-            ['name' => 'Cleaner'],
-            ['name' => 'Store Supervisor'],
+            ['name' => 'Clinic Manager'     , 'need_department' => 0  , 'need_doctor' => 0],
+            ['name' => 'Department Manager' , 'need_department' => 1  , 'need_doctor' => 0],
+            ['name' => 'Doctor'             , 'need_department' => 1  , 'need_doctor' => 0],
+            ['name' => 'Receptionist'       , 'need_department' => 1  , 'need_doctor' => 1],
+            ['name' => 'Nurse'              , 'need_department' => 1  , 'need_doctor' => 1],
+            ['name' => 'Accountant'         , 'need_department' => 0  , 'need_doctor' => 0],
+            ['name' => 'Pharmacist'         , 'need_department' => 0  , 'need_doctor' => 0],
+            ['name' => 'Store Supervisor'   , 'need_department' => 0  , 'need_doctor' => 0],
         ]);
     }
 }

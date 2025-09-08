@@ -1,24 +1,34 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Backend\Admin\ClinicController;
 use App\Http\Controllers\Backend\Admin\DoctorController;
 use App\Http\Controllers\Backend\Admin\ReportController;
 use App\Http\Controllers\Backend\Admin\PatientController;
-use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\Admin\EmployeeController;
-use App\Http\Controllers\Backend\Admin\DashboardController;
+use App\Http\Controllers\Backend\Admin\SpecialtyController;
 use App\Http\Controllers\Backend\Admin\DepartmentController;
 use App\Http\Controllers\Backend\Admin\MedicationController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Backend\Admin\AppointmentController;
 use App\Http\Controllers\Backend\Admin\PrescriptionController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Backend\Admin\Finance\ExpenseController;
 use App\Http\Controllers\Backend\Admin\Finance\PaymentController;
 use App\Http\Controllers\Backend\Admin\MedicationStockController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Backend\Admin\Finance\VendorInvoiceController;
 use App\Http\Controllers\Backend\Admin\Finance\PatientInvoiceController;
+use App\Http\Controllers\Backend\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
+use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
+use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
+use App\Http\Controllers\Backend\ClinicManager\DashboardController as ClinicManagerDashboardController;
+use App\Http\Controllers\Backend\Employee\Accountant\DashboardController as AccountantDashboardController;
+use App\Http\Controllers\Backend\Employee\Pharmacist\DashboardController as pharmacistDashboardController;
+use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
+use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
+use App\Http\Controllers\Backend\Employee\StoreSupervisor\DashboardController as StoreSupervisorDashboardController;
 
 
 
@@ -46,10 +56,10 @@ Route::prefix('clinics-management')->group(function () {
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
-    Route::get('/my_profile' , [DashboardController::class , 'myProfile'])->name('my_profile');
-    Route::get('/edit/profile' , [DashboardController::class , 'editProfile'])->name('edit_profile');
-    Route::put('/update/profile' , [DashboardController::class , 'updateProfile'])->name('update_profile');
+    Route::get('/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('dashboard');
+    Route::get('/my_profile' , [AdminDashboardController::class , 'myProfile'])->name('my_profile');
+    Route::get('/edit/profile' , [AdminDashboardController::class , 'editProfile'])->name('edit_profile');
+    Route::put('/update/profile' , [AdminDashboardController::class , 'updateProfile'])->name('update_profile');
 
 
     //Clinics
@@ -78,7 +88,24 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::put('/update/department/{id}' ,[DepartmentController::class , 'updateDepartment'])->name('update_department');
     Route::delete('/delete/department/{id}' ,[DepartmentController::class , 'deleteDepartment'])->name('delete_department');
 
-    Route::get('admin/view/department-managers', [DepartmentController::class, 'viewDepartmentsManagers'])->name('view_department_managers');
+    Route::get('/view/departments/managers', [DepartmentController::class, 'viewDepartmentsManagers'])->name('view_departments_managers');
+    Route::get('/search/departments/managers',[DepartmentController::class , 'searchDepartmentsManagers'])->name('search_departments_managers');
+    Route::get('/profile/department/manager/{id}',[DepartmentController::class , 'profileDepartmentManager'])->name('profile_department_manager');
+    Route::get('/edit/department/manager/{id}' ,[DepartmentController::class , 'editDepartmentManager'])->name('edit_department_manager');
+    Route::put('/update/department/manager/{id}' ,[DepartmentController::class , 'updateDepartmentManager'])->name('update_department_manager');
+    Route::delete('/delete/department/manager/{id}' ,[DepartmentController::class , 'deleteDepartmentManager'])->name('delete_department_manager');
+
+
+
+    //Specialty
+    Route::get('/add/specialty' ,[SpecialtyController::class , 'addSpecialty'])->name('add_specialty');
+    Route::post('/store/specialty' ,[SpecialtyController::class , 'storeSpecialty'])->name('store_specialty');
+    Route::get('/view/specialties' ,[SpecialtyController::class , 'viewSpecialties'])->name('view_specialties');
+    Route::get('/description/specialty/{id}' ,[SpecialtyController::class , 'descriptionSpecialty'])->name('description_specialty');
+    Route::get('/edit/specialty/{id}' ,[SpecialtyController::class , 'editSpecialty'])->name('edit_specialty');
+    Route::put('/update/specialty/{id}' ,[SpecialtyController::class , 'updateSpecialty'])->name('update_specialty');
+    Route::delete('/delete/specialty/{id}' ,[SpecialtyController::class , 'deleteSpecialty'])->name('delete_specialty');
+
 
 
     //Doctor
@@ -95,6 +122,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::post('/search/doctor/schedules',[DoctorController::class , 'searchDoctchedules'])->name('search_doctor_schedules');
 
     Route::get('/get-departments-by-clinic/{clinic_id}', [DoctorController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط تخصصاتها في فورم إضافة طبيب
+    Route::get('/get-specialties-by-department/{department_id}', [DoctorController::class, 'getSpecialtiesByDepartment']);
     Route::get('/get-clinic-info/{id}', [DoctorController::class, 'getClinicInfo']);  // بحضر لي أوقات العيادة في فورم الطبيب عشان أختار أوقات الطبيب بناء ع وقت العيادة
     Route::get('/clinic-working-days/{id}', [DoctorController::class, 'getWorkingDays']);    // برجع الأيام المحددة
 
@@ -213,8 +241,30 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
 
 
 
-//Clinic_Manager
+//Clinic Manager
 Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_manager'])->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [ClinicManagerDashboardController::class, 'clinicManagerDashboard'])->name('clinic_manager_dashboard');
+    Route::get('/my_profile' , [ClinicManagerDashboardController::class , 'clinicManagerProfile'])->name('clinic_manager_profile');
+    Route::get('/edit/profile' , [ClinicManagerDashboardController::class , 'clinicManagerEditProfile'])->name('clinic_manager_edit_profile');
+    Route::put('/update/profile' , [ClinicManagerDashboardController::class , 'clinicManagerUpdateProfile'])->name('clinic_manager_update_profile');
+
+});
+
+
+
+//Department Manager
+Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:department_manager'])->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [DepartmentManagerDashboardController::class, 'departmentManagerDashboard'])->name('department_manager_dashboard');
+    Route::get('/my_profile' , [DepartmentManagerDashboardController::class , 'departmentManagerProfile'])->name('department_manager_profile');
+    Route::get('/edit/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerEditProfile'])->name('department_manager_edit_profile');
+    Route::put('/update/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerUpdateProfile'])->name('department_manager_update_profile');
+    Route::delete('/delete', [DepartmentManagerDashboardController::class, 'departmentManagerDelete'])->name('department_manager_delete');
+
+    Route::get('/search', [DepartmentManagerDashboardController::class, 'departmentManagersearch'])->name('search_departments_managers');
 
 });
 
@@ -225,14 +275,93 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
 //Doctor
 Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(function () {
 
+    // Dashboard
+    Route::get('/dashboard', [DoctorDashboardController::class, 'doctorDashboard'])->name('doctor_dashboard');
+    Route::get('/my_profile' , [DoctorDashboardController::class , 'doctorProfile'])->name('doctor_profile');
+    Route::get('/edit/profile' , [DoctorDashboardController::class , 'doctorEditProfile'])->name('doctor_edit_profile');
+    Route::put('/update/profile' , [DoctorDashboardController::class , 'doctorUpdateProfile'])->name('doctor_update_profile');
+
 });
 
 
 
 
 
-//Employee
-Route::prefix('employee')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+//Employees
+/** Accountants **/
+Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+
+    //Dashboard
+    Route::get('/dashboard', [AccountantDashboardController::class, 'accountantDashboard'])->name('accountant_dashboard');
+    Route::get('/profile' , [AccountantDashboardController::class , 'accountantProfile'])->name('accountant_profile');
+    Route::get('/edit/profile' , [AccountantDashboardController::class , 'accountantEditProfile'])->name('accountant_edit_profile');
+    Route::put('/update/profile' , [AccountantDashboardController::class , 'accountantUpdateProfile'])->name('accountant_update_profile');
+
+
+
+
+});
+
+
+
+/** Nurses **/
+Route::prefix('employee/nurse')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+
+    //Dashboard
+    Route::get('/dashboard', [NurseDashboardController::class, 'nurseDashboard'])->name('nurse_dashboard');
+    Route::get('/profile' , [NurseDashboardController::class , 'nurseProfile'])->name('nurse_profile');
+    Route::get('/edit/profile' , [NurseDashboardController::class , 'nurseEditProfile'])->name('nurse_edit_profile');
+    Route::put('/update/profile' , [NurseDashboardController::class , 'nurseUpdateProfile'])->name('nurse_update_profile');
+
+
+
+
+});
+
+
+
+
+
+
+/** Pharmacists **/
+Route::prefix('employee/pharmacist')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+
+    //Dashboard
+    Route::get('/dashboard', [pharmacistDashboardController::class, 'pharmacistDashboard'])->name('pharmacist_dashboard');
+    Route::get('/profile' , [pharmacistDashboardController::class , 'pharmacistProfile'])->name('pharmacist_profile');
+    Route::get('/edit/profile' , [pharmacistDashboardController::class , 'pharmacistEditProfile'])->name('pharmacist_edit_profile');
+    Route::put('/update/profile' , [pharmacistDashboardController::class , 'pharmacistUpdateProfile'])->name('pharmacist_update_profile');
+
+
+});
+
+
+
+/** Receptionists **/
+Route::prefix('employee/receptionist')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+
+    //Dashboard
+    Route::get('/dashboard', [ReceptionistDashboardController::class, 'receptionistDashboard'])->name('receptionist_dashboard');
+    Route::get('/profile' , [ReceptionistDashboardController::class , 'receptionistProfile'])->name('receptionist_profile');
+    Route::get('/edit/profile' , [ReceptionistDashboardController::class , 'receptionistEditProfile'])->name('receptionist_edit_profile');
+    Route::put('/update/profile' , [ReceptionistDashboardController::class , 'receptionistUpdateProfile'])->name('receptionist_update_profile');
+
+
+
+
+});
+
+
+
+/** StoreSupervisors **/
+Route::prefix('employee/store-supervisor')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+
+    //Dashboard
+    Route::get('/dashboard', [StoreSupervisorDashboardController::class, 'storeSupervisorDashboard'])->name('store_supervisor_dashboard');
+    Route::get('/profile' , [StoreSupervisorDashboardController::class , 'storeSupervisorProfile'])->name('store_supervisor_profile');
+    Route::get('/edit/profile' , [StoreSupervisorDashboardController::class , 'storeSupervisorEditProfile'])->name('store_supervisor_edit_profile');
+    Route::put('/update/profile' , [StoreSupervisorDashboardController::class , 'storeSupervisorUpdateProfile'])->name('store_supervisor_update_profile');
+
 
 });
 
@@ -242,6 +371,12 @@ Route::prefix('employee')->middleware(['auth', 'verified', 'role:employee'])->gr
 
 //Patient
 Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient_dashboard');
+    Route::get('/my_profile' , [PatientDashboardController::class , 'patientProfile'])->name('patient_profile');
+    Route::get('/edit/profile' , [PatientDashboardController::class , 'patientEditProfile'])->name('patient_edit_profile');
+    Route::put('/update/profile' , [PatientDashboardController::class , 'patientUpdateProfile'])->name('patient_update_profile');
 
 });
 

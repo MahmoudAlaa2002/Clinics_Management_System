@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('job_titles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->boolean('need_department')->default(0);
+            $table->boolean('need_doctor')->default(0);
             $table->timestamps();
         });
     }

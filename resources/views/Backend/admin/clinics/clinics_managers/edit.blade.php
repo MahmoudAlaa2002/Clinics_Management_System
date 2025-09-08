@@ -1,19 +1,24 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title', 'Edit Clinic Manager')
 
 @section('content')
+
 <style>
-  .col-sm-6 { margin-bottom: 20px; }
-  input[type="date"] { direction: ltr; text-align: left; }
-  .profile-upload .upload-img img{ width:80px;height:80px;object-fit:cover;border-radius:8px; }
+  .col-sm-6{ margin-bottom:20px; }
+  input[type="date"]{ direction:ltr; text-align:left; }
+  .card + .card{ margin-top:20px; }
+  .card{ border:1px solid #ddd !important; border-radius:8px !important; box-shadow:0 4px 10px rgba(0,0,0,.08) !important; overflow:hidden !important; }
+  .card-header{ background-color:#00A8FF !important; color:#fff !important; font-weight:600 !important; padding:12px 15px !important; font-size:16px !important; border-bottom:1px solid #ddd !important; }
+  .card-body{ background-color:#fff; padding:20px; }
+  .profile-upload .upload-img img{ width:80px; height:80px; object-fit:cover; border-radius:8px; }
 </style>
 
 <div class="page-wrapper">
   <div class="content">
     <div class="row">
       <div class="col-lg-8 offset-lg-2">
-        <h4 class="page-title" style="margin-bottom: 30px;">Edit Clinic Manager</h4>
+        <h4 class="page-title" style="margin-bottom:30px;">Edit Clinic Manager</h4>
       </div>
     </div>
 
@@ -23,210 +28,239 @@
           @csrf
           @method('PUT')
 
-          <div class="row">
-            <div class="col-sm-6">
-              <label>Full Name <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fas fa-user-md"></i></span>
-                </div>
-                <input type="text" class="form-control" id="name" name="name"
-                       value="{{ $clinic_manager->name }}">
-              </div>
-            </div>
+          {{-- 1) Basic Information --}}
+          <div class="card">
+            <div class="card-header">Basic Information</div>
+            <div class="card-body">
+              <div class="row">
 
-            <div class="col-sm-6">
-              <label>Date of Birth <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
-                </div>
-                <input type="date" id="date_of_birth" name="date_of_birth"
-                       class="form-control" dir="ltr" lang="en"
-                       value="{{ $clinic_manager->date_of_birth  }}">
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label>Phone <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-phone"></i></span>
-                </div>
-                <input type="text" class="form-control" id="phone" name="phone"
-                       value="{{ $clinic_manager->phone }}">
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label>Email <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                </div>
-                <input class="form-control" type="email" id="email" name="email"
-                       value="{{ $clinic_manager->email }}">
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label>Password</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                </div>
-                <input type="password" id="password" name="password" class="form-control"
-                       placeholder="Enter new password (optional)">
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label>Confirm Password</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                </div>
-                <input class="form-control" type="password" id="confirm_password" name="confirm_password"
-                       placeholder="Enter new confirm password (optional)">
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <label>Address <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
-                </div>
-                <input class="form-control" type="text" id="address" name="address"
-                       value="{{ $clinic_manager->address }}">
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Avatar</label>
-                <div class="profile-upload">
-                  <div class="upload-img">
-                    <img alt="doctor image" src="{{ asset($clinic_manager->image ?? 'assets/img/user.jpg') }}">
-                  </div>
-                  <div class="upload-input">
-                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                {{-- Name --}}
+                <div class="col-sm-6">
+                  <label>Full Name <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i></span></div>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ $clinic_manager->name }}">
                   </div>
                 </div>
+
+                {{-- DOB --}}
+                <div class="col-sm-6">
+                  <label>Date of Birth <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-calendar-alt"></i></span></div>
+                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $clinic_manager->date_of_birth }}">
+                  </div>
+                </div>
+
+                {{-- Phone --}}
+                <div class="col-sm-6">
+                  <label>Phone <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-phone"></i></span></div>
+                    <input type="text" class="form-control" id="phone" name="phone" value="{{ $clinic_manager->phone }}">
+                  </div>
+                </div>
+
+                {{-- Email --}}
+                <div class="col-sm-6">
+                  <label>Email <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-envelope"></i></span></div>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ $clinic_manager->email }}">
+                  </div>
+                </div>
+
+                {{-- Password --}}
+                <div class="col-sm-6">
+                  <label>Password</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password (optional)">
+                  </div>
+                </div>
+
+                {{-- Confirm Password --}}
+                <div class="col-sm-6">
+                  <label>Confirm Password</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                  </div>
+                </div>
+
+                {{-- Address --}}
+                <div class="col-sm-6">
+                  <label>Address <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span></div>
+                    <input type="text" class="form-control" id="address" name="address" value="{{ $clinic_manager->address }}">
+                  </div>
+                </div>
+
+                {{-- Avatar --}}
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Avatar</label>
+                    <div class="profile-upload">
+                      <div class="upload-img">
+                        <img alt="manager image" src="{{ asset($clinic_manager->image ?? 'assets/img/user.jpg') }}">
+                      </div>
+                      <div class="upload-input">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {{-- Gender --}}
+                <div class="col-sm-6">
+                  <div class="form-group gender-select">
+                    <label class="gen-label">Gender: <span class="text-danger">*</span></label>
+                    <div class="form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" name="gender" value="male" class="form-check-input" {{ $clinic_manager->gender === 'male' ? 'checked' : '' }}> Male
+                      </label>
+                    </div>
+                    <div class="form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" name="gender" value="female" class="form-check-input" {{ $clinic_manager->gender === 'female' ? 'checked' : '' }}> Female
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
+          </div>
 
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Clinic Name <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-hospital-alt"></i></span>
-                  </div>
-                  <select class="form-control" id="clinic_id" name="clinic_id">
-                    <option disabled selected hidden>Select Clinic</option>
-                    @if(isset($clinics) && $clinics->count() > 0)
+          {{-- 2) Clinic Assignment --}}
+          <div class="card">
+            <div class="card-header">Clinic Assignment</div>
+            <div class="card-body">
+              <div class="row">
+
+                {{-- Clinic --}}
+                <div class="col-sm-12">
+                  <label>Clinic Name <span class="text-danger">*</span></label>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-hospital-alt"></i></span></div>
+                    <select class="form-control" id="clinic_id" name="clinic_id">
+                      <option disabled selected hidden>Select Clinic</option>
                       @foreach($clinics as $clinic)
-                        <option value="{{ $clinic->id }}"
-                          {{ optional($clinic_manager->employee)->clinic_id == $clinic->id ? 'selected' : '' }}>
+                        <option value="{{ $clinic->id }}" {{ optional($clinic_manager->employee)->clinic_id == $clinic->id ? 'selected' : '' }}>
                           {{ $clinic->name }}
                         </option>
                       @endforeach
-                    @endif
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Work Start Time <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                    </select>
                   </div>
-                  <select name="work_start_time" id="work_start_time" class="form-control">
-                    <option disabled hidden>Select Start Time</option>
-                  </select>
                 </div>
+
               </div>
             </div>
+          </div>
 
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label>Work End Time <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+          {{-- 3) Work Schedule --}}
+          <div class="card">
+            <div class="card-header">Work Schedule</div>
+            <div class="card-body">
+              <div class="row">
+
+                {{-- Start Time --}}
+                <div class="col-sm-6">
+                  <label>Work Start Time <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-clock"></i></span></div>
+                    <select name="work_start_time" id="work_start_time" class="form-control">
+                      <option disabled hidden>Select Start Time</option>
+                      @if($clinic_manager->employee->work_start_time)
+                        <option value="{{ $clinic_manager->employee->work_start_time }}" selected>{{ $clinic_manager->employee->work_start_time }}</option>
+                      @endif
+                    </select>
                   </div>
-                  <select name="work_end_time" id="work_end_time" class="form-control">
-                    <option disabled hidden>Select End Time</option>
-                  </select>
                 </div>
+
+                {{-- End Time --}}
+                <div class="col-sm-6">
+                  <label>Work End Time <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-clock"></i></span></div>
+                    <select name="work_end_time" id="work_end_time" class="form-control">
+                      <option disabled hidden>Select End Time</option>
+                      @if($clinic_manager->employee->work_end_time)
+                        <option value="{{ $clinic_manager->employee->work_end_time }}" selected>{{ $clinic_manager->employee->work_end_time }}</option>
+                      @endif
+                    </select>
+                  </div>
+                </div>
+
+                {{-- Working Days --}}
+                <div class="col-sm-12">
+                  <label>Working Days <span class="text-danger">*</span></label>
+                  @php
+                    $all_days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+                    $selectedDays = old('working_days', $clinic_manager->employee->working_days ?? []);
+                  @endphp
+                  <div class="row gx-1">
+                    <div class="col-6">
+                      @foreach(array_slice($all_days,0,4) as $day)
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}" {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
+                          <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
+                        </div>
+                      @endforeach
+                    </div>
+                    <div class="col-6">
+                      @foreach(array_slice($all_days,4) as $day)
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}" {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
+                          <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
+                        </div>
+                      @endforeach
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
+          </div>
 
-            <div class="col-sm-6">
+          {{-- 4) Biography & Status --}}
+          <div class="card">
+            <div class="card-header">Biography & Status</div>
+            <div class="card-body">
               <div class="form-group">
-                <label>Working Days <span class="text-danger">*</span></label>
-                <div class="row gx-1" id="working_days" name="working_days">
-
-                </div>
+                <label>Short Biography</label>
+                <textarea class="form-control" id="short_biography" name="short_biography" rows="3">{{ $clinic_manager->employee->short_biography }}</textarea>
               </div>
-            </div>
 
-            <div class="col-sm-6">
-              <div class="form-group gender-select">
-                <label class="gen-label">Gender: <span class="text-danger">*</span></label>
-                <div class="form-check-inline">
-                  <label class="form-check-label" for="gender_male">
-                    <input type="radio" id="gender_male" name="gender" class="form-check-input" value="male"
-                           {{ old('gender', $clinic_manager->gender ?? '') === 'male' ? 'checked' : '' }}> Male
-                  </label>
+              <div class="form-group">
+                <label class="display-block">Status</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="status" id="manager_active" value="active" {{ $clinic_manager->employee->status === 'active' ? 'checked' : '' }}>
+                  <label class="form-check-label" for="manager_active">Active</label>
                 </div>
-                <div class="form-check-inline">
-                  <label class="form-check-label" for="gender_female">
-                    <input type="radio" id="gender_female" name="gender" class="form-check-input" value="female"
-                           {{ old('gender', $user->gender ?? '') === 'female' ? 'checked' : '' }}> Female
-                  </label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="status" id="manager_inactive" value="inactive" {{ $clinic_manager->employee->status === 'inactive' ? 'checked' : '' }}>
+                  <label class="form-check-label" for="manager_inactive">Inactive</label>
                 </div>
               </div>
             </div>
           </div>
 
-          {{-- Short Biography --}}
-          <div class="form-group">
-            <label>Short Biography <span class="text-danger">*</span></label>
-            <textarea class="form-control" id="short_biography" name="short_biography" rows="3" cols="30">{{ $clinic_manager->employee->short_biography }}</textarea>
+          {{-- Submit --}}
+          <div class="text-center m-t-20" style="margin-top:20px;">
+            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform:none !important;">Edit Clinic Manager</button>
           </div>
 
-          {{-- Status --}}
-          <div class="form-group">
-            <label class="display-block">Status</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="status" id="doctor_active" value="active"
-                     {{ old('status', $clinic_manager->employee->status ?? 'active') === 'active' ? 'checked' : '' }}>
-              <label class="form-check-label" for="doctor_active">Active</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="status" id="doctor_inactive" value="inactive"
-                     {{ old('status', $clinic_manager->employee->status ?? '') === 'inactive' ? 'checked' : '' }}>
-              <label class="form-check-label" for="doctor_inactive">Inactive</label>
-            </div>
-          </div>
-
-          <div class="text-center m-t-20">
-            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">
-              Edit Clinic Manager
-            </button>
-          </div>
         </form>
       </div>
     </div>
-
   </div>
 </div>
 @endsection
+
+
+
 
 @section('js')
 @php
@@ -259,7 +293,7 @@
 //     });
 //   }
 
-  
+
   function loadWorkingDaysForClinic(clinicId, selectedDays = []) {
     $.get('/admin/clinic-working-days/' + clinicId, function (clinicDays) {
       const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
@@ -290,7 +324,7 @@
     });
   }
 
-  
+
   function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
     if (!clinicId) return;
     $.get('/admin/get-clinic-info/' + clinicId, function (data) {

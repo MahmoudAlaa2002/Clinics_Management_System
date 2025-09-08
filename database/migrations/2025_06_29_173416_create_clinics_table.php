@@ -21,8 +21,7 @@ return new class extends Migration
             $table->time('closing_time');
             $table->json('working_days');
             $table->text('description')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->foreignId('manager_employee_id')->nullable()->constrained('employees')->nullOnDelete();         
+            $table->enum('status', ['active', 'inactive'])->default('active');         
             $table->timestamps();
         });
     }

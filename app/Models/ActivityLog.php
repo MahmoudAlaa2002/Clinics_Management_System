@@ -9,8 +9,7 @@ class ActivityLog extends Model{
     protected $fillable = [
         'user_id',
         'action_type',
-        'module',
-        'description',
+        'target_table',
         'old_data',
         'new_data',
         'ip_address',

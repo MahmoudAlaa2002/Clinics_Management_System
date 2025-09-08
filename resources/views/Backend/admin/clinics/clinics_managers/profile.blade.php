@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title', 'Clinic Manager Profile')
 
@@ -50,10 +50,14 @@
             <div class="col-lg-8">
                 <div class="p-4 profile-card">
                     <div class="mb-4 text-center">
-                        <img src="{{ $clinic_manager->image ? asset($clinic_manager->image) : asset('assets/img/user.jpg') }}" alt="clinic Manager Image"
-                            class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
+                        <img src="{{ $clinic_manager->image ? asset($clinic_manager->image) : asset('assets/img/user.jpg') }}"
+                             alt="clinic Manager Image"
+                             class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
                         <h2 class="mt-3 mb-0">{{ $clinic_manager->name }}</h2>
-                        <p class="text-muted">Clinic Manager</p>
+                        <p class="mb-1 text-muted">Clinic Manager</p>
+                        <p class="text-primary fw-bold" style="font-size: 15px;">
+                            [ {{ $clinic_manager->employee->clinic->name ?? 'Not Assigned' }} ]
+                        </p>
                     </div>
 
                     <hr>
@@ -63,9 +67,9 @@
                     <div class="mb-4 row" style="margin-left:5px;">
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-hospital me-2 text-primary"></i>
-                            <strong>Clinic:</strong>&nbsp;
-                            <span class="text-muted">{{ $clinic_manager->employee->clinic->name ?? 'Not Assigned' }}</span>
+                            <i class="fa fa-envelope me-2 text-primary"></i>
+                            <strong>Email:</strong>&nbsp;
+                            <span class="text-muted">{{ $clinic_manager->email }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
@@ -75,27 +79,9 @@
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-envelope me-2 text-primary"></i>
-                            <strong>Email:</strong>&nbsp;
-                            <span class="text-muted">{{ $clinic_manager->email }}</span>
-                        </div>
-
-                        <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-calendar me-2 text-primary"></i>
-                            <strong>Birth Date:</strong>&nbsp;
-                            <span class="text-muted">{{ $clinic_manager->date_of_birth }}</span>
-                        </div>
-
-                        <div class="mb-3 col-md-6 profile-item">
                             <i class="fa fa-phone me-2 text-primary"></i>
                             <strong>Phone:</strong>&nbsp;
                             <span class="text-muted">{{ $clinic_manager->phone ?? 'N/A' }}</span>
-                        </div>
-
-                        <div class="mb-3 col-md-6 profile-item">
-                            <i class="fas fa-venus-mars me-2 text-primary"></i>
-                            <strong>Gender:</strong>&nbsp;
-                            <span class="text-muted">{{ ucfirst($clinic_manager->gender) }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
@@ -105,17 +91,30 @@
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-id-badge me-2 text-primary"></i>
-                            <strong>Status:</strong>&nbsp;
-                            <span class="badge" style="background-color: #28C76F; color: white; padding:5px;">
-                                {{ ucfirst($clinic_manager->employee->status) }}
-                            </span>
+                            <i class="fa fa-calendar me-2 text-primary"></i>
+                            <strong>Birth Date:</strong>&nbsp;
+                            <span class="text-muted">{{ $clinic_manager->date_of_birth }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
                             <i class="fa fa-clock me-2 text-primary"></i>
                             <strong>Work End Time:</strong>&nbsp;
                             <span class="text-muted">{{ $clinic_manager->employee->work_end_time }} PM</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6 profile-item">
+                            <i class="fas fa-venus-mars me-2 text-primary"></i>
+                            <strong>Gender:</strong>&nbsp;
+                            <span class="text-muted">{{ ucfirst($clinic_manager->gender) }}</span>
+                        </div>
+
+
+                        <div class="mb-3 col-md-6 profile-item">
+                            <i class="fa fa-id-badge me-2 text-primary"></i>
+                            <strong>Status:</strong>&nbsp;
+                            <span class="badge" style="background-color: #28C76F; color: white; padding:5px;">
+                                {{ ucfirst($clinic_manager->employee->status) }}
+                            </span>
                         </div>
                     </div>
 

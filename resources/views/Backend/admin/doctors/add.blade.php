@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'Add New Doctor')
 
@@ -229,13 +229,27 @@
                     <label>Department Name <span class="text-danger">*</span></label>
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                        <span class="input-group-text"><i class="fas fa-building"></i></span>
                       </div>
                       <select id="department_id" name="department_id" class="form-control">
                         <option disabled selected hidden>Select Department</option>
                       </select>
                     </div>
                   </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Speciality <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                        </div>
+                        <select id="specialty_id" name="specialty_id" class="form-control">
+                          <option disabled selected hidden>Select Specialty</option>
+                        </select>
+                      </div>
+                    </div>
                 </div>
 
               </div>
@@ -370,6 +384,7 @@
                 let date_of_birth = $('#date_of_birth').val().trim();
                 let clinic_id = $('#clinic_id').val();
                 let department_id = $('#department_id').val();
+                let specialty_id = $('#specialty_id').val();
                 let email = $('#email').val();
                 let password = $('#password').val();
                 let confirm_password = $('#confirm_password').val();
@@ -381,7 +396,7 @@
                 let short_biography = $('#short_biography').val().trim();
                 let status = $('input[name="status"]:checked').val();
                 let image = document.querySelector('#image').files[0];
-                let qualification = $('#qualification').val().trim();
+                let qualification = $('#qualification').val();
                 let experience_years = $('#experience_years').val();
 
                 let workingDays = [];
@@ -396,6 +411,7 @@
                 formData.append('date_of_birth', date_of_birth);
                 formData.append('clinic_id', clinic_id);
                 formData.append('department_id', department_id);
+                formData.append('specialty_id', specialty_id);
                 formData.append('email', email);
                 formData.append('password', password);
                 formData.append('confirm_password', confirm_password);
@@ -417,7 +433,7 @@
                 });
 
 
-                if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id')  || email === '' || password === '' || confirm_password === '' || phone === '' || address === '' || qualification === '' || experience_years === '' || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || gender === undefined  || $('input[name="working_days[]"]:checked').length === 0) {
+                if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || !isValidSelectValue('specialty_id')  || email === '' || password === '' || confirm_password === '' || phone === '' || address === '' || !isValidSelectValue('qualification') || experience_years === '' || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || gender === undefined  || $('input[name="working_days[]"]:checked').length === 0) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
@@ -481,6 +497,21 @@
         });
     });
 
+
+    $('#department_id').on('change', function () {
+        const departmentId = $(this).val();
+        if (!departmentId) return;
+
+        $.get('/admin/get-specialties-by-department/' + departmentId, function (data) {
+            const specialtySelect = $('#specialty_id');
+            specialtySelect.empty().append('<option value="" disabled selected hidden>Select Specialty</option>');
+
+            $.each(data, function (i, specialty) {
+                specialtySelect.append('<option value="' + specialty.id + '">' + specialty.name + '</option>');
+            });
+        });
+    });
+
     // ✅ تحميل أوقات العمل
     $.get('/admin/get-clinic-info/' + clinicId, function (data) {
         const start = parseInt(data.opening_time.split(':')[0]);
@@ -500,16 +531,22 @@
     });
 
     // ✅ تفعيل وتعطيل أيام العمل
-    $.get('/admin/clinic-working-days/' + clinicId, function (clinicDays) {
+    $.get('/admin/clinic-working-days/' + clinicId, function (response) {
+        const clinicDays = response.working_days || []; // الأيام من السيرفر
+        console.log(clinicDays);
         const allDays = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
         allDays.forEach(day => {
             const checkbox = $('#day_' + day);
             if (checkbox.length) {
                 if (clinicDays.includes(day)) {
+                    // خلي اليوم مفعّل
                     checkbox.prop('disabled', false);
+                    checkbox.closest('.form-check').removeClass('text-muted');
                 } else {
+                    // عطّل الأيام الغير متاحة
                     checkbox.prop('disabled', true).prop('checked', false);
+                    checkbox.closest('.form-check').addClass('text-muted');
                 }
             }
         });

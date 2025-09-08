@@ -9,6 +9,5 @@ class ClinicPatient extends Model{
     protected $fillable = [
         'patient_id',
         'clinic_id',
-        'visit_date',
     ];
 }

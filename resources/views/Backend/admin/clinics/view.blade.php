@@ -1,4 +1,4 @@
-@extends('Backend.master')
+@extends('Backend.admin.master')
 
 @section('title' , 'View Clinics')
 
@@ -50,7 +50,6 @@
                   <select id="search_filter" name="filter" class="form-control">
                     <option value="clinic">Clinic Name</option>
                     <option value="location">Location</option>
-                    <option value="day">Working Day</option>
                     <option value="status">Status</option>
                   </select>
                 </div>
@@ -63,10 +62,8 @@
                         <th>ID</th>
                         <th>Clinic Name</th>
                         <th>Location</th>
-                        <th>Clinic Email</th>
-                        <th>Clinic Phone</th>
-                        <th>Available Days</th>
-                        <th>Available Time</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -80,8 +77,6 @@
                                 <td>{{ $clinic->location }}</td>
                                 <td>{{ $clinic->email }}</td>
                                 <td>{{ $clinic->phone }}</td>
-                                <td>{{ $clinic->working_days ? implode(' , ', json_decode($clinic->working_days)) : '-' }}</td>
-                                <td>{{ $clinic->opening_time }} AM - {{ $clinic->closing_time }} PM</td>
                                 <td>
                                     @if($clinic->status === 'active')
                                         <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #13ee29; color: white;">Active</span>

@@ -18,21 +18,34 @@ class AuthenticatedSessionController extends Controller{
 
     public function userLogin(Request $request){
         $Check = $request->all();
-        if(Auth::guard('web')->attempt(['email' => $Check['email'] , 'password' => $Check['password']])){
-            if(Auth::user()->hasRole('admin')){
+
+        if (Auth::guard('web')->attempt(['email' => $Check['email'], 'password' => $Check['password']])) {
+            $user = Auth::user();
+
+            if ($user->hasRole('admin')) {
                 return response()->json(['data' => 1]);
-            }else if(Auth::user()->hasRole('clinic_manager')){
-                return response()->json(['data' => 2 , 'user_id' => Auth::user()->id]);
-            }else if(Auth::user()->hasRole('department_manager')){
-                return response()->json(['data' => 3 , 'user_id' => Auth::user()->id]);
-            }else if(Auth::user()->hasRole('doctor')){
-                return response()->json(['data' => 4 , 'user_id' => Auth::user()->id]);
-            }else if(Auth::user()->hasRole('employee')){
-                return response()->json(['data' => 5 , 'user_id' => Auth::user()->id]);
-            }else{
-                return response()->json(['data' => 6 , 'user_id' => Auth::user()->id]);
+
+            } else if ($user->hasRole('clinic_manager')) {
+                return response()->json(['data' => 2]);
+
+            } else if ($user->hasRole('department_manager')) {
+                return response()->json(['data' => 3]);
+
+            } else if ($user->hasRole('doctor')) {
+                return response()->json(['data' => 4]);
+
+            } else if ($user->hasRole('employee')) {
+                $employee = $user->employee;
+                $jobTitle = $employee->jobTitles()->first();
+            
+                return response()->json([
+                    'data'     => 5,
+                    'position' => $jobTitle ? $jobTitle->name : 'general'
+                ]);
+            } else if ($user->hasRole('patient')) {
+                return response()->json(['data' => 6]);
             }
-        }else{
+        } else {
             return response()->json(['data' => 0]);
         }
     }

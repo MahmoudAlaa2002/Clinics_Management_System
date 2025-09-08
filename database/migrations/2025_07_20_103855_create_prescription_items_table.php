@@ -14,9 +14,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('prescription_id')->constrained()->onDelete('cascade');
             $table->foreignId('medicine_id')->nullable()->constrained('medications')->onDelete('set null');
-            $table->string('frequency');             // التكرار (مرتين يومياً مثلاً)
-            $table->string('duration');              // المدة (7 أيام مثلاً)
-            $table->text('instructions')->nullable();
+
+            $table->string('dosage');          // الجرعة (مثلاً: 500mg)
+            $table->string('duration');        // المدة (مثلاً: 7 أيام)
+            $table->integer('quantity');       // الكمية
+            $table->decimal('unit_price', 10, 2);  // سعر الوحدة
+            $table->decimal('total_price', 10, 2); // السعر الكلي
 
             $table->timestamps();
         });

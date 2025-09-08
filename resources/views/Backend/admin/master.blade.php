@@ -16,10 +16,10 @@
 <body>
     <div class="main-wrapper">
 
-        @include('Backend.layout.header')
+        @include('Backend.admin.layout.header')
 
 
-        @include('Backend.layout.sidebar')
+        @include('Backend.admin.layout.sidebar')
 
 
         @yield('content')
