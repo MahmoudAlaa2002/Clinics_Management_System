@@ -15,28 +15,51 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void{
-        $this->call(RolesSeeder::class);
-        $this->call(DepartmentSeeder::class);
+        // $this->call(RolesSeeder::class);
+        // $this->call(DepartmentSeeder::class);
 
-        // Create Admin user
-        $admin = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
+        // // Create Admin user
+        // $admin = User::create([
+        //     'name' => 'Admin',
+        //     'email' => 'admin@gmail.com',
+        //     'password' => Hash::make('123456'),
+        //     'phone' => '0592226120',
+        //     'address' => 'Gaza',
+        //     'date_of_birth' => '2002-03-13',
+        //     'image' => 'assets/img/admin/admin.jpg',
+        //     'gender' => 'male',
+        //     'role' => 'admin',
+        // ]);
+
+        // Role::firstOrCreate([
+        //     'name' => 'admin',
+        //     'guard_name' => 'web',
+        // ]);
+
+        // $admin->assignRole('admin');
+
+        // Create Doctor user
+        $doctor = User::create([
+            'name' => 'Dr. Ahmed',
+            'email' => 'doctor@gmail.com',
             'password' => Hash::make('123456'),
-            'phone' => '0592226120',
+            'phone' => '0591234567',
             'address' => 'Gaza',
-            'date_of_birth' => '2002-03-13',
-            'image' => 'assets/img/admin/admin.jpg',
+            'date_of_birth' => '1990-05-10',
+            'image' => 'assets/img/doctors/doctor.jpg',
             'gender' => 'male',
-            'role' => 'admin',
+            'role' => 'doctor',
         ]);
 
+        // Create doctor role if it doesn't exist
         Role::firstOrCreate([
-            'name' => 'admin',
+            'name' => 'doctor',
             'guard_name' => 'web',
         ]);
 
-        $admin->assignRole('admin');
+        // Assign role to the doctor user
+        $doctor->assignRole('doctor');
+
 
     }
 }
