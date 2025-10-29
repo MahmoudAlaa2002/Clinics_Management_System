@@ -18,9 +18,7 @@ use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDash
 use App\Http\Controllers\Backend\ClinicManager\DashboardController as ClinicManagerDashboardController;
 use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
 use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
-
-
-
+use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
 
 Route::prefix('clinics-management')->group(function () {
 
@@ -207,6 +205,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/my_profile' , [DoctorDashboardController::class , 'doctorProfile'])->name('doctor_profile');
     Route::get('/edit/profile' , [DoctorDashboardController::class , 'doctorEditProfile'])->name('doctor_edit_profile');
     Route::put('/update/profile' , [DoctorDashboardController::class , 'doctorUpdateProfile'])->name('doctor_update_profile');
+    Route::get('/appointments', [DoctorAppointmentController::class, 'allAppointments'])->name('doctor_appointments');
 
 });
 
