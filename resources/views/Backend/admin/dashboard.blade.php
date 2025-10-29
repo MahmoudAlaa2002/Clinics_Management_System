@@ -26,7 +26,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    {{-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
                             <span class="dash-widget-bg3" style="background-color: #814e34;"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
@@ -34,7 +34,7 @@
                                 <span class="widget-title3" style="background-color: #814e34;">Specialty <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
@@ -68,7 +68,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    {{-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
                             <span class="dash-widget-bg3" style="background-color: #e83e8c;"><i class="fas fa-capsules" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
@@ -76,7 +76,7 @@
                                 <span class="widget-title3" style="background-color: #e83e8c;">Medications <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">

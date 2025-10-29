@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model{
+
     protected $fillable = [
         'user_id',
         'clinic_id',
         'department_id',
+        'job_title',
         'work_start_time',
         'work_end_time',
         'working_days',
@@ -25,22 +27,19 @@ class Employee extends Model{
         return $this->belongsTo(User::class);
     }
 
-    public function doctor(){
-        return $this->hasOne(Doctor::class, 'employee_id');
-    }
-
-
 
     public function clinic(){
-        return $this->belongsTo(Clinic::class, 'clinic_id');
+        return $this->belongsTo(Clinic::class);
     }
+
 
     public function department(){
-        return $this->belongsTo(Department::class, 'department_id');
+        return $this->belongsTo(Department::class);
     }
 
-    public function jobTitles(){
-        return $this->belongsToMany(JobTitle::class, 'employee_job_titles');
+
+    public function doctor(){
+        return $this->hasOne(Doctor::class, 'employee_id');
     }
 
 }

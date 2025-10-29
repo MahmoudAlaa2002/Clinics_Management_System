@@ -9,24 +9,22 @@ class Department extends Model{
     protected $fillable = [
         'name',
         'description',
+        'status',
     ];
 
     public function clinics(){
-        return $this->belongsToMany(Clinic::class, 'clinic_department');
+        return $this->belongsToMany(Clinic::class, 'clinic_departments');
     }
 
-    public function specialties() {
-        return $this->belongsToMany(Specialty::class, 'department_specialty');
-    }
 
     public function doctors(){
         return $this->hasManyThrough(
-            Doctor::class,       // الموديل النهائي
-            Employee::class,     // الموديل الوسيط
-            'department_id',     // المفتاح في جدول employees
-            'employee_id',       // المفتاح في جدول doctors
-            'id',                // المفتاح في جدول departments
-            'id'                 // المفتاح في جدول employees
+            Doctor::class,             // الموديل النهائي
+            Employee::class,           // الجدول الوسيط
+            'department_id',    // المفتاح الأجنبي في employees
+            'employee_id',             // المفتاح الأجنبي في doctors
+            'id',                      // المفتاح الأساسي في departments
+            'id'                       // المفتاح الأساسي في employees
         );
     }
 

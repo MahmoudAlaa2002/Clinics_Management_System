@@ -7,8 +7,8 @@
                     <a class="avatar" href="{{ route('profile_doctor', ['id' => $doctor->id]) }}">
                         <img src="{{ $doctor->employee->user->image
                             ? asset($doctor->employee->user->image)
-                            : asset('assets/img/default-avatar.png') }}"
-                             alt="Doctor Image">
+                            : asset('assets/img/user.jpg') }}"
+                             alt="">
                     </a>
                 </div>
 
@@ -31,13 +31,13 @@
                 </div>
 
                 <!-- Doctor Info -->
-                <h4 class="doctor-name text-ellipsis">
+                <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;">
                     <a href="{{ route('profile_doctor', ['id' => $doctor->id]) }}">
                         {{ $doctor->employee->user->name }}
                     </a>
                 </h4>
                 <div class="doc-prof">
-                    {{ optional($doctor->employee->department)->name }}
+                    {{ optional($doctor->employee->clinic)->name }}
                 </div>
                 <div class="user-country">
                     <i class="fa fa-map-marker"></i>

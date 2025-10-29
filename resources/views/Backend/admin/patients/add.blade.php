@@ -406,7 +406,7 @@
                         if (response.data == 0) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'Email Is Already Used By Another Person',
+                                text: 'The Patient Is Already Registered',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });

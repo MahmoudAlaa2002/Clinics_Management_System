@@ -4,59 +4,58 @@
 
 @section('content')
 
-    <style>
+<style>
+    .col-sm-6 { margin-bottom: 20px; }
+    .card + .card { margin-top: 20px; }
+    input[type="date"], input[type="time"] { direction: ltr; text-align: left; }
 
-        .col-sm-6 {
-            margin-bottom: 20px;
-        }
+    .card {
+        border: 1px solid #ddd !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
+        overflow: hidden !important;
+    }
 
-        input[type="date"] {
-            direction: ltr;
-            text-align: left;
-        }
-    </style>
+    .card-header {
+        background-color: #00A8FF !important;
+        color: #fff !important;
+        font-weight: 600 !important;
+        padding: 12px 15px !important;
+        font-size: 16px !important;
+        border-bottom: 1px solid #ddd !important;
+    }
 
+    .card-body {
+        background-color: #fff;
+        padding: 20px;
+    }
+</style>
 
-    <div class="page-wrapper">
-        <div class="content">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <h4 class="page-title" style="margin-bottom: 30px;">Add New Appointment</h4>
-                </div>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <h4 class="page-title" style="margin-bottom: 30px;">Add New Appointment</h4>
             </div>
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <form method="POST" action="{{ Route('store_appointment') }}" enctype="multipart/form-data">
-                        @csrf
+        </div>
 
-                        <div class="row">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <form method="POST" action="{{ Route('store_appointment') }}" enctype="multipart/form-data">
+                    @csrf
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Patient Name <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-user-injured"></i></span>
-                                        </div>
-                                        <select class="form-control" id="patient_id" name="patient_id" required>
-                                            <option value="" disabled selected hidden>Select Patient</option>
-                                            @foreach($patients as $patient)
-                                                <option value="{{ $patient->id }}">{{ $patient->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
+                    <!-- Basic Info -->
+                    <div class="card">
+                        <div class="card-header">Appointment Information</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
                                     <label>Assigned to Clinic <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-hospital"></i></span>
                                         </div>
-                                        <select class="form-control" id="clinic_id" name="clinic_id" required>
+                                        <select class="form-control" id="clinic_id" name="clinic_id">
                                             <option value="" disabled selected hidden>Select Clinic</option>
                                             @foreach($clinics as $clinic)
                                                 <option value="{{ $clinic->id }}">{{ $clinic->name }}</option>
@@ -64,39 +63,47 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="col-sm-6">
                                     <label>Assigned to Department <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
                                         </div>
-                                        <select class="form-control" id="department_id" name="department_id" required>
+                                        <select class="form-control" id="department_id" name="department_id">
                                             <option value="" disabled selected hidden>Select Department</option>
                                         </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Patient Name <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-injured"></i></span>
+                                        </div>
+                                        <select class="form-control" id="patient_id" name="patient_id">
+                                            <option value="" disabled selected hidden>Select Patient</option>
+                                            @foreach($patients as $patient)
+                                                <option value="{{ $patient->id }}">{{ $patient->user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
                                     <label>Assigned to Doctor <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user-md"></i></span>
                                         </div>
-                                        <select class="form-control" id="doctor_id" name="doctor_id" required>
+                                        <select class="form-control" id="doctor_id" name="doctor_id">
                                             <option value="" disabled selected hidden>Select Doctor</option>
                                         </select>
                                     </div>
                                 </div>
-                            </div>
 
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="col-sm-6">
                                     <label>Doctor's Appointment <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -107,34 +114,39 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="appointment_day">Appointment Day <span class="text-danger">*</span></label>
-                                    <select name="appointment_day" id="appointment_day" class="form-control" required>
+                                <div class="col-sm-6">
+                                    <label>Appointment Day <span class="text-danger">*</span></label>
+                                    <select name="appointment_day" id="appointment_day" class="form-control">
                                         <option value="" disabled selected hidden>Select Day</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-
-                        <div class="form-group">
-                            <label>Notes </label>
-                            <textarea class="form-control" id="notes" name="notes" rows="3" cols="30"></textarea>
+                    <!-- Notes -->
+                    <div class="card mt-3">
+                        <div class="card-header">Additional Notes</div>
+                        <div class="card-body">
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter notes here..."></textarea>
                         </div>
+                    </div>
 
+                    <!-- Submit -->
+                    <div class="text-center" style="margin-top:20px;">
+                        <button type="submit" class="btn btn-primary submit-btn addBtn px-5 rounded-pill" style="text-transform: none !important;">
+                            Add Appointment
+                        </button>
+                    </div>
 
-                        <div class="text-center m-t-20">
-                            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">Add Appointment</button>
-                        </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 @endsection
+
 
 @section('js')
     <script>
@@ -189,21 +201,19 @@
                     },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'The appointment has already been booked',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        } else if (response.data == 1) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Appointment has been added successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                window.location.href = '/admin/add/appointment';
-                            });
+                            Swal.fire('Error!', 'This Patient Already Has An Appointment At This Time', 'error');
+                        }
+                        else if (response.data == 1) {
+                            Swal.fire('Warning', 'This Appointment Slot Is Already Booked. Please Choose Another Time', 'warning');
+                        }
+                        else if (response.data == 2) {
+                            Swal.fire('Error!', 'This Appointment Time Has Already Passed. Please Select Another Time', 'error');
+                        }
+                        else if (response.data == 3) {
+                            Swal.fire('Success', 'Appointment Has Been Added Successfully', 'success')
+                                .then(() => {
+                                    window.location.href = '/admin/add/appointment';
+                                });
                         }
                     }
                 });
@@ -221,7 +231,7 @@
         if (clinicId) {
             // جلب التخصصات من العيادة
             $.ajax({
-                url: '/get-departments-by-clinic/' + clinicId,
+                url: '/admin/get-departments-by-clinic/' + clinicId,
                 type: 'GET',
                 success: function (data) {
                     let departmentSelect = $('#department_id');
@@ -244,7 +254,7 @@
 
             if (departmentId && clinicId) {
                 $.ajax({
-                    url: '/get-doctors-by-clinic-and-department',
+                    url: '/admin/get-doctors-by-clinic-and-department',
                     type: 'GET',
                     data: {
                         clinic_id: clinicId,
@@ -273,7 +283,7 @@
 
         if (doctorId) {
             $.ajax({
-                url: '/get-doctor-info/' + doctorId,
+                url: '/admin/get-doctor-info/' + doctorId,
                 type: 'GET',
                 success: function (data) {
                     let startParts = data.work_start_time.split(':');
@@ -317,7 +327,7 @@
 
         if (doctorId) {
             $.ajax({
-                url: '/doctor-working-days/' + doctorId,
+                url: '/admin/doctor-working-days/' + doctorId,
                 type: 'GET',
                 success: function (doctorDays) {
                     let daySelect = $('#appointment_day');

@@ -163,34 +163,58 @@
                                     {{-- Blood Type --}}
                                     <div class="col-sm-6">
                                         <label>Blood Type <span class="text-danger">*</span></label>
-                                        <select class="form-control" id="blood_type" name="blood_type">
-                                            <option value="" disabled>Select Blood Type</option>
-                                            @foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $type)
-                                                <option value="{{ $type }}" {{ $patient->blood_type == $type ? 'selected' : '' }}>{{ $type }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-tint"></i></span>
+                                            </div>
+                                            <select class="form-control" id="blood_type" name="blood_type">
+                                                <option value="" disabled>Select Blood Type</option>
+                                                @foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $type)
+                                                    <option value="{{ $type }}" {{ $patient->blood_type == $type ? 'selected' : '' }}>{{ $type }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
+
                                     {{-- Emergency Contact --}}
                                     <div class="col-sm-6">
                                         <label>Emergency Contact <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" value="{{ $patient->emergency_contact }}">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" value="{{ $patient->emergency_contact }}">
+                                        </div>
                                     </div>
+
                                     {{-- Allergies --}}
                                     <div class="col-sm-6">
                                         <label>Allergies</label>
-                                        <input type="text" class="form-control" id="allergies" name="allergies" value="{{ $patient->allergies }}">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-allergies"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="allergies" name="allergies" value="{{ $patient->allergies }}">
+                                        </div>
                                     </div>
+
                                     {{-- Chronic Diseases --}}
                                     <div class="col-sm-6">
                                         <label>Chronic Diseases</label>
-                                        <input type="text" class="form-control" id="chronic_diseases" name="chronic_diseases" value="{{ $patient->chronic_diseases }}">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-heartbeat"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="chronic_diseases" name="chronic_diseases" value="{{ $patient->chronic_diseases }}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+
                         <div class="text-center m-t-20" style="margin-top:20px;">
-                            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform:none !important;">Edit Patient</button>
+                            <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">Edit Patient</button>
                         </div>
 
                     </form>
@@ -201,79 +225,105 @@
 @endsection
 
 @section('js')
-    <script>
-        function isValidSelectValue(selectId) {
-            let val = $(`#${selectId}`).val();
-            return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
-        }
+<script>
+    function isValidSelectValue(selectId) {
+        let val = $(`#${selectId}`).val();
+        return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
+    }
 
-        $(document).ready(function () {
-            $('.addBtn').click(function (e) {
-                e.preventDefault();
+    $(document).ready(function () {
+        $('.editBtn').click(function (e) {
+            e.preventDefault();
 
-                let formData = new FormData();
-                formData.append('_method', 'PUT');
-                formData.append('name', $('#name').val().trim());
-                formData.append('date_of_birth', $('#date_of_birth').val().trim());
-                formData.append('email', $('#email').val());
-                formData.append('password', $('#password').val());
-                formData.append('confirm_password', $('#confirm_password').val());
-                formData.append('phone', $('#phone').val().trim());
-                formData.append('address', $('#address').val().trim());
-                formData.append('blood_type', $('#blood_type').val().trim());
-                formData.append('emergency_contact', $('#emergency_contact').val().trim());
-                formData.append('allergies', $('#allergies').val().trim());
-                formData.append('chronic_diseases', $('#chronic_diseases').val().trim());
-                formData.append('gender', $('input[name="gender"]:checked').val());
+            let name = $('#name').val()?.trim() || '';
+            let date_of_birth = $('#date_of_birth').val()?.trim() || '';
+            let email = $('#email').val()?.trim() || '';
+            let password = $('#password').val() || '';
+            let confirm_password = $('#confirm_password').val() || '';
+            let phone = $('#phone').val()?.trim() || '';
+            let address = $('#address').val()?.trim() || '';
+            let gender = $('input[name="gender"]:checked').val();
+            let short_biography = $('#short_biography').val()?.trim() || '';
+            let status = $('input[name="status"]:checked').val();
+            let image = document.querySelector('#image')?.files[0];
 
-                let image = document.querySelector('#image').files[0];
-                if (image) formData.append('image', image);
+            // الحقول الطبية
+            let blood_type = $('#blood_type').val();
+            let emergency_contact = $('#emergency_contact').val()?.trim() || '';
+            let allergies = $('#allergies').val()?.trim() || '';
+            let chronic_diseases = $('#chronic_diseases').val()?.trim() || '';
 
+            let formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('name', name);
+            formData.append('date_of_birth', date_of_birth);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('confirm_password', confirm_password);
+            formData.append('phone', phone);
+            formData.append('address', address);
+            formData.append('blood_type', blood_type);
+            formData.append('emergency_contact', emergency_contact);
+            formData.append('allergies', allergies);
+            formData.append('chronic_diseases', chronic_diseases);
+            formData.append('gender', gender);
+            if (image) {
+                formData.append('image', image);
+            }
 
-
-                if (
-                    !formData.get('name') || !formData.get('date_of_birth') || !formData.get('email') ||
-                    !formData.get('phone') || !formData.get('address') || !formData.get('gender') ||
-                    !isValidSelectValue('blood_type') || !formData.get('emergency_contact')
-                ) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Please Enter All Required Fields',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
-
-                $.ajax({
-                    method: 'POST',
-                    url: "{{ route('update_patient', ['id' => $patient->id]) }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        if(response.data == 0){
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'The Patient Already Exists, But The Data Was Updated Successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            });
-
-                        }else if(response.data == 2){
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Patient Has Been Updated Successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => window.location.href = '/admin/view/patients');
-                        }
-                    }
+            // التحقق من الحقول المطلوبة
+            if (!name || !date_of_birth || !email || !phone || !address || !gender ||
+                !isValidSelectValue('blood_type') || !emergency_contact) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Enter All Required Fields.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
                 });
+                return;
+            }
+
+            // التحقق من تطابق كلمة المرور
+            if (password && password !== confirm_password) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The Password Does Not Match The Confirmation Password.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // إرسال البيانات
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('update_patient', ['id' => $patient->id]) }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.data == 0) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'The Patient Already Exists, But The Data Was Updated Successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    } else if (response.data == 1) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Patient Has Been Updated Successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => window.location.href = '/admin/view/patients');
+                    }
+                }
             });
+
         });
-    </script>
+    });
+</script>
 @endsection

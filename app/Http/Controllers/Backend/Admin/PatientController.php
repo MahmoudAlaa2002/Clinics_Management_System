@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Patient;
-use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
@@ -21,17 +20,15 @@ use Illuminate\Support\Facades\Hash;
 class PatientController extends Controller{
 
     public function addPatient(){
-        $departments = Department::all();
         $clinics = Clinic::all();
+        $departments = Department::all();
         $doctors = Doctor::all();
-        return view('Backend.admin.patients.add' , compact('departments' , 'clinics' , 'doctors'));
+        return view('Backend.admin.patients.add' , compact('clinics' , 'departments' , 'doctors'));
     }
 
 
     public function storePatient(Request $request){
-       // احسب بيانات الموعد وفحص التعارض أولًا
-        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
-
+       //  احسب بيانات الموعد وفحص التعارض أولًا قبل إضافة المريض
         $appointmentDate = Carbon::parse("next {$request->appointment_day}")->toDateString();
 
         $conflict = Appointment::where('doctor_id', $request->doctor_id)
@@ -43,55 +40,21 @@ class PatientController extends Controller{
             return response()->json(['data' => 1]); // هذا الموعد محجوز
         }
 
-        // المستخدم موجود؟
-        $user = User::where('email', $request->email)
-                    ->orWhere('name', $request->name)
-                    ->first();
+        $user = User::whereRaw('LOWER(email) = ?', [strtolower($request->email)])
+            ->orWhereRaw('LOWER(name) = ?', [strtolower($request->name)])->first();
 
         if ($user) {
-            // 2) احصل/أنشئ المريض
-            $patient = Patient::firstOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'blood_type'        => $request->blood_type,
-                    'emergency_contact' => $request->emergency_contact,
-                    'allergies'         => $request->allergies,
-                    'chronic_diseases'  => $request->chronic_diseases,
-                ]
-            );
-
-            // ثبّت علاقات العيادة/القسم بدون ما توقف لو موجودة
-            ClinicPatient::firstOrCreate(
-                ['patient_id' => $patient->id, 'clinic_id' => $request->clinic_id],
-                ['visit_date' => now()]
-            );
-
-            DepartmentPatient::firstOrCreate(
-                ['patient_id' => $patient->id, 'department_id' => $request->department_id]
-            );
-
-            // أنشئ الموعد
-            Appointment::create([
-                'patient_id'           => $patient->id,
-                'doctor_id'            => $request->doctor_id,
-                'clinic_department_id' => $clinicDepartmentId,
-                'date'                 => $appointmentDate,
-                'time'                 => $request->appointment_time,
-                'status'               => 'Pending',
-                'notes'                => $request->notes,
-            ]);
-
-            return response()->json(['data' => 2]); // تم الحفظ
+            return response()->json(['data' => 0]); // موجود مسبقاً
         }
 
         // المستخدم غير موجود - أنشئه ثم كمل
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('patients'), $filename);
-            $imageName = 'patients/'.$filename;
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/patients'), $imageName);
+            $imagePath = 'assets/img/patients/' . $imageName;
         } else {
-            $imageName = null;
+            $imagePath = null;
         }
 
         $user = User::create([
@@ -100,9 +63,10 @@ class PatientController extends Controller{
             'password'     => Hash::make($request->password),
             'phone'        => $request->phone,
             'address'      => $request->address,
-            'image'        => $imageName,
+            'image'        => $imagePath,
             'date_of_birth'=> $request->date_of_birth,
             'gender'       => $request->gender,
+            'role'         => 'patient',
         ]);
         $user->assignRole('patient');
 
@@ -114,15 +78,8 @@ class PatientController extends Controller{
             'chronic_diseases'  => $request->chronic_diseases,
         ]);
 
-        ClinicPatient::firstOrCreate(
-            ['patient_id' => $patient->id, 'clinic_id' => $request->clinic_id],
-            ['visit_date' => now()]
-        );
-
-        DepartmentPatient::firstOrCreate(
-            ['patient_id' => $patient->id, 'department_id' => $request->department_id]
-        );
-
+        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
+        $consultation_fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
         Appointment::create([
             'patient_id'           => $patient->id,
             'doctor_id'            => $request->doctor_id,
@@ -130,6 +87,7 @@ class PatientController extends Controller{
             'date'                 => $appointmentDate,
             'time'                 => $request->appointment_time,
             'status'               => 'Pending',
+            'consultation_fee'     => $consultation_fee,
             'notes'                => $request->notes,
         ]);
 
@@ -208,12 +166,12 @@ class PatientController extends Controller{
             return response()->json(['data' => 0]);
         }else{
             $imagePath = $user->image;
-        if ($request->hasFile('image')) {
-            $file     = $request->file('image');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('patients'), $filename);
-            $imagePath = 'patients/'.$filename;
-        }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $imageName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('assets/img/patients'), $imageName);
+                $imagePath = 'assets/img/patients/' . $imageName;
+            }
 
         $password = $user->password;
         if ($request->filled('password')) {
@@ -229,6 +187,7 @@ class PatientController extends Controller{
             'image'         => $imagePath,
             'date_of_birth' => $request->date_of_birth,
             'gender'        => $request->gender,
+            'role'          => 'patient',
         ]);
 
 
@@ -250,8 +209,9 @@ class PatientController extends Controller{
 
     public function deletePatient($id){
         $patient = Patient::findOrFail($id);
-        $user = User::where('id', $patient->user_id)->first();
+        $user = User::findOrFail($patient->user_id);
 
+        Appointment::where('patient_id', $patient->id)->delete();
         $patient->delete();
         $user->delete();
         return response()->json(['success' => true]);
@@ -268,8 +228,17 @@ class PatientController extends Controller{
 
 
     public function getDoctorsByClinicAndDepartment(Request $request){
-        $clinic_department = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->first();
-        $doctors = Doctor::where('clinic_department_id', $clinic_department->id)->with(['employee.user:id,name'])->get()->map(fn($d) => ['id' => $d->id, 'name' => optional(optional($d->employee)->user)->name ?? 'Unknown'])->values();
+        $doctors = Doctor::whereHas('employee', function ($q) use ($request) {
+            $q->where('clinic_id', $request->clinic_id)
+              ->where('department_id', $request->department_id);
+        })
+        ->with(['employee.user:id,name'])
+        ->get()
+        ->map(fn($d) => [
+            'id'   => $d->id,
+            'name' => optional(optional($d->employee)->user)->name ?? 'Unknown'
+        ])->values();
+
         return response()->json($doctors);
     }
 

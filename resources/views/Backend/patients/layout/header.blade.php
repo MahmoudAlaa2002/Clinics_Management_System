@@ -88,7 +88,7 @@
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($user->image) }}" alt="Patient">
+                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($patient->image) }}" alt="">
                 </span>
                 <span>
                     Patient

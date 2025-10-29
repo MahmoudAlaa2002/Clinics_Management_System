@@ -64,45 +64,33 @@
                                     >
                                 </div>
                             </div>
-
-                            <div class="col-sm-12" style="margin-top: 40px;">
-                                <label>Department Description</label>
-                                <textarea
-                                    class="form-control"
-                                    id="description"
-                                    name="description"
-                                    rows="4"
-                                    placeholder="Enter department description"
-                                >{{ old('description', $department->description ?? '') }}</textarea>
-                            </div>
                         </div>
                     </div>
 
-                    {{-- التخصصات --}}
-                    <div class="card mt-3">
-                        <div class="card-header">Select Specialties for this Department</div>
+                    <div class="card">
+                        <div class="card-header">Description & Status</div>
                         <div class="card-body">
-                            <label>Specialties <span class="text-danger">*</span></label>
-                            <div class="row">
-                                @foreach($specialties as $specialty)
-                                    <div class="col-md-6">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input"
-                                                name="specialties[]" value="{{ $specialty->id }}"
-                                                id="spec_{{ $specialty->id }}"
-                                                {{ $department->specialties->contains($specialty->id) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="spec_{{ $specialty->id }}">
-                                                {{ $specialty->name }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                @endforeach
+                            <div class="form-group">
+                                <label>Department Description</label>
+                                <textarea id="description" name="description" class="form-control" rows="4" placeholder="Write a short description about the department...">{{ old('description', $department->description ?? '') }}</textarea>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label class="display-block">Status</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status" id="department_active" value="active" {{ old('status', $department->status) === 'active' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="department_active">Active</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="status" id="department_inactive" value="inactive" {{ old('status', $department->status) === 'inactive' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="department_inactive">Inactive</label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="text-center" style="margin-top:20px;">
-                        <button type="submit" class="btn btn-primary submit-btn addBtn px-5 rounded-pill" style="text-transform: none !important;">
+                        <button type="submit" class="btn btn-primary submit-btn editBtn px-5 rounded-pill" style="text-transform: none !important;">
                             Edit Department
                         </button>
                     </div>
@@ -118,14 +106,14 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('.addBtn').click(function (e) {
+            $('.editBtn').click(function (e) {
                 e.preventDefault();
 
                 let name = $('#name').val().trim();
                 let description = $('#description').val().trim();
-                let specialties = $('input[name="specialties[]"]:checked').map(function(){ return this.value; }).get();
+                let status = $('input[name="status"]:checked').val();
 
-                if(name === '' || specialties.length === 0){
+                if(name === ''){
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
@@ -140,7 +128,7 @@
                         _method: 'PUT',
                         name: name,
                         description: description,
-                        specialties: specialties,
+                        status: status,
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

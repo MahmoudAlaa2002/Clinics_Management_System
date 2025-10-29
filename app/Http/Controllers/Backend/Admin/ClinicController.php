@@ -22,9 +22,12 @@ class ClinicController extends Controller{
 
 
     public function storeClinic(Request $request){
-        if(Clinic::where('name' , $request->name)->exists() || Clinic::where('email' , $request->email)->exists()){
+        $normalizedName = strtolower(trim($request->name));
+        $normalizedEmail = strtolower(trim($request->email));
+
+        if (Clinic::whereRaw('LOWER(name) = ?', [$normalizedName])->exists() || Clinic::whereRaw('LOWER(email) = ?', [$normalizedEmail])->exists()) {
             return response()->json(['data' => 0]);
-        }else{
+        } else {
             $clinic = Clinic::create([
                 'name' => $request->name,
                 'location' => $request->location,
@@ -32,14 +35,13 @@ class ClinicController extends Controller{
                 'phone' => $request->phone,
                 'opening_time' => $request->opening_time,
                 'closing_time' => $request->closing_time,
+                'working_days' => $request->working_days,
                 'description' => $request->description,
                 'status' => $request->status,
-                'working_days' => json_encode($request->working_days),
             ]);
 
             $departmentIds = $request->input('departments', []);
             $clinic->departments()->sync($departmentIds);
-
 
             return response()->json(['data' => 1]);
         }
@@ -62,28 +64,27 @@ class ClinicController extends Controller{
         $keyword = trim((string) $request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        $clinics = Clinic::with([
-            'departments:id,name',
-            'clinicDepartments:id,clinic_id,department_id',
-            'clinicDepartments.doctors:id,clinic_department_id,employee_id',
-            'clinicDepartments.doctors.employee.user:id,name',
-        ]);
+        $clinics = Clinic::query();
 
         if ($keyword !== '') {
             switch ($filter) {
-                case 'clinic':
-                    $clinics->where('name', 'like', "{$keyword}%");
-                    break;
-                case 'location':
-                    $clinics->where('location', 'like', "{$keyword}%");
-                    break;
-                case 'status':
-                    $clinics->where('status', 'like', "{$keyword}%");
+                case 'clinic':$clinics->where('name', 'like', "{$keyword}%");break;
+
+                case 'location': $clinics->where('location', 'like', "{$keyword}%");break;
+
+                case 'status': $clinics->where('status', 'like', "{$keyword}%");break;
+
+                default:
+                    $clinics->where(function ($q) use ($keyword) {
+                        $q->where('name', 'like', "{$keyword}%")
+                        ->orWhere('location', 'like', "{$keyword}%")
+                        ->orWhere('status', 'like', "{$keyword}%");
+                    });
                     break;
             }
         }
 
-        $clinics    = $clinics->orderBy('id')->paginate(12);
+        $clinics    = $clinics->orderBy('id', 'asc')->paginate(12);
         $view       = view('Backend.admin.clinics.searchClinic', compact('clinics'))->render();
         $pagination = $clinics->total() > 12 ? $clinics->links('pagination::bootstrap-4')->render() : '';
 
@@ -97,11 +98,9 @@ class ClinicController extends Controller{
 
 
 
-
-
-    public function descriptionClinic($id){
-        $clinic = Clinic::with(['departments' , 'doctors'])->where('id' , $id)->first();
-        return view('Backend.admin.clinics.description' , compact('clinic'));
+    public function detailsClinic($id){
+        $clinic = Clinic::where('id' , $id)->first();
+        return view('Backend.admin.clinics.details' , compact('clinic'));
     }
 
 
@@ -117,13 +116,19 @@ class ClinicController extends Controller{
     }
 
     public function updateClinic(Request $request, $id){
-        $exists = Clinic::where(function ($query) use ($request, $id) {
-            $query->where('name', $request->name)
-                  ->orWhere('email', $request->email);
-        })->where('id', '!=', $id)->exists();
-        if($exists){
+        $normalizedName = strtolower(trim($request->name));
+        $normalizedEmail = strtolower(trim($request->email));
+
+        $exists = Clinic::where(function ($query) use ($normalizedName, $normalizedEmail) {
+                $query->whereRaw('LOWER(name) = ?', [$normalizedName])
+                    ->orWhereRaw('LOWER(email) = ?', [$normalizedEmail]);
+            })
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($exists) {
             return response()->json(['data' => 0]);
-        }else{
+        } else {
             $clinic = Clinic::findOrFail($id);
             $clinic->update([
                 'name' => $request->name,
@@ -148,20 +153,21 @@ class ClinicController extends Controller{
 
     public function deleteClinic($id){
         $clinic = Clinic::findOrFail($id);
-
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinic->id)->pluck('id');
-        $employeeIds = Doctor::whereIn('clinic_department_id', $clinicDepartmentIds)->pluck('employee_id')->filter();
-        $userIds = Employee::whereIn('id', $employeeIds)->pluck('user_id')->filter();
+        $employeeIds = Employee::where('clinic_id', $clinic->id)->pluck('id');
+        $doctorIds = Doctor::whereIn('employee_id', $employeeIds)->pluck('id');
+        $userIds = Employee::whereIn('id', $employeeIds)->pluck('user_id');
 
-        Doctor::whereIn('clinic_department_id', $clinicDepartmentIds)->delete();
+        Doctor::whereIn('id', $doctorIds)->delete();
         Employee::whereIn('id', $employeeIds)->delete();
         User::whereIn('id', $userIds)->delete();
-        ClinicDepartment::where('clinic_id', $clinic->id)->delete();
 
+        ClinicDepartment::whereIn('id', $clinicDepartmentIds)->delete();
         $clinic->delete();
-
         return response()->json(['success' => true]);
     }
+
+
 
 
 
@@ -291,12 +297,8 @@ class ClinicController extends Controller{
         $user = User::findOrFail($id);
         $employee = Employee::where('user_id', $id)->firstOrFail();
 
-        Clinic::where('manager_employee_id', $employee->id)->update(['manager_employee_id' => null]);
-
-
         if($user->hasRole('doctor')) {
             $doctorTitleId = JobTitle::where('name', 'Doctor')->value('id');
-
 
             if ($doctorTitleId) {
                 $employee->update(['job_title_id' => $doctorTitleId]);

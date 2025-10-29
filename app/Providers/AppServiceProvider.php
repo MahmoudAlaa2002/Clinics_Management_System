@@ -28,11 +28,8 @@ class AppServiceProvider extends ServiceProvider
                 'Backend.departments_managers.layout.*',
                 'Backend.doctors.layout.*',
                 'Backend.employees.layout.*',
-                'Backend.employees.accountants.layout.*',
                 'Backend.employees.nurses.layout.*',
-                'Backend.employees.pharmacists.layout.*',
                 'Backend.employees.receptionists.layout.*',
-                'Backend.employees.stores_supervisors.layout.*',
                 'Backend.patients.layout.*',
             ], function ($view) {
             $currentUser = null;
@@ -40,12 +37,10 @@ class AppServiceProvider extends ServiceProvider
             $admin = null;
             $clinicManager = null;
             $departmentManager = null;
-            $doctorUser = null; // غيرت الاسم لتجنب التعارض
-            $storeSupervisor = null;
-            $accountant = null;
+            $doctor = null; // غيرت الاسم لتجنب التعارض
             $nurse = null;
             $receptionist = null;
-            $pharmacist = null;
+
 
             $employee = null;
             $employeeJobTitle = null;
@@ -55,35 +50,29 @@ class AppServiceProvider extends ServiceProvider
                 $user = Auth::user();
                 $currentUser = $user;
 
-                if ($user->hasRole('admin')) {
+                if ($user->role == 'admin') {
                     $admin = $user;
 
-                } elseif ($user->hasRole('clinic_manager')) {
+                } elseif ($user->role == 'clinic_manager') {
                     $clinicManager = $user;
 
-                } elseif ($user->hasRole('department_manager')) {
+                } elseif ($user->role == 'department_manager') {
                     $departmentManager = $user;
 
-                } elseif ($user->hasRole('doctor')) {
-                    $doctorUser = $user;
+                } elseif ($user->role == 'doctor') {
+                    $doctor = $user;
 
-                } elseif ($user->hasRole('employee')) {
+                } elseif ($user->role == 'employee') {
                     $employee = $user;
-                    $jobTitle = $user->employee?->jobTitles()->first();
-                    $employeeJobTitle = $jobTitle ? $jobTitle->name : 'general';
+                    $employeeJobTitle = $user->employee->job_title;
 
-                    if ($employeeJobTitle === 'store_supervisor') {
-                        $storeSupervisor = $user;
-                    } elseif ($employeeJobTitle === 'accountant') {
-                        $accountant = $user;
+                    if ($employeeJobTitle === 'receptionist') {
+                        $receptionist = $user;
                     } elseif ($employeeJobTitle === 'nurse') {
                         $nurse = $user;
-                    } elseif ($employeeJobTitle === 'receptionist') {
-                        $receptionist = $user;
-                    } elseif ($employeeJobTitle === 'pharmacist') {
-                        $pharmacist = $user;
                     }
-                } elseif ($user->hasRole('patient')) {
+
+                } elseif ($user->role == 'patient') {
                     $patient = $user;
                 }
             }
@@ -93,12 +82,9 @@ class AppServiceProvider extends ServiceProvider
                 'admin',
                 'clinicManager',
                 'departmentManager',
-                'doctorUser',  // اسم مختلف عن الـ Controller
-                'storeSupervisor',
-                'accountant',
+                'doctor',  // اسم مختلف عن الـ Controller
                 'nurse',
                 'receptionist',
-                'pharmacist',
                 'employee',
                 'employeeJobTitle',
                 'patient'

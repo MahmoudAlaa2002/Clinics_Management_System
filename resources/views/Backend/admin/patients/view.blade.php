@@ -24,7 +24,14 @@
         </div>
         <div class="mb-4 row">
             <div class="col-md-4">
-                <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group">

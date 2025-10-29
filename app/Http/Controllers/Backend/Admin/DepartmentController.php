@@ -17,26 +17,22 @@ use Illuminate\Support\Facades\Hash;
 
 class DepartmentController extends Controller{
 
+
     public function addDepartment(){
-        $specialties = Specialty::all();
-        return view('Backend.admin.departments.add' , compact('specialties'));
+        return view('Backend.admin.departments.add');
     }
 
 
     public function storeDepartment(Request $request){
-        if(Department::where('name' , $request->name)->exists()){
+        $normalizedName = strtolower(trim($request->name));
+        if (Department::whereRaw('LOWER(name) = ?', [$normalizedName])->exists()) {
             return response()->json(['data' => 0]);
-        }else{
+        } else {
             $department = Department::create([
                 'name' => $request->name,
                 'description' => $request->description,
+                'status' => $request->status,
             ]);
-
-            // ربط التخصصات
-            if ($request->has('specialties') && is_array($request->specialties)) {
-                $department->specialties()->attach($request->specialties);
-            }
-
             return response()->json(['data' => 1]);
         }
     }
@@ -54,16 +50,14 @@ class DepartmentController extends Controller{
 
 
 
-    public function descriptionDepartment($id){
-        $department = Department::with(['clinics', 'doctors'])->withCount('clinics')->findOrFail($id);
-        $count_clinics = $department->clinics_count;
-        $count_specialties = $department->specialties()->count();
+    public function detailsDepartment($id){
+        $department = Department::with('clinics', 'doctors')->findOrFail($id);
+        $count_clinics = $department->clinics()->count();
         $count_doctor = $department->doctors()->count();
 
-        return view('Backend.admin.departments.description', compact(
+        return view('Backend.admin.departments.details', compact(
             'department',
             'count_clinics',
-            'count_specialties',
             'count_doctor'
         ));
     }
@@ -74,47 +68,44 @@ class DepartmentController extends Controller{
 
     public function editDepartment($id){
         $department = Department::findOrFail($id);
-        $specialties = Specialty::all();
-        return view('Backend.admin.departments.edit', compact('department' , 'specialties'));
+        return view('Backend.admin.departments.edit', compact('department'));
     }
 
 
     public function updateDepartment(Request $request, $id){
         $department = Department::findOrFail($id);
+        $normalizedName = strtolower(trim($request->name));
+        $exists = Department::whereRaw('LOWER(name) = ?', [$normalizedName])->where('id', '!=', $id)->exists();
+        if ($exists) {
+            return response()->json(['data' => 0]);
+        }
         $department->update([
             'name' => $request->name,
             'description' => $request->description,
+            'status' => $request->status,
         ]);
-
-        $department->specialties()->sync($request->specialties ?? []);
-
         return response()->json(['data' => 1]);
     }
 
 
 
 
+
     public function deleteDepartment($id){
         $department = Department::findOrFail($id);
-        $clinicDepartmentIds = ClinicDepartment::where('department_id', $id)->pluck('id');
+        $employeeIds = Employee::where('department_id', $department->id)->pluck('id');
+        $userIds = Employee::whereIn('id', $employeeIds)->pluck('user_id');
+        $doctorIds = Doctor::whereIn('employee_id', $employeeIds)->pluck('id');
 
-        $doctors = Doctor::whereIn('clinic_department_id', $clinicDepartmentIds)->get();
-        foreach ($doctors as $doctor) {
-            $employee = Employee::find($doctor->employee_id);
-            if ($employee) {
-                User::where('id', $employee->user_id)->delete();
-                $employee->delete();
-            }
-
-            $doctor->delete();
-        }
+        Doctor::whereIn('id', $doctorIds)->delete();
+        Employee::whereIn('id', $employeeIds)->delete();
+        User::whereIn('id', $userIds)->delete();
 
         $department->clinics()->detach();
-        $department->specialties()->detach();
         $department->delete();
-
         return response()->json(['success' => true]);
     }
+
 
 
 
@@ -132,36 +123,54 @@ class DepartmentController extends Controller{
         $keyword = trim((string) $request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        $query = User::role('department_manager')->with('employee.clinic');
+        $departments_managers = User::role('department_manager')->with([
+            'employee:id,user_id,clinic_id,department_id,status',
+            'employee.clinic:id,name',
+        ]);
 
         if ($keyword !== '') {
-            if ($filter === 'clinic') {
-                $query->whereHas('employee.clinic', function ($q) use ($keyword) {
-                    $q->where('name', 'like', $keyword.'%');
-                });
-            } elseif ($filter === 'name') {
-                $query->where('name', 'like', $keyword.'%');
-            } else {
-                $query->where(function ($q) use ($keyword) {
-                    $q->where('name', 'like', '%'.$keyword.'%')
-                    ->orWhereHas('employee.clinic', function ($qq) use ($keyword) {
-                        $qq->where('name', 'like', '%'.$keyword.'%');
+            switch ($filter) {
+                case 'name':
+                    $departments_managers->where('name', 'LIKE', "{$keyword}%");
+                    break;
+
+                case 'clinic':
+                    // ✅ إصلاح رئيسي: لازم تمر من العلاقة employee أولًا
+                    $departments_managers->whereHas('employee', function ($q) use ($keyword) {
+                        $q->whereHas('clinic', function ($qq) use ($keyword) {
+                            $qq->where('name', 'LIKE', "{$keyword}%");
+                        });
                     });
-                });
+                    break;
+
+                default:
+                    $departments_managers->where(function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "%{$keyword}%")
+                            ->orWhereHas('employee', function ($qq) use ($keyword) {
+                                $qq->whereHas('clinic', function ($qqq) use ($keyword) {
+                                    $qqq->where('name', 'LIKE', "%{$keyword}%");
+                                });
+                            });
+                    });
+                    break;
             }
         }
 
-        $departments_managers = $query->orderBy('id')->paginate(12);
+        $departments_managers = $departments_managers->orderBy('id', 'asc')->paginate(12);
 
-        $html = view('Backend.admin.departments.departments_managers.search', compact('departments_managers'))->render();
+        $view = view('Backend.admin.departments.departments_managers.search', compact('departments_managers'))->render();
+        $pagination = $departments_managers->total() > 12 ? $departments_managers->links('pagination::bootstrap-4')->render() : '';
 
         return response()->json([
-            'html'       => $html,
+            'html'       => $view,
+            'pagination' => $pagination,
             'count'      => $departments_managers->total(),
             'searching'  => $keyword !== '',
-            'pagination' => $departments_managers->links('pagination::bootstrap-4')->render(),
         ]);
     }
+
+
+
 
 
 

@@ -87,7 +87,9 @@
                         <div class="mb-3 col-md-6 profile-item">
                             <i class="fa fa-clock me-2 text-primary"></i>
                             <strong>Work Start Time:</strong>&nbsp;
-                            <span class="text-muted">{{ $clinic_manager->employee->work_start_time }} AM</span>
+                            <span class="text-muted">
+                                {{ \Carbon\Carbon::parse($clinic_manager->employee->work_start_time)->format('H:i') }}
+                            </span> AM
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
@@ -99,7 +101,9 @@
                         <div class="mb-3 col-md-6 profile-item">
                             <i class="fa fa-clock me-2 text-primary"></i>
                             <strong>Work End Time:</strong>&nbsp;
-                            <span class="text-muted">{{ $clinic_manager->employee->work_end_time }} PM</span>
+                            <span class="text-muted">
+                                {{ \Carbon\Carbon::parse($clinic_manager->employee->work_end_time)->format('H:i') }}
+                            </span> PM
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">

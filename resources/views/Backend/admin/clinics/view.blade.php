@@ -38,9 +38,16 @@
                 </a>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="mb-4 row">
             <div class="col-md-4">
-                <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group">
@@ -69,7 +76,6 @@
                     </tr>
                 </thead>
                 <tbody id="clinics_table_body">
-                    @if($clinics->count() > 0)
                         @foreach ($clinics as $clinic)
                             <tr>
                                 <td>{{ $clinic->id }}</td>
@@ -86,22 +92,13 @@
                                 </td>
                                 <td class="action-btns">
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('description_clinic', ['id' => $clinic->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ route('details_clinic', ['id' => $clinic->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
                                         <a href="{{ route('edit_clinic', ['id' => $clinic->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
                                         <button class="btn btn-outline-danger btn-sm delete-clinic" data-id="{{ $clinic->id }}"><i class="fa fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="9" class="text-center">
-                                <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
-                                    No Clinics Available At The Moment
-                                </div>
-                            </td>
-                        </tr>
-                    @endif
                 </tbody>
             </table>
             <div id="clinics-pagination" class="pagination-wrapper d-flex justify-content-center">
@@ -203,7 +200,7 @@
                     success: function (response) {
                         if (response.success) {
                             Swal.fire({
-                                title: 'Deleted!',
+                                title: 'Deleted',
                                 text: 'Clinic Has Been Deleted Successfully',
                                 icon: 'success'
                             }).then(() => location.reload());

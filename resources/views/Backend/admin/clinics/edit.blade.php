@@ -217,7 +217,6 @@
                         </div>
                     </div>
 
-                    {{-- Submit --}}
                     <div class="text-center m-t-20" style="margin-top: 20px;">
                         <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">
                             Edit Clinic

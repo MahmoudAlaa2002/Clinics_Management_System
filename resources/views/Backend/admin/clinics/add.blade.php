@@ -278,6 +278,14 @@
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
+            } else if (opening_time >= closing_time){
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The Timing Is Incorrect, Please Correct It',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
             }else{
                 $.ajax({
                 method: 'POST',

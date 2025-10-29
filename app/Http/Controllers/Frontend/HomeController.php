@@ -32,14 +32,19 @@ class HomeController extends Controller{
         // }
 
 
-        $patientsTestimonial = Testimonial::where('is_approved', true)->take(4)->get();
-        if ($patientsTestimonial->count() < 5) {
-            $randomPatientsTestimonial = Testimonial::where('is_approved', true)->inRandomOrder()->take(4 - $patientsTestimonial->count())->get();
-            $patientsTestimonials = $patientsTestimonial->concat($randomPatientsTestimonial);
-        } else {
-            $patientsTestimonials = $patientsTestimonial;
-        }
-        return view('Frontend.master' , compact('admin' , 'clinic_count' , 'department_count' , 'departments' , 'doctor_count' , 'patient_count' ,  'patientsTestimonials'));
+        // $patientsTestimonial = Testimonial::where('is_approved', true)->take(4)->get();
+        // if ($patientsTestimonial->count() < 5) {
+        //     $randomPatientsTestimonial = Testimonial::where('is_approved', true)->inRandomOrder()->take(4 - $patientsTestimonial->count())->get();
+        //     $patientsTestimonials = $patientsTestimonial->concat($randomPatientsTestimonial);
+        // } else {
+        //     $patientsTestimonials = $patientsTestimonial;
+        // }
+        return view('Frontend.master' , compact('admin' ,
+         'clinic_count' ,
+          'department_count' ,
+           'departments' ,
+            'doctor_count' ,
+             'patient_count'));
     }
 
 

@@ -48,6 +48,7 @@
                             <tr>
                                 <th>id</th>
                                 <th>Department Name</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -57,8 +58,15 @@
                                     <td>{{ $department->id }}</td>
                                     <td>{{ $department->name }}</td>
                                     <td>
+                                        @if($department->status === 'active')
+                                            <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #13ee29; color: white;">Active</span>
+                                        @else
+                                            <span class="status-badge" style="padding: 6px 20px; font-size: 18px; border-radius: 50px; background-color: #f90d25; color: white;">Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <div class="d-flex justify-content-center">
-                                            <a href="{{ route('description_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
+                                            <a href="{{ route('details_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
                                             <a href="{{ route('edit_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
                                             <button class="btn btn-outline-danger btn-sm delete-department" data-id="{{ $department->id }}"><i class="fa fa-trash"></i></button>
                                         </div>
@@ -105,7 +113,7 @@
                         success: function (response) {
                             if (response.success) {
                                 Swal.fire({
-                                    title: 'Deleted!',
+                                    title: 'Deleted',
                                     text: 'Department Has Been Deleted Successfully',
                                     icon: 'success'
                                 }).then(() => {

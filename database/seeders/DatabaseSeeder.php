@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Database\Seeders\DepartmentSeeder;
-use Database\Seeders\RolesAndPermissionsSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,11 +15,8 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void{
-        $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(RolesSeeder::class);
         $this->call(DepartmentSeeder::class);
-        $this->call(SpecialtySeeder::class);
-        $this->call(DepartmentSpecialtySeeder::class);
-        $this->call(JobTitlesSeeder::class);
 
         // Create Admin user
         $admin = User::create([
@@ -32,6 +28,7 @@ class DatabaseSeeder extends Seeder
             'date_of_birth' => '2002-03-13',
             'image' => 'assets/img/admin/admin.jpg',
             'gender' => 'male',
+            'role' => 'admin',
         ]);
 
         Role::firstOrCreate([
@@ -40,5 +37,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $admin->assignRole('admin');
+
     }
 }

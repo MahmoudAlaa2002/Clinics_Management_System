@@ -205,7 +205,7 @@
                 </div>
 
                 {{-- Working Days --}}
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                   <label>Working Days <span class="text-danger">*</span></label>
                   @php
                     $all_days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
@@ -465,7 +465,7 @@
               text: 'Department Manager Has Been Updated Successfully',
               icon: 'success',
               confirmButtonText: 'OK'
-            }).then(() => window.location.href = '/admin/view/departments/managers');
+            }).then(() => window.location.href = '/admin/view/departments-managers');
           } else {
             Swal.fire({
               title: 'Notice',

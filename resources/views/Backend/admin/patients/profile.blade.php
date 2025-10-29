@@ -90,18 +90,6 @@
                         </tr>
                     </table>
 
-
-                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom: 10px;">
-                        <i class="fas fa-align-left me-2 text-primary"></i> Notes
-                    </h5>
-
-                    <div class="mb-4 shadow-sm card rounded-3">
-                        <div class="card-body" style="background-color: #ebeaea;">
-                            <p class="mb-0" style="font-size: 15px; color: #333;">
-                                {{ $patient->user->notes ? $patient->user->notes : 'No notes available yet.' }}
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

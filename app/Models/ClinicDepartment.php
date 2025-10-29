@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClinicDepartment extends Model{
 
-    protected $table = 'clinic_department';
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +22,7 @@ class ClinicDepartment extends Model{
     }
 
     public function doctors(){
-        return $this->hasMany(Doctor::class, 'clinic_department_id', 'id');
+        return $this->hasMany(Doctor::class, 'department_id');
     }
 
 }

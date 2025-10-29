@@ -282,17 +282,6 @@
   }
 
 
-//   function loadDepartments(clinicId, selectedDepartmentId = '') {
-//     $('#department_id').empty().append('<option value="" disabled hidden>Select Department</option>');
-//     if (!clinicId) return;
-//     $.get('/admin/get-departments-by-clinic/' + clinicId, function (departments) {
-//       departments.forEach(function (d) {
-//         const sel = (String(d.id) === String(selectedDepartmentId)) ? 'selected' : '';
-//         $('#department_id').append(`<option value="${d.id}" ${sel}>${d.name}</option>`);
-//       });
-//     });
-//   }
-
 
   function loadWorkingDaysForClinic(clinicId, selectedDays = []) {
     $.get('/admin/clinic-working-days/' + clinicId, function (clinicDays) {
@@ -362,7 +351,6 @@
 
     if (currentClinicId) {
       $('#clinic_id').val(String(currentClinicId));
-    //   loadDepartments(currentClinicId, selectedDepartmentId);
       loadWorkingDaysForClinic(currentClinicId, selectedDays);
       loadWorkingTimes(currentClinicId, selectedStart, selectedEnd);
     }
@@ -370,12 +358,11 @@
     $('#clinic_id').on('change', function () {
       const clinicId = $(this).val();
       $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
-    //   loadDepartments(clinicId);
       loadWorkingTimes(clinicId);
-      loadWorkingDaysForClinic(clinicId, []); // reset selected days on clinic change
+      loadWorkingDaysForClinic(clinicId, []);
     });
 
-    // Submit via AJAX with validation
+
     $('.addBtn').on('click', function (e) {
       e.preventDefault();
 
@@ -462,7 +449,7 @@
               text: 'Clinic Manager Has Been Updated Successfully',
               icon: 'success',
               confirmButtonText: 'OK'
-            }).then(() => window.location.href = '/admin/view/clinics/managers');
+            }).then(() => window.location.href = '/admin/view/clinics-managers');
           } else {
             Swal.fire({
               title: 'Notice',

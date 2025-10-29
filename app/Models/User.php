@@ -26,6 +26,7 @@ class User extends Authenticatable{
         'image',
         'address',
         'date_of_birth',
+        'role',
         'gender',
     ];
 

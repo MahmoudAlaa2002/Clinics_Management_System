@@ -39,27 +39,35 @@
         </div>
         <div class="mb-4 row">
             <div class="col-md-4">
-                <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Search by:</span>
-                  </div>
-                  <select id="search_filter" name="filter" class="form-control">
-                    <option value="clinic">Clinic Name</option>
-                    <option value="name">Department Manager Name</option>
-                  </select>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Search by:</span>
+                    </div>
+                    <select id="search_filter" name="filter" class="form-control">
+                        <option value="name">Manager Name</option>
+                        <option value="clinic">Clinic Name</option>
+                    </select>
                 </div>
-              </div>
+            </div>
         </div>
+
         @if ($departments_managers->count() > 0)
             <div class="row clinics-managers-grid" id="departments_managers_container">
                 @foreach ($departments_managers as $department_manager)
                     <div class="col-md-4 col-sm-4 col-lg-3">
                         <div class="profile-widget">
                             <div class="clinics-managers-img">
-                                <a class="avatar" href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}"> <img src="{{ $department_manager->image ? asset($department_manager->image) : asset('default-avatar.png') }}"></a>
+                                <a class="avatar" href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}"> <img src="{{ $department_manager->image ? asset($department_manager->image) : asset('assets/img/user.jpg') }}"></a>
                             </div>
                             <div class="dropdown profile-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -68,8 +76,11 @@
                                     <a class="dropdown-item delete-departments_managers" data-id="{{ $department_manager->id }}" href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}" data-toggle="modal" data-target="#delete_departments_managers"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                 </div>
                             </div>
-                            <h4 class="clinics-managers-name text-ellipsis"><a href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}">{{ $department_manager->name }}</a></h4>
-                            <div class="doc-prof">{{ $department_manager->employee->clinic->name }}</div>
+                            <h4 class="clinics-managers-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}">{{ $department_manager->name }}</a></h4>
+                            <div class="doc-prof">{{ $department_manager->employee->department->name }}</div>
+                            <div class="user-country">
+                                <i class="fa fa-map-marker"></i> {{ $department_manager->employee->user->address }}
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -133,11 +144,13 @@
 
     let lastManagerKeyword = '';
 
-    function fetchClinicsManagers(url = "{{ route('search_departments_managers') }}") {
+
+    function fetchClinicsManagers(url = "{{ url('admin/search/departments-managers') }}") {
         let $searchInput = $('#search_input');
         let $filter      = $('#search_filter');
         let $container   = $('#departments_managers_container');
         let $pagination  = $('#departments_managers-pagination');
+
 
         if ($searchInput.length === 0 || $container.length === 0) {
             return;

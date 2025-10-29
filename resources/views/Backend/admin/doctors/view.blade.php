@@ -42,7 +42,14 @@
         </div>
         <div class="row mb-4">
             <div class="col-md-4">
-                <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group">
@@ -66,7 +73,7 @@
                             <div class="doctor-img">
                                 <a class="avatar" href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
                                     ? asset(optional($doctor->employee->user)->image)
-                                    : asset('default-avatar.png') }}"></a>
+                                    : asset('assets/img/user.jpg') }}"></a>
                             </div>
                             <div class="dropdown profile-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -75,8 +82,8 @@
                                     <a class="dropdown-item delete-doctor" data-id="{{ $doctor->id }}" href="{{ Route('delete_doctor' , ['id' => $doctor->id]) }}" data-toggle="modal" data-target="#delete_doctor"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                 </div>
                             </div>
-                            <h4 class="doctor-name text-ellipsis"><a href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}">{{ $doctor->employee->user->name }}</a></h4>
-                            <div class="doc-prof">{{ optional($doctor->department)->name }}</div>
+                            <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}">{{ $doctor->employee->user->name }}</a></h4>
+                            <div class="doc-prof">{{ optional($doctor->employee->clinic)->name }}</div>
                             <div class="user-country">
                                 <i class="fa fa-map-marker"></i> {{ $doctor->employee->user->address }}
                             </div>
@@ -126,7 +133,7 @@
                     success: function (response) {
                         if (response.success) {
                             Swal.fire({
-                                title: 'Deleted!',
+                                title: 'Deleted',
                                 text: 'Doctor Has Been Deleted Successfully',
                                 icon: 'success'
                             }).then(() => {

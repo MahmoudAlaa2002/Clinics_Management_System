@@ -22,27 +22,27 @@ class AuthenticatedSessionController extends Controller{
         if (Auth::guard('web')->attempt(['email' => $Check['email'], 'password' => $Check['password']])) {
             $user = Auth::user();
 
-            if ($user->hasRole('admin')) {
+            if ($user->role == 'admin') {
                 return response()->json(['data' => 1]);
 
-            } else if ($user->hasRole('clinic_manager')) {
+            } else if ($user->role == 'clinic_manager') {
                 return response()->json(['data' => 2]);
 
-            } else if ($user->hasRole('department_manager')) {
+            } else if ($user->role == 'department_manager') {
                 return response()->json(['data' => 3]);
 
-            } else if ($user->hasRole('doctor')) {
+            } else if ($user->role == 'doctor') {
                 return response()->json(['data' => 4]);
 
-            } else if ($user->hasRole('employee')) {
+            } elseif ($user->role == 'employee') {
                 $employee = $user->employee;
-                $jobTitle = $employee->jobTitles()->first();
-            
+                $jobTitle = $employee->job_title;
+
                 return response()->json([
                     'data'     => 5,
-                    'position' => $jobTitle ? $jobTitle->name : 'general'
+                    'position' => $jobTitle ?? 'general'
                 ]);
-            } else if ($user->hasRole('patient')) {
+            } elseif ($user->role == 'patient') {
                 return response()->json(['data' => 6]);
             }
         } else {

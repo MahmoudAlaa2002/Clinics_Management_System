@@ -50,24 +50,38 @@
                 <a href="{{ Route('add_appointment') }}" class="float-right btn btn-primary btn-rounded" style="font-weight: bold;"><i class="fa fa-plus"></i> Add Appointment</a>
             </div>
         </div>
+
+        <div class="mb-4 row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Search by:</span>
+                    </div>
+                    <select id="search_filter" name="filter" class="form-control">
+                        <option value="patient">Patient Name</option>
+                        <option value="clinic">Clinic Name</option>
+                        <option value="department">Department Name</option>
+                        <option value="doctor">Doctor Name</option>
+                        <option value="date">Appointment Date</option>
+                        <option value="status">Status</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <div class="mb-4 row">
-                        <div class="col-md-4">
-                            <input type="text" id="search_input" class="form-control" placeholder="Search...">
-                        </div>
-                        <div class="col-md-3">
-                            <select id="search_filter" class="form-control">
-                                <option value="patient">Patient Name</option>
-                                <option value="clinic">Clinic Name</option>
-                                <option value="department">Department Name</option>
-                                <option value="doctor">Doctor Name</option>
-                                <option value="date">Appointment Date</option>
-                                <option value="status">Status</option>
-                            </select>
-                        </div>
-                    </div>
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
@@ -87,30 +101,38 @@
                                 @foreach ($appointments as $appointment)
                                     <tr>
                                         <td>{{ $appointment->id }}</td>
-                                        <td>{{ $appointment->patient->name }}</td>
+                                        <td>{{ $appointment->patient->user->name }}</td>
                                         <td>{{ $appointment->clinic->name }}</td>
                                         <td>{{ $appointment->department->name }}</td>
-                                        <td>{{ $appointment->doctor->name }}</td>
-                                        <td>{{ $appointment->appointment_date }}</td>
-                                        <td>{{ $appointment->appointment_time }}</td>
+                                        <td>{{ $appointment->doctor->employee->user->name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
                                         <td>
-                                            @if($appointment->status === 'Scheduled')
-                                                <span class="status-badge" style="min-width: 140px; display: inline-block; text-align: center; padding: 4px 12px; font-size: 18px; border-radius: 50px; background-color: #189de4; color: white;">
-                                                    Scheduled
+                                            @if($appointment->status === 'Pending')
+                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#ffc107; color:white;">
+                                                    Pending
+                                                </span>
+                                            @elseif($appointment->status === 'Accepted')
+                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#189de4; color:white;">
+                                                    Accepted
+                                                </span>
+                                            @elseif($appointment->status === 'Rejected')
+                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#f90d25; color:white;">
+                                                    Rejected
+                                                </span>
+                                            @elseif($appointment->status === 'Cancelled')
+                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#6c757d; color:white;">
+                                                    Cancelled
                                                 </span>
                                             @elseif($appointment->status === 'Completed')
-                                                <span class="status-badge" style="min-width: 140px; display: inline-block; text-align: center; padding: 4px 12px; font-size: 18px; border-radius: 50px; background-color: #15ef70; color: white;">
+                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#14ea6d; color:white;">
                                                     Completed
-                                                </span>
-                                            @else
-                                                <span class="status-badge" style="min-width: 140px; display: inline-block; text-align: center; padding: 4px 12px; font-size: 18px; border-radius: 50px; background-color: #f90d25; color: white;">
-                                                    Cancelled
                                                 </span>
                                             @endif
                                         </td>
                                         <td class="action-btns">
                                             <div class="d-flex justify-content-center">
-                                                <a href="{{ route('description_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
+                                                <a href="{{ route('details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
                                                 <a href="{{ route('edit_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
                                                 <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}"><i class="fa fa-trash"></i></button>
                                             </div>
@@ -143,7 +165,7 @@
 <script>
     $(document).on('click', '.delete-appointment', function () {
         let appointmentId = $(this).data('id');
-        let url = `/delete/appointment/${appointmentId}`;
+        let url = `/admin/delete/appointment/${appointmentId}`;
 
         Swal.fire({
             title: 'Are you sure?',
@@ -166,7 +188,7 @@
                     success: function (response) {
                         if (response.success) {
                             Swal.fire({
-                                title: 'Deleted!',
+                                title: 'Deleted',
                                 text: 'Appointment Has Been Deleted Successfully',
                                 icon: 'success'
                             }).then(() => {
@@ -182,86 +204,79 @@
     });
 
     $(document).ready(function () {
+        let lastAppointmentKeyword = '';
 
-        function fetchAppointments() {
-            let keyword = $('#search_input').val().trim();
-            let filter = $('#search_filter').val();
+        function fetchAppointments(url = "{{ route('search_appointments') }}") {
+            let $searchInput = $('#search_input');
+            let $filter      = $('#search_filter');
+            let $tableBody   = $('#appointments_table_body');
+            let $pagination  = $('#main-pagination');
 
-            // ✅ إذا البحث فارغ تمامًا، أرجع للعرض الأساسي
-            if (keyword === '') {
+            if ($searchInput.length === 0 || $tableBody.length === 0) {
+                return;
+            }
+
+            let keyword = $searchInput.val().trim();
+            let filter  = $filter.length ? $filter.val() : '';
+
+            // ⛔ أول مرة يكون البحث فارغ، لا تعمل شيء
+            if (keyword === '' && lastAppointmentKeyword === '') return;
+
+            // 🔁 إذا المستخدم مسح النص بعد بحث سابق → ارجع للوضع العادي (إعادة تحميل الصفحة)
+            if (keyword === '' && lastAppointmentKeyword !== '') {
+                lastAppointmentKeyword = '';
                 window.location.href = "{{ route('view_appointments') }}";
                 return;
             }
 
-            $.ajax({
-                url: "{{ route('search_appointments') }}",
-                type: 'GET',
-                dataType: 'json',
-                data: {
-                    keyword: keyword,
-                    filter: filter
-                },
-                success: function (response) {
-                    $('#appointments_table_body').html(response.html);
-
-                    if (response.searching) {
-                        if (response.count > 12) {
-                            $('#main-pagination').html(response.pagination).show();
-                        } else {
-                            $('#main-pagination').empty().hide();
-                        }
-                    } else {
-                        $('#main-pagination').show();
-                    }
-                },
-                error: function () {
-                    console.error("فشل في تحميل نتائج البحث.");
-                }
-            });
-        }
-
-        $('#search_input, #search_filter').on('input change', function () {
-            fetchAppointments();
-        });
-
-        function fetchAppointmentsWithUrl(url) {
-            let keyword = $('#search_input').val().trim();
-            let filter = $('#search_filter').val();
+            // تحديث آخر كلمة بحث
+            lastAppointmentKeyword = keyword;
 
             $.ajax({
                 url: url,
                 type: 'GET',
                 dataType: 'json',
-                data: {
-                    keyword: keyword,
-                    filter: filter
-                },
+                data: { keyword: keyword, filter: filter },
                 success: function (response) {
-                    $('#appointments_table_body').html(response.html);
+                    $tableBody.html(response.html);
 
-                    if (response.count > 12) {
-                        $('#main-pagination').html(response.pagination).show();
+                    if (response.searching) {
+                        if (response.count > 12) {
+                            $pagination.html(response.pagination).show();
+                        } else {
+                            $pagination.empty().hide();
+                        }
                     } else {
-                        $('#main-pagination').empty().hide();
+                        $pagination.show();
                     }
                 },
                 error: function () {
-                    console.error("فشل في تحميل الصفحة المطلوبة.");
+                    console.error("⚠️ فشل في تحميل نتائج البحث.");
                 }
             });
         }
 
+        // 🔍 البحث أثناء الكتابة
+        $(document).on('input', '#search_input', function () {
+            fetchAppointments();
+        });
+
+        // 🔄 البحث عند تغيير نوع الفلتر
+        $(document).on('change', '#search_filter', function () {
+            fetchAppointments();
+        });
+
+        // 📄 دعم الباجينيشن في حالة البحث
         $(document).on('click', '#main-pagination .page-link', function (e) {
             let keyword = $('#search_input').val().trim();
             if (keyword !== '') {
                 e.preventDefault();
                 let url = $(this).attr('href');
-                if (url !== undefined && url !== '#') {
-                    fetchAppointmentsWithUrl(url);
+                if (url && url !== '#') {
+                    fetchAppointments(url);
                 }
             }
         });
-
     });
 
 </script>

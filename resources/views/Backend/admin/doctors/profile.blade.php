@@ -75,8 +75,8 @@
 
                             <div class="mb-3 col-md-6 profile-item">
                                 <i class="fas fa-stethoscope me-2 text-primary"></i>
-                                <strong>Specialty:</strong>&nbsp;
-                                <span class="text-muted">{{ $doctor->specialty->name ?? '-' }}</span>
+                                <strong>Speciality:</strong>&nbsp;
+                                <span class="text-muted">{{ $doctor->speciality ?? '-' }}</span>
                             </div>
 
                             <div class="mb-3 col-md-6 profile-item">
@@ -88,7 +88,7 @@
                             <div class="mb-3 col-md-6 profile-item">
                                 <i class="fa fa-graduation-cap me-2 text-primary"></i>
                                 <strong>Qualification:</strong>&nbsp;
-                                <span class="text-muted">{{ $doctor->qualification ?? '-' }} AM</span>
+                                <span class="text-muted">{{ $doctor->qualification ?? '-' }}</span>
                             </div>
 
                             <div class="mb-3 col-md-6 profile-item">
@@ -98,9 +98,11 @@
                             </div>
 
                             <div class="mb-3 col-md-6 profile-item">
-                                <i class="fa fa-briefcase me-2 text-primary"></i>
-                                <strong>Experience Years:</strong>&nbsp;
-                                <span class="text-muted">{{ $doctor->experience_years ?? '-' }} years</span>
+                                <i class="fas fa-file-invoice-dollar me-2 text-primary"></i>
+                                <strong>Consultation Fee:</strong>&nbsp;
+                                <span class="text-muted">
+                                    $ {{ number_format($doctor->consultation_fee, 2) }}
+                                </span>
                             </div>
 
                             <div class="mb-3 col-md-6 profile-item">
@@ -110,9 +112,18 @@
                             </div>
 
                             <div class="mb-3 col-md-6 profile-item">
-                                <i class="fa fa-clock me-2 text-primary"></i>
-                                <strong>Work Start Time:</strong>&nbsp;
-                                <span class="text-muted">{{ $doctor->employee->work_start_time }} AM</span>
+                                <i class="fa fa-star me-2 text-primary"></i>
+                                <strong>Rating:</strong>&nbsp;
+                                @php
+                                    $rating = $doctor->rating ?? 0;
+                                @endphp
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= $rating)
+                                        <i class="fa fa-star text-warning"></i>
+                                    @else
+                                        <i class="fa fa-star text-secondary"></i>
+                                    @endif
+                                @endfor
                             </div>
 
                             <div class="mb-3 col-md-6 profile-item">
@@ -123,9 +134,14 @@
 
                             <div class="mb-3 col-md-6 profile-item">
                                 <i class="fa fa-clock me-2 text-primary"></i>
-                                <strong>Work End Time:</strong>&nbsp;
-                                <span class="text-muted">{{ $doctor->employee->work_end_time }} PM</span>
+                                <strong>Work Time:</strong>&nbsp;
+                                <span class="text-muted">
+                                    {{ \Carbon\Carbon::parse($doctor->employee->work_start_time)->format('H:i') }}
+                                    -
+                                    {{ \Carbon\Carbon::parse($doctor->employee->work_end_time)->format('H:i') }}
+                                </span>
                             </div>
+
                         </div>
 
                         <div class="mb-4" style="margin-bottom: 20px;">

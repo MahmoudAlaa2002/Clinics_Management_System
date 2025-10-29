@@ -2,9 +2,9 @@
     @foreach ($departments_managers as $department_manager)
         <div class="col-md-4 col-sm-4 col-lg-3">
             <div class="profile-widget">
-                <div class="clinics-managers-img">
+                <div class="doctor-img">
                     <a class="avatar" href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}">
-                        <img src="{{ $department_manager->image ? asset($department_manager->image) : asset('default-avatar.png') }}">
+                        <img src="{{ asset($department_manager->user->image ?? 'assets/img/user.jpg') }}">
                     </a>
                 </div>
                 <div class="dropdown profile-action">
@@ -15,24 +15,28 @@
                         <a class="dropdown-item" href="{{ Route('edit_department_manager' , ['id' => $department_manager->id]) }}">
                             <i class="fa fa-pencil m-r-5"></i> Edit
                         </a>
-                        <a class="dropdown-item delete-departments_managers" data-id="{{ $department_manager->id }}"
-                           href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}"
-                           data-toggle="modal" data-target="#delete_departments_managers">
+                        <a class="dropdown-item delete-department-manager"
+                           data-id="{{ $department_manager->id }}"
+                           href="{{ Route('delete_department_manager' , ['id' => $department_manager->id]) }}"
+                           data-toggle="modal" data-target="#delete_doctor">
                             <i class="fa fa-trash-o m-r-5"></i> Delete
                         </a>
                     </div>
                 </div>
-                <h4 class="clinics-managers-name text-ellipsis">
+                <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;">
                     <a href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}">
-                        {{ $department_manager->name }}
+                        {{ $department_manager->employee->user->name }}
                     </a>
                 </h4>
-                <div class="doc-prof">{{ $department_manager->employee->clinic->name ?? 'N/A' }}</div>
+                <div class="doc-prof">{{ $department_manager->employee->department->name }}</div>
+                <div class="user-country">
+                    <i class="fa fa-map-marker"></i> {{ $department_manager->employee->user->address }}
+                </div>
             </div>
         </div>
     @endforeach
 @else
-    <div class="text-center col-12">
+    <div class="col-12 text-center">
         <div class="alert alert-info" style="font-weight: bold; font-size: 18px; margin-top:50px;">
             No Departments Managers Found
         </div>

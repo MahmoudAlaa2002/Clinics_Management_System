@@ -43,13 +43,13 @@
                         </tr>
 
                         <tr>
-                            <th><i class="fas fa-phone text-primary me-2"></i> Phone:</th>
-                            <td>{{ $employee->user->phone ?? '-' }}</td>
+                            <th><i class="fas fa-calendar-alt text-primary me-2"></i> Date of Birth:</th>
+                            <td>{{ $employee->user->date_of_birth }}</td>
                         </tr>
 
                         <tr>
-                            <th><i class="fas fa-calendar-alt text-primary me-2"></i> Date of Birth:</th>
-                            <td>{{ $employee->user->date_of_birth }}</td>
+                            <th><i class="fas fa-phone text-primary me-2"></i> Phone:</th>
+                            <td>{{ $employee->user->phone ?? '-' }}</td>
                         </tr>
 
                         <tr>
@@ -76,17 +76,17 @@
 
                         <tr>
                             <th><i class="fas fa-building text-primary me-2"></i> Department:</th>
-                            <td>{{ $employee->department->name  }}</td>
+                            <td>{{ $employee->department->name ?? '-' }}</td>
                         </tr>
 
                         <tr>
                             <th><i class="fas fa-briefcase text-primary me-2"></i> Job Title:</th>
-                            <td>{{ $employee->jobTitles->pluck('name')->implode(' , ') }}</td>
+                            <td>{{ $employee->job_title }}</td>
                         </tr>
 
                         <tr>
                             <th><i class="fas fa-calendar-alt text-primary me-2"></i> Hire Date:</th>
-                            <td>{{ $employee->jobTitles->pluck('hire_date')->map(fn($date) => \Carbon\Carbon::parse($date)->format('d/m/Y'))->implode(' , ') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d/m/Y') }}</td>
                         </tr>
                     </table>
 

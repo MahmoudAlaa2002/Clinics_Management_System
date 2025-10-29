@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('status', ['Pending', 'Accepted', 'Rejected', 'Cancelled', 'Completed'])->default('Pending');
             $table->text('notes')->nullable();
 
-            $table->decimal('consultation_fee');    //   سعر الكشفية
+            $table->decimal('consultation_fee', 5, 2);    //   سعر الكشفية
             $table->timestamps();
         });
     }

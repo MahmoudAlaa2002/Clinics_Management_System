@@ -8,19 +8,15 @@ class Doctor extends Model{
 
     protected $fillable = [
         'employee_id',
+        'speciality',
         'qualification',
-        'experience_years',
-        'specialty_id',
+        'consultation_fee',
+        'rating',
     ];
 
 
     public function employee(){
         return $this->belongsTo(Employee::class, 'employee_id');
-    }
-
-
-    public function specialty(){
-        return $this->belongsTo(Specialty::class);
     }
 
 
@@ -37,11 +33,6 @@ class Doctor extends Model{
             'id',
             'patient_id'
         );
-    }
-
-
-    public function prescriptions(){
-        return $this->hasMany(Prescription::class);
     }
 
 }

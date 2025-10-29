@@ -145,34 +145,8 @@
             </div>
           </div>
 
-          {{-- 2) Professional Information --}}
-          <div class="card">
-            <div class="card-header">Professional Information</div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <label>Qualification <span class="text-danger">*</span></label>
-                  <select class="form-control" id="qualification" name="qualification">
-                    @php
-                      $qualifications = ['MBBS','MD','DO','BDS','PhD','MSc','Fellowship','Diploma'];
-                      $selectedQualification = old('qualification', $doctor->qualification ?? null);
-                    @endphp
-                    <option disabled {{ $selectedQualification ? '' : 'selected' }} hidden>Select Qualification</option>
-                    @foreach($qualifications as $q)
-                      <option value="{{ $q }}" @selected($selectedQualification === $q)>{{ $q }}</option>
-                    @endforeach
-                  </select>
-                </div>
 
-                <div class="col-sm-6">
-                  <label>Experience Years <span class="text-danger">*</span></label>
-                  <input class="form-control" type="number" min="0" id="experience_years" name="experience_years" value="{{ old('experience_years', $doctor->experience_years ?? '') }}">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {{-- 3) Assignment --}}
+          {{-- 2) Assignment --}}
           <div class="card">
             <div class="card-header">Assignment</div>
             <div class="card-body">
@@ -194,12 +168,60 @@
                   </select>
                 </div>
 
+              </div>
+            </div>
+          </div>
+
+          {{-- 3) Professional Information --}}
+          <div class="card">
+            <div class="card-header">Professional Information</div>
+            <div class="card-body">
+              <div class="row">
+
                 <div class="col-sm-6">
-                  <label>Speciality <span class="text-danger">*</span></label>
-                  <select id="specialty_id" name="specialty_id" class="form-control">
-                    <option value="{{ $doctor->specialty->id ?? '' }}" selected>{{ $doctor->specialty->name ?? 'Select Specialty' }}</option>
+                    <label>Speciality <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-stethoscope"></i></span>
+                        </div>
+                        <input type="text" class="form-control" id="speciality" name="speciality" value="{{ $doctor->speciality }}">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <label>Qualification <span class="text-danger">*</span></label>
+                  <select class="form-control" id="qualification" name="qualification">
+                    @php
+                      $qualifications = ['MBBS','MD','DO','BDS','PhD','MSc','Fellowship','Diploma'];
+                      $selectedQualification = old('qualification', $doctor->qualification ?? null);
+                    @endphp
+                    <option disabled {{ $selectedQualification ? '' : 'selected' }} hidden>Select Qualification</option>
+                    @foreach($qualifications as $q)
+                      <option value="{{ $q }}" @selected($selectedQualification === $q)>{{ $q }}</option>
+                    @endforeach
                   </select>
                 </div>
+
+                <div class="col-sm-6">
+                    <label>Consultation Fee <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-file-invoice-dollar"></i></span>
+                        </div>
+                        <input class="form-control" type="number" min="0" id="consultation_fee" name="consultation_fee" value="{{ old('consultation_fee', $doctor->consultation_fee ?? '') }}">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <label>Rating <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-star"></i></span>
+                        </div>
+                        <input type="number" min="0" class="form-control" id="rating" name="rating" value="{{ $doctor->rating }}">
+                    </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -322,7 +344,6 @@
                     let date_of_birth = $('#date_of_birth').val().trim();
                     let clinic_id = $('#clinic_id').val();
                     let department_id = $('#department_id').val();
-                    let specialty_id = $('#specialty_id').val();
                     let email = $('#email').val();
                     let password = $('#password').val();
                     let confirm_password = $('#confirm_password').val();
@@ -330,9 +351,10 @@
                     let address = $('#address').val().trim();
                     let work_start_time = $('#work_start_time').val();
                     let work_end_time = $('#work_end_time').val();
+                    let speciality = $('#speciality').val();
                     let qualification = $('#qualification').val();
-                    let experience_years = $('#experience_years').val();
-
+                    let rating = $('#rating').val();
+                    let consultation_fee = $('#consultation_fee').val();
                     let gender = $('input[name="gender"]:checked').val();
                     let short_biography = $('#short_biography').val().trim();
                     let status = $('input[name="status"]:checked').val();
@@ -356,14 +378,15 @@
                     formData.append('date_of_birth', date_of_birth);
                     formData.append('clinic_id', clinic_id);
                     formData.append('department_id', department_id);
-                    formData.append('specialty_id', specialty_id);
                     formData.append('email', email);
                     formData.append('password', password);
                     formData.append('confirm_password', confirm_password);
                     formData.append('phone', phone);
                     formData.append('address', address);
+                    formData.append('speciality', speciality);
                     formData.append('qualification', qualification);
-                    formData.append('experience_years', experience_years);
+                    formData.append('rating', rating);
+                    formData.append('consultation_fee', consultation_fee);
                     formData.append('work_start_time', work_start_time);
                     formData.append('work_end_time', work_end_time);
                     formData.append('gender', gender);
@@ -383,13 +406,9 @@
                     });
 
 
-                    if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
-                    !isValidSelectValue('department_id') || !isValidSelectValue('specialty_id') ||
-                    email === '' || phone === '' || address === '' ||
-                    !isValidSelectValue('qualification') ||
-                    experience_years === '' || !isValidSelectValue('work_start_time') ||
-                    !isValidSelectValue('work_end_time') || gender === undefined ||
-                    workingDays.length === 0) {
+                    if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || email === '' || phone === '' || address === '' ||
+                    speciality === '' || !isValidSelectValue('qualification') || rating === '' || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
+                    !isValidSelectValue('work_end_time') || gender === undefined ||workingDays.length === 0) {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Enter All Required Fields',
@@ -397,7 +416,7 @@
                             confirmButtonText: 'OK'
                         });
                         return;
-                    }else if (password !== confirm_password){
+                    } else if (password !== confirm_password){
                         Swal.fire({
                             title: 'Error!',
                             text: 'The Password Does Not Match The Confirmation Password',
@@ -405,7 +424,23 @@
                             confirmButtonText: 'OK'
                         });
                         return;
-                    }else if (work_start_time >= work_end_time){
+                    } else if (rating < 1 || rating > 5) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'The Rating Must Be Between 1 And 5',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            return;
+                    }else if (consultation_fee <= 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'The Consultation Fee Is Invalid',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    } else if (work_start_time >= work_end_time){
                         Swal.fire({
                             title: 'Error!',
                             text: 'The Timing Is Incorrect, Please Correct It',
@@ -413,7 +448,7 @@
                             confirmButtonText: 'OK'
                         });
                         return;
-                    }else{
+                    } else{
                         $.ajax({
                             method: 'POST',
                             url: "{{ route('update_doctor', ['id' => $doctor->id]) }}",
@@ -435,7 +470,7 @@
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
-                                    text: 'Doctor Has Been Added Successfully',
+                                    text: 'Doctor Has Been Updated Successfully',
                                     icon: 'success',
                                     confirmButtonText: 'OK'
                                 }).then(() => {
@@ -454,7 +489,6 @@
 
         if (currentClinicId) {
         loadDepartments(currentClinicId, "{{ $doctor->employee->department->id ?? '' }}");
-        loadSpecialties("{{ $doctor->employee->department->id ?? '' }}", "{{ $doctor->specialty->id ?? '' }}");
         loadWorkingTimes(currentClinicId, "{{ $doctor->employee->work_start_time ?? '' }}", "{{ $doctor->employee->work_end_time ?? '' }}");
         loadWorkingDaysForClinic(currentClinicId, selectedDays);
         }
@@ -476,15 +510,6 @@
         $.get('/admin/get-departments-by-clinic/' + clinicId, function (data) {
             data.forEach(d => {
             $('#department_id').append(`<option value="${d.id}" ${d.id == selected ? 'selected':''}>${d.name}</option>`);
-            });
-        });
-        }
-
-        function loadSpecialties(depId, selected = '') {
-        $('#specialty_id').empty().append('<option disabled selected hidden>Select Specialty</option>');
-        $.get('/admin/get-specialties-by-department/' + depId, function (data) {
-            data.forEach(s => {
-            $('#specialty_id').append(`<option value="${s.id}" ${s.id == selected ? 'selected':''}>${s.name}</option>`);
             });
         });
         }

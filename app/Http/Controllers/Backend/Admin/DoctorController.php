@@ -24,9 +24,13 @@ class DoctorController extends Controller{
 
 
     public function storeDoctor(Request $request){
-        if(User::where('name', $request->name)->exists() && User::where('email', $request->email)->exists()){
+        $normalizedName = strtolower(trim($request->name));
+        $normalizedEmail = strtolower(trim($request->email));
+        $existingUser = User::whereRaw('LOWER(name) = ?', [$normalizedName])->orWhereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+
+        if ($existingUser) {
             return response()->json(['data' => 0]);
-        }else{
+        } else {
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
@@ -46,6 +50,7 @@ class DoctorController extends Controller{
                 'image' => $imagePath,
                 'date_of_birth' => $request->date_of_birth,
                 'gender' => $request->gender,
+                'role' => 'doctor',
             ]);
             $user->assignRole(['doctor']);
 
@@ -53,6 +58,8 @@ class DoctorController extends Controller{
                 'user_id' => $user->id,
                 'clinic_id' => $request->clinic_id,
                 'department_id' => $request->department_id,
+                'job_title' => 'Doctor',
+                'hire_date' => now()->toDateString(),
                 'work_start_time' => $request->work_start_time,
                 'work_end_time' => $request->work_end_time,
                 'working_days' => $request->working_days,
@@ -60,18 +67,12 @@ class DoctorController extends Controller{
                 'short_biography' => $request->short_biography,
             ]);
 
-            $job_title_Id = JobTitle::where('name', 'doctor')->pluck('id')->first();
-            EmployeeJobTitle::create([
-                'employee_id' => $employee->id,
-                'job_title_id' => $job_title_Id ,
-                'hire_date' => now()->toDateString(),
-            ]);
-
             Doctor::create([
                 'employee_id' => $employee->id,
+                'speciality'   => $request->speciality,
                 'qualification' => $request->qualification,
-                'experience_years' => $request->experience_years,
-                'specialty_id'       => $request->specialty_id,
+                'consultation_fee'       => $request->consultation_fee,
+                'rating' => $request->rating,
             ]);
 
             return response()->json(['data' => 1]);
@@ -91,68 +92,93 @@ class DoctorController extends Controller{
 
 
 
-    public function searchDoctors(Request $request){
-        $keyword = trim((string) $request->input('keyword', ''));
-        $filter  = $request->input('filter', '');
+    public function searchDoctors(Request $request)
+{
+    $keyword = trim((string) $request->input('keyword', ''));
+    $filter  = $request->input('filter', '');
 
-        $doctors = Doctor::with([
-            'specialty:id,name',
-            'employee:id,user_id,working_days,status,clinic_id,department_id',
-            'employee.user:id,name,address,image',
-            'employee.clinic:id,name',
-            'employee.department:id,name',
-        ]);
+    $doctors = Doctor::with([
+        'employee:id,user_id,job_title,status,clinic_id,department_id',
+        'employee.user:id,name,address,image',
+        'employee.clinic:id,name',
+        'employee.department:id,name',
+    ]);
 
-        if ($keyword !== '') {
-            switch ($filter) {
-                case 'name': // البحث باسم المستخدم
-                    $doctors->whereHas('employee.user', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', "{$keyword}%");
-                    });
-                    break;
+    if ($keyword !== '') {
+        switch ($filter) {
+            case 'name': // البحث باسم الطبيب (من جدول users)
+                $doctors->whereHas('employee.user', function ($q) use ($keyword) {
+                    $q->where('name', 'LIKE', "{$keyword}%");
+                });
+                break;
 
-                case 'clinic': // البحث باسم العيادة
-                    $doctors->whereHas('employee.clinic', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', "{$keyword}%");
-                    });
-                    break;
+            case 'clinic': // البحث باسم العيادة
+                $doctors->whereHas('employee.clinic', function ($q) use ($keyword) {
+                    $q->where('name', 'LIKE', "{$keyword}%");
+                });
+                break;
 
-                case 'department': // البحث باسم القسم
-                    $doctors->whereHas('employee.department', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', "{$keyword}%");
-                    });
-                    break;
+            case 'department': // البحث باسم القسم
+                $doctors->whereHas('employee.department', function ($q) use ($keyword) {
+                    $q->where('name', 'LIKE', "{$keyword}%");
+                });
+                break;
 
-                case 'status': // البحث حسب حالة الموظف
-                    $doctors->whereHas('employee', function ($q) use ($keyword) {
-                        $q->where('status', 'LIKE', "{$keyword}%");
-                    });
-                    break;
+            case 'status': // البحث حسب حالة الموظف
+                $doctors->whereHas('employee', function ($q) use ($keyword) {
+                    $q->where('status', 'LIKE', "{$keyword}%");
+                });
+                break;
 
-                case 'specialty': // البحث باسم التخصص
-                    $doctors->whereHas('specialty', function ($q) use ($keyword) {
-                        $q->where('name', 'LIKE', "{$keyword}%");
-                    });
-                    break;
+            case 'job': // البحث بعنوان الوظيفة من جدول employees
+                $doctors->whereHas('employee', function ($q) use ($keyword) {
+                    $q->where('job_title', 'LIKE', "{$keyword}%");
+                });
+                break;
 
-                case 'qualification': // البحث بالمؤهل العلمي
-                    $doctors->where('qualification', 'LIKE', "{$keyword}%");
-                    break;
-            }
+            case 'speciality': // البحث بالتخصص (speciality)
+                $doctors->where('speciality', 'LIKE', "{$keyword}%");
+                break;
+
+            case 'qualification': // البحث بالمؤهل العلمي
+                $doctors->where('qualification', 'LIKE', "{$keyword}%");
+                break;
+
+            default: // بحث عام يشمل الاسم، الوظيفة، التخصص، المؤهل
+                $doctors->where(function ($q) use ($keyword) {
+                    $q->where('speciality', 'LIKE', "%{$keyword}%")
+                      ->orWhere('qualification', 'LIKE', "%{$keyword}%")
+                      ->orWhereHas('employee', function ($qq) use ($keyword) {
+                          $qq->where('job_title', 'LIKE', "%{$keyword}%")
+                             ->orWhere('status', 'LIKE', "%{$keyword}%");
+                      })
+                      ->orWhereHas('employee.user', function ($qq) use ($keyword) {
+                          $qq->where('name', 'LIKE', "%{$keyword}%");
+                      })
+                      ->orWhereHas('employee.clinic', function ($qq) use ($keyword) {
+                          $qq->where('name', 'LIKE', "%{$keyword}%");
+                      })
+                      ->orWhereHas('employee.department', function ($qq) use ($keyword) {
+                          $qq->where('name', 'LIKE', "%{$keyword}%");
+                      });
+                });
+                break;
         }
-
-        $doctors = $doctors->orderBy('id')->paginate(12);
-
-        $view = view('Backend.admin.doctors.searchDoctor', compact('doctors'))->render();
-        $pagination = $doctors->total() > 12 ? $doctors->links('pagination::bootstrap-4')->render() : '';
-
-        return response()->json([
-            'html'       => $view,
-            'pagination' => $pagination,
-            'count'      => $doctors->total(),
-            'searching'  => $keyword !== '',
-        ]);
     }
+
+    $doctors = $doctors->orderBy('id')->paginate(12);
+
+    $view = view('Backend.admin.doctors.searchDoctor', compact('doctors'))->render();
+    $pagination = $doctors->total() > 12 ? $doctors->links('pagination::bootstrap-4')->render() : '';
+
+    return response()->json([
+        'html'       => $view,
+        'pagination' => $pagination,
+        'count'      => $doctors->total(),
+        'searching'  => $keyword !== '',
+    ]);
+}
+
 
 
 
@@ -160,9 +186,7 @@ class DoctorController extends Controller{
 
 
     public function profileDoctor($id){
-        $doctor = Doctor::with(['employee.user','employee.department','employee.clinic'])->findOrFail($id);
-
-        // dd($doctor->employee->user->name);
+        $doctor = Doctor::findOrFail($id);
         return view('Backend.admin.doctors.profile', compact('doctor'));
     }
 
@@ -183,68 +207,71 @@ class DoctorController extends Controller{
 
     public function updateDoctor(Request $request, $id){
         $doctor = Doctor::findOrFail($id);
-        $employee = Employee::where('id', $doctor->employee_id)->first();
-        $user = $employee ? User::where('id', $employee->user_id)->first() : null;
+        $employee = Employee::findOrFail($doctor->employee_id);
+        $user = User::findOrFail($employee->user_id);
 
-        $currentUserId = $doctor->employee->user_id;
-        if (User::where('name', $request->name)->where('id', '!=', $currentUserId)->exists() || User::where('email', $request->email)->where('id', '!=', $currentUserId)->exists()) {
-            return response()->json(['data' => 0]);
-        }else{
-            $imagePath = $user->image;
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('assets/img/doctors'), $imageName);
-                $imagePath = 'assets/img/doctors/' . $imageName;
-            }
+        $normalizedName = strtolower(trim($request->name));
+        $normalizedEmail = strtolower(trim($request->email));
 
+        $existingUser = User::whereRaw('LOWER(name) = ?', [$normalizedName])
+            ->where('id', '!=', $user->id)->orWhereRaw('LOWER(email) = ?', [$normalizedEmail])->where('id', '!=', $user->id)->first();
 
-            $password = $user->password;
-            if ($request->filled('password')) {
-                $password = Hash::make($request->password);
-            }
-
-            $user->update([
-                'name' => $request->name ,
-                'email' => $request->email ,
-                'phone' => $request->phone,
-                'password' => $password,
-                'image' => $imagePath,
-                'address' => $request->address,
-                'date_of_birth' => $request->date_of_birth,
-                'gender' => $request->gender,
-            ]);
-
-            $employee->update([
-                'user_id' => $user->id ,
-                'clinic_id' => $request->clinic_id,
-                'department_id' => $request->department_id,
-                'status' => $request->status,
-                'work_start_time' => $request->work_start_time,
-                'work_end_time' => $request->work_end_time,
-                'working_days' => $request->working_days,
-                'short_biography' => $request->short_biography,
-            ]);
-
-            $job_title_Id = JobTitle::where('name', 'doctor')->pluck('id')->first();
-            EmployeeJobTitle::updateOrCreate(
-                ['employee_id' => $employee->id],
-                [
-                    'job_title_id' => $job_title_Id,
-                    'hire_date' => $request->hire_date ?? now()->toDateString(),
-                ]
-            );
-
-            $doctor->update([
-                'employee_id' => $employee->id ,
-                'qualification' => $request->qualification,
-                'experience_years' => $request->experience_years,
-                'specialty_id'       => $request->specialty_id,
-            ]);
-
-            return response()->json(['data' => 1]);
+        if ($existingUser) {
+            return response()->json(['data' => 0]); // موجود مسبقاً
         }
+
+        $imagePath = $user->image;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/doctors'), $imageName);
+            $newPath = 'assets/img/doctors/' . $imageName;
+
+            // حذف الصورة القديمة إذا وجدت
+            if ($user->image && file_exists(public_path($user->image))) {
+                @unlink(public_path($user->image));
+            }
+            $imagePath = $newPath;
+        }
+
+        $password = $user->password;
+        if ($request->filled('password')) {
+            $password = Hash::make($request->password);
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => $password,
+            'address' => $request->address,
+            'image' => $imagePath,
+            'date_of_birth' => $request->date_of_birth,
+            'gender' => $request->gender,
+            'role' => 'doctor',
+        ]);
+
+        $employee->update([
+            'clinic_id' => $request->clinic_id,
+            'department_id' => $request->department_id,
+            'job_title' => 'Doctor',
+            'work_start_time' => $request->work_start_time,
+            'work_end_time' => $request->work_end_time,
+            'working_days' => $request->working_days,
+            'status' => $request->status,
+            'short_biography' => $request->short_biography,
+        ]);
+
+        $doctor->update([
+            'speciality' => $request->speciality,
+            'qualification' => $request->qualification,
+            'consultation_fee' => $request->consultation_fee,
+            'rating' => $request->rating,
+        ]);
+
+        return response()->json(['data' => 1]); // تم التحديث بنجاح
     }
+
 
 
 
@@ -254,6 +281,7 @@ class DoctorController extends Controller{
         $employee = Employee::where('id', $doctor->employee_id)->first();
         $user = $employee ? User::where('id', $employee->user_id)->first() : null;
 
+        Appointment::where('doctor_id', $doctor->id)->delete();
         $doctor->delete();
         $employee->delete();
         $user->delete();

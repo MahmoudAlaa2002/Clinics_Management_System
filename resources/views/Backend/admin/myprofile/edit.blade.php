@@ -2,139 +2,142 @@
 
 @section('title' , 'Edit Admin Profile')
 
-
 @section('content')
-
 <style>
-
-    .col-sm-6 {
-        margin-bottom: 20px;
-    }
-
-    input[type="date"] {
-        direction: ltr;
-        text-align: left;
-    }
+    .col-sm-6 { margin-bottom: 20px; }
+    input[type="date"] { direction: ltr; text-align: left; }
+    .card { border: 1px solid #ddd !important; border-radius: 8px !important; box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important; overflow: hidden !important; }
+    .card-header { background-color: #00A8FF !important; color: #fff !important; font-weight: 600 !important; padding: 12px 15px !important; font-size: 16px !important; border-bottom: 1px solid #ddd !important; }
+    .card-body { background-color: #fff; padding: 20px; }
 </style>
 
 <div class="page-wrapper">
     <div class="content">
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <h4 class="page-title" style="margin-bottom: 30px;">Edit Admin Profile</h4>
+                <h4 class="page-title" style="margin-bottom:30px;">Edit Admin Profile</h4>
             </div>
         </div>
+
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <form method="POST" action="{{ Route('update_profile') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('update_profile') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
-                    <div class="row">
+                    {{-- Admin Information --}}
+                    <div class="card">
+                        <div class="card-header">Admin Information</div>
+                        <div class="card-body">
+                            <div class="row">
 
-                        <div class="col-sm-6">
-                            <label>Full Name <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-user-md"></i></span>
-                                </div>
-                              <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Date of Birth <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
-                                </div>
-                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $user->date_of_birth }}">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Phone <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Email <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                                </div>
-                                <input class="form-control" type="email" id="email" name="email" value="{{ $user->email }}">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Password </label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                                </div>
-                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password (optional)">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Confirm Password </label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                                </div>
-                                <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Enter new confirm password (optional)">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label>Address <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
-                                </div>
-                                <input class="form-control" type="text" id="address" name="address" value="{{ $user->address }}">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Avatar</label>
-                                <div class="profile-upload">
-                                    <div class="upload-img">
-                                        <img alt="doctor image" src="{{ asset($user->image ?? 'assets/img/user.jpg') }}">
-                                    </div>
-                                    <div class="upload-input">
-                                        <input type="file" class="form-control" id="image" name="image">
+                                <div class="col-sm-6">
+                                    <label>Full Name <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-md"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-sm-6">
-                            <div class="form-group gender-select">
-                                <label class="gen-label">Gender: <span class="text-danger">*</span></label>
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $user->gender == 'male' ? 'checked' : '' }}>Male
-                                    </label>
+                                <div class="col-sm-6">
+                                    <label>Date of Birth <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input type="date" id="date_of_birth" name="date_of_birth" class="form-control" dir="ltr" lang="en" value="{{ $user->date_of_birth }}">
+                                    </div>
                                 </div>
-                                <div class="form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $user->gender == 'female' ? 'checked' : '' }}>Female
-                                    </label>
+
+                                <div class="col-sm-6">
+                                    <label>Phone <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
+                                    </div>
                                 </div>
+
+                                <div class="col-sm-6">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                        </div>
+                                        <input class="form-control" type="email" id="email" name="email" value="{{ $user->email }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Password</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                        </div>
+                                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password (optional)">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Confirm Password</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                        </div>
+                                        <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Enter confirm password (optional)">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Address <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
+                                        </div>
+                                        <input class="form-control" type="text" id="address" name="address" value="{{ $user->address }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Avatar</label>
+                                    <div class="profile-upload">
+                                        <div class="upload-img">
+                                            <img alt="admin image" src="{{ asset($user->image ?? 'assets/img/user.jpg') }}">
+                                        </div>
+                                        <div class="upload-input">
+                                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group gender-select">
+                                        <label class="gen-label">Gender: <span class="text-danger">*</span></label>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $user->gender == 'male' ? 'checked' : '' }}>Male
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $user->gender == 'female' ? 'checked' : '' }}>Female
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
 
-                    <div class="text-center m-t-20">
-                        <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">Edit Admin Profile</button>
+                    {{-- Submit --}}
+                    <div class="text-center" style="margin-top:20px;">
+                        <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
+                            Edit Profile
+                        </button>
                     </div>
                 </form>
             </div>
@@ -146,7 +149,7 @@
 @section('js')
     <script>
         $(document).ready(function () {
-            $('.addBtn').click(function (e) {
+            $('.editBtn').click(function (e) {
                 e.preventDefault();
 
                 let name = $('#name').val().trim();

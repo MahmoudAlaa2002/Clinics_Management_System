@@ -4,7 +4,7 @@
             <div class="profile-widget">
                 <div class="clinics-managers-img">
                     <a class="avatar" href="{{ Route('profile_clinics_managers' , ['id' => $clinics_manager->id]) }}">
-                        <img src="{{ $clinics_manager->image ? asset($clinics_manager->image) : asset('default-avatar.png') }}">
+                        <img src="{{ $clinics_manager->image ? asset($clinics_manager->image) : asset('assets/img/user.jpg') }}">
                     </a>
                 </div>
 
@@ -25,10 +25,13 @@
                     </div>
                 </div>
 
-                <h4 class="clinics-managers-name text-ellipsis">
+                <h4 class="clinics-managers-name text-ellipsis" style="margin-bottom: 7px;">
                     <a href="{{ Route('profile_clinics_managers' , ['id' => $clinics_manager->id]) }}">{{ $clinics_manager->name }}</a>
                 </h4>
                 <div class="doc-prof">{{ $clinics_manager->employee->clinic->name }}</div>
+                <div class="user-country">
+                    <i class="fa fa-map-marker"></i> {{ $clinics_manager->employee->user->address }}
+                </div>
             </div>
         </div>
     @endforeach

@@ -23,34 +23,11 @@ class Clinic extends Model{
     ];
 
     public function departments(){
-        return $this->belongsToMany(Department::class, 'clinic_department'); // اسم الجدول الوسيط
-    }
-
-    public function clinicDepartments() {
-        return $this->hasMany(ClinicDepartment::class);
+        return $this->belongsToMany(Department::class, 'clinic_departments'); // اسم الجدول الوسيط
     }
 
     public function employees(){
         return $this->hasMany(Employee::class, 'clinic_id');
     }
 
-    public function doctors(){
-        return $this->hasManyThrough(
-            Doctor::class,
-            Employee::class,
-            'clinic_id',       // مفتاح خارجي في employees يشير إلى العيادة
-            'employee_id',     // مفتاح خارجي في doctors يشير إلى الموظف
-            'id',              // المفتاح الأساسي في clinics
-            'id'               // المفتاح الأساسي في employees
-        );
-    }
-
-
-    public function patients(){
-        return $this->belongsToMany(Patient::class, 'clinic_patients');
-    }
-
-    public function medicineStocks(){
-        return $this->hasMany(MedicineStock::class);
-    }
 }
