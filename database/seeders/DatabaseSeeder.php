@@ -15,28 +15,28 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void{
-        // $this->call(RolesSeeder::class);
-        // $this->call(DepartmentSeeder::class);
+        $this->call(RolesSeeder::class);
+        $this->call(DepartmentSeeder::class);
 
-        // // Create Admin user
-        // $admin = User::create([
-        //     'name' => 'Admin',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => Hash::make('123456'),
-        //     'phone' => '0592226120',
-        //     'address' => 'Gaza',
-        //     'date_of_birth' => '2002-03-13',
-        //     'image' => 'assets/img/admin/admin.jpg',
-        //     'gender' => 'male',
-        //     'role' => 'admin',
-        // ]);
+        // Create Admin user
+        $admin = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('123456'),
+            'phone' => '0592226120',
+            'address' => 'Gaza',
+            'date_of_birth' => '2002-03-13',
+            'image' => 'assets/img/admin/admin.jpg',
+            'gender' => 'male',
+            'role' => 'admin',
+        ]);
 
-        // Role::firstOrCreate([
-        //     'name' => 'admin',
-        //     'guard_name' => 'web',
-        // ]);
+        Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'web',
+        ]);
 
-        // $admin->assignRole('admin');
+        $admin->assignRole('admin');
 
         // Create Doctor user
         $doctor = User::create([
