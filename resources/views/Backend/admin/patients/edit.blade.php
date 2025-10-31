@@ -307,15 +307,15 @@
                 success: function (response) {
                     if (response.data == 0) {
                         Swal.fire({
-                            title: 'Success',
-                            text: 'The Patient Already Exists, But The Data Was Updated Successfully.',
-                            icon: 'success',
+                            title: 'Error!',
+                            text: 'The Patient Already Exists',
+                            icon: 'error',
                             confirmButtonText: 'OK'
                         });
                     } else if (response.data == 1) {
                         Swal.fire({
                             title: 'Success',
-                            text: 'Patient Has Been Updated Successfully.',
+                            text: 'Patient Has Been Updated Successfully',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         }).then(() => window.location.href = '/admin/view/patients');

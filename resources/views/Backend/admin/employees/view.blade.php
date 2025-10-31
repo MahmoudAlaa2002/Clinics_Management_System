@@ -41,7 +41,6 @@
             </div>
         </div>
 
-        {{-- 🔍 مربع البحث --}}
         <div class="mb-4 row">
             <div class="col-md-4">
                 <div class="input-group">
@@ -66,7 +65,7 @@
             </div>
         </div>
 
-        {{-- 🧾 جدول الموظفين --}}
+
         <div id="employees_container">
             @include('Backend.admin.employees.search', ['employees' => $employees])
         </div>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('payment_status', ['Paid', 'Partially Paid', 'Unpaid'])->default('Unpaid');
             $table->date('invoice_date');
             $table->date('due_date');
+            $table->text('notes');
             $table->timestamps();
         });
     }

@@ -102,8 +102,8 @@
                                     <tr>
                                         <td>{{ $appointment->id }}</td>
                                         <td>{{ $appointment->patient->user->name }}</td>
-                                        <td>{{ $appointment->clinic->name }}</td>
-                                        <td>{{ $appointment->department->name }}</td>
+                                        <td>{{ $appointment->clinicDepartment->clinic->name }}</td>
+                                        <td>{{ $appointment->clinicDepartment->department->name }}</td>
                                         <td>{{ $appointment->doctor->employee->user->name }}</td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>

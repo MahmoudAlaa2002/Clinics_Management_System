@@ -145,6 +145,15 @@
                         </li>
                     </ul>
                 </li>
+
+                <li class="submenu {{ Request::is('admin/view/medical-records') ? 'active' : '' }}">
+                    <a href="#"><i class="fa fa-notes-medical"></i> <span> Medical Records </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('admin/view/medical-records') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('view_medical_records') }}" class="{{ Request::is('admin/view/medical-records') ? 'active' : '' }}">View Medical Records</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
 
@@ -156,8 +165,7 @@
                 <li class="submenu">
                     <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span> Invoices </span> <span class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="">View Invoices</a></li>
-                        <li><a href="">View Payments</a></li>
+                        <li><a href="{{ route('view_invoices') }}">View Invoices</a></li>
                     </ul>
                 </li>
             </ul>
@@ -165,7 +173,6 @@
 
             <ul>
                 <li class="menu-title">System</li>
-
                 <li class="submenu {{ Request::is('admin/edit/profile') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
                     <ul style="{{ Request::is('admin/edit/profile')  ? '' : 'display: none;' }}">
@@ -174,7 +181,6 @@
                         </li>
                     </ul>
                 </li>
-
             </ul>
         </div>
     </div>

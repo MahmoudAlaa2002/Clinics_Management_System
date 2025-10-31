@@ -22,28 +22,28 @@ class Appointment extends Model{
     }
 
     // الوصول للعيادة من خلال جدول clinic_departments
-    public function clinic(){
-        return $this->hasOneThrough(
-            Clinic::class,
-            ClinicDepartment::class,
-            'id',              // المفتاح الأساسي في clinic_departments
-            'id',              // المفتاح الأساسي في clinics
-            'clinic_department_id', // المفتاح الأجنبي في appointments
-            'clinic_id'        // المفتاح الأجنبي في clinic_departments
-        );
-    }
+    // public function clinic(){
+    //     return $this->hasOneThrough(
+    //         Clinic::class,
+    //         ClinicDepartment::class,
+    //         'id',              // المفتاح الأساسي في clinic_departments
+    //         'id',              // المفتاح الأساسي في clinics
+    //         'clinic_department_id', // المفتاح الأجنبي في appointments
+    //         'clinic_id'        // المفتاح الأجنبي في clinic_departments
+    //     );
+    // }
 
-    // الوصول للقسم من خلال جدول clinic_departments
-    public function department(){
-        return $this->hasOneThrough(
-            Department::class,
-            ClinicDepartment::class,
-            'id',                 // المفتاح الأساسي في clinic_departments
-            'id',                 // المفتاح الأساسي في departments
-            'clinic_department_id', // المفتاح الأجنبي في appointments
-            'department_id'       // المفتاح الأجنبي في clinic_departments
-        );
-    }
+    // // الوصول للقسم من خلال جدول clinic_departments
+    // public function department(){
+    //     return $this->hasOneThrough(
+    //         Department::class,
+    //         ClinicDepartment::class,
+    //         'id',                 // المفتاح الأساسي في clinic_departments
+    //         'id',                 // المفتاح الأساسي في departments
+    //         'clinic_department_id', // المفتاح الأجنبي في appointments
+    //         'department_id'       // المفتاح الأجنبي في clinic_departments
+    //     );
+    // }
 
     public function doctor(){
         return $this->belongsTo(Doctor::class);

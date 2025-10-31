@@ -5,11 +5,13 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Backend\Admin\ClinicController;
 use App\Http\Controllers\Backend\Admin\DoctorController;
+use App\Http\Controllers\Backend\Admin\InvoiceController;
 use App\Http\Controllers\Backend\Admin\PatientController;
 use App\Http\Controllers\Backend\Admin\EmployeeController;
 use App\Http\Controllers\Backend\Admin\DepartmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Backend\Admin\AppointmentController;
+use App\Http\Controllers\Backend\Admin\MedicalRecordController;
 use App\Http\Controllers\Backend\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
@@ -147,14 +149,28 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
 
 
 
+    //Invoices
+    Route::get('/view/invoices' ,[InvoiceController::class , 'viewInvoices'])->name('view_invoices');
+    Route::get('/search/invoices',[InvoiceController::class , 'searchInvoices'])->name('search_invoices');
+    Route::get('/details/invoice/{id}',[InvoiceController::class , 'detailsInvoice'])->name('details_invoice');
+    Route::get('/edit/invoice/{id}' ,[InvoiceController::class , 'editInvoice'])->name('edit_invoice');
+    Route::put('/update/invoice/{id}' ,[InvoiceController::class , 'updateInvoice'])->name('update_invoice');
+    Route::delete('/delete/invoice/{id}' ,[InvoiceController::class ,'deleteInvoice'])->name('delete_invoice');
 
 
+
+    //Medical Records
+    Route::get('/view/medical-records' ,[MedicalRecordController::class , 'viewMedicalRecords'])->name('view_medical_records');
+    Route::get('/search/medical-records',[MedicalRecordController::class , 'searchMedicalRecords'])->name('search_medical_records');
+    Route::get('/details/medical-record/{id}',[MedicalRecordController::class , 'detailsMedicalRecord'])->name('details_medical_record');
+    Route::get('/edit/medical-record/{id}' ,[MedicalRecordController::class , 'editMedicalRecord'])->name('edit_medical_record');
+    Route::put('/update/medical-record/{id}' ,[MedicalRecordController::class , 'updateMedicalRecord'])->name('update_medical_record');
+    Route::delete('/delete/medical-record/{id}' ,[MedicalRecordController::class ,'deleteMedicalRecord'])->name('delete_medical_record');
 
 
 
 
     // Notifications
-
     Route::get('/notifications/details/medication/read/{id}', [AdminNotificationController::class, 'markExpiredAsRead'])
     ->name('notifications_details_medication_read');   // إشعار الأدوية المنتهية
 

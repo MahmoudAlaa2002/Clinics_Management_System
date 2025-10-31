@@ -22,16 +22,23 @@ class DashboardController extends Controller{
         $clinic_count = Clinic::count();
         $department_count = Department::count();
         $doctor_count = Doctor::count();
+        $doctors = Doctor::orderBy('created_at', 'desc')->take(10)->get();
         $employee_count = Employee::count();
         $patient_count = Patient::count();
+        $patients = Patient::orderBy('created_at', 'desc')->take(5)->get();
         $today_appointments = Appointment::whereDate('date', today())->count();
+        $appointments = Appointment::orderBy('created_at', 'desc')->take(5)->get();
         return view('Backend.admin.dashboard' , compact(
             'clinic_count' ,
-            'department_count' ,
-            'doctor_count' ,
-            'employee_count' ,
-            'patient_count' ,
-            'today_appointments'));
+        'department_count' ,
+        'doctor_count' ,
+        'doctors',
+        'employee_count' ,
+        'patient_count' ,
+        'patients',
+        'today_appointments',
+                     'appointments',
+    ));
     }
 
 

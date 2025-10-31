@@ -17,7 +17,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <h4 class="page-title mb-4">Edit Employee</h4>
+                <h4 class="mb-4 page-title">Edit Employee</h4>
             </div>
         </div>
 
@@ -92,7 +92,7 @@
                                 <div class="col-sm-6">
                                     <label>Avatar</label>
                                     <div class="profile-upload">
-                                        <div class="upload-img mb-2">
+                                        <div class="mb-2 upload-img">
                                             <img src="{{ asset($employee->user->image ?? 'assets/img/user.jpg') }}" alt="employee">
                                         </div>
                                         <input type="file" id="image" name="image" class="form-control" accept="image/*">
@@ -150,12 +150,12 @@
                                 </div>
 
                                 {{-- Job Title --}}
-                                <div class="col-sm-12 mt-3">
-                                    <label class="fw-bold mb-2">Job Title <span class="text-danger">*</span></label>
-                                    <div class="card p-3">
+                                <div class="mt-3 col-sm-12">
+                                    <label class="mb-2 fw-bold">Job Title <span class="text-danger">*</span></label>
+                                    <div class="p-3 card">
                                         @php $job = $employee->job_title; @endphp
                                         @foreach(['Clinic Manager','Department Manager','Doctor','Nurse','Receptionist'] as $title)
-                                            <div class="form-check mb-2">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="{{ strtolower(str_replace(' ','_',$title)) }}" value="{{ $title }}" {{ $job == $title ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="{{ strtolower(str_replace(' ','_',$title)) }}">{{ $title }}</label>
                                             </div>
@@ -343,7 +343,7 @@
             });
         }
 
-        // ✅ إظهار/إخفاء أقسام حسب الوظيفة
+        // إظهار/إخفاء أقسام حسب الوظيفة
         $('input[name="job_title"]').on('change', function () {
             const job = $(this).val();
             const needDept = ['Department Manager','Doctor','Nurse','Receptionist'];
@@ -351,7 +351,7 @@
             $('#doctor_info_card').toggle(job === 'Doctor');
         });
 
-        // ✅ عند الضغط على زر التعديل
+        // عند الضغط على زر التعديل
         $('.editBtn').on('click', function (e) {
             e.preventDefault();
             const form = $('form')[0];
@@ -369,7 +369,9 @@
                     if (res.data == 0)
                         Swal.fire('Error!', 'This Employee Already Exists', 'error');
                     else if (res.data == 1)
-                        Swal.fire('Warning', 'Another Manager Already Exists for this Clinic/Department', 'warning');
+                        Swal.fire('Warning', 'Another Manager Already Exists for this Clinic', 'warning');
+                    else if (res.data == 2)
+                        Swal.fire('Warning', 'Another Manager Already Exists for this Department', 'warning');
                     else if (res.data == 3)
                         Swal.fire('Success', 'Employee Has Been Updated Successfully', 'success')
                             .then(() => window.location.href = '/admin/view/employees');

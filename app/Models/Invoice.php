@@ -13,6 +13,7 @@ class Invoice extends Model{
         'payment_status',
         'invoice_date',
         'due_date',
+        'notes',
     ];
 
     public function appointment(){

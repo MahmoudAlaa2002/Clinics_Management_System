@@ -207,106 +207,6 @@
                         </div>
                     </div>
 
-                    {{-- 3) Assignment (Clinic/Department/Doctor) --}}
-                    <div class="card">
-                        <div class="card-header">Assignment</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Assigned to Clinic <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-hospital"></i></span>
-                                            </div>
-                                            <select class="form-control" id="clinic_id" name="clinic_id">
-                                                <option value="" disabled selected hidden>Select Clinic</option>
-                                                @foreach($clinics as $clinic)
-                                                    <option value="{{ $clinic->id }}">{{ $clinic->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Assigned to Department <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                                            </div>
-                                            <select class="form-control" id="department_id" name="department_id">
-                                                <option value="" disabled selected hidden>Select Department</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Assigned to Doctor <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-user-md"></i></span>
-                                            </div>
-                                            <select class="form-control" id="doctor_id" name="doctor_id">
-                                                <option value="" disabled selected hidden>Select Doctor</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- 4) Appointment --}}
-                    <div class="card">
-                        <div class="card-header">Appointment</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="appointment_day">Appointment Day <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                            </div>
-                                            <select name="appointment_day" id="appointment_day" class="form-control">
-                                                <option value="" disabled selected hidden>Select Day</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Doctor's Appointment <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                                            </div>
-                                            <select name="appointment_time" id="appointment_time" class="form-control">
-                                                <option value="" disabled selected hidden>Select Appointment Time</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- 5) Notes --}}
-                    <div class="card">
-                        <div class="card-header">Notes</div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>Notes</label>
-                                <textarea class="form-control" id="notes" name="notes" rows="3" cols="30"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="text-center m-t-20" style="margin-top:20px;">
                         <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform:none !important;">
                             Add Patient
@@ -332,9 +232,6 @@
 
                 let name = $('#name').val().trim();
                 let date_of_birth = $('#date_of_birth').val().trim();
-                let clinic_id = $('#clinic_id').val();
-                let department_id = $('#department_id').val();
-                let doctor_id = $('#doctor_id').val();
                 let email = $('#email').val();
                 let password = $('#password').val();
                 let confirm_password = $('#confirm_password').val();
@@ -344,20 +241,13 @@
                 let emergency_contact = $('#emergency_contact').val();
                 let allergies = $('#allergies').val();
                 let chronic_diseases = $('#chronic_diseases').val();
-                let appointment_time = $('#appointment_time').val();
-                let appointment_day = $('#appointment_day').val();
                 let gender = $('input[name="gender"]:checked').val();
                 let image = document.querySelector('#image').files[0];
-                let notes = $('#notes').val();
 
 
-                // ✅ استخدم FormData
                 let formData = new FormData();
                 formData.append('name', name);
                 formData.append('date_of_birth', date_of_birth);
-                formData.append('clinic_id', clinic_id);
-                formData.append('department_id', department_id);
-                formData.append('doctor_id', doctor_id);
                 formData.append('email', email);
                 formData.append('password', password);
                 formData.append('confirm_password', confirm_password);
@@ -367,15 +257,13 @@
                 formData.append('emergency_contact', emergency_contact);
                 formData.append('allergies', allergies);
                 formData.append('chronic_diseases', chronic_diseases);
-                formData.append('appointment_time', appointment_time);
-                formData.append('appointment_day', appointment_day);
                 formData.append('gender', gender);
-                formData.append('notes', notes);
                 if (image) {
                     formData.append('image', image);
                 }
 
-                if (name == '' || date_of_birth == '' || email == '' || password == '' || confirm_password == '' || phone == '' || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || !isValidSelectValue('doctor_id') || !isValidSelectValue('appointment_time') || !isValidSelectValue('appointment_day')) {
+                if (name == '' || date_of_birth == '' || email == '' || password == '' || confirm_password == '' || phone == ''
+                || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
@@ -406,19 +294,11 @@
                         if (response.data == 0) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'The Patient Is Already Registered',
+                                text: 'The Patient Already Exists',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
-                        }else if (response.data == 1) {
-                            Swal.fire({
-                                title: 'Warning',
-                                text: 'This Appointment Slot Is Already Booked. Please Choose Another Time',
-                                icon: 'warning',
-                                confirmButtonText: 'OK'
-                                });
-                                return;
-                        } else if (response.data == 2) {
+                        } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Patient Has Been Added Successfully',
@@ -433,128 +313,6 @@
             }
             });
         });
-
-
-    $('#clinic_id').on('change', function () {
-        var clinicId = $(this).val();
-
-        // إخفاء خيار "Select Clinic"
-        $(this).find('option:first').hide();
-
-        if (clinicId) {
-            // جلب التخصصات من العيادة
-            $.ajax({
-                url: '/admin/get-departments-by-clinic/' + clinicId,
-                type: 'GET',
-                success: function (data) {
-                    let departmentSelect = $('#department_id');
-                    departmentSelect.empty().append('<option value="" disabled selected hidden>Select Department</option>');
-
-                    let doctorSelect = $('#doctor_id');
-                    doctorSelect.empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
-
-                    $.each(data, function (key, department) {
-                        departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
-                    });
-                }
-            });
-        }
-    });
-
-    $('#department_id').on('change', function () {
-        var departmentId = $(this).val();
-        var clinicId = $('#clinic_id').val(); // مهم جداً
-
-        // صفّر القوائم التابعة
-        $('#doctor_id').empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
-        $('#appointment_day').empty().append('<option value="" disabled selected hidden>Select Day</option>');
-        $('#appointment_time').empty().append('<option value="" disabled selected hidden>Select Appointment Time</option>');
-
-        if (departmentId && clinicId) {
-            $.ajax({
-                url: "{{ route('get_doctors_by_clinic_and_department') }}",
-                type: "GET",
-                data: {
-                    clinic_id: clinicId,
-                    department_id: departmentId
-                },
-                success: function (data) {
-                    let doctorSelect = $('#doctor_id');
-                    doctorSelect.empty().append('<option value="" disabled selected hidden>Select Doctor</option>');
-
-                    $.each(data, function (_, doctor) {
-                        doctorSelect.append('<option value="' + doctor.id + '">' + doctor.name + '</option>');
-                    });
-                },
-                error: function(xhr){
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-    });
-
-    $('#doctor_id').on('change', function () {
-        var doctorId = $(this).val();
-
-        if (doctorId) {
-            $.ajax({
-                url: '/admin/get-doctor-info/' + doctorId,
-                type: 'GET',
-                success: function (data) {
-                    let startParts = data.work_start_time.split(':');
-                    let endParts = data.work_end_time.split(':');
-
-                    let startHour = parseInt(startParts[0]);
-                    let startMinute = parseInt(startParts[1]);
-
-                    let endHour = parseInt(endParts[0]);
-                    let endMinute = parseInt(endParts[1]);
-
-                    let appointmentSelect = $('#appointment_time');
-                    appointmentSelect.empty().append('<option disabled selected hidden>Select Appointment Time</option>');
-
-                    let current = new Date();
-                    current.setHours(startHour, startMinute, 0, 0);
-
-                    let end = new Date();
-                    end.setHours(endHour, endMinute, 0, 0);
-
-                    while (current <= end) {
-                        let hh = current.getHours().toString().padStart(2, '0');
-                        let mm = current.getMinutes().toString().padStart(2, '0');
-                        let timeLabel = `${hh}:${mm}`;
-                        appointmentSelect.append(`<option value="${timeLabel}:00">${timeLabel}</option>`);
-
-                        // أضف 30 دقيقة
-                        current.setMinutes(current.getMinutes() + 30);
-                    }
-                },
-                error: function (xhr) {
-                    console.error('Failed to fetch doctor times', xhr);
-                    $('#appointment_time').html('<option value="">Could not load appointment times</option>');
-                }
-            });
-        }
-    });
-
-    $('#doctor_id').on('change', function () {
-        var doctorId = $(this).val();
-
-        if (doctorId) {
-            $.ajax({
-                url: '/admin/doctor-working-days/' + doctorId,
-                type: 'GET',
-                success: function (doctorDays) {
-                    let daySelect = $('#appointment_day');
-
-
-                    doctorDays.forEach(function(day) {
-                        daySelect.append('<option value="' + day + '">' + day + '</option>');
-                    });
-                },
-            });
-        }
-    });
 
     </script>
 @endsection

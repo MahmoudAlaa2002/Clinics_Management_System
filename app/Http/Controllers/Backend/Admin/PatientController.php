@@ -20,26 +20,11 @@ use Illuminate\Support\Facades\Hash;
 class PatientController extends Controller{
 
     public function addPatient(){
-        $clinics = Clinic::all();
-        $departments = Department::all();
-        $doctors = Doctor::all();
-        return view('Backend.admin.patients.add' , compact('clinics' , 'departments' , 'doctors'));
+        return view('Backend.admin.patients.add');
     }
 
 
     public function storePatient(Request $request){
-       //  احسب بيانات الموعد وفحص التعارض أولًا قبل إضافة المريض
-        $appointmentDate = Carbon::parse("next {$request->appointment_day}")->toDateString();
-
-        $conflict = Appointment::where('doctor_id', $request->doctor_id)
-            ->where('date', $appointmentDate)
-            ->where('time', $request->appointment_time)
-            ->exists();
-
-        if ($conflict) {
-            return response()->json(['data' => 1]); // هذا الموعد محجوز
-        }
-
         $user = User::whereRaw('LOWER(email) = ?', [strtolower($request->email)])
             ->orWhereRaw('LOWER(name) = ?', [strtolower($request->name)])->first();
 
@@ -78,20 +63,7 @@ class PatientController extends Controller{
             'chronic_diseases'  => $request->chronic_diseases,
         ]);
 
-        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
-        $consultation_fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
-        Appointment::create([
-            'patient_id'           => $patient->id,
-            'doctor_id'            => $request->doctor_id,
-            'clinic_department_id' => $clinicDepartmentId,
-            'date'                 => $appointmentDate,
-            'time'                 => $request->appointment_time,
-            'status'               => 'Pending',
-            'consultation_fee'     => $consultation_fee,
-            'notes'                => $request->notes,
-        ]);
-
-        return response()->json(['data' => 2]);
+        return response()->json(['data' => 1]);
     }
 
 
@@ -156,10 +128,11 @@ class PatientController extends Controller{
 
     public function updatePatient(Request $request, $id){
         $patient = Patient::findOrFail($id);
-        $user    = User::findOrFail($patient->user_id);
+        $user = User::findOrFail($patient->user_id);
 
         $patientExists = User::where(function ($query) use ($request) {
-            $query->where('email', $request->email)->orWhere('name', $request->name);
+            $query->whereRaw('LOWER(email) = ?', [strtolower($request->email)])
+                  ->orWhereRaw('LOWER(name) = ?', [strtolower($request->name)]);
         })->where('id', '!=', $user->id)->exists();
 
         if ($patientExists) {
@@ -190,7 +163,6 @@ class PatientController extends Controller{
             'role'          => 'patient',
         ]);
 
-
         $patient->update([
             'blood_type'        => $request->blood_type,
             'emergency_contact' => $request->emergency_contact,
@@ -200,8 +172,6 @@ class PatientController extends Controller{
 
         return response()->json(['data' => 1]);
         }
-
-
     }
 
 
