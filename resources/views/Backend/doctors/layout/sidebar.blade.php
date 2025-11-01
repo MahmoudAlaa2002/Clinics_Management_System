@@ -59,12 +59,6 @@
                         <i class="fa fa-calendar-day"></i> <span>Today's Appointments</span>
                     </a>
                 </li>
-
-                <li class="{{ Request::is('doctor/appointments/manage') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-tasks"></i> <span>Manage Appointments</span>
-                    </a>
-                </li>
             </ul>
 
 
@@ -73,20 +67,8 @@
                 <li class="menu-title">Patients</li>
 
                 <li class="{{ Request::is('doctor/patients') ? 'active' : '' }}">
-                    <a href="#">
+                    <a href="{{ route('doctor.patients') }}">
                         <i class="fa fa-users"></i> <span>My Patients</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/patients/search') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-search"></i> <span>Search Patient</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/patients/history/*') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-history"></i> <span>Patient History</span>
                     </a>
                 </li>
             </ul>
