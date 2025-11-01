@@ -38,5 +38,28 @@ class DatabaseSeeder extends Seeder
 
         $admin->assignRole('admin');
 
+        // Create Doctor user
+        $doctor = User::create([
+            'name' => 'Dr. Ahmed',
+            'email' => 'doctor@gmail.com',
+            'password' => Hash::make('123456'),
+            'phone' => '0591234567',
+            'address' => 'Gaza',
+            'date_of_birth' => '1990-05-10',
+            'image' => 'assets/img/doctors/doctor.jpg',
+            'gender' => 'male',
+            'role' => 'doctor',
+        ]);
+
+        // Create doctor role if it doesn't exist
+        Role::firstOrCreate([
+            'name' => 'doctor',
+            'guard_name' => 'web',
+        ]);
+
+        // Assign role to the doctor user
+        $doctor->assignRole('doctor');
+
+
     }
 }
