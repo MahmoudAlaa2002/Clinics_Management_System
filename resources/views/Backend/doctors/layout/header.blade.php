@@ -91,7 +91,7 @@
                     <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($doctor->image) }}" alt="Doctor">
                 </span>
                 <span>
-                    Doctor
+                    {{$doctor->name}}
                 </span>
             </a>
             <div class="dropdown-menu">

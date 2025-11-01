@@ -38,4 +38,12 @@ class AppointmentController extends Controller
 
         return redirect()->back()->with('success', 'Appointment confirmed successfully.');
     }
+
+    public function cancelAppointment(Appointment $appointment)
+    {
+        $appointment->status = 'Cancelled';
+        $appointment->save();
+
+        return redirect()->back()->with('success', 'Appointment cancelled successfully.');
+    }
 }
