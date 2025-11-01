@@ -163,7 +163,11 @@
                                 <tr>
                                     <td colspan="8" class="text-center">
                                         <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
-                                            No appointments found
+                                            @if (request('date') === 'today')
+                                                No Appointments today
+                                            @else
+                                                No appointments found
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

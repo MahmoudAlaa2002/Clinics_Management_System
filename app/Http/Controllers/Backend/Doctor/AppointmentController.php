@@ -21,6 +21,12 @@ class AppointmentController extends Controller
             $appointments->where('date', '<=', $request->to_date);
         }
 
+        if ($request->has('date') && !empty($request->date)) {
+            if ($request->date == 'today') {
+                $appointments->where('date', date('Y-m-d'));
+            }
+        }
+
         if ($request->has('keyword') && !empty($request->keyword)) {
             $keyword = $request->keyword;
             $appointments->where(function ($query) use ($keyword) {

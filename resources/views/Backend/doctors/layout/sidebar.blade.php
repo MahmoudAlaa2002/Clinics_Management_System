@@ -48,15 +48,15 @@
             <ul>
                 <li class="menu-title">Appointments</li>
 
-                <li class="{{ Request::is('doctor/appointments') ? 'active' : '' }}">
+                <li class="{{ Request::is('doctor/appointments') && request('date') !== 'today' ? 'active' : '' }}">
                     <a href="{{ route('doctor.appointments') }}">
                         <i class="fa fa-calendar-alt"></i> <span>All Appointments</span>
                     </a>
                 </li>
 
-                <li class="{{ Request::is('doctor/appointments/today') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-calendar-day"></i> <span>Today’s Appointments</span>
+                <li class="{{ request()->is('doctor/appointments') && request('date') === 'today' ? 'active' : '' }}">
+                    <a href="{{ route('doctor.appointments') }}?date=today">
+                        <i class="fa fa-calendar-day"></i> <span>Today's Appointments</span>
                     </a>
                 </li>
 
