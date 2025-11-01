@@ -155,6 +155,31 @@
                                             <div class="d-flex justify-content-center">
                                                 <a href="#" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
                                                 <a href="#" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                                @if($appointment->status === 'Pending')
+                                                    <form action="{{ route('doctor_confirm_appointment', $appointment) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-outline-success btn-sm">
+                                                            <i class="fa fa-check"></i>
+                                                        </button>
+                                                    </form>
+
+                                                    {{-- Reject --}}
+                                                    <form action="{{ route('doctor_reject_appointment', $appointment) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                @if($appointment->status === 'Accepted')
+                                                    {{-- Cancel --}}
+                                                    <form action="{{ route('doctor_cancel_appointment', $appointment) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-outline-warning btn-sm">
+                                                            <i class="fa fa-ban"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -185,3 +210,62 @@
 </div>
 
 @endsection
+
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // كل الفورمات التي بها زر قبول/رفض/إلغاء
+        document.querySelectorAll('form.d-inline').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // منع الإرسال الافتراضي مؤقتًا
+
+                let action = '';
+                if (form.querySelector('button i.fa-check')) action = 'accept';
+                if (form.querySelector('button i.fa-times')) action = 'reject';
+                if (form.querySelector('button i.fa-ban')) action = 'cancel';
+
+                if(action) {
+                    let confirmMessage = '';
+                    let confirmTitle = '';
+                    let iconType = 'question';
+
+                    switch(action) {
+                        case 'accept':
+                            confirmTitle = 'Accept Appointment';
+                            confirmMessage = 'Are you sure you want to accept this appointment?';
+                            iconType = 'success';
+                            break;
+                        case 'reject':
+                            confirmTitle = 'Reject Appointment';
+                            confirmMessage = 'Are you sure you want to reject this appointment?';
+                            iconType = 'error';
+                            break;
+                        case 'cancel':
+                            confirmTitle = 'Cancel Appointment';
+                            confirmMessage = 'Are you sure you want to cancel this appointment?';
+                            iconType = 'warning';
+                            break;
+                    }
+
+                    Swal.fire({
+                        title: confirmTitle,
+                        text: confirmMessage,
+                        icon: iconType,
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // تنفيذ الفورم إذا ضغط نعم
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+@endsection
+
