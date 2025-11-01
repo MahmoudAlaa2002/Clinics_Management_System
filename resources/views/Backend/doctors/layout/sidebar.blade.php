@@ -49,7 +49,7 @@
                 <li class="menu-title">Appointments</li>
 
                 <li class="{{ Request::is('doctor/appointments') ? 'active' : '' }}">
-                    <a href="{{ route('doctor_appointments') }}">
+                    <a href="{{ route('doctor.appointments') }}">
                         <i class="fa fa-calendar-alt"></i> <span>All Appointments</span>
                     </a>
                 </li>

@@ -12,22 +12,29 @@ class AppointmentController extends Controller
     public function allAppointments(Request $request)
     {
         $doctor = Auth::user()->employee->doctor;
-        $appointments = Appointment::where('doctor_id', $doctor->id);
+        $appointments = Appointment::with(['patient.user', 'clinic', 'department'])->where('doctor_id', $doctor->id);
 
-        if ($request->has('from')) {
-            $appointments = $appointments->whereDate('date', '>=', $request->from);
+        if ($request->has('from_date') && !empty($request->from_date)) {
+            $appointments->where('date', '>=', $request->from_date);
+        }
+        if ($request->has('to_date') && !empty($request->to_date)) {
+            $appointments->where('date', '<=', $request->to_date);
         }
 
-        if ($request->has('to')) {
-            $appointments = $appointments->whereDate('date', '<=', $request->to);
-        }
-
-        if ($request->has('status')) {
-            $appointments = $appointments->where('status', $request->status);
+        if ($request->has('keyword') && !empty($request->keyword)) {
+            $keyword = $request->keyword;
+            $appointments->where(function ($query) use ($keyword) {
+                $query->where('status', 'ILIKE', "%$keyword%")
+                    ->orWhere('date', 'ILIKE', "%$keyword%")
+                    ->orWhere('time', 'ILIKE', "%$keyword%")
+                    ->orWhereHas('patient.user', function ($q) use ($keyword) {
+                        $q->where('name', 'ILIKE', "%$keyword%");
+                    });
+            });
         }
 
         return view('Backend.doctors.appointments.index', [
-            'appointments' => $appointments->get(),
+            'appointments' => $appointments->paginate(10),
         ]);
     }
 
