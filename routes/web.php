@@ -20,6 +20,7 @@ use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as Re
 use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
 use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
 use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
+use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
 
 Route::prefix('clinics-management')->group(function () {
 
@@ -212,6 +213,9 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::post('/appointments/cancel/{appointment}', [DoctorAppointmentController::class, 'cancelAppointment'])->name('doctor_cancel_appointment');
     Route::get('/patients', [DoctorPatientController::class, 'index'])->name('doctor.patients');
     Route::get('/patients/{patient}', [DoctorPatientController::class, 'show'])->name('doctor.patients.show');
+    Route::get('/medical-records', [DoctorMedicalRecordsController::class, 'index'])->name('doctor.medical_records');
+    Route::get('/medical-records/create', [DoctorMedicalRecordsController::class, 'create'])->name('doctor.medical_records.create');
+    Route::post('/medical-records/store', [DoctorMedicalRecordsController::class, 'store'])->name('doctor.medical_records.store');
 
 });
 

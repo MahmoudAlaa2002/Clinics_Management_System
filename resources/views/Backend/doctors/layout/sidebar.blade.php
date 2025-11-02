@@ -78,21 +78,15 @@
             <ul>
                 <li class="menu-title">Medical Records</li>
 
-                <li class="{{ Request::is('doctor/records') ? 'active' : '' }}">
-                    <a href="#">
+                <li class="{{ Request::is('doctor/medical-records') ? 'active' : '' }}">
+                    <a href="{{ route('doctor.medical_records') }}">
                         <i class="fa fa-notes-medical"></i> <span>All Records</span>
                     </a>
                 </li>
 
-                <li class="{{ Request::is('doctor/records/create') ? 'active' : '' }}">
-                    <a href="#">
+                <li class="{{ Request::is('doctor/medical-records/create') ? 'active' : '' }}">
+                    <a href="{{ route('doctor.medical_records.create') }}">
                         <i class="fa fa-plus"></i> <span>Create Record</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/records/archived') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-archive"></i> <span>Archived Records</span>
                     </a>
                 </li>
             </ul>
