@@ -21,6 +21,7 @@ use App\Http\Controllers\Backend\DepartmentManager\DashboardController as Depart
 use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
 use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
 use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
+use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
 
 Route::prefix('clinics-management')->group(function () {
 
@@ -216,6 +217,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/medical-records', [DoctorMedicalRecordsController::class, 'index'])->name('doctor.medical_records');
     Route::get('/medical-records/create', [DoctorMedicalRecordsController::class, 'create'])->name('doctor.medical_records.create');
     Route::post('/medical-records/store', [DoctorMedicalRecordsController::class, 'store'])->name('doctor.medical_records.store');
+    Route::get('/invoices', [DoctorInvoicesController::class, 'index'])->name('doctor.invoices');
 
 });
 
