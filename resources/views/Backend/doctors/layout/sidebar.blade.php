@@ -121,14 +121,8 @@
                 <li class="menu-title">Invoices & Payments</li>
 
                 <li class="{{ Request::is('doctor/invoices') ? 'active' : '' }}">
-                    <a href="#">
+                    <a href="{{ route('doctor.invoices') }}">
                         <i class="fa fa-file-invoice-dollar"></i> <span>Invoices</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/earnings') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-wallet"></i> <span>My Earnings</span>
                     </a>
                 </li>
             </ul>

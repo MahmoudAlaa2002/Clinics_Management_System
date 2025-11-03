@@ -3,11 +3,59 @@
 @section('title', 'My Invoices')
 
 @section('content')
+<style>
+    .summary-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        background-color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .summary-card h3 {
+        margin: 0;
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .summary-card p {
+        margin: 5px 0 0;
+        color: #555;
+    }
+    .table-wrapper {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+</style>
+
 <div class="page-wrapper">
     <div class="content">
         <div class="mb-3 row">
             <div class="col-sm-6 col-12">
                 <h4 class="page-title">My Invoices</h4>
+            </div>
+        </div>
+
+        {{-- Summary Cards --}}
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="summary-card">
+                    <p>Total Earnings</p>
+                    <h3>${{ number_format($totalEarnings, 2) }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="summary-card">
+                    <p>Pending Payments</p>
+                    <h3>${{ number_format($pendingPayments, 2) }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="summary-card">
+                    <p>Total Invoices</p>
+                    <h3>{{ $invoices->count() }}</h3>
+                </div>
             </div>
         </div>
 
