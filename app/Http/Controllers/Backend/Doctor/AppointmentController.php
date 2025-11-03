@@ -40,8 +40,13 @@ class AppointmentController extends Controller
         }
 
         return view('Backend.doctors.appointments.index', [
-            'appointments' => $appointments->paginate(10),
+            'appointments' => $appointments->orderBy('date', 'desc')->orderBy('time', 'desc')->paginate(20),
         ]);
+    }
+
+    public function show(Appointment $appointment)
+    {
+        return view('Backend.doctors.appointments.show', compact('appointment'));
     }
 
     public function confirmAppointment(Appointment $appointment)

@@ -134,7 +134,7 @@
                             @if($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
                                     <tr>
-                                        <td>{{ $appointment->id }}</td>
+                                        <td>{{ ($appointments->currentPage() - 1) * $appointments->perPage() + $loop->iteration }}</td>
                                         <td>{{ $appointment->patient->user->name }}</td>
                                         <td>{{ $appointment->clinic->name }}</td>
                                         <td>{{ $appointment->department->name }}</td>
@@ -153,8 +153,7 @@
                                         </td>
                                         <td>
                                             <div class="d-flex justify-content-center">
-                                                <a href="#" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                                <a href="#" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ route('doctor.appointment.show', $appointment) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
                                                 @if($appointment->status === 'Pending')
                                                     <form action="{{ route('doctor_confirm_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf

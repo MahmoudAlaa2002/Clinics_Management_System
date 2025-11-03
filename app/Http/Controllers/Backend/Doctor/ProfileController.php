@@ -10,6 +10,15 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
+
+    public function profile()
+    {
+        $doctor = Auth::user()->employee->doctor;
+
+        return view('Backend.doctors.profile.view', compact('doctor'));
+    }
+
+
     public function edit()
     {
         $doctor = Auth::user()->employee->doctor;
