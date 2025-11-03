@@ -51,9 +51,15 @@ class MedicalRecordsController extends Controller
         $doctor = Auth::user()->employee->doctor;
         $appointments = Appointment::where('doctor_id', $doctor->id)
         ->where('status', 'Accepted')
-        ->whereDate('date', '<=', now())
-        ->whereTime('time', '<=', now('Asia/Gaza')->format('H:i:s'))
-        ->whereDoesntHave('medicalRecord') // معناها: الموعد ما له سجل طبي بعد
+        ->whereDate('date', '<=', today())
+        ->where(function ($query) {
+            $query->whereDate('date', '<', today())
+                ->orWhere(function ($q) {
+                    $q->whereDate('date', today())
+                        ->whereTime('time', '<=', now('Asia/Gaza')->format('H:i:s'));
+                });
+        })
+        ->whereDoesntHave('medicalRecord')
         ->with('patient.user')
         ->get();
 
