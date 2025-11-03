@@ -92,30 +92,6 @@
             </ul>
 
 
-            {{-- 💊 Prescriptions --}}
-            <ul>
-                <li class="menu-title">Prescriptions</li>
-
-                <li class="{{ Request::is('doctor/prescriptions') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-prescription"></i> <span>All Prescriptions</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/prescriptions/create') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-file-medical"></i> <span>Create Prescription</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/prescriptions/history') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-clock"></i> <span>Prescription History</span>
-                    </a>
-                </li>
-            </ul>
-
-
             {{-- 💰 Invoices & Payments --}}
             <ul>
                 <li class="menu-title">Invoices & Payments</li>
