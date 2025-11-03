@@ -109,7 +109,7 @@
                 <li class="menu-title">Profile</li>
 
                 <li class="{{ Request::is('doctor/profile/edit') ? 'active' : '' }}">
-                    <a href="#">
+                    <a href="{{ route('doctor.profile.edit') }}">
                         <i class="fa fa-user-cog"></i> <span>Edit Profile</span>
                     </a>
                 </li>
@@ -121,7 +121,7 @@
                 </li>
 
                 <li class="{{ Request::is('doctor/profile/settings') ? 'active' : '' }}">
-                    <a href="#">
+                    <a href="{{ route('doctor.profile.settings') }}">
                         <i class="fa fa-lock"></i> <span>Account Settings</span>
                     </a>
                 </li>

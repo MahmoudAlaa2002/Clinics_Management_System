@@ -22,6 +22,7 @@ use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointme
 use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
 use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
 use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
+use App\Http\Controllers\Backend\Doctor\ProfileController as DoctorProfileController;
 
 Route::prefix('clinics-management')->group(function () {
 
@@ -218,7 +219,10 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/medical-records/create', [DoctorMedicalRecordsController::class, 'create'])->name('doctor.medical_records.create');
     Route::post('/medical-records/store', [DoctorMedicalRecordsController::class, 'store'])->name('doctor.medical_records.store');
     Route::get('/invoices', [DoctorInvoicesController::class, 'index'])->name('doctor.invoices');
-
+    Route::get('/doctor/profile/edit', [DoctorProfileController::class, 'edit'])->name('doctor.profile.edit');
+    Route::put('/doctor/profile/update', [DoctorProfileController::class, 'update'])->name('doctor.profile.update');
+    Route::get('/doctor/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
+    Route::post('/doctor/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
 });
 
 
