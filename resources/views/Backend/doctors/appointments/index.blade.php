@@ -157,7 +157,7 @@
                                                 @if($appointment->status === 'Pending')
                                                     <form action="{{ route('doctor_confirm_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-success btn-sm">
+                                                        <button type="submit" class="btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Accept this Appointment">
                                                             <i class="fa fa-check"></i>
                                                         </button>
                                                     </form>
@@ -165,7 +165,7 @@
                                                     {{-- Reject --}}
                                                     <form action="{{ route('doctor_reject_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" title="Reject this Appointment">
                                                             <i class="fa fa-times"></i>
                                                         </button>
                                                     </form>
@@ -174,7 +174,7 @@
                                                     {{-- Cancel --}}
                                                     <form action="{{ route('doctor_cancel_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-warning btn-sm">
+                                                        <button type="submit" class="btn btn-outline-warning btn-sm" data-bs-toggle="tooltip" title="Cancel this Appointment">
                                                             <i class="fa fa-ban"></i>
                                                         </button>
                                                     </form>
