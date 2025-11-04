@@ -226,6 +226,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::put('/doctor/profile/update', [DoctorProfileController::class, 'update'])->name('doctor.profile.update');
     Route::get('/doctor/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
     Route::post('/doctor/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
+    Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');
 });
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class ProfileController extends Controller
@@ -28,26 +29,30 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $doctor = Auth::user()->employee->doctor;
+        $user = $doctor->employee->user;
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $doctor->employee->user_id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:2048',
+            'speciality' => 'nullable|string|max:255',
+            'qualification' => 'nullable|string|max:255',
+            'consultation_fee' => 'nullable|numeric|min:0',
         ]);
 
-        // تحديث البيانات
-        $user = $doctor->employee->user;
         $user->update($request->only('name', 'email', 'phone', 'address'));
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $imageName = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('assets/img/doctors'), $imageName);
-            $imagePath = 'assets/img/doctors/' . $imageName;
-            $user->update(['image' => $imagePath]);
+            $user->update(['image' => 'assets/img/doctors/' . $imageName]);
         }
+
+        // Update doctor-specific fields
+        $doctor->update($request->only('speciality', 'qualification', 'consultation_fee'));
 
         return redirect()->route('doctor.profile.edit')->with('success', 'Profile updated successfully.');
     }
@@ -78,5 +83,31 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('doctor.profile.settings')->with('success', 'Password updated successfully.');
+    }
+
+    public function updateEmail(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->email = $request->email;
+        $user->save();
+
+        return back()->with('success', 'Email updated successfully.');
+    }
+
+    public function logoutAll()
+    {
+        $user = Auth::user();
+        $currentSessionId = session()->getId();
+        // Revoke all sessions except current
+        DB::table('sessions')
+            ->where('user_id', $user->id)
+            ->where('id', '!=', $currentSessionId)
+            ->delete();
+
+        return back()->with('success', 'Logged out from all devices.');
     }
 }

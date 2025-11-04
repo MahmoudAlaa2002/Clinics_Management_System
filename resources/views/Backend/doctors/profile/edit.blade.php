@@ -47,12 +47,15 @@
                 @csrf
                 @method('PUT')
 
+                {{-- Profile Image --}}
                 <div class="text-center mb-4">
-                    <img src="{{ Auth::user()->image ? asset(Auth::user()->image) : asset('assets/img/user.jpg') }}"
+                    <img src="{{ $doctor->employee->user->image ? asset($doctor->employee->user->image) : asset('assets/img/default-user.png') }}"
                         alt="Doctor"
-                        class="profile-image"
-                        style="width: 130px; height: 130px; object-fit: cover; border-radius: 50%; border: 5px solid #03A9F4; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        class="profile-image">
                 </div>
+
+                {{-- User Information --}}
+                <h5 class="mb-3"><i class="fa fa-info-circle me-1 text-primary"></i> Personal Info</h5>
 
                 <div class="mb-3">
                     <label class="form-label">Name</label>
@@ -84,7 +87,28 @@
                     @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="d-flex justify-content-between">
+                {{-- Doctor Information --}}
+                <h5 class="mb-3 mt-4"><i class="fa fa-user-md me-1 text-primary"></i> Doctor Info</h5>
+
+                <div class="mb-3">
+                    <label class="form-label">Specialization</label>
+                    <input type="text" name="speciality" class="form-control" value="{{ old('speciality', $doctor->speciality) }}">
+                    @error('speciality') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Qualification</label>
+                    <input type="text" name="qualification" class="form-control" value="{{ old('qualification', $doctor->qualification) }}">
+                    @error('qualification') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Consultation Fee ($)</label>
+                    <input type="number" step="0.01" name="consultation_fee" class="form-control" value="{{ old('consultation_fee', $doctor->consultation_fee) }}">
+                    @error('consultation_fee') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
                     <a href="{{ route('doctor_dashboard') }}" class="btn btn-outline-secondary btn-rounded">
                         <i class="fa fa-arrow-left me-1"></i> Back
                     </a>
@@ -92,6 +116,7 @@
                         <i class="fa fa-save me-1"></i> Update Profile
                     </button>
                 </div>
+
             </form>
         </div>
     </div>

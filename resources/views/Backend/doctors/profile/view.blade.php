@@ -56,13 +56,22 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         transform: translateY(-2px);
     }
+
+    .rating {
+        color: #ffc107;
+        font-weight: bold;
+    }
+
+    .profile-section-title {
+        font-weight: bold;
+        color: #03A9F4;
+        margin-bottom: 10px;
+    }
 </style>
 
 <div class="page-wrapper">
     <div class="content">
-        <div>
-            <h4 class="page-title">My Profile</h4>
-        </div>
+        <h4 class="page-title">My Profile</h4>
 
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -81,53 +90,71 @@
                     <hr>
 
                     {{-- General Information --}}
-                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:20px;">
-                        <i class="fas fa-info-circle me-2 text-primary"></i> General Information
+                    <h5 class="profile-section-title">
+                        <i class="fas fa-info-circle me-2"></i> General Information
                     </h5>
 
                     <div class="mb-4 row" style="margin-left:5px;">
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-envelope me-2 text-primary"></i>
+                            <i class="fa fa-envelope me-2"></i>
                             <strong>Email :</strong>&nbsp;
                             <span class="text-muted">{{ $doctor->employee->user->email }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-calendar me-2 text-primary"></i>
+                            <i class="fa fa-calendar me-2"></i>
                             <strong>Birth Date:</strong>&nbsp;
-                            <span class="text-muted">{{ $doctor->employee->user->date_of_birth }}</span>
+                            <span class="text-muted">{{ $doctor->employee->user->date_of_birth ?? 'N/A' }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fa fa-phone me-2 text-primary"></i>
+                            <i class="fa fa-phone me-2"></i>
                             <strong>Phone :</strong>&nbsp;
                             <span class="text-muted">{{ $doctor->employee->user->phone ?? 'N/A' }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fas fa-venus-mars me-2 text-primary"></i>
+                            <i class="fas fa-venus-mars me-2"></i>
                             <strong>Gender:</strong>&nbsp;
-                            <span class="text-muted">{{ ucfirst($doctor->employee->user->gender) }}</span>
+                            <span class="text-muted">{{ ucfirst($doctor->employee->user->gender ?? 'N/A') }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                            <i class="fas fa-map-marker-alt me-2"></i>
                             <strong>Address :</strong>&nbsp;
                             <span class="text-muted">{{ $doctor->employee->user->address ?? 'N/A' }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fas fa-id-badge me-2 text-primary"></i>
+                            <i class="fas fa-id-badge me-2"></i>
                             <strong>Specialization:</strong>&nbsp;
                             <span class="text-muted">{{ $doctor->speciality ?? 'N/A' }}</span>
                         </div>
 
                         <div class="mb-3 col-md-6 profile-item">
-                            <i class="fas fa-hospital me-2 text-primary"></i>
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            <strong>Qualification:</strong>&nbsp;
+                            <span class="text-muted">{{ $doctor->qualification ?? 'N/A' }}</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6 profile-item">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            <strong>Consultation Fee:</strong>&nbsp;
+                            <span class="text-muted">${{ number_format($doctor->consultation_fee, 2) }}</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6 profile-item">
+                            <i class="fas fa-star me-2"></i>
+                            <strong>Rating:</strong>&nbsp;
+                            <span class="rating">{{ $doctor->rating ?? 0 }}/5</span>
+                        </div>
+
+                        <div class="mb-3 col-md-6 profile-item">
+                            <i class="fas fa-hospital me-2"></i>
                             <strong>Clinic:</strong>&nbsp;
                             @if($doctor->employee->clinic)
                                 <a href="{{ route('doctor.clinic.show', $doctor->employee->clinic->id) }}"
-                                class="clinic-link">
+                                   class="clinic-link">
                                     {{ $doctor->employee->clinic->name }}
                                 </a>
                             @else
