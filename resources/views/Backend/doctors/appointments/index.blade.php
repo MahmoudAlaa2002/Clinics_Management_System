@@ -157,16 +157,16 @@
                                                 @if($appointment->status === 'Pending')
                                                     <form action="{{ route('doctor_confirm_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Accept this Appointment">
-                                                            <i class="fa fa-check"></i>
+                                                        <button type="submit" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Accept this Appointment">
+                                                            <i class="fa fa-check"></i> Accept
                                                         </button>
                                                     </form>
 
                                                     {{-- Reject --}}
                                                     <form action="{{ route('doctor_reject_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" title="Reject this Appointment">
-                                                            <i class="fa fa-times"></i>
+                                                        <button type="submit" class="mr-1 btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" title="Reject this Appointment">
+                                                            <i class="fa fa-times"></i> Reject
                                                         </button>
                                                     </form>
                                                 @endif
@@ -174,8 +174,8 @@
                                                     {{-- Cancel --}}
                                                     <form action="{{ route('doctor_cancel_appointment', $appointment) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-warning btn-sm" data-bs-toggle="tooltip" title="Cancel this Appointment">
-                                                            <i class="fa fa-ban"></i>
+                                                        <button type="submit" class="mr-1 btn btn-outline-warning btn-sm" data-bs-toggle="tooltip" title="Cancel this Appointment">
+                                                            <i class="fa fa-ban"></i> Cancel
                                                         </button>
                                                     </form>
                                                 @endif
@@ -214,7 +214,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // كل الفورمات التي بها زر قبول/رفض/إلغاء
         document.querySelectorAll('form.d-inline').forEach(function(form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault(); // منع الإرسال الافتراضي مؤقتًا
@@ -225,9 +224,10 @@
                 if (form.querySelector('button i.fa-ban')) action = 'cancel';
 
                 if(action) {
-                    let confirmMessage = '';
                     let confirmTitle = '';
+                    let confirmMessage = '';
                     let iconType = 'question';
+                    let inputRequired = false;
 
                     switch(action) {
                         case 'accept':
@@ -242,8 +242,9 @@
                             break;
                         case 'cancel':
                             confirmTitle = 'Cancel Appointment';
-                            confirmMessage = 'Are you sure you want to cancel this appointment?';
+                            confirmMessage = 'Please enter the reason for cancellation:';
                             iconType = 'warning';
+                            inputRequired = true;
                             break;
                     }
 
@@ -251,14 +252,30 @@
                         title: confirmTitle,
                         text: confirmMessage,
                         icon: iconType,
+                        input: inputRequired ? 'text' : null,
+                        inputPlaceholder: inputRequired ? 'Enter reason here...' : '',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
+                        cancelButtonText: 'No',
+                        preConfirm: (inputValue) => {
+                            if(inputRequired && !inputValue) {
+                                Swal.showValidationMessage('You must enter a reason!');
+                            }
+                            return inputValue;
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            form.submit(); // تنفيذ الفورم إذا ضغط نعم
+                            if(inputRequired) {
+                                // نضيف input hidden للفورم
+                                let input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'note';
+                                input.value = result.value;
+                                form.appendChild(input);
+                            }
+                            form.submit(); // تنفيذ الفورم
                         }
                     });
                 }

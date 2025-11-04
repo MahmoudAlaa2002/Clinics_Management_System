@@ -17,11 +17,11 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
 
-            $table->string('diagnosis');        //التشخيص
-            $table->string('treatment');        // العلاج
+            $table->string('diagnosis')->nullable();        //التشخيص
+            $table->string('treatment')->nullable();        // العلاج
             $table->date('record_date');
 
-            $table->text('prescriptions');
+            $table->text('prescriptions')->nullable();
             $table->text('attachmentss')->nullable();    // مرفقات كالبريد الإلكتروني
             $table->text('notes')->nullable();
             $table->timestamps();

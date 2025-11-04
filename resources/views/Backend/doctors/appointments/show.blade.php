@@ -14,6 +14,12 @@
         border-radius: 12px;
         padding: 30px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        transition: 0.3s;
+    }
+
+    .appointment-card.cancelled {
+        border: 2px solid #dc3545;
+        background-color: #fff5f5;
     }
 
     .appointment-title {
@@ -24,6 +30,19 @@
         display: flex;
         align-items: center;
         gap: 8px;
+    }
+
+    .status-badge {
+        margin-left: 10px;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .status-cancelled {
+        background-color: #dc3545;
     }
 
     .details-grid {
@@ -61,11 +80,20 @@
         margin-bottom: 20px;
     }
 
+    .notes-section.cancelled {
+        background-color: #f8d7da;
+        border-left-color: #dc3545;
+    }
+
     .notes-section h5 {
         font-size: 14px;
         font-weight: 600;
         color: #856404;
         margin-bottom: 6px;
+    }
+
+    .notes-section.cancelled h5 {
+        color: #721c24;
     }
 
     .back-btn {
@@ -85,9 +113,13 @@
 
 <div class="page-wrapper">
     <div class="content appointment-wrapper">
-        <div class="appointment-card">
+        <div class="appointment-card @if($appointment->status == 'cancelled') cancelled @endif">
             <div class="appointment-title">
                 <i class="fas fa-calendar-check"></i> Appointment Details
+
+                @if($appointment->status == 'Cancelled')
+                    <span class="status-badge status-cancelled">Cancelled</span>
+                @endif
             </div>
 
             <div class="details-grid">
@@ -115,10 +147,19 @@
                 </div>
             </div>
 
+            {{-- General Notes --}}
             @if($appointment->notes)
                 <div class="notes-section">
                     <h5>Notes</h5>
                     <p>{{ $appointment->notes }}</p>
+                </div>
+            @endif
+
+            {{-- Cancellation Reason --}}
+            @if($appointment->status == 'Cancelled' && $appointment->medicalRecord?->notes)
+                <div class="notes-section cancelled">
+                    <h5>Cancellation Reason</h5>
+                    <p>{{ $appointment->medicalRecord->notes }}</p>
                 </div>
             @endif
 

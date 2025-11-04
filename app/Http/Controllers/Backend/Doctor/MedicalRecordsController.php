@@ -73,8 +73,8 @@ class MedicalRecordsController extends Controller
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'appointment_id' => 'required|exists:appointments,id',
-            'diagnosis' => 'required|string|max:255',
-            'treatment' => 'required|string|max:255',
+            'diagnosis' => 'nullable|string|max:255',
+            'treatment' => 'nullable|string|max:255',
             'prescriptions' => 'nullable|string',
             'attachments' => 'nullable|string',
             'notes' => 'nullable|string',

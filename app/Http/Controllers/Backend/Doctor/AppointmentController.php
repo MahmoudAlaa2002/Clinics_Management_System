@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Backend\Doctor;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreMedicalRecordRequest;
 
 class AppointmentController extends Controller
 {
@@ -65,10 +67,25 @@ class AppointmentController extends Controller
         return redirect()->back()->with('success', 'Appointment rejected successfully.');
     }
 
-    public function cancelAppointment(Appointment $appointment)
+    public function cancelAppointment(Request $request, Appointment $appointment)
     {
-        $appointment->status = 'Cancelled';
-        $appointment->save();
+        $validated = $request->validate([
+            'note' => 'nullable|string',
+        ]);
+
+        DB::transaction(function () use($appointment, $validated){
+            $note = $validated['note'] ?? 'Appointment cancelled by doctor';
+            $appointment->medicalRecord()->create([
+                'appointment_id' => $appointment->id,
+                'doctor_id' => Auth::user()->employee->doctor->id,
+                'patient_id' => $appointment->patient_id,
+                'record_date' => now()->format('Y-m-d'),
+                'notes' => $note,
+            ]);
+
+            $appointment->status = 'Cancelled';
+            $appointment->save();
+        });
 
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
     }
