@@ -35,7 +35,7 @@ Route::prefix('clinics-management')->group(function () {
     //Auth
     Route::get('/login', [AuthenticatedSessionController::class, 'login'])->name('login')->middleware('guest');
     Route::post('/user/login', [AuthenticatedSessionController::class, 'userLogin'])->name('user_login')->middleware('guest');
-    Route::get('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout')->middleware('auth');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout')->middleware('auth');
 
     Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest')->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register')->middleware('guest');
@@ -208,8 +208,11 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     // Dashboard
     Route::get('/dashboard', [DoctorDashboardController::class, 'doctorDashboard'])->name('doctor_dashboard');
     Route::get('/my_profile' , [DoctorProfileController::class , 'profile'])->name('doctor_profile');
-    Route::get('/edit/profile' , [DoctorDashboardController::class , 'doctorEditProfile'])->name('doctor_edit_profile');
-    Route::put('/update/profile' , [DoctorDashboardController::class , 'doctorUpdateProfile'])->name('doctor_update_profile');
+    Route::get('/doctor/profile/edit', [DoctorProfileController::class, 'edit'])->name('doctor.profile.edit');
+    Route::put('/doctor/profile/update', [DoctorProfileController::class, 'update'])->name('doctor.profile.update');
+    Route::get('/doctor/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
+    Route::post('/doctor/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
+    Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');
     Route::get('/appointments', [DoctorAppointmentController::class, 'allAppointments'])->name('doctor.appointments');
     Route::get('/appointments/{appointment}', [DoctorAppointmentController::class, 'show'])->name('doctor.appointment.show');
     Route::post('/appointments/confirm/{appointment}', [DoctorAppointmentController::class, 'confirmAppointment'])->name('doctor_confirm_appointment');
@@ -222,11 +225,6 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/medical-records/create', [DoctorMedicalRecordsController::class, 'create'])->name('doctor.medical_records.create');
     Route::post('/medical-records/store', [DoctorMedicalRecordsController::class, 'store'])->name('doctor.medical_records.store');
     Route::get('/invoices', [DoctorInvoicesController::class, 'index'])->name('doctor.invoices');
-    Route::get('/doctor/profile/edit', [DoctorProfileController::class, 'edit'])->name('doctor.profile.edit');
-    Route::put('/doctor/profile/update', [DoctorProfileController::class, 'update'])->name('doctor.profile.update');
-    Route::get('/doctor/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
-    Route::post('/doctor/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
-    Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');
 });
 
 

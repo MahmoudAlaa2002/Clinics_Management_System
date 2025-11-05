@@ -52,9 +52,11 @@ class AuthenticatedSessionController extends Controller{
 
 
 
-    public function logout(){
-        Auth::logout();
-        Session::flush();
+    public function logout()
+    {
+        Auth::logout(); // تسجيل خروج المستخدم
+        request()->session()->invalidate(); // تعطيل الجلسة الحالية
+        request()->session()->regenerateToken(); // إنشاء CSRF token جديد
         return redirect()->route('login');
     }
 }
