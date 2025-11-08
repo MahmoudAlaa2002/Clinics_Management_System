@@ -18,18 +18,24 @@
             </div>
         </div>
 
-        {{-- 🔍 Search Form --}}
-        <form method="GET" action="{{ route('doctor.patients') }}" class="mb-4 row">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                    <input type="text" name="keyword" class="form-control" placeholder="Search by patient name..." value="{{ request('keyword') }}">
-                </div>
+        {{-- Filters & Search --}}
+            <div class="card-box p-3 mb-4 shadow-sm">
+                <form method="GET" action="{{ route('doctor.patients') }}">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold" for="keyword">Filter</label>
+                            <input type="text" name="keyword" id="keyword" class="form-control"
+                                placeholder="Search by Patient name, Email, Phone and Boold Type..." value="{{ request('keyword') }}">
+                        </div>
+
+                        <div class="col-md-2 text-end mt-3 mt-md-0">
+                            <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4">
+                                <i class="fa fa-search me-1"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary" style="border-radius: 30px;">Search</button>
-            </div>
-        </form>
 
         {{-- 📋 Table --}}
         <div class="table-responsive">
@@ -51,7 +57,7 @@
                 <tbody>
                     @forelse ($patients as $patient)
                         <tr>
-                            <td>{{ $patient->id }}</td>
+                            <td>{{ ($patients->currentPage() - 1) * $patients->perPage() + $loop->iteration }}</td>
                             <td>{{ $patient->user->name }}</td>
                             <td>{{ $patient->user->email ?? '-' }}</td>
                             <td>{{ $patient->user->phone ?? '-' }}</td>
@@ -62,7 +68,7 @@
                             <td>{{ $patient->chronic_diseases ?? '-' }}</td>
                             <td>
                                 <a href="{{ route('doctor.patients.show', $patient) }}" class="btn btn-outline-success btn-sm">
-                                    <i class="fa fa-eye"></i> View
+                                    <i class="fa fa-eye"></i> View Patient details
                                 </a>
                             </td>
                         </tr>

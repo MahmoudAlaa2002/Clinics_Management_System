@@ -5,9 +5,9 @@
 @section('content')
 <div class="page-wrapper">
     <div class="content">
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <h4 class="page-title">Manage Medical Records</h4>
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-6 col-12">
+                <h4 class="page-title mb-0">Manage Medical Records</h4>
             </div>
         </div>
 
@@ -58,7 +58,11 @@
                         @forelse ($medicalRecords as $record)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $record->patient->user->name ?? '-' }}</td>
+                                <td>
+                                    <a href="{{ route('doctor.patients.show', $record->patient) }}">
+                                        {{ $record->patient->user->name ?? '-' }}
+                                    </a>
+                                </td>
                                 <td>{{ Str::limit($record->diagnosis, 40) }}</td>
                                 <td>{{ Str::limit($record->treatment, 40) }}</td>
                                 <td>{{ $record->record_date }}</td>
