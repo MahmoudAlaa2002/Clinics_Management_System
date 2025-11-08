@@ -51,6 +51,7 @@
                             <th>Treatment</th>
                             <th>Date</th>
                             <th>Notes</th>
+                            <th>Attachments</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -68,19 +69,42 @@
                                 <td>{{ $record->record_date }}</td>
                                 <td>{{ Str::limit($record->notes, 40) ?? '-' }}</td>
                                 <td>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a href="#" class="btn btn-outline-success btn-sm">
-                                            <i class="fa fa-eye"></i>
+                                    @if($record->attachmentss)
+                                        @php
+                                            $files = json_decode($record->attachmentss, true);
+                                        @endphp
+
+                                        @if(is_array($files))
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach($files as $file)
+                                                    @if(is_string($file))
+                                                        <li>
+                                                            <a href="{{ Storage::url($file) }}" target="_blank">{{ basename($file) }}</a>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            -
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="{{ route('doctor.medical_records.show', $record) }}" class="mr-1 btn btn-outline-success btn-sm">
+                                            <i class="fa fa-eye"></i> Details
                                         </a>
-                                        <a href="#" class="btn btn-outline-primary btn-sm">
-                                            <i class="fa fa-edit"></i>
+                                        <a href="{{ route('doctor.medical_records.edit', $record) }}" class="mr-1 btn btn-outline-primary btn-sm">
+                                            <i class="fa fa-edit"></i> Edit
                                         </a>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted">No medical records found</td>
+                                <td colspan="8" class="text-center text-muted">No medical records found</td>
                             </tr>
                         @endforelse
                     </tbody>

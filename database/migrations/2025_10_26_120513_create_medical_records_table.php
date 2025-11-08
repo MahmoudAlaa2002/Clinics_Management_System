@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('record_date');
 
             $table->text('prescriptions')->nullable();
-            $table->text('attachmentss')->nullable();    // مرفقات كالبريد الإلكتروني
+            $table->json('attachmentss')->nullable();    // مرفقات كالبريد الإلكتروني
             $table->text('notes')->nullable();
             $table->timestamps();
         });
