@@ -269,10 +269,15 @@
                         </div>
                     </div>
 
-                    {{-- Back Button --}}
-                    <div class="d-flex justify-content-end mt-4">
-                        <a href="{{ route('doctor_dashboard') }}" class="btn back-btn">
-                            <i class="fa fa-arrow-left me-1"></i> Back to Dashboard
+                    {{-- Actions: Back + Edit --}}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url()->previous() }}" class="btn back-btn">
+                            <i class="fa fa-arrow-left me-1"></i> Back
+                        </a>
+
+                        <a href="{{ route('doctor.profile.edit') }}" class="btn back-btn"
+                        style="background-color: #ffc107; border-color: #ffc107;">
+                            <i class="fa fa-edit me-1"></i> Edit Profile
                         </a>
                     </div>
                 </div>

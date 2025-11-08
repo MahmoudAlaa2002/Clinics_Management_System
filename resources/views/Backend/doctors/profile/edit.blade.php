@@ -90,6 +90,22 @@
             border-color: #aaa;
         }
 
+        .back-btn {
+            background-color: #03A9F4;
+            color: white;
+            border-radius: 30px;
+            padding: 10px 35px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(3, 169, 244, 0.2);
+        }
+
+        .back-btn:hover {
+            background-color: #0288d1;
+            box-shadow: 0 6px 18px rgba(2, 136, 209, 0.3);
+            transform: translateY(-2px);
+        }
+
         .alert {
             border-radius: 10px;
             font-weight: 500;
@@ -243,10 +259,11 @@
 
                     {{-- Actions --}}
                     <div class="d-flex justify-content-between align-items-center mt-4">
-                        <a href="{{ route('doctor_dashboard') }}" class="btn btn-outline-secondary btn-rounded">
+                        <a href="{{ url()->previous() }}" class="btn back-btn">
                             <i class="fa fa-arrow-left me-1"></i> Back
                         </a>
-                        <button type="submit" class="btn btn-primary btn-rounded">
+                        <button type="submit" class="btn back-btn"
+                            style="background-color: #03A9F4; border-color: #03A9F4;">
                             <i class="fa fa-save me-1"></i> Save Changes
                         </button>
                     </div>
