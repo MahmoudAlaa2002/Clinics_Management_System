@@ -114,12 +114,6 @@
                     </a>
                 </li>
 
-                <li class="{{ Request::is('doctor/profile/schedule') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-clock"></i> <span>Manage Schedule</span>
-                    </a>
-                </li>
-
                 <li class="{{ Request::is('doctor/profile/settings') ? 'active' : '' }}">
                     <a href="{{ route('doctor.profile.settings') }}">
                         <i class="fa fa-lock"></i> <span>Account Settings</span>
@@ -154,3 +148,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.querySelector('.sidebar-inner');
+        if (!sidebar) return;
+
+        // بننتظر شوية بعد تحميل المكتبة لتكون جاهزة
+        setTimeout(() => {
+            const scrollElement = sidebar.querySelector('.slimScrollDiv') || sidebar;
+
+            scrollElement.addEventListener('scroll', function() {
+                localStorage.setItem('sidebar-scroll', scrollElement.scrollTop);
+            });
+
+            const savedScroll = localStorage.getItem('sidebar-scroll');
+            if (savedScroll !== null) {
+                scrollElement.scrollTop = savedScroll;
+            }
+        }, 500);
+    });
+</script>

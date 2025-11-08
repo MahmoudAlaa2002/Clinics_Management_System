@@ -163,8 +163,10 @@
                 </div>
             @endif
 
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('doctor.appointments') }}" class="btn back-btn">Back</a>
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url()->previous() }}" class="btn back-btn">
+                    <i class="fa fa-arrow-left me-1"></i> Back
+                </a>
             </div>
         </div>
     </div>
