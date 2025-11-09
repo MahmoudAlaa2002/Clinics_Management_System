@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model{
+
+    use HasFactory;
+
     protected $fillable = [
         'doctor_id',
         'patient_id',
@@ -51,6 +55,14 @@ class Appointment extends Model{
 
     public function patient(){
         return $this->belongsTo(Patient::class);
+    }
+
+    public function medicalRecord(){
+        return $this->hasOne(MedicalRecord::class);
+    }
+
+    public function invoice(){
+        return $this->hasOne(Invoice::class);
     }
 
 }
