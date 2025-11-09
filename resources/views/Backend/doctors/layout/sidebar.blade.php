@@ -102,6 +102,12 @@
             <ul>
                 <li class="menu-title">Profile</li>
 
+                <li class="{{ Request::is('doctor/my_profile') ? 'active' : '' }}">
+                    <a href="{{ route('doctor_profile') }}">
+                        <i class="fa fa-user-cog"></i> <span>Profile</span>
+                    </a>
+                </li>
+
                 <li class="{{ Request::is('doctor/profile/edit') ? 'active' : '' }}">
                     <a href="{{ route('doctor.profile.edit') }}">
                         <i class="fa fa-user-cog"></i> <span>Edit Profile</span>

@@ -54,18 +54,19 @@
                             <input type="text" name="keyword" id="keyword" class="form-control"
                                 placeholder="Search appointments..." value="{{ request('keyword') }}">
                         </div>
+                        @if (request('date') !== 'today')
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold" for="from_date">From Date</label>
+                                <input type="date" name="from_date" id="from_date" class="form-control"
+                                    value="{{ request('from_date') }}">
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold" for="from_date">From Date</label>
-                            <input type="date" name="from_date" id="from_date" class="form-control"
-                                value="{{ request('from_date') }}">
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold" for="to_date">To Date</label>
-                            <input type="date" name="to_date" id="to_date" class="form-control"
-                                value="{{ request('to_date') }}">
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold" for="to_date">To Date</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control"
+                                    value="{{ request('to_date') }}">
+                            </div>
+                        @endif
 
                         <div class="col-md-2 text-end mt-3 mt-md-0">
                             <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4">
@@ -121,8 +122,8 @@
                                         <td>
                                             <div class="d-flex justify-content-center">
                                                 <a href="{{ route('doctor.appointment.show', $appointment) }}"
-                                                    class="mr-1 btn btn-outline-success btn-sm"><i
-                                                        class="fa fa-eye"></i> Details</a>
+                                                    class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i>
+                                                    Details</a>
                                                 @if ($appointment->status === 'Pending')
                                                     <form action="{{ route('doctor_confirm_appointment', $appointment) }}"
                                                         method="POST" class="d-inline">
@@ -206,13 +207,13 @@
                             case 'accept':
                                 confirmTitle = 'Accept Appointment';
                                 confirmMessage =
-                                'Are you sure you want to accept this appointment?';
+                                    'Are you sure you want to accept this appointment?';
                                 iconType = 'success';
                                 break;
                             case 'reject':
                                 confirmTitle = 'Reject Appointment';
                                 confirmMessage =
-                                'Are you sure you want to reject this appointment?';
+                                    'Are you sure you want to reject this appointment?';
                                 iconType = 'error';
                                 break;
                             case 'cancel':
