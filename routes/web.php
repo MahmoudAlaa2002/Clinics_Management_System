@@ -19,6 +19,7 @@ use App\Http\Controllers\Backend\ClinicManager\DashboardController as ClinicMana
 use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
 use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
 use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
+use App\Http\Controllers\Backend\Doctor\ReportController as DoctorReportController;
 use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
 use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
 use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
@@ -213,6 +214,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
     Route::post('/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
     Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');
+    Route::get('/reports/monthly', [DoctorReportController::class, 'monthly'])->name('doctor.reports.monthly');
     Route::get('/appointments', [DoctorAppointmentController::class, 'allAppointments'])->name('doctor.appointments');
     Route::get('/appointments/{appointment}', [DoctorAppointmentController::class, 'show'])->name('doctor.appointment.show');
     Route::post('/appointments/confirm/{appointment}', [DoctorAppointmentController::class, 'confirmAppointment'])->name('doctor_confirm_appointment');

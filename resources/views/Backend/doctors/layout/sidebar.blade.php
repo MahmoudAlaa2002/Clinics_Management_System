@@ -24,8 +24,8 @@
                     </a>
                 </li>
 
-                <li class="{{ Request::is('doctor/reports') ? 'active' : '' }}">
-                    <a href="#">
+                <li class="{{ Request::is('doctor/reports/monthly') ? 'active' : '' }}">
+                    <a href="{{ route('doctor.reports.monthly') }}">
                         <i class="fa fa-file-alt"></i> <span>Monthly Reports</span>
                     </a>
                 </li>
@@ -33,12 +33,6 @@
                 <li class="{{ Request::is('doctor/reviews') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-star"></i> <span>Patient Reviews</span>
-                    </a>
-                </li>
-
-                <li class="{{ Request::is('doctor/performance') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-chart-pie"></i> <span>Performance Charts</span>
                     </a>
                 </li>
             </ul>
