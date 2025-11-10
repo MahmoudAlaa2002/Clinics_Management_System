@@ -155,29 +155,46 @@ class MedicalRecordsController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        if ($request->hasFile('attachmentss')) {
-            $newFiles = [];
-            foreach ($request->file('attachmentss') as $file) {
-                $originalName = $file->getClientOriginalName();
-
-                // حفظ الملف بنفس الاسم داخل storage/app/public/medical_records
-                $path = $file->storeAs('medical_records', $originalName, 'public');
-
-                $newFiles[] = $path;
-            }
+        try {
+            DB::beginTransaction();
 
             // جلب الملفات القديمة
             $oldFiles = $medicalRecord->attachmentss ? json_decode($medicalRecord->attachmentss, true) : [];
 
-            // دمج القديم مع الجديد
-            $allFiles = array_merge($oldFiles, $newFiles);
+            // حذف الملفات المحددة من الطلب
+            if ($request->has('remove_files')) {
+                foreach ($request->remove_files as $fileToRemove) {
+                    Storage::disk('public')->delete($fileToRemove); // حذف فعلي من storage
+                    $oldFiles = array_filter($oldFiles, fn($f) => $f !== $fileToRemove);
+                }
+            }
 
-            $validated['attachmentss'] = json_encode($allFiles);
+            // إضافة ملفات جديدة إن وجدت
+            if ($request->hasFile('attachmentss')) {
+                $newFiles = [];
+                foreach ($request->file('attachmentss') as $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $path = $file->storeAs('medical_records', $originalName, 'public');
+                    $newFiles[] = $path;
+                }
+
+                $oldFiles = array_merge($oldFiles, $newFiles);
+            }
+
+            $validated['attachmentss'] = json_encode(array_values($oldFiles));
+
+            // تحديث السجل
+            $medicalRecord->update($validated);
+
+            DB::commit();
+
+            return redirect()
+                ->route('doctor.medical_records.show', $medicalRecord)
+                ->with('success', 'Medical Record updated successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Something went wrong while updating the record.');
         }
-
-        $medicalRecord->update($validated);
-
-        return redirect()->route('doctor.medical_records.show', $medicalRecord)
-                        ->with('success', 'Medical Record updated successfully.');
     }
 }

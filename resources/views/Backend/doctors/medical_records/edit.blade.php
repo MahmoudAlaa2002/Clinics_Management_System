@@ -97,13 +97,16 @@
                     <input type="file" name="attachmentss[]" class="form-control" multiple>
 
                     @if ($medicalRecord->attachmentss)
-                        <small class="text-muted">Existing files:</small>
+                        <small class="text-muted d-block mt-2">Existing files:</small>
                         <ul>
                             @foreach (json_decode($medicalRecord->attachmentss, true) as $file)
-                                <li>
-                                    <a href="{{ Storage::url($file) }}" target="_blank">
+                                <li class="d-flex align-items-center">
+                                    <a href="{{ Storage::url($file) }}" target="_blank" class="me-2">
                                         {{ basename($file) }}
                                     </a>
+                                    <label class="text-danger small mb-0">
+                                        <input type="checkbox" name="remove_files[]" value="{{ $file }}"> Remove
+                                    </label>
                                 </li>
                             @endforeach
                         </ul>
