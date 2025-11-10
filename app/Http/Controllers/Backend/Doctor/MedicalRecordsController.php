@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MedicalRecordsController extends Controller
 {
@@ -73,11 +74,11 @@ class MedicalRecordsController extends Controller
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'appointment_id' => 'required|exists:appointments,id',
-            'diagnosis' => 'nullable|string|max:255',
-            'treatment' => 'nullable|string|max:255',
-            'prescriptions' => 'nullable|string',
-            'attachments' => 'nullable|string',
-            'notes' => 'nullable|string',
+            'diagnosis' => 'nullable|string|max:1000',
+            'treatment' => 'nullable|string|max:1000',
+            'prescriptions' => 'nullable|string|max:1000',
+            'attachmentss.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         $validated['doctor_id'] = $doctor->id;
@@ -93,15 +94,44 @@ class MedicalRecordsController extends Controller
             return back()->with('error', 'A medical record already exists for this appointment.');
         }
 
-        DB::transaction(function () use ($appointment, $validated) {
+        try {
+            DB::beginTransaction();
 
+            // معالجة الملفات داخل الترانزكشن
+            $uploadedFiles = [];
+            if ($request->hasFile('attachmentss')) {
+                foreach ($request->file('attachmentss') as $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $path = $file->storeAs('medical_records', $originalName, 'public');
+                    $uploadedFiles[] = $path;
+                }
+                $validated['attachmentss'] = json_encode($uploadedFiles);
+            }
+
+            // تحديث حالة الموعد
             $appointment->update(['status' => 'Completed']);
 
+            // إنشاء السجل الطبي
             MedicalRecord::create($validated);
-        });
 
+            DB::commit();
 
-        return redirect()->route('doctor.medical_records')->with('success', 'Medical record created successfully.');
+            return redirect()
+                ->route('doctor.medical_records')
+                ->with('success', 'Medical record created successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // حذف أي ملفات تم رفعها قبل الفشل
+            if (!empty($uploadedFiles)) {
+                foreach ($uploadedFiles as $file) {
+                    Storage::disk('public')->delete($file);
+                }
+            }
+
+            return back()->with('error', 'Something went wrong. Please try again.');
+        }
     }
 
     public function show(MedicalRecord $medicalRecord)

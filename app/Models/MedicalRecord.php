@@ -17,7 +17,7 @@ class MedicalRecord extends Model{
         'treatment',
         'record_date',
         'prescriptions',
-        'attachments',
+        'attachmentss',
         'notes',
     ];
 

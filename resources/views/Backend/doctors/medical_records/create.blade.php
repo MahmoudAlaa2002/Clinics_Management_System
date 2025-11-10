@@ -55,7 +55,7 @@
             </div>
 
             <div class="card-box">
-                <form action="{{ route('doctor.medical_records.store') }}" method="POST">
+                <form action="{{ route('doctor.medical_records.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     {{-- Select Appointment --}}
@@ -99,7 +99,7 @@
                     <div class="form-group mb-3">
                         <label class="form-label"><i class="fa fa-paperclip text-primary me-2"></i> Attachments
                             (optional)</label>
-                        <textarea name="attachmentss" class="form-control" rows="3" placeholder="Enter attachment links or details...">{{ old('attachmentss') }}</textarea>
+                        <input type="file" name="attachmentss[]" class="form-control" multiple>
                     </div>
 
                     {{-- Notes --}}
