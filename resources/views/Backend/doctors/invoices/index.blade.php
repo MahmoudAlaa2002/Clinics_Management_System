@@ -90,9 +90,17 @@
                 <tbody>
                     @forelse ($invoices as $invoice)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $invoice->appointment->id ?? '-' }}</td>
-                            <td>{{ $invoice->patient->user->name ?? '-' }}</td>
+                            <td>{{ ($invoices->currentPage() - 1) * $invoices->perPage() + $loop->iteration }}</td>
+                            <td>
+                                <a href="{{ route('doctor.appointment.show', $invoice->appointment) }}">
+                                    {{ $invoice->appointment->id ?? '-' }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ route('doctor.patients.show', $invoice->patient) }}">
+                                    {{ $invoice->patient->user->name ?? '-' }}
+                                </a>
+                            </td>
                             <td>{{ $invoice->total_amount ?? '-' }}</td>
                             <td>{{ $invoice->invoice_date ? \Carbon\Carbon::parse($invoice->invoice_date)->format('Y-m-d') : '-' }}</td>
                             <td>{{ $invoice->due_date ? \Carbon\Carbon::parse($invoice->due_date)->format('Y-m-d') : '-' }}</td>
