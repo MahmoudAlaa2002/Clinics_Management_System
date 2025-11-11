@@ -48,6 +48,10 @@
             {{-- Filters & Search --}}
             <div class="card-box p-3 mb-4 shadow-sm">
                 <form method="GET" action="{{ route('doctor.appointments') }}">
+                    @if (request('date') === 'today')
+                        <input type="hidden" name="date" value="today">
+                    @endif
+
                     <div class="row align-items-end">
                         <div class="col-md-4">
                             <label class="form-label fw-bold" for="keyword">Filter</label>
@@ -106,7 +110,20 @@
                                         </td>
                                         <td>{{ $appointment->clinic->name }}</td>
                                         <td>{{ $appointment->department->name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
+                                        @php
+                                            $date = \Carbon\Carbon::parse($appointment->date);
+                                            $formattedDate = $date->format('Y-m-d');
+                                            $dayName = $date->format('l'); // Monday, Tuesday...
+                                        @endphp
+
+                                        <td>
+                                            @if ($date->isToday())
+                                                Today
+                                            @else
+                                                {{ $dayName }}
+                                            @endif
+                                            - {{ $formattedDate }}
+                                        </td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
                                         <td>
                                             <span

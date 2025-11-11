@@ -16,17 +16,17 @@ class AppointmentController extends Controller
         $doctor = Auth::user()->employee->doctor;
         $appointments = Appointment::with(['patient.user', 'clinic', 'department'])->where('doctor_id', $doctor->id);
 
+        if ($request->has('date') && !empty($request->date)) {
+            if ($request->date == 'today') {
+                $appointments->where('date', date('Y-m-d'));
+            }
+        }
+
         if ($request->has('from_date') && !empty($request->from_date)) {
             $appointments->where('date', '>=', $request->from_date);
         }
         if ($request->has('to_date') && !empty($request->to_date)) {
             $appointments->where('date', '<=', $request->to_date);
-        }
-
-        if ($request->has('date') && !empty($request->date)) {
-            if ($request->date == 'today') {
-                $appointments->where('date', date('Y-m-d'));
-            }
         }
 
         if ($request->has('keyword') && !empty($request->keyword)) {
