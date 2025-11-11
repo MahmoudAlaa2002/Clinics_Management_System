@@ -260,7 +260,7 @@
 
           {{-- Submit --}}
           <div class="text-center m-t-20" style="margin-top:20px;">
-            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform:none !important;">Edit Department Manager</button>
+            <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">Edit Department Manager</button>
           </div>
 
         </form>
@@ -379,7 +379,7 @@
     });
 
     // إرسال البيانات عبر AJAX
-    $('.addBtn').on('click', function (e) {
+    $('.editBtn').on('click', function (e) {
       e.preventDefault();
 
       const name = $('#name').val().trim();
@@ -403,10 +403,11 @@
         workingDays.push($(this).val());
       });
 
-      if (!name || !date_of_birth || !clinic_id || !department_id || !email || !phone || !address || !gender || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
+      if (!name || !date_of_birth || !clinic_id || !department_id || !email || !phone || !address
+        || !gender || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
         Swal.fire({
           title: 'Error!',
-          text: 'Please Enter All Required Fields',
+          text: 'Please enter all required fields',
           icon: 'error',
           confirmButtonText: 'OK'
         });
@@ -455,14 +456,14 @@
           if (response.data == 0) {
             Swal.fire({
               title: 'Error!',
-              text: 'This Department Manager Already Exists',
+              text: 'This department manager already exists',
               icon: 'error',
               confirmButtonText: 'OK'
             });
           } else if (response.data == 1) {
             Swal.fire({
               title: 'Success',
-              text: 'Department Manager Has Been Updated Successfully',
+              text: 'Department Manager has been updated successfully',
               icon: 'success',
               confirmButtonText: 'OK'
             }).then(() => window.location.href = '/admin/view/departments-managers');

@@ -1,6 +1,6 @@
 @extends('Backend.admin.master')
 
-@section('title', 'Edit Employee')
+@section('title' , 'Edit Employee')
 
 @section('content')
 <style>
@@ -9,7 +9,10 @@
     .card { border: 1px solid #ddd !important; border-radius: 8px !important; box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important; overflow: hidden !important; }
     .card-header { background-color: #00A8FF !important; color: #fff !important; font-weight: 600 !important; padding: 12px 15px !important; font-size: 16px !important; border-bottom: 1px solid #ddd !important; }
     .card-body { background-color: #fff; padding: 20px; }
-    .small-gutter > [class^="col-"] { padding-left: 30px !important; margin-top: 15px !important; }
+    .small-gutter > [class^="col-"] {
+        padding-left: 30px !important;
+        margin-top: 15px !important;
+    }
     .profile-upload .upload-img img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
 </style>
 
@@ -17,7 +20,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <h4 class="mb-4 page-title">Edit Employee</h4>
+                <h4 class="page-title" style="margin-bottom:30px;">Edit Employee</h4>
             </div>
         </div>
 
@@ -32,12 +35,11 @@
                         <div class="card-header">Employee Information</div>
                         <div class="card-body">
                             <div class="row">
-
                                 <div class="col-sm-6">
                                     <label>Employee Name <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i></span></div>
-                                        <input type="text" class="form-control" id="name" name="name" value="{{ $employee->user->name }}">
+                                        <input type="text" class="form-control" id="name" value="{{ $employee->user->name }}">
                                     </div>
                                 </div>
 
@@ -45,7 +47,7 @@
                                     <label>Date of Birth <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-calendar-alt"></i></span></div>
-                                        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ $employee->user->date_of_birth }}">
+                                        <input type="date" class="form-control" id="date_of_birth" value="{{ $employee->user->date_of_birth }}">
                                     </div>
                                 </div>
 
@@ -53,7 +55,7 @@
                                     <label>Phone <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-phone"></i></span></div>
-                                        <input type="text" class="form-control" id="phone" name="phone" value="{{ $employee->user->phone }}">
+                                        <input type="text" class="form-control" id="phone" value="{{ $employee->user->phone }}">
                                     </div>
                                 </div>
 
@@ -61,7 +63,7 @@
                                     <label>Email <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-envelope"></i></span></div>
-                                        <input type="email" class="form-control" id="email" name="email" value="{{ $employee->user->email }}">
+                                        <input type="email" class="form-control" id="email" value="{{ $employee->user->email }}">
                                     </div>
                                 </div>
 
@@ -69,7 +71,7 @@
                                     <label>Password</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password (optional)">
+                                        <input type="password" class="form-control" id="password" placeholder="New password (optional)">
                                     </div>
                                 </div>
 
@@ -77,7 +79,7 @@
                                     <label>Confirm Password</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-lock"></i></span></div>
-                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password">
+                                        <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password">
                                     </div>
                                 </div>
 
@@ -85,17 +87,17 @@
                                     <label>Address</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span></div>
-                                        <input type="text" class="form-control" id="address" name="address" value="{{ $employee->user->address }}">
+                                        <input type="text" class="form-control" id="address" value="{{ $employee->user->address }}">
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <label>Avatar</label>
                                     <div class="profile-upload">
-                                        <div class="mb-2 upload-img">
-                                            <img src="{{ asset($employee->user->image ?? 'assets/img/user.jpg') }}" alt="employee">
+                                        <div class="upload-img mb-2">
+                                            <img alt="employee" src="{{ asset($employee->user->image ?? 'assets/img/user.jpg') }}">
                                         </div>
-                                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                                        <input type="file" class="form-control" id="image" accept="image/*">
                                     </div>
                                 </div>
 
@@ -110,54 +112,57 @@
                                         <label class="form-check-label">Female</label>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
 
                     {{-- 2) Work Assignment --}}
                     <div class="card">
-                        <div class="card-header">Work Assignment</div>
+                        <div class="card-header">Assignment</div>
                         <div class="card-body">
                             <div class="row">
 
                                 {{-- Clinic --}}
                                 <div class="col-sm-6">
-                                    <label>Clinic <span class="text-danger">*</span></label>
-                                    <select id="clinic_id" name="clinic_id" class="form-control">
-                                        <option disabled hidden>Select Clinic</option>
-                                        @foreach($clinics as $clinic)
-                                            <option value="{{ $clinic->id }}" {{ $employee->clinic_id == $clinic->id ? 'selected' : '' }}>{{ $clinic->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label>Clinic Name <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                        </div>
+                                        <select id="clinic_id" class="form-control">
+                                            <option disabled hidden>Select Clinic</option>
+                                            @foreach($clinics as $clinic)
+                                                <option value="{{ $clinic->id }}" {{ $employee->clinic_id == $clinic->id ? 'selected' : '' }}>
+                                                    {{ $clinic->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {{-- Department --}}
                                 <div class="col-sm-6" id="department_field" style="{{ in_array($employee->job_title, ['Department Manager', 'Doctor', 'Nurse', 'Receptionist']) ? '' : 'display:none;' }}">
-                                    <label>Department <span class="text-danger">*</span></label>
-                                    <select id="department_id" name="department_id" class="form-control">
-                                        <option value="" {{ !$employee->department_id ? 'selected' : '' }} disabled hidden>
-                                            Select Department
-                                        </option>
-                                        @foreach($departments as $department)
-                                            <option
-                                                value="{{ $department->id }}"
-                                                {{ $employee->department_id == $department->id ? 'selected' : '' }}>
-                                                {{ $department->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <label>Department Name <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <select id="department_id" class="form-control">
+                                            <option disabled hidden>Select Department</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {{-- Job Title --}}
-                                <div class="mt-3 col-sm-12">
+                                <div class="col-sm-12 mt-3">
                                     <label class="mb-2 fw-bold">Job Title <span class="text-danger">*</span></label>
                                     <div class="p-3 card">
                                         @php $job = $employee->job_title; @endphp
                                         @foreach(['Clinic Manager','Department Manager','Doctor','Nurse','Receptionist'] as $title)
                                             <div class="mb-2 form-check">
-                                                <input class="form-check-input" type="radio" name="job_title" id="{{ strtolower(str_replace(' ','_',$title)) }}" value="{{ $title }}" {{ $job == $title ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="{{ strtolower(str_replace(' ','_',$title)) }}">{{ $title }}</label>
+                                                <input class="form-check-input job-title-radio" type="radio" name="job_title"
+                                                    value="{{ $title }}" {{ $job == $title ? 'checked' : '' }}>
+                                                <label class="form-check-label">{{ $title }}</label>
                                             </div>
                                         @endforeach
                                     </div>
@@ -169,61 +174,95 @@
 
                     {{-- 3) Doctor Info --}}
                     <div class="card" id="doctor_info_card" style="{{ $employee->job_title == 'Doctor' ? '' : 'display:none;' }}">
-                        <div class="card-header">Doctor Job Information</div>
+                        <div class="card-header">Professional Information</div>
                         <div class="card-body">
                             <div class="row">
 
+                                {{-- Speciality --}}
                                 <div class="col-sm-6">
-                                    <label>Speciality</label>
-                                    <input type="text" id="speciality" name="speciality" class="form-control" value="{{ optional($employee->doctor)->speciality }}">
+                                    <label>Speciality <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="speciality" name="speciality" value="{{ optional($employee->doctor)->speciality }}">
+                                    </div>
                                 </div>
 
+                                {{-- Qualification --}}
                                 <div class="col-sm-6">
-                                    <label>Qualification</label>
-                                    <select id="qualification" name="qualification" class="form-control">
-                                        <option value="" {{ empty(optional($employee->doctor)->qualification) ? 'selected' : '' }} disabled hidden>
-                                            Select Qualification
-                                        </option>
-                                        @foreach(['MBBS','MD','DO','BDS','PhD','MSc','Fellowship','Diploma','Other'] as $q)
-                                            <option value="{{ $q }}" {{ optional($employee->doctor)->qualification == $q ? 'selected' : '' }}>
-                                                {{ $q }}
+                                    <label>Qualification <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                                        </div>
+                                        <select id="qualification" name="qualification" class="form-control">
+                                            <option value="" disabled {{ empty(optional($employee->doctor)->qualification) ? 'selected' : '' }}>
+                                                Select Qualification
                                             </option>
-                                        @endforeach
-                                    </select>
+                                            @foreach(['MBBS','MD','DO','BDS','PhD','MSc','Fellowship','Diploma','Other'] as $q)
+                                                <option value="{{ $q }}" {{ optional($employee->doctor)->qualification == $q ? 'selected' : '' }}>
+                                                    {{ $q }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
+                                {{-- Consultation Fee --}}
                                 <div class="col-sm-6">
-                                    <label>Consultation Fee</label>
-                                    <input type="number" id="consultation_fee" name="consultation_fee" class="form-control" min="0" value="{{ optional($employee->doctor)->consultation_fee }}">
+                                    <label>Consultation Fee <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-file-invoice-dollar"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" id="consultation_fee" name="consultation_fee" min="0" value="{{ optional($employee->doctor)->consultation_fee }}">
+                                    </div>
                                 </div>
 
+                                {{-- Rating --}}
                                 <div class="col-sm-6">
-                                    <label>Rating</label>
-                                    <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" value="{{ optional($employee->doctor)->rating }}">
+                                    <label>Rating <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-star"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="{{ optional($employee->doctor)->rating }}">
+                                    </div>
                                 </div>
 
                             </div>
                         </div>
                     </div>
 
+
                     {{-- 4) Work Schedule --}}
                     <div class="card">
                         <div class="card-header">Work Schedule</div>
                         <div class="card-body">
                             <div class="row">
-
                                 <div class="col-sm-6">
                                     <label>Work Start Time <span class="text-danger">*</span></label>
-                                    <select name="work_start_time" id="work_start_time" class="form-control">
-                                        <option disabled selected hidden>Select Start Time</option>
-                                    </select>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        </div>
+                                        <select id="work_start_time" class="form-control">
+                                            <option disabled selected hidden>Select Start Time</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <label>Work End Time <span class="text-danger">*</span></label>
-                                    <select name="work_end_time" id="work_end_time" class="form-control">
-                                        <option disabled selected hidden>Select End Time</option>
-                                    </select>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        </div>
+                                        <select id="work_end_time" class="form-control">
+                                            <option disabled selected hidden>Select End Time</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="col-sm-6">
@@ -232,26 +271,29 @@
                                         $all_days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
                                         $selectedDays = $employee->working_days ?? [];
                                     @endphp
+
                                     <div class="row gx-1">
-                                        <div class="col-6">
+                                        <div class="col-sm-6">
                                             @foreach(array_slice($all_days, 0, 4) as $day)
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}" {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}"
+                                                        {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <div class="col-6">
+
+                                        <div class="col-sm-6">
                                             @foreach(array_slice($all_days, 4) as $day)
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}" {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="working_days[]" value="{{ $day }}" id="day_{{ $day }}"
+                                                        {{ in_array($day, $selectedDays) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="day_{{ $day }}">{{ $day }}</label>
                                                 </div>
                                             @endforeach
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -263,7 +305,7 @@
                             <div class="row">
                                 <div class="mb-3 col-sm-12">
                                     <label>Short Biography</label>
-                                    <textarea id="short_biography" name="short_biography" class="form-control" rows="4">{{ $employee->short_biography }}</textarea>
+                                    <textarea id="short_biography" class="form-control" rows="4">{{ $employee->short_biography }}</textarea>
                                 </div>
 
                                 <div class="col-sm-12">
@@ -281,8 +323,11 @@
                         </div>
                     </div>
 
+                    {{-- Submit --}}
                     <div class="text-center" style="margin-top:20px;">
-                        <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">Edit Employee</button>
+                        <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
+                            Edit Employee
+                        </button>
                     </div>
 
                 </form>
@@ -295,68 +340,151 @@
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script>
+    <script>
     $(document).ready(function () {
+        const employeeId = "{{ $employee->id }}";
+        const currentClinicId = "{{ $employee->clinic_id ?? '' }}";
+        const selectedDays = {!! json_encode($employee->working_days ?? []) !!};
 
-        // ✅ تحميل أوقات العمل فور دخول الصفحة بعد تحميل DOM
-        const clinicId = "{{ $employee->clinic_id }}";
-        if (clinicId) {
-            // استخدم تأخير بسيط للتأكد إن الصفحة والـ selects محملة بالكامل
-            setTimeout(() => loadClinicTimes(clinicId, true), 200);
+        if (currentClinicId) {
+            loadDepartments(currentClinicId, "{{ $employee->department_id ?? '' }}");
+            loadWorkingTimes(currentClinicId, "{{ $employee->work_start_time ?? '' }}", "{{ $employee->work_end_time ?? '' }}");
+            loadWorkingDaysForClinic(currentClinicId, selectedDays);
         }
 
-        // ✅ عند تغيير العيادة — نعيد تحميل أوقات العمل
         $('#clinic_id').on('change', function () {
-            loadClinicTimes($(this).val(), false);
+            const id = $(this).val();
+            loadDepartments(id);
+            loadWorkingTimes(id);
+            loadWorkingDaysForClinic(id, []);
         });
 
-        // ✅ دالة تحميل أوقات العمل الخاصة بالعيادة
-        function loadClinicTimes(id, isInitialLoad = false) {
-            if (!id) return;
+        function loadDepartments(id, selected='') {
+            $('#department_id').empty().append('<option disabled selected hidden>Loading...</option>');
+            $.get('/admin/get-departments-by-clinic/' + id, function (data) {
+                $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
+                data.forEach(dep => {
+                    $('#department_id').append(`<option value="${dep.id}" ${dep.id == selected ? 'selected' : ''}>${dep.name}</option>`);
+                });
+            });
+        }
 
+        function loadWorkingTimes(id, start='', end='') {
             $.get('/admin/get-clinic-info/' + id, function (data) {
-                const start = parseInt(data.opening_time.split(':')[0]);
-                const end = parseInt(data.closing_time.split(':')[0]);
-
-                const workStart = $('#work_start_time');
-                const workEnd = $('#work_end_time');
-                workStart.empty().append('<option disabled hidden>Select Start Time</option>');
-                workEnd.empty().append('<option disabled hidden>Select End Time</option>');
-
-                // توليد قائمة الساعات
-                for (let h = start; h <= end; h++) {
-                    const label = (h < 10 ? '0' + h : h) + ':00';
-                    const value = (h < 10 ? '0' + h : h) + ':00:00';
-                    workStart.append(`<option value="${value}">${label}</option>`);
-                    workEnd.append(`<option value="${value}">${label}</option>`);
-                }
-
-                // ✅ تعيين القيم المحفوظة من قاعدة البيانات إذا كانت موجودة
-                const savedStart = "{{ $employee->work_start_time }}";
-                const savedEnd = "{{ $employee->work_end_time }}";
-
-                if (isInitialLoad) {
-                    // أول مرة فقط نعيّن القيم المحفوظة
-                    $('#work_start_time').val(savedStart).trigger('change');
-                    $('#work_end_time').val(savedEnd).trigger('change');
+                const sHour = parseInt(data.opening_time.split(':')[0]);
+                const eHour = parseInt(data.closing_time.split(':')[0]);
+                const $s = $('#work_start_time'), $e = $('#work_end_time');
+                $s.empty().append('<option disabled hidden>Select Start Time</option>');
+                $e.empty().append('<option disabled hidden>Select End Time</option>');
+                for (let h = sHour; h <= eHour; h++) {
+                    let hh = (h < 10 ? '0' : '') + h;
+                    let value = hh + ':00:00';
+                    $s.append(`<option value="${value}" ${value === start ? 'selected' : ''}>${hh}:00</option>`);
+                    $e.append(`<option value="${value}" ${value === end ? 'selected' : ''}>${hh}:00</option>`);
                 }
             });
         }
 
-        // إظهار/إخفاء أقسام حسب الوظيفة
-        $('input[name="job_title"]').on('change', function () {
-            const job = $(this).val();
-            const needDept = ['Department Manager','Doctor','Nurse','Receptionist'];
-            $('#department_field').toggle(needDept.includes(job));
-            $('#doctor_info_card').toggle(job === 'Doctor');
+        function loadWorkingDaysForClinic(id, selectedDays) {
+            $.get('/admin/clinic-working-days/' + id, function (resp) {
+                const clinicDays = resp.working_days || [];
+                const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+                allDays.forEach(day => {
+                    const $cb = $('#day_' + day);
+                    if (clinicDays.includes(day)) {
+                        $cb.prop('disabled', false);
+                        if (selectedDays.includes(day)) $cb.prop('checked', true);
+                    } else {
+                        $cb.prop('disabled', true).prop('checked', false);
+                    }
+                });
+            });
+        }
+
+        // ✅ إظهار أو إخفاء القسم وحقول الدكتور حسب الوظيفة
+        $(document).on('change', '.job-title-radio', function () {
+            const job = $(this).val().toLowerCase();
+            const jobsNeedDept = ['department manager','doctor','nurse','receptionist'];
+            if (jobsNeedDept.includes(job)) $('#department_field').slideDown(200);
+            else $('#department_field').slideUp(200);
+
+            if (job === 'doctor') $('#doctor_info_card').slideDown(200);
+            else $('#doctor_info_card').slideUp(200);
         });
 
-        // عند الضغط على زر التعديل
-        $('.editBtn').on('click', function (e) {
+        // ✅ زر التعديل
+        $('.editBtn').click(function (e) {
             e.preventDefault();
-            const form = $('form')[0];
-            const formData = new FormData(form);
+
+            let name = $('#name').val().trim(),
+                date_of_birth = $('#date_of_birth').val().trim(),
+                phone = $('#phone').val().trim(),
+                email = $('#email').val().trim(),
+                address = $('#address').val().trim(),
+                clinic_id = $('#clinic_id').val(),
+                department_id = $('#department_id').val(),
+                work_start_time = $('#work_start_time').val(),
+                work_end_time = $('#work_end_time').val(),
+                gender = $('input[name="gender"]:checked').val(),
+                status = $('input[name="status"]:checked').val(),
+                password = $('#password').val(),
+                confirm_password = $('#confirm_password').val(),
+                short_biography = $('#short_biography').val().trim(),
+                job_title = $('input[name="job_title"]:checked').val(),
+                speciality = $('#speciality').val(),
+                qualification = $('#qualification').val(),
+                consultation_fee = $('#consultation_fee').val(),
+                rating = $('#rating').val(),
+                image = document.querySelector('#image').files[0];
+
+            let workingDays = [];
+            $('input[name="working_days[]"]:checked').each(function () { workingDays.push($(this).val()); });
+
+            if (!name || !date_of_birth || !clinic_id || !email || !phone || !gender || !work_start_time || !work_end_time || workingDays.length === 0 || !job_title) {
+                return Swal.fire('Error!', 'Please Enter All Required Fields', 'error');
+            }
+
+            if (password !== confirm_password) {
+                return Swal.fire('Error!', 'Password confirmation does not match', 'error');
+            }
+
+            if (work_start_time >= work_end_time) {
+                return Swal.fire('Error!', 'Invalid work time range', 'error');
+            }
+
+            if ($('#department_field').is(':visible') && !department_id) {
+                return Swal.fire('Error!', 'Please Select Department', 'error');
+            }
+
+            if ($('#doctor_info_card').is(':visible') && (!speciality || !qualification || !consultation_fee || !rating)) {
+                return Swal.fire('Error!', 'Please Fill All Doctor Fields', 'error');
+            }
+
+            let formData = new FormData();
             formData.append('_method', 'PUT');
+            formData.append('name', name);
+            formData.append('date_of_birth', date_of_birth);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('address', address);
+            formData.append('clinic_id', clinic_id);
+            if (department_id) {
+                formData.append('department_id', department_id);
+            }
+            formData.append('gender', gender);
+            formData.append('status', status);
+            formData.append('job_title', job_title);
+            formData.append('short_biography', short_biography);
+            formData.append('password', password);
+            formData.append('confirm_password', confirm_password);
+            formData.append('work_start_time', work_start_time);
+            formData.append('work_end_time', work_end_time);
+            workingDays.forEach(d => formData.append('working_days[]', d));
+            if (image) formData.append('image', image);
+            formData.append('speciality', speciality);
+            formData.append('qualification', qualification);
+            formData.append('consultation_fee', consultation_fee);
+            formData.append('rating', rating);
 
             $.ajax({
                 method: 'POST',
@@ -364,27 +492,20 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (res) {
-                    if (res.data == 0)
-                        Swal.fire('Error!', 'This Employee Already Exists', 'error');
-                    else if (res.data == 1)
-                        Swal.fire('Warning', 'Another Manager Already Exists for this Clinic', 'warning');
-                    else if (res.data == 2)
-                        Swal.fire('Warning', 'Another Manager Already Exists for this Department', 'warning');
+                    if (res.data == 0) Swal.fire('Error!', 'This Employee Already Exists', 'error');
+                    else if (res.data == 1) Swal.fire('Error!', 'Clinic Already Has A Manager', 'error');
+                    else if (res.data == 2) Swal.fire('Error!', 'Department Already Has A Manager', 'error');
                     else if (res.data == 3)
-                        Swal.fire('Success', 'Employee Has Been Updated Successfully', 'success')
+                        Swal.fire('Success', 'Employee Updated Successfully', 'success')
                             .then(() => window.location.href = '/admin/view/employees');
-                    else
-                        Swal.fire('Info', 'Unknown response received', 'info');
                 },
                 error: function () {
-                    Swal.fire('Error!', 'Unexpected error occurred while updating', 'error');
+                    Swal.fire('Error!', 'Unexpected error occurred', 'error');
                 }
             });
         });
-
     });
-</script>
+    </script>
 @endsection
-

@@ -96,7 +96,7 @@
                         success: function (response) {
                             if (response.success) {
                                 Swal.fire({
-                                    title: 'Deleted!',
+                                    title: 'Deleted',
                                     text: 'Patient Has Been Deleted Successfully',
                                     icon: 'success'
                                 }).then(() => {

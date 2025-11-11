@@ -166,7 +166,7 @@
                 if (name == '' || date_of_birth == '' || email == '' || phone == '' || address == '' || gender == undefined) {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please Enter All Required Fields',
+                        text: 'Please enter all required fields',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -201,7 +201,7 @@
                         if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Admin Profile Has Been Updated Successfully',
+                                text: 'Admin profile has been updated successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

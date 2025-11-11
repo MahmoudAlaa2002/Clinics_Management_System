@@ -24,7 +24,7 @@
 @else
     <tr>
         <td colspan="6" class="p-4 text-center">
-            <strong style="font-weight: bold; font-size: 18px; margin-top:50px;">No Patients Found</strong>
+            <strong style="font-weight: bold; font-size: 18px; margin-top:50px;">No Patients Available At The Moment</strong>
         </td>
     </tr>
 @endif

@@ -24,7 +24,7 @@
                 <h4 class="page-title">Search Doctors Schedules</h4>
             </div>
             <div class="card-body" style="margin-top: 50px;">
-                <form id="doctor-schedule-form" method="POST" action="{{ route('search_doctor_schedules') }}">
+                <form id="doctor-schedule-form" method="POST" action="{{ route('search_doctor_schedule') }}">
                     @csrf
                     <div class="mb-3 row">
                         <div class="col-md-4">
@@ -105,7 +105,7 @@
                             </button>
                         </div>
 
-                        {{-- ✅ جدول المواعيد مع scroll --}}
+                        {{-- جدول المواعيد مع scroll --}}
                         <div class="table-responsive">
                             <table class="table table-bordered text-center align-middle mb-0" style="min-width: 1000px; font-size: 14px;">
                                 @php
@@ -213,7 +213,7 @@
 
             if (departmentId && clinicId) {
                 $.ajax({
-                    url: '/admin/get-doctors-by-clinic-and-department',
+                    url: '/clinics-management/get-doctors-by-clinic-and-department',
                     type: 'GET',
                     data: {
                         clinic_id: clinicId,
@@ -265,7 +265,7 @@
                     // إذا كان يوجد تخصص محدد مسبقًا، حمّل الأطباء واضبط المختار
                     if (selectedDepartmentId) {
                         $.ajax({
-                            url: '/admin/get-doctors-by-clinic-and-department',
+                            url: '/clinics-management/get-doctors-by-clinic-and-department',
                             type: 'GET',
                             data: {
                                 clinic_id: selectedClinicId,

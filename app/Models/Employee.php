@@ -45,4 +45,16 @@ class Employee extends Model{
         return $this->hasOne(Doctor::class, 'employee_id');
     }
 
+
+
+
+    // تجعل الوقت بالصيغة هادي 08:00 , 19:00
+    public function getWorkStartTimeAttribute($value){
+        return $value ? \Carbon\Carbon::parse($value)->format('H:i') : null;
+    }
+
+    public function getWorkEndTimeAttribute($value){
+        return $value ? \Carbon\Carbon::parse($value)->format('H:i') : null;
+    }
+
 }

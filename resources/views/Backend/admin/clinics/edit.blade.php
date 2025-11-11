@@ -218,7 +218,7 @@
                     </div>
 
                     <div class="text-center m-t-20" style="margin-top: 20px;">
-                        <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">
+                        <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform: none !important;">
                             Edit Clinic
                         </button>
                     </div>
@@ -239,7 +239,7 @@
 
 
         $(document).ready(function () {
-            $('.addBtn').click(function (e) {
+            $('.editBtn').click(function (e) {
                 e.preventDefault();
 
                 let name = $('#name').val().trim();
@@ -261,10 +261,11 @@
                     departments.push($(this).val());
                 });
 
-                if (name === '' || location === '' || email === '' || phone === '' || !isValidSelectValue('opening_time') || !isValidSelectValue('closing_time') || working_days.length === 0 || departments.length === 0) {
+                if (name === '' || location === '' || email === '' || phone === '' || !isValidSelectValue('opening_time')
+                    || !isValidSelectValue('closing_time') || working_days.length === 0 || departments.length === 0) {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please Enter All Required Fields',
+                        text: 'Please enter all required fields',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -294,14 +295,14 @@
                         if (response.data === 0) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'This Clinic Name Already Exists',
+                                text: 'This clinic name already exists',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
                         } else if (response.data === 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Clinic Has Been Updated Successfully',
+                                text: 'Clinic has been updated successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

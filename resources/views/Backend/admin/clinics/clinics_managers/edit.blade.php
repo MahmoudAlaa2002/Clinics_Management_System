@@ -36,7 +36,7 @@
 
                 {{-- Name --}}
                 <div class="col-sm-6">
-                  <label>Full Name <span class="text-danger">*</span></label>
+                  <label>Name <span class="text-danger">*</span></label>
                   <div class="input-group">
                     <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-user"></i></span></div>
                     <input type="text" class="form-control" id="name" name="name" value="{{ $clinic_manager->name }}">
@@ -140,7 +140,7 @@
               <div class="row">
 
                 {{-- Clinic --}}
-                <div class="col-sm-12">
+                <div class="col-sm-6">
                   <label>Clinic Name <span class="text-danger">*</span></label>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-hospital-alt"></i></span></div>
@@ -249,7 +249,7 @@
 
           {{-- Submit --}}
           <div class="text-center m-t-20" style="margin-top:20px;">
-            <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform:none !important;">Edit Clinic Manager</button>
+            <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">Edit Clinic Manager</button>
           </div>
 
         </form>
@@ -283,35 +283,30 @@
 
 
 
-  function loadWorkingDaysForClinic(clinicId, selectedDays = []) {
-    $.get('/admin/clinic-working-days/' + clinicId, function (clinicDays) {
-      const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
-      const $daysContainer = $('#working_days');
-      $daysContainer.empty();
+  function loadWorkingDaysForClinic(id, selectedDays) {
+    $.get('/admin/clinic-working-days/' + id, function (resp) {
+        // 🔹 استخراج الأيام المفعلة من العيادة
+        const clinicDays = Array.isArray(resp.working_days) ? resp.working_days : [];
 
+        const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 
-      const $col1 = $('<div class="col-6"></div>');
-      const $col2 = $('<div class="col-6"></div>');
+        allDays.forEach(day => {
+            const $cb = $('#day_' + day);
+            const isAvailable = clinicDays.includes(day);
 
-      allDays.forEach((day, idx) => {
-        const isAvailable = clinicDays.includes(day);
-        const isSelected  = selectedDays.includes(day);
-        const checkbox = `
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox"
-              name="working_days[]" value="${day}"
-              id="day_${day}" ${isSelected ? 'checked' : ''} ${!isAvailable ? 'disabled' : ''}>
-            <label class="form-check-label ${!isAvailable ? 'text-muted' : ''}" for="day_${day}">
-              ${day}
-            </label>
-          </div>
-        `;
-        (idx < 4 ? $col1 : $col2).append(checkbox);
-      });
-
-      $daysContainer.append($col1, $col2);
+            if (isAvailable) {
+                // ✅ الأيام الخاصة بالعيادة تكون مفعّلة
+                $cb.prop('disabled', false).closest('label, .form-check-label').removeClass('text-muted');
+                if (selectedDays.includes(day)) $cb.prop('checked', true);
+            } else {
+                // ❌ الأيام الغير موجودة في العيادة تُعطّل وتُرمّد
+                $cb.prop('disabled', true).prop('checked', false);
+                $cb.closest('label, .form-check-label').addClass('text-muted');
+            }
+        });
     });
-  }
+}
+
 
 
   function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
@@ -363,7 +358,7 @@
     });
 
 
-    $('.addBtn').on('click', function (e) {
+    $('.editBtn').on('click', function (e) {
       e.preventDefault();
 
       const name = $('#name').val().trim();
@@ -387,10 +382,11 @@
         workingDays.push($(this).val());
       });
 
-      if (!name || !date_of_birth || !clinic_id  || !email || !phone || !address || !gender || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
+      if (!name || !date_of_birth || !clinic_id  || !email || !phone || !address || !gender
+        || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
         Swal.fire({
           title: 'Error!',
-          text: 'Please Enter All Required Fields',
+          text: 'Please enter all required fields',
           icon: 'error',
           confirmButtonText: 'OK'
         });
@@ -439,14 +435,14 @@
           if (response.data == 0) {
             Swal.fire({
               title: 'Error!',
-              text: 'This Clinic Manager Already Exists',
+              text: 'This clinic manager already exists',
               icon: 'error',
               confirmButtonText: 'OK'
             });
           } else if (response.data == 1) {
             Swal.fire({
               title: 'Success',
-              text: 'Clinic Manager Has Been Updated Successfully',
+              text: 'Clinic Manager has been updated successfully',
               icon: 'success',
               confirmButtonText: 'OK'
             }).then(() => window.location.href = '/admin/view/clinics-managers');

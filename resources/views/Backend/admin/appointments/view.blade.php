@@ -101,10 +101,10 @@
                                 @foreach ($appointments as $appointment)
                                     <tr>
                                         <td>{{ $appointment->id }}</td>
-                                        <td>{{ $appointment->patient->user->name }}</td>
+                                        <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
                                         <td>{{ $appointment->clinicDepartment->clinic->name }}</td>
                                         <td>{{ $appointment->clinicDepartment->department->name }}</td>
-                                        <td>{{ $appointment->doctor->employee->user->name }}</td>
+                                        <td>{{ optional(optional(optional($appointment->doctor)->employee)->user)->name ?? '-' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
                                         <td>
@@ -143,7 +143,7 @@
                                 <tr>
                                     <td colspan="9" class="text-center">
                                         <div  style="font-weight: bold; font-size: 18px; margin-top:15px;">
-                                            No appointments available at the moment
+                                            There Are Currently No Scheduled Appointments
                                         </div>
                                     </td>
                                 </tr>
@@ -189,7 +189,7 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Appointment Has Been Deleted Successfully',
+                                text: 'Appointment has been deleted successfully',
                                 icon: 'success'
                             }).then(() => {
                                 location.reload();

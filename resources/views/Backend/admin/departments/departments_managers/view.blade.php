@@ -104,7 +104,7 @@
 <script>
     $(document).on('click', '.delete-departments_managers', function () {
         let departmentsManagerId = $(this).data('id');
-        let url = `/admin/delete/department/manager/${departmentsManagerId}`;
+        let url = `/admin/delete/department-manager/${departmentsManagerId}`;
 
         Swal.fire({
             title: 'Are you sure?',
@@ -127,7 +127,7 @@
                     success: function (response) {
                         if (response.success) {
                             Swal.fire({
-                                title: 'Deleted!',
+                                title: 'Deleted',
                                 text: 'Department Manager Has Been Deleted Successfully',
                                 icon: 'success'
                             }).then(() => {

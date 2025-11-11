@@ -116,7 +116,7 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Medical Record Has Been Deleted Successfully',
+                                text: 'Medical Record has been deleted successfully',
                                 icon: 'success'
                             }).then(() => {
                                 location.reload();

@@ -114,7 +114,7 @@
                             if (response.success) {
                                 Swal.fire({
                                     title: 'Deleted',
-                                    text: 'Department Has Been Deleted Successfully',
+                                    text: 'Department has been deleted successfully',
                                     icon: 'success'
                                 }).then(() => {
                                     location.reload();

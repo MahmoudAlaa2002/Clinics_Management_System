@@ -266,7 +266,7 @@
                 || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please Enter All Required Fields',
+                        text: 'Please enter all required fields',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -275,7 +275,7 @@
                 }else if (password !== confirm_password){
                     Swal.fire({
                         title: 'Error!',
-                        text: 'The Password Does Not Match The Confirmation Password',
+                        text: 'Password confirmation does not match',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -294,18 +294,18 @@
                         if (response.data == 0) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'The Patient Already Exists',
+                                text: 'The patient already exists',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
                         } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Patient Has Been Added Successfully',
+                                text: 'Patient has been added successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = '/admin/add/patient';
+                                window.location.href = '/admin/view/patients';
                             });
                         }
                     }

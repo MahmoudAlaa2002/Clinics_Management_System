@@ -109,7 +109,7 @@
                 if (name == '') {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please Enter All Required Fields',
+                        text: 'Please enter all required fields',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -130,18 +130,18 @@
                             if (response.data == 0) {
                                 Swal.fire({
                                     title: 'Error!',
-                                    text: 'This Department Already Exists',
+                                    text: 'This department already exists',
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
-                                    text: 'Department Has Been Added Successfully',
+                                    text: 'Department has been added successfully',
                                     icon: 'success',
                                     confirmButtonText: 'OK'
                                 }).then(() => {
-                                    window.location.href = '/admin/add/department';
+                                    window.location.href = '/admin/view/departments';
                                 });
                             }
                         },

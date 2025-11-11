@@ -116,7 +116,7 @@
                 if(name === ''){
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please Enter All Required Fields',
+                        text: 'Please enter all required fields',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -137,7 +137,7 @@
                         if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Department Has Been Updated Successfully',
+                                text: 'Department has been updated successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {

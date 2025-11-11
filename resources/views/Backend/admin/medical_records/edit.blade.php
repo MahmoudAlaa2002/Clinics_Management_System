@@ -119,18 +119,18 @@
                     </div>
 
 
-                    <div class="card mt-4">
+                    <div class="mt-4 card">
                         <div class="card-header">Prescriptions & Attachments</div>
                         <div class="card-body">
                             <div class="row">
 
-                                <div class="col-sm-12 mb-3">
+                                <div class="mb-3 col-sm-12">
                                     <label>Prescriptions <span class="text-danger">*</span></label>
                                     <textarea id="prescriptions" name="prescriptions" class="form-control" rows="3"
                                               placeholder="Enter prescriptions...">{{ $medical_record->prescriptions }}</textarea>
                                 </div>
 
-                                <div class="col-sm-12 mb-3">
+                                <div class="mb-3 col-sm-12">
                                     <label>Attachments (optional)</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -145,7 +145,7 @@
                         </div>
                     </div>
 
-                    <div class="card mt-4">
+                    <div class="mt-4 card">
                         <div class="card-header">Notes</div>
                         <div class="card-body">
                             <div class="row">
@@ -183,6 +183,20 @@
             const formData = new FormData(form);
             formData.append('_method', 'PUT');
 
+            let diagnosis = $('#diagnosis').val().trim();
+            let treatment = $('#treatment').val().trim();
+            let prescriptions = $('#prescriptions').val().trim();
+
+            if (diagnosis === '' || treatment === '' || prescriptions === '') {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter all required fields',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
             $.ajax({
                 method: 'POST',
                 url: "{{ route('update_medical_record', ['id' => $medical_record->id]) }}",
@@ -194,7 +208,7 @@
                     if (res.data == 1){
                         Swal.fire(
                             'Success',
-                            'Medical Record Has Been Updated Successfully',
+                            'Medical Record has been updated successfully',
                             'success'
                         ).then(() => window.location.href = '/admin/view/medical-records');
                     }else{

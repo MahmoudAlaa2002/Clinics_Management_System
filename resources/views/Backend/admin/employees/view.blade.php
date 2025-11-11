@@ -162,7 +162,7 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Employee Has Been Deleted Successfully',
+                                text: 'Employee has been deleted successfully',
                                 icon: 'success'
                             }).then(() => {
                                 location.reload();

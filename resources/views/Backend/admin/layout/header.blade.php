@@ -64,7 +64,7 @@
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($admin?->image) }}" alt="Admin">
+                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($admin?->image ?? 'assets/img/user.jpg') }}" alt="">
                 </span>
                 <span>
                     Admin
@@ -74,7 +74,13 @@
                 <a class="dropdown-item" href="{{ route('home') }}">Home</a>
                 <a class="dropdown-item" href="{{ route('my_profile') }}">My Profile</a>
                 <a class="dropdown-item" href="{{ route('edit_profile') }}">Edit Profile</a>
-                <a class="dropdown-item" href="{{ Route('logout') }}">Logout</a>
+                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Logout
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </li>
     </ul>

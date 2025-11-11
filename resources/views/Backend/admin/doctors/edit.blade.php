@@ -411,7 +411,7 @@
                     !isValidSelectValue('work_end_time') || gender === undefined ||workingDays.length === 0) {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Please Enter All Required Fields',
+                            text: 'Please enter all required fields',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
@@ -419,7 +419,7 @@
                     } else if (password !== confirm_password){
                         Swal.fire({
                             title: 'Error!',
-                            text: 'The Password Does Not Match The Confirmation Password',
+                            text: 'Password confirmation does not match',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
@@ -427,7 +427,7 @@
                     } else if (rating < 1 || rating > 5) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'The Rating Must Be Between 1 And 5',
+                                text: 'The rating must be between 1 and 5',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
@@ -435,7 +435,7 @@
                     }else if (consultation_fee <= 0) {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'The Consultation Fee Is Invalid',
+                            text: 'The consultation fee is invalid',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
@@ -443,7 +443,7 @@
                     } else if (work_start_time >= work_end_time){
                         Swal.fire({
                             title: 'Error!',
-                            text: 'The Timing Is Incorrect, Please Correct It',
+                            text: 'The timing is incorrect, Please correct it',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
@@ -463,14 +463,14 @@
                             if (response.data == 0) {
                                 Swal.fire({
                                     title: 'Error!',
-                                    text: 'This Doctor Already Exists',
+                                    text: 'This doctor already exists',
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
-                                    text: 'Doctor Has Been Updated Successfully',
+                                    text: 'Doctor has been updated successfully',
                                     icon: 'success',
                                     confirmButtonText: 'OK'
                                 }).then(() => {

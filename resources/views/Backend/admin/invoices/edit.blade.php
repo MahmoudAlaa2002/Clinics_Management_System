@@ -50,7 +50,7 @@
 
 
                                 <div class="col-sm-6">
-                                    <label>Appointment ID <span class="text-danger">*</span></label>
+                                    <label>Appointment ID </label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-calendar-check"></i></span>
@@ -147,6 +147,18 @@ $(document).ready(function () {
         const formData = new FormData(form);
         formData.append('_method', 'PUT');
 
+        let totalAmount = $('#total_amount').val().trim();
+
+        if (totalAmount === '') {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter all required fields',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
         $.ajax({
             method: 'POST',
             url: "{{ route('update_invoice', ['id' => $invoice->id]) }}",
@@ -158,7 +170,7 @@ $(document).ready(function () {
                 if (res.data == 1){
                     Swal.fire(
                         'Success',
-                        'Invoice Has Been Updated Successfully',
+                        'Invoice has been updated successfully',
                         'success'
                     ).then(() => window.location.href = '/admin/view/invoices');
                 }else{

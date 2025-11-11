@@ -315,7 +315,6 @@ class EmployeeController extends Controller{
         $user = User::findOrFail($employee->user_id);
         $doctor = Doctor::where('employee_id', $employee->id)->first();
         if ($doctor) {
-            Appointment::where('doctor_id', $doctor->id)->delete();
             $doctor->delete();
         }
 

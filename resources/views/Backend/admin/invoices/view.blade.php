@@ -116,7 +116,7 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Invoice Has Been Deleted Successfully',
+                                text: 'Invoice has been deleted successfully',
                                 icon: 'success'
                             }).then(() => {
                                 location.reload();

@@ -287,14 +287,13 @@
             if (password && password !== confirm_password) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'The Password Does Not Match The Confirmation Password.',
+                    text: 'Password confirmation does not match',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
                 return;
             }
 
-            // إرسال البيانات
             $.ajax({
                 method: 'POST',
                 url: "{{ route('update_patient', ['id' => $patient->id]) }}",
@@ -308,14 +307,14 @@
                     if (response.data == 0) {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'The Patient Already Exists',
+                            text: 'The patient already exists',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
                     } else if (response.data == 1) {
                         Swal.fire({
                             title: 'Success',
-                            text: 'Patient Has Been Updated Successfully',
+                            text: 'Patient has been updated successfully',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         }).then(() => window.location.href = '/admin/view/patients');

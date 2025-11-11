@@ -73,6 +73,16 @@ class AppointmentController extends Controller{
             return response()->json(['data' => 1]); // الموعد محجوز
         }
 
+        $anotherAppointment = Appointment::where('patient_id', $request->patient_id)
+            ->where('date', $appointmentDate)
+            ->where('time', $request->appointment_time)
+            ->where('clinic_department_id', '!=', $clinicDepartmentId)
+            ->exists();
+
+        if ($anotherAppointment) {
+            return response()->json(['data' => 3]); // لديه موعد في عيادة أخرى أو قسم آخر بنفس الوقت
+        }
+
         // احضار رسوم الكشف
         $consultation_fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
 
@@ -88,7 +98,7 @@ class AppointmentController extends Controller{
             'status'                => 'Pending',
         ]);
 
-        return response()->json(['data' => 3]); // تم الحجز بنجاح
+        return response()->json(['data' => 4]); // تم الحجز بنجاح
     }
 
 
@@ -162,7 +172,7 @@ class AppointmentController extends Controller{
 
         $appointments = $appointments->orderBy('id', 'asc')->paginate(12);
 
-        $view = view('Backend.admin.appointments.searchAppointment', compact('appointments'))->render();
+        $view = view('Backend.admin.appointments.search', compact('appointments'))->render();
         $pagination = $appointments->total() > 12 ? $appointments->links('pagination::bootstrap-4')->render() : '';
 
         return response()->json([
@@ -189,44 +199,72 @@ class AppointmentController extends Controller{
 
     public function editAppointment($id){
         $appointment = Appointment::findOrFail($id);
-        $patients = Patient::all();
         $clinics = Clinic::all();
-        return view('Backend.admin.appointments.edit', compact('patients' , 'appointment' ,'clinics'));
+        return view('Backend.admin.appointments.edit', compact('appointment' ,'clinics'));
     }
 
 
     public function updateAppointment(Request $request, $id){
-
-
         $selectedDay = $request->appointment_day;
-        $appointmentDate = Carbon::parse("next $selectedDay")->toDateString();
+        $selectedTime = $request->appointment_time;
 
-        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
+        $appointmentDate = Carbon::parse("this $selectedDay");
+        if ($appointmentDate->isPast()) {
+            $appointmentDate = Carbon::parse("next $selectedDay");
+        }
+        $appointmentDate = $appointmentDate->toDateString();
+
+        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)
+            ->where('department_id', $request->department_id)->value('id');
 
         $exists = Appointment::where('patient_id', $request->patient_id)
             ->where('doctor_id', $request->doctor_id)
             ->where('clinic_department_id', $clinicDepartmentId)
             ->where('date', $appointmentDate)
-            ->where('time', $request->appointment_time)
-            ->where('id', '!=', $id) // تجاهل الموعد الحالي
+            ->where('time', $selectedTime)
+            ->where('id', '!=', $id)
             ->exists();
 
         if ($exists) {
-            return response()->json(['data' => 0]); // الموعد موجود مسبقا
-        } else {
-            $appointment = Appointment::findOrFail($id);
-            $appointment->update([
-                'patient_id' => $request->patient_id,
-                'doctor_id' => $request->doctor_id,
-                'clinic_department_id'  => $clinicDepartmentId,
-                'date' => $appointmentDate,
-                'time' => $request->appointment_time,
-                'notes' => $request->notes,
-            ]);
-
-            return response()->json(['data' => 1]); // تم التحديث بنجاح
+            return response()->json(['data' => 0]); // موجود مسبقا
         }
+
+        // فحص تعارض قريب للدكتور نفسه
+        $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
+            ->where('date', $appointmentDate)
+            ->where('time', $selectedTime)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($doctorConflict) {
+            return response()->json(['data' => 2]); // الدكتور لديه موعد في هذا الوقت
+        }
+
+        // فحص تعارض مع عيادة أخرى
+        $anotherClinic = Appointment::where('patient_id', $request->patient_id)
+            ->where('date', $appointmentDate)
+            ->where('time', $selectedTime)
+            ->where('clinic_department_id', '!=', $clinicDepartmentId)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($anotherClinic) {
+            return response()->json(['data' => 3]); // لديه موعد في عيادة أخرى
+        }
+
+        // تحديث الموعد
+        Appointment::findOrFail($id)->update([
+            'patient_id' => $request->patient_id,
+            'doctor_id' => $request->doctor_id,
+            'clinic_department_id' => $clinicDepartmentId,
+            'date' => $appointmentDate,
+            'time' => $selectedTime,
+            'notes' => $request->notes,
+        ]);
+
+        return response()->json(['data' => 1]); // نجاح
     }
+
 
 
 

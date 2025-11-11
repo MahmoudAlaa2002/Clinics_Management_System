@@ -93,7 +93,7 @@
 
 
                 <li class="submenu {{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fas fa-user"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
+                    <a href="#"><i class="fas fa-user-tie"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
                     <ul style="{{ Request::is('admin/add/employee') || Request::is('admin/view/employees') || Request::is('admin/edit/employee/*') || Request::is('admin/profile/employee/*') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('add_employee') }}" class="{{ Request::is('admin/add/employee') ? 'active' : '' }}">Add Employee</a>
@@ -104,9 +104,9 @@
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/doctor/schedules') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/schedules') ? 'active' : '' }}">
                     <a href="#"><i class="fa-solid fa-user-doctor"></i> <span> Doctors </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/doctor/schedules') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/schedules') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('add_doctor') }}" class="{{ Request::is('admin/add/doctor') ? 'active' : '' }}">Add Doctor</a>
                         </li>
@@ -114,7 +114,7 @@
                             <a href="{{ route('view_doctors') }}" class="{{ Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*') ? 'active' : '' }}">View Doctors</a>
                         </li>
                         <li>
-                            <a href="{{ route('search_doctor_schedules') }}" class="{{ Request::is('admin/search/doctor/schedules') ? 'active' : '' }}">Doctor Schedules</a>
+                            <a href="{{ route('search_schedules') }}" class="{{ Request::is('admin/search/schedules') ? 'active' : '' }}">Doctor Schedules</a>
                         </li>
                     </ul>
                 </li>
@@ -146,29 +146,68 @@
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/view/medical-records') ? 'active' : '' }}">
-                    <a href="#"><i class="fa fa-notes-medical"></i> <span> Medical Records </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/view/medical-records') ? '' : 'display: none;' }}">
+
+
+                <li class="submenu {{ Request::is('admin/view/medical-records') || Request::is('admin/edit/medical-record/*') || Request::is('admin/details/medical-record/*') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fa fa-notes-medical"></i>
+                        <span> Medical Records </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+
+                    <ul style="{{ Request::is('admin/view/medical-records') || Request::is('admin/edit/medical-record/*') || Request::is('admin/details/medical-record/*') ? '' : 'display: none;' }}">
                         <li>
-                            <a href="{{ route('view_medical_records') }}" class="{{ Request::is('admin/view/medical-records') ? 'active' : '' }}">View Medical Records</a>
+                            <a href="{{ route('view_medical_records') }}"
+                            class="{{ Request::is('admin/view/medical-records') || Request::is('admin/edit/medical-record/*') || Request::is('admin/details/medical-record/*') ? 'active' : '' }}">
+                                View Medical Records
+                            </a>
                         </li>
                     </ul>
                 </li>
+
             </ul>
 
 
 
 
             <ul>
-                <li class="menu-title">Invoices</li>
+                <li class="menu-title">Invoices & Reports</li>
+                <li class="submenu {{ Request::is('admin/view/invoices') || Request::is('admin/edit/invoice/*') || Request::is('admin/details/invoice/*') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span> Invoices </span>
+                        <span class="menu-arrow"></span>
+                    </a>
 
-                <li class="submenu">
-                    <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span> Invoices </span> <span class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li><a href="{{ route('view_invoices') }}">View Invoices</a></li>
+                    <ul style="{{ Request::is('admin/view/invoices') || Request::is('admin/edit/invoice/*') || Request::is('admin/details/invoice/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('view_invoices') }}"
+                               class="{{ Request::is('admin/view/invoices') || Request::is('admin/edit/invoice/*') || Request::is('admin/details/invoice/*') ? 'active' : '' }}">
+                                View Invoices
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="submenu {{ Request::is('admin/view/reports') || Request::is('admin/edit/report/*') || Request::is('admin/details/report/*') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fas fa-file-alt"></i>
+                        <span> Reports </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+
+                    <ul style="{{ Request::is('admin/view/reports') || Request::is('admin/edit/report/*') || Request::is('admin/details/report/*') ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('view_reports') }}"
+                               class="{{ Request::is('admin/view/reports') || Request::is('admin/edit/report/*') || Request::is('admin/details/report/*') ? 'active' : '' }}">
+                                View Reports
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
+
 
 
             <ul>

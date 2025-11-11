@@ -21,13 +21,9 @@ return new class extends Migration
             $table->string('treatment')->nullable();        // العلاج
             $table->date('record_date');
 
-<<<<<<< HEAD
-            $table->text('prescriptions');
-            $table->text('attachments')->nullable();    // مرفقات كالبريد الإلكتروني
-=======
             $table->text('prescriptions')->nullable();
-            $table->json('attachmentss')->nullable();    // مرفقات كالبريد الإلكتروني
->>>>>>> albaraa/doctor-dashboard
+            $table->text('attachments')->nullable();    // مرفقات كالبريد الإلكتروني
+
             $table->text('notes')->nullable();
             $table->timestamps();
         });

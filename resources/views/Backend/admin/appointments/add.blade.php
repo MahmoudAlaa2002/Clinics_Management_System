@@ -49,32 +49,6 @@
                         <div class="card-header">Appointment Information</div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <label>Assigned to Clinic <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-hospital"></i></span>
-                                        </div>
-                                        <select class="form-control" id="clinic_id" name="clinic_id">
-                                            <option value="" disabled selected hidden>Select Clinic</option>
-                                            @foreach($clinics as $clinic)
-                                                <option value="{{ $clinic->id }}">{{ $clinic->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <label>Assigned to Department <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                                        </div>
-                                        <select class="form-control" id="department_id" name="department_id">
-                                            <option value="" disabled selected hidden>Select Department</option>
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <div class="col-sm-6">
                                     <label>Patient Name <span class="text-danger">*</span></label>
@@ -92,6 +66,33 @@
                                 </div>
 
                                 <div class="col-sm-6">
+                                    <label>Clinic <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                        </div>
+                                        <select class="form-control" id="clinic_id" name="clinic_id">
+                                            <option value="" disabled selected hidden>Select Clinic</option>
+                                            @foreach($clinics as $clinic)
+                                                <option value="{{ $clinic->id }}">{{ $clinic->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Department <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                                        </div>
+                                        <select class="form-control" id="department_id" name="department_id">
+                                            <option value="" disabled selected hidden>Select Department</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
                                     <label>Assigned to Doctor <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -104,7 +105,20 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Doctor's Appointment <span class="text-danger">*</span></label>
+                                    <label>Appointment Day <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+                                        </div>
+
+                                        <select name="appointment_day" id="appointment_day" class="form-control">
+                                            <option value="" disabled selected hidden>Select Day</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Appointment Time<span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-clock"></i></span>
@@ -115,19 +129,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6">
-                                    <label>Appointment Day <span class="text-danger">*</span></label>
-                                    <select name="appointment_day" id="appointment_day" class="form-control">
-                                        <option value="" disabled selected hidden>Select Day</option>
-                                    </select>
-                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Notes -->
                     <div class="card mt-3">
-                        <div class="card-header">Additional Notes</div>
+                        <div class="card-header">Notes</div>
                         <div class="card-body">
                             <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter notes here..."></textarea>
                         </div>
@@ -201,18 +209,21 @@
                     },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire('Error!', 'This Patient Already Has An Appointment At This Time', 'error');
+                            Swal.fire('Error!', 'This patient already has an appointment at this time', 'error');
                         }
                         else if (response.data == 1) {
-                            Swal.fire('Warning', 'This Appointment Slot Is Already Booked. Please Choose Another Time', 'warning');
+                            Swal.fire('Warning', 'This appointment slot is already booked. Please choose another time', 'warning');
                         }
                         else if (response.data == 2) {
-                            Swal.fire('Error!', 'This Appointment Time Has Already Passed. Please Select Another Time', 'error');
+                            Swal.fire('Error!', 'This appointment time has already passed. please select another time', 'error');
                         }
                         else if (response.data == 3) {
-                            Swal.fire('Success', 'Appointment Has Been Added Successfully', 'success')
+                            Swal.fire('Error!', 'You already have an appointment scheduled at another clinic at this time', 'error');
+                        }
+                        else if (response.data == 4) {
+                            Swal.fire('Success', 'Appointment has been added successfully', 'success')
                                 .then(() => {
-                                    window.location.href = '/admin/add/appointment';
+                                    window.location.href = '/admin/view/appointments';
                                 });
                         }
                     }
@@ -254,7 +265,7 @@
 
             if (departmentId && clinicId) {
                 $.ajax({
-                    url: '/admin/get-doctors-by-clinic-and-department',
+                    url: '/clinics-management/get-doctors-by-clinic-and-department',
                     type: 'GET',
                     data: {
                         clinic_id: clinicId,
@@ -283,7 +294,7 @@
 
         if (doctorId) {
             $.ajax({
-                url: '/admin/get-doctor-info/' + doctorId,
+                url: '/clinics-management/get-doctor-info/' + doctorId,
                 type: 'GET',
                 success: function (data) {
                     let startParts = data.work_start_time.split(':');
@@ -327,11 +338,10 @@
 
         if (doctorId) {
             $.ajax({
-                url: '/admin/doctor-working-days/' + doctorId,
+                url: '/clinics-management/doctor-working-days/' + doctorId,
                 type: 'GET',
                 success: function (doctorDays) {
                     let daySelect = $('#appointment_day');
-
 
                     doctorDays.forEach(function(day) {
                         daySelect.append('<option value="' + day + '">' + day + '</option>');

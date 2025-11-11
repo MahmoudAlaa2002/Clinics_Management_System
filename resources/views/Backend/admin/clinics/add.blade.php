@@ -271,17 +271,18 @@
                 formData.append('departments[]', department);
             });
 
-            if(name === '' || location === '' || email === ''  || phone === '' || opening_time === '' || closing_time === '' || $('input[name="working_days[]"]:checked').length === 0 || $('input[name="departments[]"]:checked').length === 0){
+            if(name === '' || location === '' || email === ''  || phone === '' || opening_time === ''
+                || closing_time === '' || $('input[name="working_days[]"]:checked').length === 0 || $('input[name="departments[]"]:checked').length === 0){
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Please Enter All Required Fields',
+                    text: 'Please enter all required fields',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
             } else if (opening_time >= closing_time){
                 Swal.fire({
                     title: 'Error!',
-                    text: 'The Timing Is Incorrect, Please Correct It',
+                    text: 'The timing is incorrect, please correct it',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -300,18 +301,18 @@
                     if (response.data == 0) {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'This Clinic Already Exists',
+                            text: 'This clinic already exists',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
                     } else if (response.data == 1) {
                         Swal.fire({
                             title: 'Success',
-                            text: 'Clinic Has Been Added Successfully',
+                            text: 'Clinic has been added successfully',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            window.location.href = '/admin/add/clinic';
+                            window.location.href = '/admin/view/clinics';
                         });
                     }
                 }

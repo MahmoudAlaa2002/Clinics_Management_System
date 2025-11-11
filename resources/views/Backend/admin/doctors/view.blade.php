@@ -40,7 +40,7 @@
                 <a href="{{ Route('add_doctor') }}" class="float-right btn btn-primary btn-rounded" style="font-weight: bold;"><i class="fa fa-plus"></i> Add Doctor</a>
             </div>
         </div>
-        <div class="row mb-4">
+        <div class="mb-4 row">
             <div class="col-md-4">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -95,9 +95,9 @@
                 {{ $doctors->links('pagination::bootstrap-4') }}
             </div>
         @else
-            <div class="col-12 text-center">
+            <div class="text-center col-12">
                 <div class="alert alert-info" style="font-weight: bold; font-size: 18px; margin-top:50px;">
-                    No Doctors Available At The Moment
+                    There Are No Doctors Listed Yet
                 </div>
             </div>
         @endif

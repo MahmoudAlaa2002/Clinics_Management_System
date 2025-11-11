@@ -121,7 +121,47 @@
                         </tr>
                     </table>
 
+                    @if($employee->job_title == 'Doctor')
+                        <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:10px;">
+                            <i class="fas fa-user-md me-2 text-primary"></i> Doctor Information
+                        </h5>
 
+                        <table class="table table-borderless" style="margin-bottom:50px;">
+                            <tr>
+                                <th><i class="fas fa-stethoscope text-primary me-2"></i> Speciality:</th>
+                                <td>{{ optional($employee->doctor)->speciality ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <th><i class="fas fa-graduation-cap text-primary me-2"></i> Qualification:</th>
+                                <td>{{ optional($employee->doctor)->qualification ?? '-' }}</td>
+                            </tr>
+
+                            <tr>
+                                <th><i class="fas fa-file-invoice-dollar text-primary me-2"></i> Consultation Fee:</th>
+                                <td>
+                                    @if(optional($employee->doctor)->consultation_fee)
+                                        ${{ number_format($employee->doctor->consultation_fee, 2) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th><i class="fas fa-star text-primary me-2"></i> Rating:</th>
+                                <td>
+                                    @if(optional($employee->doctor)->rating)
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i class="fa{{ $i <= $employee->doctor->rating ? 's' : 'r' }} fa-star text-warning"></i>
+                                        @endfor
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            </tr>
+                        </table>
+                    @endif
 
                     <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom: 10px;">
                         <i class="fas fa-align-left me-2 text-primary"></i> Short Biography

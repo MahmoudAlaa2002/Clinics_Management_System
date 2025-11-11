@@ -201,7 +201,7 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Clinic Has Been Deleted Successfully',
+                                text: 'Clinic has been deleted successfully',
                                 icon: 'success'
                             }).then(() => location.reload());
                         } else {

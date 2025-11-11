@@ -245,22 +245,19 @@ class DepartmentController extends Controller{
 
     public function deleteDepartmentManager($id){
         $user = User::findOrFail($id);
-        $employee = Employee::where('user_id', $id)->first();
+        $employee = Employee::where('user_id', $id)->firstOrFail();
 
-        $jobTitle = JobTitle::where('name', 'Department Manager')->first();
-        EmployeeJobTitle::where('employee_id', $employee->id)->where('job_title_id', $jobTitle->id)->delete();
-
-        // تحقق إذا كان عنده وظائف أخرى
-        $remainingJobTitles = EmployeeJobTitle::where('employee_id', $employee->id)->count();
-
-        // إذا ما في غير وظيفة مدير قسم → احذف كل شيء
-        if ($remainingJobTitles == 0) {
+        if ($user->hasRole('doctor')) {
+            $employee->update(['job_title' => 'Doctor']);
+            $user->removeRole('department_manager');
+            return response()->json(['success' => true]);
+        } else {
+            $user->removeRole('department_manager');
             $employee->delete();
             $user->delete();
+
+            return response()->json(['success' => true]);
         }
-
-        return response()->json(['success' => true]);
     }
-
 }
 

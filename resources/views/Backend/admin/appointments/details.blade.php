@@ -141,12 +141,12 @@
 
                         <div class="detail-box">
                             <div class="detail-title"><i class="fas fa-calendar-day"></i> Date</div>
-                            <div class="detail-value">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d') }}</div>
+                            <div class="detail-value">{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</div>
                         </div>
 
                         <div class="detail-box">
                             <div class="detail-title"><i class="fas fa-clock"></i> Time</div>
-                            <div class="detail-value">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</div>
+                            <div class="detail-value">{{ \Carbon\Carbon::parse($appointment->time)->format('h:i A') }}</div>
                         </div>
 
                     </div>

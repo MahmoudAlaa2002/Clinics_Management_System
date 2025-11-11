@@ -142,33 +142,42 @@
                         <div class="card-body">
                             <div class="row">
 
-                                {{-- Clinic --}}
                                 <div class="col-sm-6">
                                     <label>Clinic <span class="text-danger">*</span></label>
-                                    <select id="clinic_id" name="clinic_id" class="form-control">
-                                        <option disabled selected hidden>Select Clinic</option>
-                                        @foreach($clinics as $clinic)
-                                            <option value="{{ $clinic->id }}">{{ $clinic->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                        </div>
+                                        <select id="clinic_id" name="clinic_id" class="form-control">
+                                            <option disabled selected hidden>Select Clinic</option>
+                                            @foreach($clinics as $clinic)
+                                                <option value="{{ $clinic->id }}">{{ $clinic->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {{-- Department --}}
                                 <div class="col-sm-6" id="department_field" style="display:none;">
                                     <label>Department <span class="text-danger">*</span></label>
-                                    <select id="department_id" name="department_id" class="form-control">
-                                        <option disabled selected hidden>Select Department</option>
-                                        {{-- الأقسام تجي من السيرفر --}}
-                                    </select>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
+                                        <select id="department_id" name="department_id" class="form-control">
+                                            <option disabled selected hidden>Select Department</option>
+                                            {{-- الأقسام تجي من السيرفر --}}
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {{-- Job Title --}}
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label class="fw-bold mb-2">Job Title <span class="text-danger">*</span></label>
-                                        <div class="card p-3" style="border: 1px solid #ddd; border-radius: 8px;">
+                                        <label class="mb-2 fw-bold">Job Title <span class="text-danger">*</span></label>
+                                        <div class="p-3 card" style="border: 1px solid #ddd; border-radius: 8px;">
 
-                                            <div class="form-check mb-2">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="clinic_manager" value="Clinic Manager"
                                                        {{ old('job_title', $employee->job_title ?? '') == 'clinic_manager' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="clinic_manager">
@@ -176,7 +185,7 @@
                                                 </label>
                                             </div>
 
-                                            <div class="form-check mb-2">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="department_manager" value="Department Manager"
                                                        {{ old('job_title', $employee->job_title ?? '') == 'department_manager' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="department_manager">
@@ -184,7 +193,7 @@
                                                 </label>
                                             </div>
 
-                                            <div class="form-check mb-2">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="doctor" value="Doctor"
                                                        {{ old('job_title', $employee->job_title ?? '') == 'doctor' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="doctor">
@@ -192,7 +201,7 @@
                                                 </label>
                                             </div>
 
-                                            <div class="form-check mb-2">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="nurse" value="Nurse"
                                                        {{ old('job_title', $employee->job_title ?? '') == 'nurse' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="nurse">
@@ -464,29 +473,29 @@
             let start = moment(work_start_time, "HH:mm");
             let end = moment(work_end_time, "HH:mm");
 
-            // ✅ التحقق
+            // التحقق
             if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
                 email === '' || phone === '' || job_title === undefined ||
                 workingDays.length === 0 || !work_start_time || !work_end_time || gender === undefined) {
-                Swal.fire({ title: 'Error!', text: 'Please Enter All Required Fields', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' });
                 return;
             } else if (password !== confirm_password) {
-                Swal.fire({ title: 'Error!', text: 'The Password Does Not Match The Confirmation Password', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Password confirmation does not match', icon: 'error', confirmButtonText: 'OK' });
                 return;
             } else if (!start.isBefore(end)) {
-                Swal.fire({ title: 'Error!', text: 'The Timing Is Incorrect, Please Correct It', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'The timing is incorrect, Please correct it', icon: 'error', confirmButtonText: 'OK' });
                 return;
             } else if ($('#department_field').is(':visible') && !department_id) {
-                Swal.fire({ title: 'Error!', text: 'Please Select Department', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK' });
                 return;
             } else if ($('#doctor_info_card').is(':visible') && (!speciality || !isValidSelectValue('qualification') || !consultation_fee || !rating)) {
-                Swal.fire({ title: 'Error!', text: 'Please Fill All Doctor Job Information Fields', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Please fill all doctor job information fields', icon: 'error', confirmButtonText: 'OK' });
                 return;
             } else if ($('#doctor_info_card').is(':visible') && (consultation_fee <= 0)) {
-                Swal.fire({ title: 'Error!', text: 'The Consultation Fee Is Invalid', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'The consultation fee is invalid', icon: 'error', confirmButtonText: 'OK' });
                 return;
             } else if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
-                Swal.fire({ title: 'Error!', text: 'The Rating Must Be Between 1 And 5', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK' });
                 return;
             }else {
                 $.ajax({
@@ -498,18 +507,18 @@
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire({ title: 'Error!', text: 'This Employee Already Exists', icon: 'error', confirmButtonText: 'OK' });
+                            Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' });
                         } else if (response.data == 1) {
-                            Swal.fire({ title: 'Error!', text: 'This Clinic Already Has A Manager', icon: 'error', confirmButtonText: 'OK' });
+                            Swal.fire({ title: 'Error!', text: 'This clinic already has a manager', icon: 'error', confirmButtonText: 'OK' });
                         } else if (response.data == 2) {
-                            Swal.fire({ title: 'Error!', text: 'This Department Already Has A Manager', icon: 'error', confirmButtonText: 'OK' });
+                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' });
                         } else if (response.data == 3) {
                             Swal.fire({
                                 title: 'Success',
-                                text: 'Employee Has Been Added Successfully',
+                                text: 'Employee has been added successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
-                            }).then(() => { window.location.href = '/admin/add/employee'; });
+                            }).then(() => { window.location.href = '/admin/view/employees'; });
                         }
                     },
                 });

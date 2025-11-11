@@ -92,92 +92,91 @@ class DoctorController extends Controller{
 
 
 
-    public function searchDoctors(Request $request)
-{
-    $keyword = trim((string) $request->input('keyword', ''));
-    $filter  = $request->input('filter', '');
+    public function searchDoctors(Request $request){
+        $keyword = trim((string) $request->input('keyword', ''));
+        $filter  = $request->input('filter', '');
 
-    $doctors = Doctor::with([
-        'employee:id,user_id,job_title,status,clinic_id,department_id',
-        'employee.user:id,name,address,image',
-        'employee.clinic:id,name',
-        'employee.department:id,name',
-    ]);
+        $doctors = Doctor::with([
+            'employee:id,user_id,job_title,status,clinic_id,department_id',
+            'employee.user:id,name,address,image',
+            'employee.clinic:id,name',
+            'employee.department:id,name',
+        ]);
 
-    if ($keyword !== '') {
-        switch ($filter) {
-            case 'name': // البحث باسم الطبيب (من جدول users)
-                $doctors->whereHas('employee.user', function ($q) use ($keyword) {
-                    $q->where('name', 'LIKE', "{$keyword}%");
-                });
-                break;
+        if ($keyword !== '') {
+            switch ($filter) {
+                case 'name': // البحث باسم الطبيب (من جدول users)
+                    $doctors->whereHas('employee.user', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "{$keyword}%");
+                    });
+                    break;
 
-            case 'clinic': // البحث باسم العيادة
-                $doctors->whereHas('employee.clinic', function ($q) use ($keyword) {
-                    $q->where('name', 'LIKE', "{$keyword}%");
-                });
-                break;
+                case 'clinic': // البحث باسم العيادة
+                    $doctors->whereHas('employee.clinic', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "{$keyword}%");
+                    });
+                    break;
 
-            case 'department': // البحث باسم القسم
-                $doctors->whereHas('employee.department', function ($q) use ($keyword) {
-                    $q->where('name', 'LIKE', "{$keyword}%");
-                });
-                break;
+                case 'department': // البحث باسم القسم
+                    $doctors->whereHas('employee.department', function ($q) use ($keyword) {
+                        $q->where('name', 'LIKE', "{$keyword}%");
+                    });
+                    break;
 
-            case 'status': // البحث حسب حالة الموظف
-                $doctors->whereHas('employee', function ($q) use ($keyword) {
-                    $q->where('status', 'LIKE', "{$keyword}%");
-                });
-                break;
+                case 'status': // البحث حسب حالة الموظف
+                    $doctors->whereHas('employee', function ($q) use ($keyword) {
+                        $q->where('status', 'LIKE', "{$keyword}%");
+                    });
+                    break;
 
-            case 'job': // البحث بعنوان الوظيفة من جدول employees
-                $doctors->whereHas('employee', function ($q) use ($keyword) {
-                    $q->where('job_title', 'LIKE', "{$keyword}%");
-                });
-                break;
+                case 'job': // البحث بعنوان الوظيفة من جدول employees
+                    $doctors->whereHas('employee', function ($q) use ($keyword) {
+                        $q->where('job_title', 'LIKE', "{$keyword}%");
+                    });
+                    break;
 
-            case 'speciality': // البحث بالتخصص (speciality)
-                $doctors->where('speciality', 'LIKE', "{$keyword}%");
-                break;
+                case 'speciality': // البحث بالتخصص (speciality)
+                    $doctors->where('speciality', 'LIKE', "{$keyword}%");
+                    break;
 
-            case 'qualification': // البحث بالمؤهل العلمي
-                $doctors->where('qualification', 'LIKE', "{$keyword}%");
-                break;
+                case 'qualification': // البحث بالمؤهل العلمي
+                    $doctors->where('qualification', 'LIKE', "{$keyword}%");
+                    break;
 
-            default: // بحث عام يشمل الاسم، الوظيفة، التخصص، المؤهل
-                $doctors->where(function ($q) use ($keyword) {
-                    $q->where('speciality', 'LIKE', "%{$keyword}%")
-                      ->orWhere('qualification', 'LIKE', "%{$keyword}%")
-                      ->orWhereHas('employee', function ($qq) use ($keyword) {
-                          $qq->where('job_title', 'LIKE', "%{$keyword}%")
-                             ->orWhere('status', 'LIKE', "%{$keyword}%");
-                      })
-                      ->orWhereHas('employee.user', function ($qq) use ($keyword) {
-                          $qq->where('name', 'LIKE', "%{$keyword}%");
-                      })
-                      ->orWhereHas('employee.clinic', function ($qq) use ($keyword) {
-                          $qq->where('name', 'LIKE', "%{$keyword}%");
-                      })
-                      ->orWhereHas('employee.department', function ($qq) use ($keyword) {
-                          $qq->where('name', 'LIKE', "%{$keyword}%");
-                      });
-                });
-                break;
+                default: // بحث عام يشمل الاسم، الوظيفة، التخصص، المؤهل
+                    $doctors->where(function ($q) use ($keyword) {
+                        $q->where('speciality', 'LIKE', "%{$keyword}%")
+                        ->orWhere('qualification', 'LIKE', "%{$keyword}%")
+                        ->orWhereHas('employee', function ($qq) use ($keyword) {
+                            $qq->where('job_title', 'LIKE', "%{$keyword}%")
+                                ->orWhere('status', 'LIKE', "%{$keyword}%");
+                        })
+                        ->orWhereHas('employee.user', function ($qq) use ($keyword) {
+                            $qq->where('name', 'LIKE', "%{$keyword}%");
+                        })
+                        ->orWhereHas('employee.clinic', function ($qq) use ($keyword) {
+                            $qq->where('name', 'LIKE', "%{$keyword}%");
+                        })
+                        ->orWhereHas('employee.department', function ($qq) use ($keyword) {
+                            $qq->where('name', 'LIKE', "%{$keyword}%");
+                        });
+                    });
+                    break;
+            }
         }
+
+        $doctors = $doctors->orderBy('id')->paginate(12);
+
+        $view = view('Backend.admin.doctors.searchDoctor', compact('doctors'))->render();
+        $pagination = $doctors->total() > 12 ? $doctors->links('pagination::bootstrap-4')->render() : '';
+
+        return response()->json([
+            'html'       => $view,
+            'pagination' => $pagination,
+            'count'      => $doctors->total(),
+            'searching'  => $keyword !== '',
+        ]);
     }
-
-    $doctors = $doctors->orderBy('id')->paginate(12);
-
-    $view = view('Backend.admin.doctors.searchDoctor', compact('doctors'))->render();
-    $pagination = $doctors->total() > 12 ? $doctors->links('pagination::bootstrap-4')->render() : '';
-
-    return response()->json([
-        'html'       => $view,
-        'pagination' => $pagination,
-        'count'      => $doctors->total(),
-        'searching'  => $keyword !== '',
-    ]);
-}
 
 
 
@@ -280,8 +279,6 @@ class DoctorController extends Controller{
         $doctor = Doctor::findOrFail($id);
         $employee = Employee::where('id', $doctor->employee_id)->first();
         $user = $employee ? User::where('id', $employee->user_id)->first() : null;
-
-        Appointment::where('doctor_id', $doctor->id)->delete();
         $doctor->delete();
         $employee->delete();
         $user->delete();
@@ -297,7 +294,7 @@ class DoctorController extends Controller{
 
 
 
-    public function searchDoctorSchedules(){
+    public function searchSchedules(){
         $clinics = Clinic::all();
         $departments = Department::all();
         $doctors = Doctor::all();
@@ -305,7 +302,7 @@ class DoctorController extends Controller{
     }
 
 
-    public function searchDoctchedules(Request $request){
+    public function searchDoctSchedule(Request $request){
         $doctor_id = $request->doctor_id;
         $clinic_id = $request->clinic_id;
         $department_id = $request->department_id;
@@ -348,11 +345,6 @@ class DoctorController extends Controller{
         return response()->json($clinic->departments);
     }
 
-
-    public function getSpecialtiesByDepartment($department_id){
-        $department = Department::with('specialties')->findOrFail($department_id);
-        return response()->json($department->specialties);
-    }
 
 
     public function getClinicInfo($id){
