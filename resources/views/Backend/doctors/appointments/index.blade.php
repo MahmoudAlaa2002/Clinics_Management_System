@@ -52,7 +52,7 @@
                         <div class="col-md-4">
                             <label class="form-label fw-bold" for="keyword">Filter</label>
                             <input type="text" name="keyword" id="keyword" class="form-control"
-                                placeholder="Search appointments..." value="{{ request('keyword') }}">
+                                placeholder="Search by patient name, status and date..." value="{{ request('keyword') }}">
                         </div>
                         @if (request('date') !== 'today')
                             <div class="col-md-3">
