@@ -35,4 +35,8 @@ class Patient extends Model{
             'doctor_id'
         );
     }
+
+    public function medicalRecords(){
+        return $this->hasMany(MedicalRecord::class);
+    }
 }
