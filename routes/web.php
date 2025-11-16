@@ -346,6 +346,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
     Route::post('/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
     Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');
+    Route::get('/calendar', [DoctorAppointmentController::class, 'calendar'])->name('doctor.calendar');
     Route::get('/reports/monthly', [DoctorReportController::class, 'monthly'])->name('doctor.reports.monthly');
     Route::get('/appointments', [DoctorAppointmentController::class, 'allAppointments'])->name('doctor.appointments');
     Route::get('/appointments/{appointment}', [DoctorAppointmentController::class, 'show'])->name('doctor.appointment.show');
@@ -355,7 +356,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/clinics/{clinic}', [DoctorClinicController::class, 'show'])->name('doctor.clinic.show');
     Route::get('/patients', [DoctorPatientController::class, 'index'])->name('doctor.patients');
     Route::get('/patients/{patient}', [DoctorPatientController::class, 'show'])->name('doctor.patients.show');
-    Route::get('patients/{patient}/records', [DoctorMedicalRecordsController::class, 'patientRecords'])->name('doctor.patients.records');
+    Route::get('patients/{patient}/records', [DoctorMedicalRecordsController::class, 'patientRecords'])->name('doctor.patient.records');
     Route::get('/medical-records', [DoctorMedicalRecordsController::class, 'index'])->name('doctor.medical_records');
     Route::get('/medical-records/create', [DoctorMedicalRecordsController::class, 'create'])->name('doctor.medical_records.create');
     Route::post('/medical-records/store', [DoctorMedicalRecordsController::class, 'store'])->name('doctor.medical_records.store');
