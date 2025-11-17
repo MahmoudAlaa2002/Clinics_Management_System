@@ -418,6 +418,7 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     Route::get('/my_profile' , [PatientDashboardController::class , 'patientProfile'])->name('patient_profile');
     Route::get('/edit/profile' , [PatientDashboardController::class , 'patientEditProfile'])->name('patient_edit_profile');
     Route::put('/update/profile' , [PatientDashboardController::class , 'patientUpdateProfile'])->name('patient_update_profile');
+    Route::get('/personalityStatistics', [PatientDashboardController::class, 'personalityStatistics'])->name('patient.personalityStatistics');
 
 });
 
