@@ -46,9 +46,6 @@
             <div class="col-sm-4 col-3">
                 <h4 class="page-title">View Appointments</h4>
             </div>
-            <div class="text-right col-sm-8 col-9 m-b-20">
-                <a href="{{ Route('clinic.add_appointment') }}" class="float-right btn btn-primary btn-rounded" style="font-weight: bold;"><i class="fa fa-plus"></i> Add Appointment</a>
-            </div>
         </div>
 
         <div class="mb-4 row">
@@ -130,7 +127,6 @@
                                         <td class="action-btns">
                                             <div class="d-flex justify-content-center">
                                                 <a href="{{ route('clinic.details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                                <a href="{{ route('clinic.edit_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
                                                 <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}"><i class="fa fa-trash"></i></button>
                                             </div>
                                         </td>

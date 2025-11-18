@@ -13,6 +13,7 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\MedicineStock;
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use App\Models\Specialty;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,8 +27,10 @@ class DashboardController extends Controller{
         $employee_count = Employee::count();
         $patient_count = Patient::count();
         $patients = Patient::orderBy('created_at', 'desc')->take(5)->get();
+        $all_appointments = Appointment::count();
         $today_appointments = Appointment::whereDate('date', today())->count();
         $appointments = Appointment::orderBy('created_at', 'desc')->take(5)->get();
+        $invoices_count = Invoice::count();
         return view('Backend.admin.dashboard' , compact(
             'clinic_count' ,
         'department_count' ,
@@ -36,9 +39,11 @@ class DashboardController extends Controller{
         'employee_count' ,
         'patient_count' ,
         'patients',
+        'all_appointments',
         'today_appointments',
                      'appointments',
-    ));
+                     'invoices_count',
+        ));
     }
 
 

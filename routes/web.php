@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\Admin\AppointmentController as AdminAppointment
 use App\Http\Controllers\Backend\Admin\MedicalRecordController as AdminMedicalRecordController;
 use App\Http\Controllers\Backend\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Backend\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Backend\admin\ChartController as AdminChartController;
 use App\Http\Controllers\Backend\Admin\NotificationController as AdminNotificationController;
 
 use App\Http\Controllers\Backend\ClinicManager\ClinicController as ClinicManagerClinicController;
@@ -24,16 +25,16 @@ use App\Http\Controllers\Backend\ClinicManager\DashboardController as ClinicMana
 use App\Http\Controllers\Backend\ClinicManager\DepartmentController as ClinicManagerDepartmentController;
 use App\Http\Controllers\Backend\ClinicManager\AppointmentController as ClinicManagerAppointmentController;
 use App\Http\Controllers\Backend\ClinicManager\PatientController as ClinicManagerPatientController;
-use App\Http\Controllers\Backend\ClinicManager\MedicalRecordController as ClinicManagerMedicalRecordController;
 use App\Http\Controllers\Backend\ClinicManager\ReportController as ClinicManagerReportController;
 use App\Http\Controllers\Backend\ClinicManager\InvoiceController as ClinicManagerInvoiceController;
+use App\Http\Controllers\Backend\ClinicManager\ChartController as ClinicManagerChartController;
 
 use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
-
-use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
 use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
+use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
 
+use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
 use App\Http\Controllers\Backend\Doctor\ReportController as DoctorReportController;
 use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
@@ -42,9 +43,9 @@ use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesCont
 use App\Http\Controllers\Backend\Doctor\ProfileController as DoctorProfileController;
 use App\Http\Controllers\Backend\Doctor\ClinicController as DoctorClinicController;
 
-use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
 
-use App\Http\Controllers\Backend\shared\CommonDoctorController;
+use App\Http\Controllers\Backend\Shared\CommonDoctorController;
+
 
 
 Route::prefix('clinics-management')->group(function () {
@@ -67,6 +68,8 @@ Route::prefix('clinics-management')->group(function () {
     Route::get('/get-doctors-by-clinic-and-department', [CommonDoctorController::class, 'getDoctorsByClinicAndDepartment'])->name('get_doctors_by_clinic_and_department');
     Route::get('/get-doctor-info/{id}', [CommonDoctorController::class, 'getDoctorInfo']);   // يرجع أوقات الدكتور للحجز معاه
     Route::get('/doctor-working-days/{id}', [CommonDoctorController::class, 'getWorkingDays']);  // يرجع أيام الدكتور للحجز معاه
+
+
 
 });
 
@@ -183,11 +186,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
 
     //Reports
     Route::get('/view/reports' ,[AdminReportController::class , 'viewReports'])->name('view_reports');
-    Route::get('/search/reports',[AdminReportController::class , 'searchReports'])->name('search_reports');
-    Route::get('/details/report/{id}' ,[AdminReportController::class , 'detailsReport'])->name('details_report');
-    Route::get('/edit/report/{id}' ,[AdminReportController::class , 'editReport'])->name('edit_report');
-    Route::put('/update/report/{id}' ,[AdminReportController::class , 'updateReport'])->name('update_report');
-    Route::delete('/delete/report/{id}' ,[AdminReportController::class , 'deleteReport'])->name('delete_report');
+    Route::get('/details/patients-reports' ,[AdminReportController::class , 'detailsPatientsReports'])->name('details_patients_reports');
+    Route::get('/details/appointments-reports' ,[AdminReportController::class , 'detailsAppointmentsReports'])->name('details_appointments_reports');
+    Route::get('/details/invoices-reports' ,[AdminReportController::class , 'detailsInvoicesReports'])->name('details_invoices_reports');
+    Route::get('/details/doctors-reports' ,[AdminReportController::class , 'detailsDoctorsReports'])->name('details_doctors_reports');
 
 
     //Medical Records
@@ -198,6 +200,16 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::put('/update/medical-record/{id}' ,[AdminMedicalRecordController::class , 'updateMedicalRecord'])->name('update_medical_record');
     Route::delete('/delete/medical-record/{id}' ,[AdminMedicalRecordController::class ,'deleteMedicalRecord'])->name('delete_medical_record');
 
+
+    //Chart
+    Route::get('/chart/appointments-monthly', [AdminChartController::class, 'appointmentsMonthly'])->name('appointments_monthly');
+    Route::get('/chart/patients-per-clinic', [AdminChartController::class, 'patientsPerClinic'])->name('patients_per_clinic');
+    Route::get('/chart/patients-monthly', [AdminChartController::class, 'patientsPerMonth'])->name('patients_monthly');
+    Route::get('/chart/appointments-by-clinic', [AdminChartController::class, 'getAppointmentsByClinic'])->name('appointments_by_clinic');
+    Route::get('/chart/revenue-monthly', [AdminChartController::class, 'monthlyRevenue'])->name('monthly_revenue');
+    Route::get('/chart/revenue-per-clinic', [AdminChartController::class, 'revenuePerClinic'])->name('revenue_per_clinic');
+    Route::get('/chart/doctors-monthly', [AdminChartController::class, 'doctorsMonthly'])->name('doctors_monthly');
+    Route::get('/chart/doctors-by-department', [AdminChartController::class, 'doctorsByDepartment'])->name('doctors_by_department');
 
 
 
@@ -265,53 +277,37 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
 
 
     //Patient
-    Route::get('/add/patient' ,[ClinicManagerPatientController::class , 'addPatient'])->name('clinic.add_patient');
-    Route::post('/store/patient',[ClinicManagerPatientController::class , 'storePatient'])->name('clinic.store_patient');
     Route::get('/view/patients' ,[ClinicManagerPatientController::class , 'viewPatients'])->name('clinic.view_patients');
     Route::get('/search/patients' ,[ClinicManagerPatientController::class , 'searchPatients'])->name('clinic.search_patients');
     Route::get('/profile/patient/{id}',[ClinicManagerPatientController::class , 'profilePatient'])->name('clinic.profile_patient');
-    Route::get('/edit/patient/{id}' ,[ClinicManagerPatientController::class , 'editPatient'])->name('clinic.edit_patient');
-    Route::put('/update/patient/{id}' ,[ClinicManagerPatientController::class , 'updatePatient'])->name('clinic.update_patient');
-    Route::delete('/delete/patient/{id}' ,[ClinicManagerPatientController::class , 'deletePatient'])->name('clinic.delete_patient');
 
 
     //Appointment
-    Route::get('/add/appointment' ,[ClinicManagerAppointmentController::class , 'addAppointment'])->name('clinic.add_appointment');
-    Route::post('/store/appointment',[ClinicManagerAppointmentController::class , 'storeAppointment'])->name('clinic.store_appointment');
     Route::get('/view/appointments' ,[ClinicManagerAppointmentController::class , 'viewAppointments'])->name('clinic.view_appointments');
     Route::get('/search/appointments',[ClinicManagerAppointmentController::class , 'searchAppointments'])->name('clinic.search_appointments');
     Route::get('/details/appointment/{id}',[ClinicManagerAppointmentController::class , 'detailsAppointment'])->name('clinic.details_appointment');
-    Route::get('/edit/appointment/{id}' ,[ClinicManagerAppointmentController::class , 'editAppointment'])->name('clinic.edit_appointment');
-    Route::put('/update/appointment/{id}' ,[ClinicManagerAppointmentController::class , 'updateAppointment'])->name('clinic.update_appointment');
     Route::delete('/delete/appointment/{id}' ,[ClinicManagerAppointmentController::class ,'deleteAppointment'])->name('clinic.delete_appointment');
 
 
     //Reports
-    Route::get('/add/report' ,[ClinicManagerReportController::class , 'addReport'])->name('clinic.add_report');
     Route::get('/view/reports' ,[ClinicManagerReportController::class , 'viewReports'])->name('clinic.view_reports');
-    Route::get('/search/reports',[ClinicManagerReportController::class , 'searchReports'])->name('clinic.search_reports');
-    Route::get('/details/report/{id}' ,[ClinicManagerReportController::class , 'detailsReport'])->name('clinic.details_report');
-    Route::get('/edit/report/{id}' ,[ClinicManagerReportController::class , 'editReport'])->name('clinic.edit_report');
-    Route::put('/update/report/{id}' ,[ClinicManagerReportController::class , 'updateReport'])->name('clinic.update_report');
-    Route::delete('/delete/report/{id}' ,[ClinicManagerReportController::class , 'deleteReport'])->name('clinic.delete_report');
+    Route::get('/details/patients-reports' ,[ClinicManagerReportController::class , 'detailsPatientsReports'])->name('clinic.details_patients_reports');
+    Route::get('/details/appointments-reports' ,[ClinicManagerReportController::class , 'detailsAppointmentsReports'])->name('clinic.details_appointments_reports');
+    Route::get('/details/invoices-reports' ,[ClinicManagerReportController::class , 'detailsInvoicesReports'])->name('clinic.details_invoices_reports');
+    Route::get('/details/doctors-reports' ,[ClinicManagerReportController::class , 'detailsDoctorsReports'])->name('clinic.details_doctors_reports');
 
 
     //Invoices
     Route::get('/view/invoices' ,[ClinicManagerInvoiceController::class , 'viewInvoices'])->name('clinic.view_invoices');
     Route::get('/search/invoices',[ClinicManagerInvoiceController::class , 'searchInvoices'])->name('clinic.search_invoices');
     Route::get('/details/invoice/{id}',[ClinicManagerInvoiceController::class , 'detailsInvoice'])->name('clinic.details_invoice');
-    Route::get('/edit/invoice/{id}' ,[ClinicManagerInvoiceController::class , 'editInvoice'])->name('clinic.edit_invoice');
-    Route::put('/update/invoice/{id}' ,[ClinicManagerInvoiceController::class , 'updateInvoice'])->name('clinic.update_invoice');
-    Route::delete('/delete/invoice/{id}' ,[ClinicManagerInvoiceController::class ,'deleteInvoice'])->name('clinic.delete_invoice');
 
 
-    //Medical Records
-    Route::get('/view/medical-records' ,[ClinicManagerMedicalRecordController::class , 'viewMedicalRecords'])->name('clinic.view_medical_records');
-    Route::get('/search/medical-records',[ClinicManagerMedicalRecordController::class , 'searchMedicalRecords'])->name('clinic.search_medical_records');
-    Route::get('/details/medical-record/{id}',[ClinicManagerMedicalRecordController::class , 'detailsMedicalRecord'])->name('clinic.details_medical_record');
-    Route::get('/edit/medical-record/{id}' ,[ClinicManagerMedicalRecordController::class , 'editMedicalRecord'])->name('clinic.edit_medical_record');
-    Route::put('/update/medical-record/{id}' ,[ClinicManagerMedicalRecordController::class , 'updateMedicalRecord'])->name('clinic.update_medical_record');
-    Route::delete('/delete/medical-record/{id}' ,[ClinicManagerMedicalRecordController::class ,'deleteMedicalRecord'])->name('clinic.delete_medical_record');
+    //Chart
+    Route::get('/clinic-manager/appointments-per-month', [ClinicManagerChartController::class, 'clinicAppointmentsPerMonth'])->name('clinic_manager.appointments_per_month');
+    Route::get('/clinic-patients-monthly', [ClinicManagerChartController::class, 'clinicPatientsMonthly'])->name('clinic_patients_monthly');
+    Route::get('/clinic-revenue-monthly', [ClinicManagerChartController::class, 'clinicMonthlyRevenue'])->name('clinic_monthly_revenue');
+    Route::get('/clinic-doctors-monthly', [ClinicManagerChartController::class, 'clinicDoctorsMonthly'])->name('clinic_doctors_monthly');
 
 });
 

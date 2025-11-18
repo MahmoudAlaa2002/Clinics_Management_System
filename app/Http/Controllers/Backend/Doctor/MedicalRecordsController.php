@@ -23,11 +23,11 @@ class MedicalRecordsController extends Controller
             $search = $request->input('search');
 
             $medicalRecords->where(function($query) use ($search) {
-                $query->where('diagnosis', 'ilike', "%{$search}%")
-                    ->orWhere('treatment', 'ilike', "%{$search}%")
-                    ->orWhere('notes', 'ilike', "%{$search}%")
+                $query->where('diagnosis', 'like', "%{$search}%")
+                    ->orWhere('treatment', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%")
                     ->orWhereHas('patient.user', function($q) use ($search) {
-                        $q->where('name', 'ilike', "%{$search}%");
+                        $q->where('name', 'like', "%{$search}%");
                     });
             });
         }

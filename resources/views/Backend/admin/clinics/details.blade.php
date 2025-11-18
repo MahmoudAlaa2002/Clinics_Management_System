@@ -36,12 +36,19 @@
                     <div class="col-md-4">
                         <p><strong>Departments Count:</strong> {{ optional($clinic->departments)->count() ?? 0 }}</p>
                         <p><strong>Employees Count:</strong> {{ optional($clinic->employees)->count() ?? 0 }}</p>
-                        <p><strong>Doctors Count:</strong> {{ optional($clinic->doctors)->count() ?? 0 }}</p>
-                        <p><strong>Patients Count:</strong> {{ optional($clinic->patients)->count() ?? 0 }}</p>
+                        <p><strong>Doctors Count:</strong> {{ $doctors_count ?? 0 }}</p>
+                        <p><strong>Patients Count:</strong> {{ $patients_count ?? 0 }}</p>
                     </div>
 
                     <div class="col-md-4">
-                        <p><strong>Clinic Manager:</strong> -</p>
+                        <p><strong>Clinic Manager:</strong>
+                            @if($clinic_manager)
+                                {{ $clinic_manager->user->name }}
+                            @else
+                                -
+                            @endif
+                        </p>
+
                         <p><strong>Status:</strong>
                             @if($clinic->status == 'active')
                                 <span class="badge badge-success" style="padding: 8px 15px; border-radius: 30px; background-color: #13ee29; font-size:14px;">Active</span>

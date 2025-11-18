@@ -33,12 +33,6 @@
                     <a href="{{ route('clinic.details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
                         <i class="fa fa-eye"></i>
                     </a>
-                    <a href="{{ route('clinic.edit_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <button class="btn btn-outline-danger btn-sm delete-invoice" data-id="{{ $invoice->id }}">
-                        <i class="fa fa-trash"></i>
-                    </button>
                 </div>
             </td>
         </tr>

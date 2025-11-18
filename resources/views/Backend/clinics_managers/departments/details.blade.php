@@ -60,7 +60,7 @@
                 <ul class="mb-0">
                     @foreach($doctors as $doctor)
                         <li>
-                            <a href="{{ route('profile_doctor', $doctor->id) }}">
+                            <a href="{{ route('clinic.profile_doctor', $doctor->id) }}">
                                 {{ $doctor->employee->user->name }}
                             </a>
                         </li>

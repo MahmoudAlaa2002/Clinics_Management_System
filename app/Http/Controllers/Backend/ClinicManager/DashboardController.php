@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Backend\ClinicManager;
 
+use App\Models\Doctor;
+use App\Models\Invoice;
+use App\Models\Patient;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +14,46 @@ use Illuminate\Support\Facades\Hash;
 class DashboardController extends Controller{
 
     public function clinicManagerDashboard(){
-        return view ('Backend.clinics_managers.dashboard');
+        $clinic = Auth::user()->employee->clinic;
+        $department_count = $clinic->departments->count();
+        $employee_count = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic->id)->count();
+        $doctor_count = Doctor::whereHas('employee', function ($q) use ($clinic) {
+            $q->where('clinic_id', $clinic->id);
+        })->count();
+
+        $doctors = Doctor::whereHas('employee', function ($q) use ($clinic) {
+            $q->where('clinic_id', $clinic->id);
+        })->take(5)->get();
+
+        $patient_count = $clinic->appointments()->distinct('patient_id')->count('patient_id');
+        $patients = Patient::whereHas('appointments', function($q) use ($clinic) {
+            $q->whereIn(
+                'clinic_department_id',
+                $clinic->clinicDepartments()->pluck('id')
+            );
+        })->orderBy('created_at', 'desc')->take(5)->get();
+
+
+        $all_appointments = $clinic->appointments()->count();
+        $appointments = $clinic->appointments()->take(5)->get();
+        $today_appointments = $clinic->appointments()->whereDate('date', today())->count();
+
+        $invoice_count = Invoice::whereHas('appointment', function ($q) use ($clinic) {
+            $q->whereIn('clinic_department_id', $clinic->clinicDepartments()->pluck('id'));
+        })->count();
+
+
+        return view ('Backend.clinics_managers.dashboard' , compact('department_count',
+            'employee_count',
+            'doctor_count',
+            'doctors',
+            'patient_count',
+            'patients',
+            'all_appointments',
+            'today_appointments',
+            'appointments',
+            'invoice_count',
+        ));
     }
 
 

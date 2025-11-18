@@ -144,15 +144,14 @@
                             <p class="mb-0 text-muted">{{ $clinic_manager->employee->short_biography ?? 'No biography provided.' }}</p>
                         </div>
                     </div>
-
-                    <div class="mb-3 d-flex justify-content-end">
-                        <a href="{{ Route('view_clinics_managers') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
-                            Back
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="mb-3 d-flex justify-content-end" style="margin-right: 240px;">
+        <a href="{{ Route('view_clinics_managers') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
+            Back
+        </a>
     </div>
 </div>
 @endsection

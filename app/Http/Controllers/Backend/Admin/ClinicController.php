@@ -21,14 +21,10 @@ class ClinicController extends Controller{
 
 
     public function storeClinic(Request $request){
-
         $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
 
-        if (
-            Clinic::whereRaw('LOWER(name) = ?', [$normalizedName])->exists() ||
-            Clinic::whereRaw('LOWER(email) = ?', [$normalizedEmail])->exists()
-        ) {
+        if (Clinic::whereRaw('LOWER(name) = ?', [$normalizedName])->exists() || Clinic::whereRaw('LOWER(email) = ?', [$normalizedEmail])->exists()) {
             return response()->json(['data' => 0]);
         }
 
@@ -102,8 +98,18 @@ class ClinicController extends Controller{
 
 
     public function detailsClinic($id){
-        $clinic = Clinic::where('id' , $id)->first();
-        return view('Backend.admin.clinics.details' , compact('clinic'));
+        $clinic = Clinic::findOrFail($id);
+        $clinic_manager = Employee::where('clinic_id', $clinic->id)->where('job_title', 'Clinic Manager')->first();
+        $doctors_count = Doctor::whereHas('employee', function($q) use ($clinic) {
+            $q->where('clinic_id', $clinic->id);
+        })->count();
+
+        $patients_count = $clinic->appointments()->distinct('patient_id')->count('patient_id');
+        return view('Backend.admin.clinics.details' , compact('clinic' ,
+         'clinic_manager',
+         'doctors_count',
+         'patients_count',
+        ));
     }
 
 

@@ -33,4 +33,22 @@ class Clinic extends Model{
         return $this->hasMany(Employee::class, 'clinic_id');
     }
 
+
+    // علاقة مباشرة العيادة مع المواعيد
+    public function appointments(){
+        return $this->hasManyThrough(
+            Appointment::class,
+            ClinicDepartment::class,
+            'clinic_id',            // foreign key in clinic_departments
+            'clinic_department_id', // foreign key in appointments
+            'id',                   // local key in clinics
+            'id'                    // local key in clinic_departments
+        );
+    }
+
+
+    public function clinicDepartments(){
+        return $this->hasMany(ClinicDepartment::class, 'clinic_id');
+    }
+
 }

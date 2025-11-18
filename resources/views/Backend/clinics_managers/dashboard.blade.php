@@ -3,35 +3,62 @@
 @section('title' , 'Clinic Manager Dashboard')
 
 @section('content')
-    {{-- <div class="page-wrapper">
+    <div class="page-wrapper">
             <div class="content">
+
+                {{-- Welcome --}}
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm" style="
+                        border-left: 5px solid #00A8FF;
+                        border-radius: 12px;
+                        overflow: hidden;
+                    ">
+                        <div class="card-body d-flex align-items-center" style="padding: 18px 24px;">
+
+                            <div style="
+                                width: 60px; height: 60px;
+                                background: linear-gradient(135deg, #e6f4ff, #d4edff);
+                                display: flex; align-items: center; justify-content: center;
+                                border-radius: 50%;
+                                color: #00A8FF;
+                                font-size: 26px;
+                                margin-right: 18px;
+                                box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+                            ">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+
+                            <div>
+                                <h4 style="
+                                    margin: 0;
+                                    font-weight: 700;
+                                    color: #00A8FF;
+                                    font-size: 24px;
+                                ">
+                                    Welcome {{ Auth::user()->name }}
+                                </h4>
+
+                                <p style="
+                                    margin: 3px 0 0;
+                                    color: #666;
+                                    font-size: 15px;
+                                ">
+                                    We're glad to have you here today.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
-							<span class="dash-widget-bg1"><i class="fas fa-hospital" aria-hidden="true"></i></span>
-							<div class="text-right dash-widget-info">
-								<h3>{{ $clinic_count }}</h3>
-								<span class="widget-title1">Clinics <i class="fa fa-check" aria-hidden="true"></i></span>
-							</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
-                            <span class="dash-widget-bg4"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
+                            <span class="dash-widget-bg4"><i class="fas fa-building" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
                                 <h3>{{ $department_count }}</h3>
                                 <span class="widget-title4">Departments <i class="fa fa-check" aria-hidden="true"></i></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
-                            <span class="dash-widget-bg2"><i class="fa fa-user-md"></i></span>
-                            <div class="text-right dash-widget-info">
-                                <h3>{{ $doctor_count }}</h3>
-                                <span class="widget-title2">Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
@@ -50,6 +77,16 @@
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
+                            <span class="dash-widget-bg2"><i class="fa fa-user-md"></i></span>
+                            <div class="text-right dash-widget-info">
+                                <h3>{{ $doctor_count }}</h3>
+                                <span class="widget-title2">Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
                             <span class="dash-widget-bg3"><i class="fas fa-user-injured" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
                                 <h3>{{ $patient_count }}</h3>
@@ -60,27 +97,17 @@
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
-                            <span class="dash-widget-bg3" style="background-color: #e83e8c;"><i class="fas fa-capsules" aria-hidden="true"></i></span>
+                            <span class="dash-widget-bg2" style="background-color: #e83e8c;"><i class="fas fa-calendar-alt"></i></span>
                             <div class="text-right dash-widget-info">
-                                <h3>{{ $medication_count }}</h3>
-                                <span class="widget-title3" style="background-color: #e83e8c;">Medications <i class="fa fa-check" aria-hidden="true"></i></span>
+                                <h3>{{ $all_appointments }}</h3>
+                                <span class="widget-title2" style="background-color: #e83e8c;">All Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
-                            <span class="dash-widget-bg3" style="background-color: #814e34;"><i class="fas fa-warehouse" aria-hidden="true"></i></span>
-                            <div class="text-right dash-widget-info">
-                                <h3>{{ $medicine_stock_count }}</h3>
-                                <span class="widget-title3" style="background-color: #814e34;">Service <i class="fa fa-check" aria-hidden="true"></i></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
-                            <span class="dash-widget-bg2" style="background-color: #6f42c1;"><i class="fas fa-calendar-check"></i></span>
+                            <span class="dash-widget-bg2" style="background-color: #6f42c1;"><i class="fas fa-calendar-day"></i></span>
                             <div class="text-right dash-widget-info">
                                 <h3>{{ $today_appointments }}</h3>
                                 <span class="widget-title2" style="background-color: #6f42c1;">Today Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
@@ -88,343 +115,206 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg2" style="background-color: #8B4513;"><i class="fas fa-file-invoice-dollar"></i></span>
+                            <div class="text-right dash-widget-info">
+                                <h3>{{ $invoice_count }}</h3>
+                                <span class="widget-title2" style="background-color: #8B4513;">Invoices <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
 				<div class="row">
-					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
-						<div class="card">
-							<div class="card-body">
-								<div class="chart-title">
-									<h4>Patient Total</h4>
-									<span class="float-right"><i class="fa fa-caret-up" aria-hidden="true"></i> 15% Higher than Last Month</span>
-								</div>
-								<canvas id="linegraph"></canvas>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
-						<div class="card">
-							<div class="card-body">
-								<div class="chart-title">
-									<h4>Patients In</h4>
-									<div class="float-right">
-										<ul class="chat-user-total">
-											<li><i class="fa fa-circle current-users" aria-hidden="true"></i>ICU</li>
-											<li><i class="fa fa-circle old-users" aria-hidden="true"></i> OPD</li>
-										</ul>
-									</div>
-								</div>
-								<canvas id="bargraph"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
+
+                    {{-- Appointments View --}}
 					<div class="col-12 col-md-6 col-lg-8 col-xl-8">
-						<div class="card">
-							<div class="card-header">
-								<h4 class="card-title d-inline-block">Upcoming Appointments</h4> <a href="appointments.html" class="float-right btn btn-primary">View all</a>
-							</div>
-							<div class="p-0 card-body">
-								<div class="table-responsive">
-									<table class="table mb-0">
-										<thead class="d-none">
-											<tr>
-												<th>Patient Name</th>
-												<th>Doctor Name</th>
-												<th>Timing</th>
-												<th class="text-right">Status</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
-												</td>
-											</tr>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
-												</td>
-											</tr>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
-												</td>
-											</tr>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
-												</td>
-											</tr>
-											<tr>
-												<td style="min-width: 200px;">
-													<a class="avatar" href="profile.html">B</a>
-													<h2><a href="profile.html">Bernardo Galaviz <span>New York, USA</span></a></h2>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Appointment With</h5>
-													<p>Dr. Cristina Groves</p>
-												</td>
-												<td>
-													<h5 class="p-0 time-title">Timing</h5>
-													<p>7.00 PM</p>
-												</td>
-												<td class="text-right">
-													<a href="appointments.html" class="btn btn-outline-primary take-btn">Take up</a>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title d-inline-block">Appointments</h4>
+                                <a href="{{ route('clinic.view_appointments') }}" class="float-right btn btn-primary">View all</a>
+                            </div>
+
+                            <div class="card-body p-0">
+                                @if($appointments->isEmpty())
+                                    <div class="py-5 text-center">
+                                        <h5 style="color: #555; font-weight: 500;">There are currently no scheduled appointments</h5>
+                                    </div>
+                                @else
+                                    <div class="table-responsive">
+                                        <table class="table mb-0">
+
+                                            <thead class="d-none">
+                                                <tr>
+                                                    <th>Patient Name</th>
+                                                    <th>Doctor Name</th>
+                                                    <th>Timing</th>
+                                                    <th class="text-right">Status</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            @foreach ($appointments as $appointment)
+                                                <tr>
+                                                    <td style="min-width: 200px;">
+
+                                                        {{-- Avatar --}}
+                                                        @if($appointment->patient && $appointment->patient->user)
+                                                            <a class="avatar"
+                                                               href="{{ route('clinic.profile_patient', ['id' => $appointment->patient->id]) }}">
+                                                                {{ substr($appointment->patient->user->name, 0, 1) }}
+                                                            </a>
+                                                        @else
+                                                            <span class="avatar bg-danger text-white">?</span>
+                                                        @endif
+
+                                                        {{-- Patient Name + Address --}}
+                                                        @if($appointment->patient && $appointment->patient->user)
+                                                            <h2>
+                                                                <a href="{{ route('clinic.profile_patient', ['id' => $appointment->patient->id]) }}">
+                                                                    {{ $appointment->patient->user->name }}
+                                                                    <span>{{ $appointment->patient->user->address ?? 'No address' }}</span>
+                                                                </a>
+                                                            </h2>
+                                                        @else
+                                                            <h2>
+                                                                <span class="text-danger">Deleted Patient</span>
+                                                                <span class="d-block text-muted" style="font-size: 13px;">No address</span>
+                                                            </h2>
+                                                        @endif
+
+                                                    </td>
+
+                                                    <td>
+                                                        <h5 class="p-0 time-title">Appointment With</h5>
+
+                                                        @if($appointment->doctor && $appointment->doctor->employee && $appointment->doctor->employee->user)
+                                                            <p>Dr. {{ $appointment->doctor->employee->user->name }}</p>
+                                                        @else
+                                                            <p class="text-danger">Doctor Deleted</p>
+                                                        @endif
+                                                    </td>
+
+
+                                                    <td>
+                                                        <h5 class="p-0 time-title">Timing</h5>
+                                                        <p>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</p>
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <a href="{{ route('clinic.details_appointment', ['id' => $appointment->id]) }}"
+                                                           class="btn btn-outline-primary take-btn">
+                                                            Take up
+                                                        </a>
+                                                    </td>
+
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{-- Doctors View --}}
                     <div class="col-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="card member-panel">
-							<div class="bg-white card-header">
-								<h4 class="mb-0 card-title">Doctors</h4>
-							</div>
+                            <div class="bg-white card-header">
+                                <h4 class="mb-0 card-title">Doctors</h4>
+                            </div>
                             <div class="card-body">
-                                <ul class="contact-list">
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="John Doe"><img src="{{ asset('assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
-                                            </div>
-                                            <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">John Doe</span>
-                                                <span class="contact-date">MBBS, MD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="Richard Miles"><img src="{{ asset('assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
-                                            </div>
-                                            <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Richard Miles</span>
-                                                <span class="contact-date">MD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="John Doe"><img src="{{ asset('assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
-                                            </div>
-                                            <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">John Doe</span>
-                                                <span class="contact-date">BMBS</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="Richard Miles"><img src="{{ asset('assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle"><span class="status online"></span></a>
-                                            </div>
-                                            <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Richard Miles</span>
-                                                <span class="contact-date">MS, MD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="John Doe"><img src="{{ asset('assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle"><span class="status offline"></span></a>
-                                            </div>
-                                            <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">John Doe</span>
-                                                <span class="contact-date">MBBS</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="contact-cont">
-                                            <div class="float-left user-img m-r-10">
-                                                <a href="profile.html" title="Richard Miles"><img src="{{ asset('assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle"><span class="status away"></span></a>
-                                            </div>
-                                            <div class="contact-info">
-                                                <span class="contact-name text-ellipsis">Richard Miles</span>
-                                                <span class="contact-date">MBBS, MD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                @if($doctors->isEmpty())
+                                <div class="text-center" style="padding: 100px 0;">
+                                    <h5 style="color: #555; font-weight: 500;">There are no doctors listed yet</h5>
+                                </div>
+                                @else
+                                    <ul class="contact-list">
+                                        @foreach ($doctors as $doctor)
+                                            <li>
+                                                <div class="contact-cont">
+                                                    <div class="float-left user-img m-r-10">
+                                                        <a href="{{ route('clinic.profile_doctor' , ['id' => $doctor->id]) }}" title="{{ $doctor->employee->user->name }}">
+                                                            <img src="{{ asset($doctor->employee->user->image ?? 'assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle">
+                                                            <span class="status online"></span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="contact-info">
+                                                        <a href="{{ route('clinic.profile_doctor' , ['id' => $doctor->id]) }}"
+                                                            class="contact-name text-ellipsis"
+                                                            style="color: #00A8FF; font-weight: 600;">
+                                                             {{ $doctor->employee->user->name }}
+                                                         </a>
+                                                        <span class="contact-date">
+                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                @if ($i <= $doctor->rating)
+                                                                    <i class="fas fa-star text-warning"></i>
+                                                                @else
+                                                                    <i class="far fa-star text-muted"></i>
+                                                                @endif
+                                                            @endfor
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
                             </div>
                             <div class="text-center bg-white card-footer">
-                                <a href="doctors.html" class="text-muted">View all Doctors</a>
+                                <a href="{{ route('clinic.view_doctors') }}" class="text-muted">View all Doctors</a>
                             </div>
                         </div>
                     </div>
 				</div>
-				<div class="row">
-					<div class="col-12 col-md-6 col-lg-8 col-xl-8">
-						<div class="card">
-							<div class="card-header">
-								<h4 class="card-title d-inline-block">New Patients </h4> <a href="patients.html" class="float-right btn btn-primary">View all</a>
-							</div>
-							<div class="card-block">
-								<div class="table-responsive">
-									<table class="table mb-0 new-patient-table">
-										<tbody>
-											<tr>
-												<td>
-													<img width="28" height="28" class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" alt="">
-													<h2>John Doe</h2>
-												</td>
-												<td>Johndoe21@gmail.com</td>
-												<td>+1-202-555-0125</td>
-												<td><button class="float-right btn btn-primary btn-primary-one">Fever</button></td>
-											</tr>
-											<tr>
-												<td>
-													<img width="28" height="28" class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" alt="">
-													<h2>Richard</h2>
-												</td>
-												<td>Richard123@yahoo.com</td>
-												<td>202-555-0127</td>
-												<td><button class="float-right btn btn-primary btn-primary-two">Cancer</button></td>
-											</tr>
-											<tr>
-												<td>
-													<img width="28" height="28" class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" alt="">
-													<h2>Villiam</h2>
-												</td>
-												<td>Richard123@yahoo.com</td>
-												<td>+1-202-555-0106</td>
-												<td><button class="float-right btn btn-primary btn-primary-three">Eye</button></td>
-											</tr>
-											<tr>
-												<td>
-													<img width="28" height="28" class="rounded-circle" src="{{ asset('assets/img/user.jpg') }}" alt="">
-													<h2>Martin</h2>
-												</td>
-												<td>Richard123@yahoo.com</td>
-												<td>776-2323 89562015</td>
-												<td><button class="float-right btn btn-primary btn-primary-four">Fever</button></td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-6 col-lg-4 col-xl-4">
-						<div class="hospital-barchart">
-							<h4 class="card-title d-inline-block">Hospital Management</h4>
-						</div>
-						<div class="bar-chart">
-							<div class="legend">
-								<div class="item">
-									<h4>Level1</h4>
-								</div>
 
-								<div class="item">
-									<h4>Level2</h4>
-								</div>
-								<div class="text-right item">
-									<h4>Level3</h4>
-								</div>
-								<div class="text-right item">
-									<h4>Level4</h4>
-								</div>
-							</div>
-							<div class="clearfix chart">
-								<div class="item">
-									<div class="bar">
-										<span class="percent">16%</span>
-										<div class="item-progress" data-percent="16">
-											<span class="title">OPD Patient</span>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="bar">
-										<span class="percent">71%</span>
-										<div class="item-progress" data-percent="71">
-											<span class="title">New Patient</span>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="bar">
-										<span class="percent">82%</span>
-										<div class="item-progress" data-percent="82">
-											<span class="title">Laboratory Test</span>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="bar">
-										<span class="percent">67%</span>
-										<div class="item-progress" data-percent="67">
-											<span class="title">Treatment</span>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="bar">
-										<span class="percent">30%</span>
-										<div class="item-progress" data-percent="30">
-											<span class="title">Discharge</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					 </div>
-				</div>
+
+                {{-- Patients View --}}
+				<div class="row">
+                    <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title d-inline-block">New Patients</h4>
+                                <a href="{{ route('clinic.view_patients') }}" class="float-right btn btn-primary">View all</a>
+                            </div>
+                            <div class="card-block">
+                                @if($patients->isEmpty())
+                                    <div class="text-center" style="padding: 100px 0;">
+                                        <h5 style="color: #555; font-weight: 500;">No patients available at the moment</h5>
+                                    </div>
+                                @else
+                                    <div class="table-responsive">
+                                        <table class="table mb-0 new-patient-table">
+                                            <tbody>
+                                                @foreach ($patients as $patient)
+                                                    <tr>
+                                                        <td>
+                                                            <img width="34" height="34" class="rounded-circle" src="{{ asset($patient->user->image ?? 'assets/img/user.jpg') }}" alt="">
+                                                            <h2>{{ $patient->user->name }}</h2>
+                                                        </td>
+                                                        <td>{{ $patient->user->email }}</td>
+                                                        <td>{{ $patient->user->phone }}</td>
+                                                        <td>
+                                                            <a href="{{ route('clinic.profile_patient', ['id' => $patient->id]) }}"
+                                                               class="float-right border btn btn-primary btn-primary-one border-primary">
+                                                               Show
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="notification-box">
                 <div class="msg-sidebar notifications msg-noti">
@@ -636,5 +526,5 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection

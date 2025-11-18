@@ -91,47 +91,6 @@
 
 @section('js')
 <script>
-    // حذف الموظف
-    $(document).on('click', '.delete-invoice', function () {
-        let invoiceId = $(this).data('id');
-        let url = `/clinic-manager/delete/invoice/${invoiceId}`;
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            imageUrl: 'https://img.icons8.com/ios-filled/50/fa314a/delete-trash.png',
-            imageWidth: 60,
-            imageHeight: 60,
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete it'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Deleted',
-                                text: 'Invoice has been deleted successfully',
-                                icon: 'success'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
-                        }
-                    },
-                });
-            }
-        });
-    });
-
-
-
     let lastKeyword = '';
 
     function fetchInvoices(url = "{{ route('clinic.search_invoices') }}") {

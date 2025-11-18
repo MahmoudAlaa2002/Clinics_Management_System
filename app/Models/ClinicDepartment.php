@@ -28,4 +28,5 @@ class ClinicDepartment extends Model{
         return $this->hasMany(Doctor::class, 'department_id');
     }
 
+
 }

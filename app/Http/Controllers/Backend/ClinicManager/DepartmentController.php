@@ -42,8 +42,7 @@ class DepartmentController extends Controller{
 
 
     public function detailsDepartment($id){
-        $clinicManager = Auth::user();
-        $clinic = $clinicManager->employee->clinic;
+        $clinic = Auth::user()->employee->clinic;
         $department = $clinic->departments()->where('departments.id', $id)->first();
 
         // يحضر الدكاترة الموجودين في هادا القسم وفي العيادة المحددة
@@ -58,8 +57,7 @@ class DepartmentController extends Controller{
 
 
     public function deleteDepartment($id){
-        $clinicManager = Auth::user();
-        $clinic = $clinicManager->employee->clinic;
+        $clinic = Auth::user()->employee->clinic;
         $department = $clinic->departments()->where('departments.id', $id)->first();
         $clinic->departments()->detach($department->id);
         return response()->json(['data' => 1]);

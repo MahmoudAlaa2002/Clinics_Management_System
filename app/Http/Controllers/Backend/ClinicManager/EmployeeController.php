@@ -113,7 +113,8 @@ class EmployeeController extends Controller{
 
 
     public function viewEmployees(){
-        $employees = Employee::where('user_id', '!=', Auth::id())->orderBy('id', 'asc')->paginate(12);
+        $clinic_id =  Auth::user()->employee->clinic->id;
+        $employees = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic_id)->orderBy('id', 'asc')->paginate(12);
         return view('Backend.clinics_managers.employees.view' , compact('employees'));
     }
 

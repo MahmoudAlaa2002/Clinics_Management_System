@@ -91,7 +91,10 @@ class DoctorController extends Controller{
 
 
     public function viewDoctors(){
-        $doctors = Doctor::orderBy('id', 'asc')->paginate(12);
+        $clinicId = Auth::user()->employee->clinic_id;
+        $doctors = Doctor::whereHas('employee', function ($query) use ($clinicId) {
+            $query->where('clinic_id', $clinicId);
+        })->orderBy('id', 'asc')->paginate(12);
         return view('Backend.clinics_managers.doctors.view' , compact('doctors'));
     }
 

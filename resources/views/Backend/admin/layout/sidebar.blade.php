@@ -104,9 +104,9 @@
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/schedules') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/schedules') || Request::is('admin/search/doctor/schedule') ? 'active' : '' }}">
                     <a href="#"><i class="fa-solid fa-user-doctor"></i> <span> Doctors </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/schedules') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('admin/add/doctor') || Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*')  || Request::is('admin/search/schedules') || Request::is('admin/search/doctor/schedule') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('add_doctor') }}" class="{{ Request::is('admin/add/doctor') ? 'active' : '' }}">Add Doctor</a>
                         </li>
@@ -114,7 +114,7 @@
                             <a href="{{ route('view_doctors') }}" class="{{ Request::is('admin/view/doctors') || Request::is('admin/edit/doctor/*') || Request::is('admin/profile/doctor/*') ? 'active' : '' }}">View Doctors</a>
                         </li>
                         <li>
-                            <a href="{{ route('search_schedules') }}" class="{{ Request::is('admin/search/schedules') ? 'active' : '' }}">Doctor Schedules</a>
+                            <a href="{{ route('search_schedules') }}" class="{{ Request::is('admin/search/schedules') || Request::is('admin/search/doctor/schedule') ? 'active' : '' }}">Doctor Schedules</a>
                         </li>
                     </ul>
                 </li>
@@ -133,7 +133,7 @@
 
 
                 <li class="submenu {{ Request::is('admin/add/appointment') || Request::is('admin/view/appointments') || Request::is('admin/search/appointments') || Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fa fa-calendar-check-o"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
+                    <a href="#"><i class="fas fa-calendar-alt"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
                     <ul style="{{ Request::is('admin/add/appointment') || Request::is('admin/view/appointments') || Request::is('admin/search/appointments') ||
                         Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') ? '' : 'display: none;' }}">
                         <li>

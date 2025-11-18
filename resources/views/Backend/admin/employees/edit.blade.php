@@ -378,7 +378,7 @@
                 $e.empty().append('<option disabled hidden>Select End Time</option>');
                 for (let h = sHour; h <= eHour; h++) {
                     let hh = (h < 10 ? '0' : '') + h;
-                    let value = hh + ':00:00';
+                    let value = hh + ':00';
                     $s.append(`<option value="${value}" ${value === start ? 'selected' : ''}>${hh}:00</option>`);
                     $e.append(`<option value="${value}" ${value === end ? 'selected' : ''}>${hh}:00</option>`);
                 }

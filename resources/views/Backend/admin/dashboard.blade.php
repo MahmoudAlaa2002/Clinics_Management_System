@@ -3,8 +3,68 @@
 @section('title' , 'Admin Dashboard')
 
 @section('content')
+
+    <style>
+        .dash-widget span[class^="dash-widget-bg"] {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;       /* حجم الأيقونة */
+            width: 60px;           /* قطر الدائرة */
+            height: 60px;          /* قطر الدائرة */
+            border-radius: 50%;
+        }
+    </style>
     <div class="page-wrapper">
             <div class="content">
+
+                {{-- Welcome --}}
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm" style="
+                        border-left: 5px solid #00A8FF;
+                        border-radius: 12px;
+                        overflow: hidden;
+                    ">
+                        <div class="card-body d-flex align-items-center" style="padding: 18px 24px;">
+
+                            <div style="
+                                width: 60px; height: 60px;
+                                background: linear-gradient(135deg, #e6f4ff, #d4edff);
+                                display: flex; align-items: center; justify-content: center;
+                                border-radius: 50%;
+                                color: #00A8FF;
+                                font-size: 26px;
+                                margin-right: 18px;
+                                box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+                            ">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+
+                            <div>
+                                <h4 style="
+                                    margin: 0;
+                                    font-weight: 700;
+                                    color: #00A8FF;
+                                    font-size: 24px;
+                                ">
+                                    Welcome {{ Auth::user()->name }}
+                                </h4>
+
+                                <p style="
+                                    margin: 3px 0 0;
+                                    color: #666;
+                                    font-size: 15px;
+                                ">
+                                    We're glad to have you here today.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                {{-- Counts --}}
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
@@ -26,26 +86,6 @@
                         </div>
                     </div>
 
-                    {{-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
-                            <span class="dash-widget-bg3" style="background-color: #814e34;"><i class="fa fa-stethoscope" aria-hidden="true"></i></span>
-                            <div class="text-right dash-widget-info">
-                                <h3>{{ $specialty_count }}</h3>
-                                <span class="widget-title3" style="background-color: #814e34;">Specialty <i class="fa fa-check" aria-hidden="true"></i></span>
-                            </div>
-                        </div>
-                    </div> --}}
-
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="dash-widget">
-                            <span class="dash-widget-bg2"><i class="fa fa-user-md"></i></span>
-                            <div class="text-right dash-widget-info">
-                                <h3>{{ $doctor_count }}</h3>
-                                <span class="widget-title2">Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
                             <span class="dash-widget-bg1" style="background-color: #4b5563;">
@@ -60,6 +100,16 @@
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
+                            <span class="dash-widget-bg2"><i class="fa fa-user-md"></i></span>
+                            <div class="text-right dash-widget-info">
+                                <h3>{{ $doctor_count }}</h3>
+                                <span class="widget-title2">Doctors <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
                             <span class="dash-widget-bg3"><i class="fas fa-user-injured" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
                                 <h3>{{ $patient_count }}</h3>
@@ -68,20 +118,20 @@
                         </div>
                     </div>
 
-                    {{-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
-                            <span class="dash-widget-bg3" style="background-color: #e83e8c;"><i class="fas fa-capsules" aria-hidden="true"></i></span>
+                            <span class="dash-widget-bg3" style="background-color: #814e34;"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span>
                             <div class="text-right dash-widget-info">
-                                <h3>{{ $medication_count }}</h3>
-                                <span class="widget-title3" style="background-color: #e83e8c;">Medications <i class="fa fa-check" aria-hidden="true"></i></span>
+                                <h3>{{ $all_appointments }}</h3>
+                                <span class="widget-title3" style="background-color: #814e34;">All Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
 
 
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
-                            <span class="dash-widget-bg2" style="background-color: #6f42c1;"><i class="fas fa-calendar-check"></i></span>
+                            <span class="dash-widget-bg2" style="background-color: #6f42c1;"><i class="fas fa-calendar-day"></i></span>
                             <div class="text-right dash-widget-info">
                                 <h3>{{ $today_appointments }}</h3>
                                 <span class="widget-title2" style="background-color: #6f42c1;">Today Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
@@ -89,35 +139,44 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg3" style="background-color: #e83e8c;"><i class="fas fa-file-invoice" aria-hidden="true"></i></span>
+                            <div class="text-right dash-widget-info">
+                                <h3>{{ $invoices_count }}</h3>
+                                <span class="widget-title3" style="background-color: #e83e8c;">Invoices <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- Charts --}}
 				<div class="row">
 					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
 						<div class="card">
 							<div class="card-body">
 								<div class="chart-title">
-									<h4>Patient Total</h4>
-									<span class="float-right"><i class="fa fa-caret-up" aria-hidden="true"></i> 15% Higher than Last Month</span>
+									<h4>Completed Appointments Per Month</h4>
 								</div>
 								<canvas id="linegraph"></canvas>
+
 							</div>
 						</div>
 					</div>
+
 					<div class="col-12 col-md-6 col-lg-6 col-xl-6">
-						<div class="card">
-							<div class="card-body">
-								<div class="chart-title">
-									<h4>Patients In</h4>
-									<div class="float-right">
-										<ul class="chat-user-total">
-											<li><i class="fa fa-circle current-users" aria-hidden="true"></i>ICU</li>
-											<li><i class="fa fa-circle old-users" aria-hidden="true"></i> OPD</li>
-										</ul>
-									</div>
-								</div>
-								<canvas id="bargraph"></canvas>
-							</div>
-						</div>
-					</div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="chart-title">
+                                    <h4>Patients per Clinic</h4>
+                                    <span class="float-right"><i class="fa fa-hospital" aria-hidden="true"></i></span>
+                                </div>
+                                <canvas id="patientsClinicChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+
 				</div>
 				<div class="row">
 
@@ -128,7 +187,8 @@
                                 <h4 class="card-title d-inline-block">Appointments</h4>
                                 <a href="{{ route('view_appointments') }}" class="float-right btn btn-primary">View all</a>
                             </div>
-                            <div class="p-0 card-body">
+
+                            <div class="card-body p-0">
                                 @if($appointments->isEmpty())
                                     <div class="py-5 text-center">
                                         <h5 style="color: #555; font-weight: 500;">There are currently no scheduled appointments</h5>
@@ -136,6 +196,7 @@
                                 @else
                                     <div class="table-responsive">
                                         <table class="table mb-0">
+
                                             <thead class="d-none">
                                                 <tr>
                                                     <th>Patient Name</th>
@@ -144,42 +205,71 @@
                                                     <th class="text-right">Status</th>
                                                 </tr>
                                             </thead>
+
                                             <tbody>
-                                                @foreach ($appointments as $appointment)
-                                                    <tr>
-                                                        <td style="min-width: 200px;">
-                                                            <a class="avatar" href="{{ route('profile_patient', ['id' => $appointment->patient->id]) }}">
+                                            @foreach ($appointments as $appointment)
+                                                <tr>
+                                                    <td style="min-width: 200px;">
+
+                                                        {{-- Avatar --}}
+                                                        @if($appointment->patient && $appointment->patient->user)
+                                                            <a class="avatar"
+                                                               href="{{ route('profile_patient', ['id' => $appointment->patient->id]) }}">
                                                                 {{ substr($appointment->patient->user->name, 0, 1) }}
                                                             </a>
+                                                        @else
+                                                            <span class="avatar bg-danger text-white">?</span>
+                                                        @endif
+
+                                                        {{-- Patient Name + Address --}}
+                                                        @if($appointment->patient && $appointment->patient->user)
                                                             <h2>
                                                                 <a href="{{ route('profile_patient', ['id' => $appointment->patient->id]) }}">
                                                                     {{ $appointment->patient->user->name }}
-                                                                    <span>{{ $appointment->patient->user->address }}</span>
+                                                                    <span>{{ $appointment->patient->user->address ?? 'No address' }}</span>
                                                                 </a>
                                                             </h2>
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="p-0 time-title">Appointment With</h5>
-                                                            <p>Dr. {{ $appointment->doctor->employee->user->name ?? '-' }}</p>
-                                                        </td>
-                                                        <td>
-                                                            <h5 class="p-0 time-title">Timing</h5>
-                                                            <p>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</p>
-                                                        </td>
-                                                        <td class="text-right">
-                                                            <a href="{{ route('details_appointment', ['id' => $appointment->id]) }}" class="btn btn-outline-primary take-btn">
-                                                                Take up
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                        @else
+                                                            <h2>
+                                                                <span class="text-danger">Deleted Patient</span>
+                                                                <span class="d-block text-muted" style="font-size: 13px;">No address</span>
+                                                            </h2>
+                                                        @endif
+
+                                                    </td>
+
+                                                    <td>
+                                                        <h5 class="p-0 time-title">Appointment With</h5>
+
+                                                        @if($appointment->doctor && $appointment->doctor->employee && $appointment->doctor->employee->user)
+                                                            <p>Dr. {{ $appointment->doctor->employee->user->name }}</p>
+                                                        @else
+                                                            <p class="text-danger">Doctor Deleted</p>
+                                                        @endif
+                                                    </td>
+
+                                                    <td>
+                                                        <h5 class="p-0 time-title">Timing</h5>
+                                                        <p>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</p>
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <a href="{{ route('details_appointment', ['id' => $appointment->id]) }}"
+                                                           class="btn btn-outline-primary take-btn">
+                                                            Take up
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
+
                                         </table>
                                     </div>
                                 @endif
                             </div>
                         </div>
                     </div>
+
 
 
                     {{-- Doctors View --}}
@@ -490,3 +580,61 @@
             </div>
         </div>
 @endsection
+
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Chart 1: Appointments per Month
+        fetch("{{ route('appointments_monthly') }}")
+            .then(res => res.json())
+            .then(data => {
+                const ctx1 = document.getElementById('linegraph').getContext('2d');
+                new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: data.months,
+                        datasets: [{
+                            label: 'Completed Appointments Per Month',
+                            data: data.appointments,
+                            borderColor: '#28A745',
+                            backgroundColor: 'rgba(40,167,69,0.20)',
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            tension: 0.4
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            });
+
+        // Chart 2: Patients per Clinic
+        fetch("{{ route('patients_per_clinic') }}")
+            .then(res => res.json())
+            .then(data => {
+                const ctx2 = document.getElementById('patientsClinicChart').getContext('2d');
+                new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: data.clinics,
+                        datasets: [{
+                            label: 'Number of Patients',
+                            data: data.counts,
+                            backgroundColor: 'rgba(0,168,255,0.5)',
+                            borderColor: '#00A8FF',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                    }
+                });
+            });
+
+    });
+</script>
+@endsection
+

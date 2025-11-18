@@ -16,11 +16,6 @@
             <div class="col-sm-4 col-3">
                 <h4 class="page-title">View Patients</h4>
             </div>
-            <div class="text-right col-sm-8 col-9 m-b-20">
-                <a href="{{ Route('clinic.add_patient') }}" class="float-right btn btn-primary btn-rounded" style="font-weight: bold;">
-                    <i class="fa fa-plus"></i> Add Patient
-                </a>
-            </div>
         </div>
         <div class="mb-4 row">
             <div class="col-md-4">
@@ -71,96 +66,55 @@
 
 @section('js')
     <script>
-        $(document).on('click', '.delete-patient', function () {
-            let patientId = $(this).data('id');
-            let url = `/clinic-manager/delete/patient/${patientId}`;
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                imageUrl: 'https://img.icons8.com/ios-filled/50/fa314a/delete-trash.png',
-                imageWidth: 60,
-                imageHeight: 60,
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, delete it'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    title: 'Deleted',
-                                    text: 'Patient has been deleted successfully',
-                                    icon: 'success'
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire('Error!', 'Something went wrong.', 'error');
-                            }
-                        },
-                    });
-                }
-            });
-        });
-
-
         let lastKeyword = '';
 
-    function fetchPatients(url = "{{ route('clinic.search_patients') }}") {
-        let keyword = $('#search_input').val().trim();
-        let filter  = $('#search_filter').val();
+        function fetchPatients(url = "{{ route('clinic.search_patients') }}") {
+            let keyword = $('#search_input').val().trim();
+            let filter  = $('#search_filter').val();
 
-        if (keyword === '' && lastKeyword === '') return;
+            if (keyword === '' && lastKeyword === '') return;
 
-        if (keyword === '' && lastKeyword !== '') {
-            lastKeyword = '';
-            window.location.href = "{{ route('clinic.view_patients') }}";
-            return;
+            if (keyword === '' && lastKeyword !== '') {
+                lastKeyword = '';
+                window.location.href = "{{ route('clinic.view_patients') }}";
+                return;
+            }
+
+            lastKeyword = keyword;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: { keyword: keyword, filter: filter },
+                success: function (response) {
+                    $('#patients_table_body').html(response.html);
+                    if (response.searching) {
+                        if (response.count > 12) {
+                            $('#patients-pagination').html(response.pagination).show();
+                        } else {
+                            $('#patients-pagination').empty().hide();
+                        }
+                    } else {
+                        $('#patients-pagination').show();
+                    }
+                },
+                error: function () {
+                    console.error("Failed to fetch patients.");
+                }
+            });
         }
 
-        lastKeyword = keyword;
+        $(document).on('input', '#search_input', function () { fetchPatients(); });
+        $(document).on('change', '#search_filter', function () { fetchPatients(); });
 
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            data: { keyword: keyword, filter: filter },
-            success: function (response) {
-                $('#patients_table_body').html(response.html);
-                if (response.searching) {
-                    if (response.count > 12) {
-                        $('#patients-pagination').html(response.pagination).show();
-                    } else {
-                        $('#patients-pagination').empty().hide();
-                    }
-                } else {
-                    $('#patients-pagination').show();
-                }
-            },
-            error: function () {
-                console.error("Failed to fetch patients.");
+        $(document).on('click', '#patients-pagination .page-link', function (e) {
+            let keyword = $('#search_input').val().trim();
+            if (keyword !== '') {
+                e.preventDefault();
+                let url = $(this).attr('href');
+                if (url && url !== '#') fetchPatients(url);
             }
         });
-    }
-
-    $(document).on('input', '#search_input', function () { fetchPatients(); });
-    $(document).on('change', '#search_filter', function () { fetchPatients(); });
-
-    $(document).on('click', '#patients-pagination .page-link', function (e) {
-        let keyword = $('#search_input').val().trim();
-        if (keyword !== '') {
-            e.preventDefault();
-            let url = $(this).attr('href');
-            if (url && url !== '#') fetchPatients(url);
-        }
-    });
     </script>
 @endsection

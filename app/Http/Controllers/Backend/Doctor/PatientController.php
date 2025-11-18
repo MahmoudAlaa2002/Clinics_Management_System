@@ -17,10 +17,10 @@ class PatientController extends Controller
         if (request()->has('keyword') && !empty(request()->keyword)) {
             $keyword = request()->keyword;
             $patients->whereHas('user', function ($q) use ($keyword) {
-                $q->where('name', 'ILIKE', "%$keyword%")
-                  ->orWhere('email', 'ILIKE', "%$keyword%")
-                  ->orWhere('phone', 'ILIKE', "%$keyword%")
-                  ->orWhere('blood_type', 'ILIKE', "%$keyword%");
+                $q->where('name', 'LIKE', "%$keyword%")
+                  ->orWhere('email', 'LIKE', "%$keyword%")
+                  ->orWhere('phone', 'LIKE', "%$keyword%")
+                  ->orWhere('blood_type', 'LIKE', "%$keyword%");
             });
         }
         $patients = $patients->paginate(10);

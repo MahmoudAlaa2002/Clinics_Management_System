@@ -81,47 +81,22 @@
                 </li>
 
 
-                <li class="submenu {{ Request::is('clinic-manager/add/patient') || Request::is('clinic-manager/view/patients') || Request::is('clinic-manager/edit/patient/*') || Request::is('clinic-manager/profile/patient/*') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('clinic-manager/view/patients')  || Request::is('clinic-manager/profile/patient/*') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-user-injured"></i> <span> Patients </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('clinic-manager/add/patient') || Request::is('clinic-manager/view/patients') || Request::is('clinic-manager/edit/patient/*') || Request::is('clinic-manager/profile/patient/*') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('clinic-manager/view/patients')  || Request::is('clinic-manager/profile/patient/*') ? '' : 'display: none;' }}">
                         <li>
-                            <a href="{{ route('clinic.add_patient') }}" class="{{ Request::is('clinic-manager/add/patient') ? 'active' : '' }}">Add Patient</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('clinic.view_patients') }}" class="{{ Request::is('clinic-manager/view/patients') || Request::is('clinic-manager/edit/patient/*') || Request::is('clinic-manager/profile/patient/*') ? 'active' : '' }}">View Patients</a>
+                            <a href="{{ route('clinic.view_patients') }}" class="{{ Request::is('clinic-manager/view/patients') || Request::is('clinic-manager/profile/patient/*') ? 'active' : '' }}">View Patients</a>
                         </li>
                     </ul>
                 </li>
 
 
-                <li class="submenu {{ Request::is('clinic-manager/add/appointment') || Request::is('clinic-manager/view/appointments') || Request::is('clinic-manager/search/appointments') || Request::is('clinic-manager/edit/appointment/*') || Request::is('clinic-manager/details/appointment/*') ? 'active' : '' }}">
-                    <a href="#"><i class="fa fa-calendar-check-o"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('clinic-manager/add/appointment') || Request::is('clinic-manager/view/appointments') || Request::is('clinic-manager/search/appointments') ||
-                        Request::is('clinic-manager/edit/appointment/*') || Request::is('clinic-manager/details/appointment/*') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('clinic.add_appointment') }}" class="{{ Request::is('clinic-manager/add/appointment') ? 'active' : '' }}">Add Appointment</a>
-                        </li>
+                <li class="submenu {{ Request::is('clinic-manager/view/appointments') || Request::is('clinic-manager/search/appointments') || Request::is('clinic-manager/details/appointment/*') ? 'active' : '' }}">
+                    <a href="#"><i class="fas fa-calendar-alt"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('clinic-manager/view/appointments') || Request::is('clinic-manager/search/appointments') || Request::is('clinic-manager/details/appointment/*') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('clinic.view_appointments') }}"
-                            class="{{ Request::is('clinic-manager/view/appointments') || Request::is('clinic-manager/search/appointments') || Request::is('clinic-manager/edit/appointment/*') || Request::is('clinic-manager/details/appointment/*') ? 'active' : '' }}">View Appointments</a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li class="submenu {{ Request::is('clinic-manager/view/medical-records') || Request::is('clinic-manager/edit/medical-record/*') || Request::is('clinic-manager/details/medical-record/*') ? 'active' : '' }}">
-                    <a href="#">
-                        <i class="fa fa-notes-medical"></i>
-                        <span> Medical Records </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-
-                    <ul style="{{ Request::is('clinic-manager/view/medical-records') || Request::is('clinic-manager/edit/medical-record/*') || Request::is('clinic-manager/details/medical-record/*') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('clinic.view_medical_records') }}"
-                            class="{{ Request::is('clinic-manager/view/medical-records') || Request::is('clinic-manager/edit/medical-record/*') || Request::is('clinic-manager/details/medical-record/*') ? 'active' : '' }}">
-                                View Medical Records
-                            </a>
+                            class="{{ Request::is('clinic-manager/view/appointments') || Request::is('clinic-manager/search/appointments') || Request::is('clinic-manager/details/appointment/*') ? 'active' : '' }}">View Appointments</a>
                         </li>
                     </ul>
                 </li>
@@ -131,17 +106,17 @@
 
             <ul>
                 <li class="menu-title">Invoices & Reports</li>
-                <li class="submenu {{ Request::is('clinic-manager/view/invoices') || Request::is('clinic-manager/edit/invoice/*') || Request::is('clinic-manager/details/invoice/*') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('clinic-manager/view/invoices') || Request::is('clinic-manager/details/invoice/*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span> Invoices </span>
                         <span class="menu-arrow"></span>
                     </a>
 
-                    <ul style="{{ Request::is('clinic-manager/view/invoices') || Request::is('clinic-manager/edit/invoice/*') || Request::is('clinic-manager/details/invoice/*') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('clinic-manager/view/invoices') || Request::is('clinic-manager/details/invoice/*') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('clinic.view_invoices') }}"
-                               class="{{ Request::is('clinic-manager/view/invoices') || Request::is('clinic-manager/edit/invoice/*') || Request::is('clinic-manager/details/invoice/*') ? 'active' : '' }}">
+                               class="{{ Request::is('clinic-manager/view/invoices') || Request::is('clinic-manager/details/invoice/*') ? 'active' : '' }}">
                                 View Invoices
                             </a>
                         </li>
@@ -149,24 +124,17 @@
                 </li>
 
 
-                <li class="submenu  {{ Request::is('clinic-manager/add/report') || Request::is('clinic-manager/view/reports') || Request::is('clinic-manager/edit/report/*') || Request::is('clinic-manager/details/report/*') ? 'active' : '' }}">
+                <li class="submenu  {{ Request::is('clinic-manager/view/reports') || Request::is('clinic-manager/details/patients-reports*') || Request::is('clinic-manager/details/appointments-reports*') || Request::is('clinic-manager/details/invoices-reports*') || Request::is('clinic-manager/details/doctors-reports*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fas fa-file-alt"></i>
                         <span> Reports </span>
                         <span class="menu-arrow"></span>
                     </a>
 
-                    <ul style="{{ Request::is('clinic-manager/add/report') ? '' : 'display: none;' }}">
-                        <li>
-                            <a href="{{ route('clinic.add_report') }}"
-                               class="{{ Request::is('clinic-manager/add/report') ? 'active' : '' }}">
-                                Add Report
-                            </a>
-                        </li>
-
+                    <ul style="{{ Request::is('clinic-manager/view/report') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('clinic.view_reports') }}"
-                               class="{{ Request::is('clinic-manager/view/reports') || Request::is('clinic-manager/edit/report/*') || Request::is('clinic-manager/details/report/*') ? 'active' : '' }}">
+                               class="{{ Request::is('clinic-manager/view/reports') || Request::is('clinic-manager/details/patients-reports*') || Request::is('clinic-manager/details/appointments-reports*') || Request::is('clinic-manager/details/invoices-reports*') || Request::is('clinic-manager/details/doctors-reports*') ? 'active' : '' }}">
                                 View Reports
                             </a>
                         </li>

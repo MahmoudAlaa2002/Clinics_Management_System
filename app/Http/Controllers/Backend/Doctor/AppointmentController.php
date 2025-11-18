@@ -32,11 +32,11 @@ class AppointmentController extends Controller
         if ($request->has('keyword') && !empty($request->keyword)) {
             $keyword = $request->keyword;
             $appointments->where(function ($query) use ($keyword) {
-                $query->where('status', 'ILIKE', "%$keyword%")
-                    ->orWhere('date', 'ILIKE', "%$keyword%")
-                    ->orWhere('time', 'ILIKE', "%$keyword%")
+                $query->where('status', 'LIKE', "%$keyword%")
+                    ->orWhere('date', 'LIKE', "%$keyword%")
+                    ->orWhere('time', 'LIKE', "%$keyword%")
                     ->orWhereHas('patient.user', function ($q) use ($keyword) {
-                        $q->where('name', 'ILIKE', "%$keyword%");
+                        $q->where('name', 'LIKE', "%$keyword%");
                     });
             });
         }

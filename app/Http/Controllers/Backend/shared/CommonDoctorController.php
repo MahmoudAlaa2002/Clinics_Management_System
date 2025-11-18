@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\shared;
+namespace App\Http\Controllers\Backend\Shared;
 
 use App\Models\Doctor;
 use Illuminate\Http\Request;

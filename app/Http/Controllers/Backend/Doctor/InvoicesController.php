@@ -26,9 +26,9 @@ class InvoicesController extends Controller
             $search = $request->input('search');
 
             $invoicesQuery->where(function($query) use ($search) {
-                $query->where('payment_status', 'ilike', "{$search}%")
+                $query->where('payment_status', 'like', "{$search}%")
                     ->orWhereHas('patient.user', function($q) use ($search) {
-                        $q->where('name', 'ilike', "%{$search}%");
+                        $q->where('name', 'like', "%{$search}%");
                     });
             });
         }

@@ -7,6 +7,7 @@
             </div>
         </a>
     </div>
+
     <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
     <a id="mobile_btn" class="float-left mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>
     <ul class="float-right nav user-menu">
@@ -59,16 +60,19 @@
         </li>
 
         <li class="nav-item dropdown d-none d-sm-block">
-            <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="float-right badge badge-pill bg-danger">8</span></a>
+            <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
+                <i class="fa fa-comment-o"></i>
+                <span class="float-right badge badge-pill bg-danger">8</span>
+            </a>
         </li>
+
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($admin?->image ?? 'assets/img/user.jpg') }}" alt="">
+                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;"
+                         src="{{ asset($admin?->image ?? 'assets/img/user.jpg') }}" alt="">
                 </span>
-                <span>
-                    Admin
-                </span>
+                <span>Admin</span>
             </a>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{ route('home') }}">Home</a>
@@ -83,5 +87,6 @@
                 </form>
             </div>
         </li>
+
     </ul>
 </div>
