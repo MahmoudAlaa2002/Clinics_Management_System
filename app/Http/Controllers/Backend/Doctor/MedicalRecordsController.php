@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Doctor;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalRecord;
 use App\Models\Appointment;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -196,5 +197,15 @@ class MedicalRecordsController extends Controller
             DB::rollBack();
             return back()->with('error', 'Something went wrong while updating the record.');
         }
+    }
+
+    public function patientRecords(Patient $patient)
+    {
+        $records = MedicalRecord::with(['doctor.employee.user', 'patient.user'])
+                    ->where('patient_id', $patient->id)
+                    ->orderBy('record_date', 'desc')
+                    ->get();
+
+        return view('Backend.doctors.patients.medical-records', compact('records', 'patient'));
     }
 }

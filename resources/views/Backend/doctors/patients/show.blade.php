@@ -62,6 +62,12 @@
                         <img src="{{ $patient->user->image ? asset($patient->user->image) : asset('assets/img/user.jpg') }}"
                             alt="Patient Image" class="profile-image mb-3">
                         <h4 class="mt-2">{{ $patient->user->name }}</h4>
+
+                        <a href="{{ route('doctor.patient.records', $patient) }}"
+                            class="btn btn-outline-primary"
+                            style="border-radius: 25px; padding: 8px 25px; font-weight:600;">
+                            <i class="fas fa-file-medical me-1"></i> View Medical Records
+                        </a>
                     </div>
 
                     <div class="col-md-8">
@@ -119,7 +125,7 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4">
-                <a href="{{ url()->previous() }}" class="btn back-btn">
+                <a href="{{ route('doctor.patients') }}" class="btn back-btn">
                     <i class="fa fa-arrow-left me-1"></i> Back
                 </a>
             </div>

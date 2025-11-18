@@ -30,6 +30,12 @@
                     </a>
                 </li>
 
+                <li class="{{ Request::is('doctor/calendar') ? 'active' : '' }}">
+                    <a href="{{ route('doctor.calendar') }}">
+                        <i class="fa fa-calendar-alt"></i> <span>Schedule</span>
+                    </a>
+                </li>
+
                 <li class="{{ Request::is('doctor/reviews') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fa fa-star"></i> <span>Patient Reviews</span>

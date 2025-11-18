@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Backend\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Doctor;
+use App\Models\Department;
+use App\Models\Clinic;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -88,5 +92,31 @@ class AppointmentController extends Controller
         });
 
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
+    }
+
+    public function calendar()
+    {
+        $doctor = Auth::user()->employee->doctor;
+
+        $appointments = $doctor->appointments()
+            ->with(['patient.user'])
+            ->get()
+            ->map(function($a) {
+                return [
+                    'title' => $a->patient->user->name,
+                    'start' => $a->date . ' ' . $a->time,
+                    'color' => $a->status == 'Accepted' ? '#03A9F4' :
+                            ($a->status == 'Completed' ? '#28a745' :
+                            ($a->status == 'Cancelled' ? '#dc3545' : '#6c757d')),
+                    'extendedProps' => [
+                        'status' => $a->status,
+                        'notes'  => $a->notes,
+                    ]
+                ];
+            });
+
+        return view('Backend.doctors.appointments.calendar', [
+            'appointmentsJson' => $appointments->toJson(),
+        ]);
     }
 }

@@ -140,7 +140,12 @@
                                             <div class="d-flex justify-content-center">
                                                 <a href="{{ route('doctor.appointment.show', $appointment) }}"
                                                     class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i>
-                                                    Details</a>
+                                                    Details
+                                                </a>
+                                                <a href="{{ route('doctor.patient.records', $appointment->patient) }}"
+                                                    class="mr-1 btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-file-medical"></i> Records
+                                                </a>
                                                 @if ($appointment->status === 'Pending')
                                                     <form action="{{ route('doctor_confirm_appointment', $appointment) }}"
                                                         method="POST" class="d-inline">
