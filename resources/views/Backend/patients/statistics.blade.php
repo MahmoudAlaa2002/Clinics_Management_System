@@ -135,26 +135,27 @@
             </div>
 
             {{-- Optional: Table of Upcoming Appointments --}}
-            @if ($upCamingAppointments->count())
-                <div class="row mt-5">
-                    <div class="col-12">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">Upcoming Appointments</h5>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Time</th>
-                                                <th>Clinic</th>
-                                                <th>Department</th>
-                                                <th>Doctor</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Upcoming Appointments</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Clinic</th>
+                                            <th>Department</th>
+                                            <th>Doctor</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    @if ($upCamingAppointments->count())
                                         <tbody>
                                             @foreach ($upCamingAppointments as $appointment)
                                                 <tr>
@@ -188,13 +189,21 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                    </table>
-                                </div>
+                                    @else
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6" class="text-center text-muted py-3">
+                                                    No upcoming appointments
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    @endif
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 @endsection
