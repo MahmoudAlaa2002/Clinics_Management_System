@@ -413,7 +413,8 @@
                             title: 'Error!',
                             text: 'Please enter all required fields',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                         return;
                     } else if (password !== confirm_password){
@@ -421,7 +422,8 @@
                             title: 'Error!',
                             text: 'Password confirmation does not match',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                         return;
                     } else if (rating < 1 || rating > 5) {
@@ -429,7 +431,8 @@
                                 title: 'Error!',
                                 text: 'The rating must be between 1 and 5',
                                 icon: 'error',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             });
                             return;
                     }else if (consultation_fee <= 0) {
@@ -437,7 +440,8 @@
                             title: 'Error!',
                             text: 'The consultation fee is invalid',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                         return;
                     } else if (work_start_time >= work_end_time){
@@ -445,7 +449,8 @@
                             title: 'Error!',
                             text: 'The timing is incorrect, Please correct it',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                         return;
                     } else{
@@ -465,14 +470,16 @@
                                     title: 'Error!',
                                     text: 'This doctor already exists',
                                     icon: 'error',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
                                 });
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
                                     text: 'Doctor has been updated successfully',
                                     icon: 'success',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
                                 }).then(() => {
                                     window.location.href = '/admin/view/doctors';
                                 });

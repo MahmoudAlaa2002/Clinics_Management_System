@@ -28,7 +28,12 @@ class PatientController extends Controller{
         $keyword = trim((string) $request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        $patients = Patient::with('user:id,name,email,phone,address');
+        $clinicId = Auth::user()->employee->clinic_id;
+
+        $patients = Patient::with('user:id,name,email,phone,address')
+            ->whereHas('appointments.clinicDepartment', function ($q) use ($clinicId) {
+                $q->where('clinic_id', $clinicId);
+            });
 
         if ($keyword !== '') {
             switch ($filter) {

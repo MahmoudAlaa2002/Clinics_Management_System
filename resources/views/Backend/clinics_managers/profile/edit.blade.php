@@ -167,7 +167,8 @@
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     });
                     return;
                 }
@@ -202,7 +203,8 @@
                                 title: 'Success',
                                 text: 'Clinic Manager profile has been updated successfully',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 window.location.href = '/clinic-manager/profile';
                             });
@@ -211,5 +213,5 @@
                 });
             });
         });
-    </script>
+</script>
 @endsection

@@ -107,7 +107,8 @@
                     title: 'Error!',
                     text: 'Please Enter Your Email & Password',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
             } else {
                 $.ajax({
@@ -144,14 +145,6 @@
                                 window.location.href = '/employee/receptionist/dashboard';
                             } else if (position === 'Nurse') {
                                 window.location.href = '/employee/nurse/dashboard';
-                            } else if (position === 'Pharmacist') {
-                                window.location.href = '/employee/pharmacist/dashboard';
-                            } else if (position === 'Accountant') {
-                                window.location.href = '/employee/accountant/dashboard';
-                            } else if (position === 'Store Supervisor') {
-                                window.location.href = '/employee/store-supervisor/dashboard';
-                            } else {
-                                window.location.href = '/employee/dashboard';
                             }
 
                         } else if (response.data === 6) {

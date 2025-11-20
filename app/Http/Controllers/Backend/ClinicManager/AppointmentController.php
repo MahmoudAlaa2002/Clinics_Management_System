@@ -27,11 +27,14 @@ class AppointmentController extends Controller{
         $keyword = trim($request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
+        $clinicId = Auth::user()->employee->clinic_id;
+        $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinicId)->pluck('id');
+
         $appointments = Appointment::with([
             'patient.user',
             'doctor.employee.user',
             'clinicDepartment.department'
-        ]);
+        ])->whereIn('clinic_department_id', $clinicDepartmentIds);
 
         if ($keyword !== '') {
             switch ($filter) {
@@ -47,12 +50,6 @@ class AppointmentController extends Controller{
                     });
                     break;
 
-                case 'department':
-                    $appointments->whereHas('clinicDepartment.department', function ($q) use ($keyword) {
-                        $q->where('name', 'like', "{$keyword}%");
-                    });
-                    break;
-
                 case 'date':
                     $appointments->where('date', 'like', "{$keyword}%");
                     break;
@@ -64,10 +61,9 @@ class AppointmentController extends Controller{
                 default:
                     $appointments->where(function ($q) use ($keyword) {
                         $q->whereHas('patient.user', fn($qq) => $qq->where('name', 'like', "%{$keyword}%"))
-                        ->orWhereHas('doctor.employee.user', fn($qq) => $qq->where('name', 'like', "%{$keyword}%"))
-                        ->orWhereHas('clinicDepartment.department', fn($qq) => $qq->where('name', 'like', "%{$keyword}%"))
-                        ->orWhere('date', 'like', "%{$keyword}%")
-                        ->orWhere('status', 'like', "%{$keyword}%");
+                          ->orWhereHas('doctor.employee.user', fn($qq) => $qq->where('name', 'like', "%{$keyword}%"))
+                          ->orWhere('date', 'like', "%{$keyword}%")
+                          ->orWhere('status', 'like', "%{$keyword}%");
                     });
                     break;
             }
@@ -85,6 +81,7 @@ class AppointmentController extends Controller{
             'searching'  => $keyword !== '',
         ]);
     }
+
 
 
 

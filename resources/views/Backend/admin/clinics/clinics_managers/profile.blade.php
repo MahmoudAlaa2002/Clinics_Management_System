@@ -3,6 +3,7 @@
 @section('title', 'Clinic Manager Profile')
 
 @section('content')
+
 <style>
     .profile-card {
         border-radius: 20px;

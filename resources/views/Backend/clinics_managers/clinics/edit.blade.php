@@ -267,7 +267,8 @@
                         title: 'Error!',
                         text: 'Please enter all required fields',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     });
                     return;
                 }
@@ -297,14 +298,16 @@
                                 title: 'Error!',
                                 text: 'This clinic name already exists',
                                 icon: 'error',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             });
                         } else if (response.data === 1) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Clinic has been updated successfully',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 window.location.href = "{{ route('clinic_profile') }}";
                             });

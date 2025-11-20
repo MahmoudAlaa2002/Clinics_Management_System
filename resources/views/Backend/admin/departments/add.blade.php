@@ -111,7 +111,8 @@
                         title: 'Error!',
                         text: 'Please enter all required fields',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     });
                     return;
                 }else{
@@ -132,14 +133,16 @@
                                     title: 'Error!',
                                     text: 'This department already exists',
                                     icon: 'error',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
                                 });
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
                                     text: 'Department has been added successfully',
                                     icon: 'success',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
                                 }).then(() => {
                                     window.location.href = '/admin/view/departments';
                                 });

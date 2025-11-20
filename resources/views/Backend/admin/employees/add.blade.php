@@ -477,25 +477,25 @@
             if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
                 email === '' || phone === '' || job_title === undefined ||
                 workingDays.length === 0 || !work_start_time || !work_end_time || gender === undefined) {
-                Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if (password !== confirm_password) {
-                Swal.fire({ title: 'Error!', text: 'Password confirmation does not match', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Password confirmation does not match', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if (!start.isBefore(end)) {
-                Swal.fire({ title: 'Error!', text: 'The timing is incorrect, Please correct it', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'The timing is incorrect, Please correct it', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if ($('#department_field').is(':visible') && !department_id) {
-                Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if ($('#doctor_info_card').is(':visible') && (!speciality || !isValidSelectValue('qualification') || !consultation_fee || !rating)) {
-                Swal.fire({ title: 'Error!', text: 'Please fill all doctor job information fields', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Please fill all doctor job information fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if ($('#doctor_info_card').is(':visible') && (consultation_fee <= 0)) {
-                Swal.fire({ title: 'Error!', text: 'The consultation fee is invalid', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'The consultation fee is invalid', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
-                Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             }else {
                 $.ajax({
@@ -507,17 +507,18 @@
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' });
+                            Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 1) {
-                            Swal.fire({ title: 'Error!', text: 'This clinic already has a manager', icon: 'error', confirmButtonText: 'OK' });
+                            Swal.fire({ title: 'Error!', text: 'This clinic already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 2) {
-                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' });
+                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 3) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Employee has been added successfully',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => { window.location.href = '/admin/view/employees'; });
                         }
                     },

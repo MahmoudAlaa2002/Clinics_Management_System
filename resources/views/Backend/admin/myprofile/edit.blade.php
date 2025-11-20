@@ -168,7 +168,8 @@
                         title: 'Error!',
                         text: 'Please enter all required fields',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     });
                     return;
                 }
@@ -203,7 +204,8 @@
                                 title: 'Success',
                                 text: 'Admin profile has been updated successfully',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 window.location.href = '/admin/my_profile';
                             });

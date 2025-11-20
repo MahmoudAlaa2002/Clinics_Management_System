@@ -277,14 +277,16 @@
                     title: 'Error!',
                     text: 'Please enter all required fields',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
             } else if (opening_time >= closing_time){
                 Swal.fire({
                     title: 'Error!',
                     text: 'The timing is incorrect, please correct it',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
                 return;
             }else{
@@ -303,14 +305,16 @@
                             title: 'Error!',
                             text: 'This clinic already exists',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                     } else if (response.data == 1) {
                         Swal.fire({
                             title: 'Success',
                             text: 'Clinic has been added successfully',
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         }).then(() => {
                             window.location.href = '/admin/view/clinics';
                         });

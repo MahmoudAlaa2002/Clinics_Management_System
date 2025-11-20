@@ -61,6 +61,10 @@
                             class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
                             <h2 class="mt-3 mb-0">{{ $clinicManager->name }}</h2>
                         <p class="text-muted">Clinic Manager</p>
+
+                        <p class="text-primary fw-semibold mb-0">
+                            [ {{ $clinicManager->employee->clinic->name ?? '-' }} ]
+                        </p>
                     </div>
 
                     <hr>

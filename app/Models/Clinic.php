@@ -26,7 +26,7 @@ class Clinic extends Model{
     ];
 
     public function departments(){
-        return $this->belongsToMany(Department::class, 'clinic_departments'); // اسم الجدول الوسيط
+        return $this->belongsToMany(Department::class, 'clinic_departments')->withTimestamps(); // اسم الجدول الوسيط
     }
 
     public function employees(){

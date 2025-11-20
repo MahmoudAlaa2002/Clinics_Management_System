@@ -278,7 +278,8 @@
                     title: 'Error!',
                     text: 'Please Enter All Required Fields.',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
                 return;
             }
@@ -289,7 +290,8 @@
                     title: 'Error!',
                     text: 'Password confirmation does not match',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
                 return;
             }
@@ -309,14 +311,16 @@
                             title: 'Error!',
                             text: 'The patient already exists',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                     } else if (response.data == 1) {
                         Swal.fire({
                             title: 'Success',
                             text: 'Patient has been updated successfully',
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         }).then(() => window.location.href = '/admin/view/patients');
                     }
                 }

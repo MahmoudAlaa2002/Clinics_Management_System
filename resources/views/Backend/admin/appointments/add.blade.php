@@ -194,7 +194,8 @@
                         title: 'Error!',
                         text: 'Please Enter All Required Fields',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     });
                     return;
                 }else{

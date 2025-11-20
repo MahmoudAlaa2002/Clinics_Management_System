@@ -30,8 +30,8 @@ class ReportController extends Controller{
             $q->whereHas('clinicDepartment', function ($d) use ($clinicId) {
                 $d->where('clinic_id', $clinicId);
             })
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year);
+            ->whereMonth('appointments.created_at', now()->month)
+            ->whereYear('appointments.created_at', now()->year);
         })
         ->distinct()
         ->count();

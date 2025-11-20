@@ -126,7 +126,11 @@ class EmployeeController extends Controller{
         $keyword = trim((string) $request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        $query = Employee::with('user');
+        $clinic_id = Auth::user()->employee->clinic->id;
+
+        $query = Employee::with('user')
+            ->where('clinic_id', $clinic_id)
+            ->where('user_id', '!=', Auth::id());
 
         if ($keyword !== '') {
             if ($filter === 'name') {
@@ -139,7 +143,8 @@ class EmployeeController extends Controller{
                 $query->where(function ($q) use ($keyword) {
                     $q->whereHas('user', function ($qq) use ($keyword) {
                         $qq->where('name', 'like', '%' . $keyword . '%');
-                    })->orWhere('job_title', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhere('job_title', 'like', '%' . $keyword . '%');
                 });
             }
         }
@@ -154,6 +159,7 @@ class EmployeeController extends Controller{
             'pagination' => $employees->links('pagination::bootstrap-4')->render(),
         ]);
     }
+
 
 
 

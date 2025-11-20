@@ -406,20 +406,22 @@
       if (!name || !date_of_birth || !clinic_id || !department_id || !email || !phone || !address
         || !gender || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
         Swal.fire({
-          title: 'Error!',
-          text: 'Please enter all required fields',
-          icon: 'error',
-          confirmButtonText: 'OK'
+            title: 'Error!',
+            text: 'Please enter all required fields',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007BFF',
         });
         return;
       }
 
       if (password && password !== confirm_password) {
         Swal.fire({
-          title: 'Error!',
-          text: 'Password confirmation does not match',
-          icon: 'error',
-          confirmButtonText: 'OK'
+            title: 'Error!',
+            text: 'Password confirmation does not match',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#007BFF',
         });
         return;
       }
@@ -455,24 +457,27 @@
         success: function (response) {
           if (response.data == 0) {
             Swal.fire({
-              title: 'Error!',
-              text: 'This department manager already exists',
-              icon: 'error',
-              confirmButtonText: 'OK'
+                title: 'Error!',
+                text: 'This department manager already exists',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
             });
           } else if (response.data == 1) {
             Swal.fire({
-              title: 'Success',
-              text: 'Department Manager has been updated successfully',
-              icon: 'success',
-              confirmButtonText: 'OK'
+                title: 'Success',
+                text: 'Department Manager has been updated successfully',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
             }).then(() => window.location.href = '/admin/view/departments-managers');
           } else {
             Swal.fire({
-              title: 'Notice',
-              text: 'Unexpected response. Please try again.',
-              icon: 'info',
-              confirmButtonText: 'OK'
+                title: 'Notice',
+                text: 'Unexpected response. Please try again.',
+                icon: 'info',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
             });
           }
         },

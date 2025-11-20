@@ -154,7 +154,8 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please enter all required fields',
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
             });
             return;
         }

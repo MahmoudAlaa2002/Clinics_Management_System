@@ -106,53 +106,59 @@ class DoctorController extends Controller{
         $keyword = trim((string) $request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
+        $clinicId = Auth::user()->employee->clinic_id;
+
         $doctors = Doctor::with([
             'employee:id,user_id,job_title,status,clinic_id,department_id',
             'employee.user:id,name,address,image',
             'employee.department:id,name',
-        ]);
+        ])
+        ->whereHas('employee', function ($query) use ($clinicId) {
+            $query->where('clinic_id', $clinicId);
+        });
 
         if ($keyword !== '') {
             switch ($filter) {
-                case 'name': // البحث باسم الطبيب (من جدول users)
+                case 'name':
                     $doctors->whereHas('employee.user', function ($q) use ($keyword) {
                         $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'department': // البحث باسم القسم
+                case 'department':
                     $doctors->whereHas('employee.department', function ($q) use ($keyword) {
                         $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'status': // البحث حسب حالة الموظف
+                case 'status':
                     $doctors->whereHas('employee', function ($q) use ($keyword) {
                         $q->where('status', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'job': // البحث بعنوان الوظيفة من جدول employees
+                case 'job':
                     $doctors->whereHas('employee', function ($q) use ($keyword) {
                         $q->where('job_title', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'speciality': // البحث بالتخصص (speciality)
+                case 'speciality':
                     $doctors->where('speciality', 'LIKE', "{$keyword}%");
                     break;
 
-                case 'qualification': // البحث بالمؤهل العلمي
+                case 'qualification':
                     $doctors->where('qualification', 'LIKE', "{$keyword}%");
                     break;
 
-                default: // بحث عام يشمل الاسم، الوظيفة، التخصص، المؤهل
+                default:
+                    // 🔍 بحث عام
                     $doctors->where(function ($q) use ($keyword) {
                         $q->where('speciality', 'LIKE', "%{$keyword}%")
                         ->orWhere('qualification', 'LIKE', "%{$keyword}%")
                         ->orWhereHas('employee', function ($qq) use ($keyword) {
                             $qq->where('job_title', 'LIKE', "%{$keyword}%")
-                                ->orWhere('status', 'LIKE', "%{$keyword}%");
+                               ->orWhere('status', 'LIKE', "%{$keyword}%");
                         })
                         ->orWhereHas('employee.user', function ($qq) use ($keyword) {
                             $qq->where('name', 'LIKE', "%{$keyword}%");
@@ -177,6 +183,7 @@ class DoctorController extends Controller{
             'searching'  => $keyword !== '',
         ]);
     }
+
 
 
 

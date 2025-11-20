@@ -465,19 +465,21 @@ $(document).ready(function () {
                     Swal.fire({ title: 'Error!',
                     text: 'This Doctor Already Exists',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
                 }else if (response.data == 1) {
                     Swal.fire({
                         title: 'Success',
                         text: 'Doctor Updated Successfully',
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     }).then(() => { window.location.href = '/clinic-manager/view/doctors'; });
                 }
             },
             error: function() {
-                Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
             }
         });
     });

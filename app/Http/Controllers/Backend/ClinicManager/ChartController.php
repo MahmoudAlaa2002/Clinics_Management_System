@@ -23,8 +23,8 @@ class ChartController extends Controller{
                     $q->whereHas('clinicDepartment', function ($d) use ($clinicId) {
                         $d->where('clinic_id', $clinicId);
                     })
-                    ->whereMonth('created_at', $month)
-                    ->whereYear('created_at', now()->year);
+                    ->whereMonth('appointments.created_at', $month)
+                    ->whereYear('appointments.created_at', now()->year);
                 })
                 ->distinct()
                 ->count();
@@ -40,7 +40,6 @@ class ChartController extends Controller{
 
     public function clinicAppointmentsPerMonth(){
         $clinicId = Auth::user()->employee->clinic_id;
-
         $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
         $counts = [];
@@ -69,7 +68,8 @@ class ChartController extends Controller{
 
         $monthlyCounts = [];
         foreach (range(1, 12) as $month) {
-            $count = Doctor::whereMonth('created_at', $month)->whereHas('employee', function($q) use ($clinic_id) {
+            $count = Doctor::whereMonth('created_at', $month)->whereYear('created_at', now()->year)
+            ->whereHas('employee', function($q) use ($clinic_id) {
                         $q->where('clinic_id', $clinic_id);
                     })->count();
 

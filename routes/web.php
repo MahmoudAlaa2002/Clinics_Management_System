@@ -5,47 +5,61 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
+use App\Http\Controllers\Backend\Shared\CommonDoctorController;
+
+use App\Http\Controllers\Backend\Admin\ChartController as AdminChartController;
 use App\Http\Controllers\Backend\Admin\ClinicController as AdminClinicController;
-use App\Http\Controllers\Backend\Admin\PatientController as AdminPatientController;
 use App\Http\Controllers\Backend\Admin\DoctorController as AdminDoctorController;
+use App\Http\Controllers\Backend\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Backend\Admin\InvoiceController as AdminInvoiceController;
+use App\Http\Controllers\Backend\Admin\PatientController as AdminPatientController;
 use App\Http\Controllers\Backend\Admin\EmployeeController as AdminEmployeeController;
 use App\Http\Controllers\Backend\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Backend\Admin\DepartmentController as AdminDepartmentController;
 use App\Http\Controllers\Backend\Admin\AppointmentController as AdminAppointmentController;
-use App\Http\Controllers\Backend\Admin\MedicalRecordController as AdminMedicalRecordController;
-use App\Http\Controllers\Backend\Admin\InvoiceController as AdminInvoiceController;
-use App\Http\Controllers\Backend\Admin\ReportController as AdminReportController;
-use App\Http\Controllers\Backend\admin\ChartController as AdminChartController;
 use App\Http\Controllers\Backend\Admin\NotificationController as AdminNotificationController;
+use App\Http\Controllers\Backend\Admin\MedicalRecordController as AdminMedicalRecordController;
 
+use App\Http\Controllers\Backend\ClinicManager\ChartController as ClinicManagerChartController;
 use App\Http\Controllers\Backend\ClinicManager\ClinicController as ClinicManagerClinicController;
 use App\Http\Controllers\Backend\ClinicManager\DoctorController as ClinicManagerDoctorController;
+use App\Http\Controllers\Backend\ClinicManager\ReportController as ClinicManagerReportController;
+use App\Http\Controllers\Backend\ClinicManager\InvoiceController as ClinicManagerInvoiceController;
+use App\Http\Controllers\Backend\ClinicManager\PatientController as ClinicManagerPatientController;
 use App\Http\Controllers\Backend\ClinicManager\EmployeeController as ClinicManagerEmployeeController;
 use App\Http\Controllers\Backend\ClinicManager\DashboardController as ClinicManagerDashboardController;
 use App\Http\Controllers\Backend\ClinicManager\DepartmentController as ClinicManagerDepartmentController;
 use App\Http\Controllers\Backend\ClinicManager\AppointmentController as ClinicManagerAppointmentController;
-use App\Http\Controllers\Backend\ClinicManager\PatientController as ClinicManagerPatientController;
-use App\Http\Controllers\Backend\ClinicManager\ReportController as ClinicManagerReportController;
-use App\Http\Controllers\Backend\ClinicManager\InvoiceController as ClinicManagerInvoiceController;
-use App\Http\Controllers\Backend\ClinicManager\ChartController as ClinicManagerChartController;
+
 
 use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
-use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
+use App\Http\Controllers\Backend\DepartmentManager\ClinicController as DepartmentManagerClinicController;
+use App\Http\Controllers\Backend\DepartmentManager\DepartmentController as DepartmentManagerDepartmentController;
+use App\Http\Controllers\Backend\DepartmentManager\EmployeeController as DepartmentManagerEmployeeController;
+use App\Http\Controllers\Backend\DepartmentManager\DoctorController as DepartmentManagerDoctorController;
+use App\Http\Controllers\Backend\DepartmentManager\PatientController as DepartmentManagerPatientController;
+use App\Http\Controllers\Backend\DepartmentManager\AppointmentController as DepartmentManagerAppointmentController;
+use App\Http\Controllers\Backend\DepartmentManager\ReportController as DepartmentManagerReportController;
+use App\Http\Controllers\Backend\DepartmentManager\ChartController as DepartmentManagerChartController;
+
+
+use App\Http\Controllers\Backend\Doctor\ClinicController as DoctorClinicController;
+use App\Http\Controllers\Backend\Doctor\ReportController as DoctorReportController;
+use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
+use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
+use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
+use App\Http\Controllers\Backend\Doctor\ProfileController as DoctorProfileController;
+use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
+use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
+
+
 use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
+
+
 use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
 
-use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
-use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
-use App\Http\Controllers\Backend\Doctor\ReportController as DoctorReportController;
-use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
-use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
-use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
-use App\Http\Controllers\Backend\Doctor\ProfileController as DoctorProfileController;
-use App\Http\Controllers\Backend\Doctor\ClinicController as DoctorClinicController;
 
-
-use App\Http\Controllers\Backend\Shared\CommonDoctorController;
-
+use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
 
 
 Route::prefix('clinics-management')->group(function () {
@@ -318,12 +332,62 @@ Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:depar
 
     // Dashboard
     Route::get('/dashboard', [DepartmentManagerDashboardController::class, 'departmentManagerDashboard'])->name('department_manager_dashboard');
-    Route::get('/my_profile' , [DepartmentManagerDashboardController::class , 'departmentManagerProfile'])->name('department_manager_profile');
+    Route::get('/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerProfile'])->name('department_manager_profile');
     Route::get('/edit/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerEditProfile'])->name('department_manager_edit_profile');
     Route::put('/update/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerUpdateProfile'])->name('department_manager_update_profile');
     Route::delete('/delete', [DepartmentManagerDashboardController::class, 'departmentManagerDelete'])->name('department_manager_delete');
 
-    Route::get('/search', [DepartmentManagerDashboardController::class, 'departmentManagersearch'])->name('search_departments_managers');
+
+    //Clinic
+    Route::get('/clinic-profile', [DepartmentManagerClinicController::class, 'clinicProfile'])->name('department.clinic_profile');
+
+
+    //Department
+    Route::get('/depratment-profile', [DepartmentManagerDepartmentController::class, 'depratmentProfile'])->name('depratment_profile');
+    Route::get('/edit/depratment-profile', [DepartmentManagerDepartmentController::class, 'editDepratmentProfile'])->name('edit_depratment_profile');
+    Route::put('/update/depratment-profile', [DepartmentManagerDepartmentController::class, 'updateDepratmentProfile'])->name('update_depratment_profile');
+
+
+    //Employees
+    Route::get('/view/employees' ,[DepartmentManagerEmployeeController::class , 'viewEmployees'])->name('department.view_employees');
+    Route::get('/search/employees',[DepartmentManagerEmployeeController::class , 'searchEmployees'])->name('department.search_employees');
+    Route::get('/profile/employee/{id}',[DepartmentManagerEmployeeController::class , 'profileEmployee'])->name('department.profile_employee');
+
+
+    //Doctors
+    Route::get('/view/doctors' ,[DepartmentManagerDoctorController::class , 'viewDoctors'])->name('department.view_doctors');
+    Route::get('/search/doctors',[DepartmentManagerDoctorController::class , 'searchDoctors'])->name('department.search_doctors');
+    Route::get('/profile/doctor/{id}',[DepartmentManagerDoctorController::class , 'profileDoctor'])->name('department.profile_doctor');
+
+    Route::get('/search/schedules',[DepartmentManagerDoctorController::class ,  'searchSchedules'])->name('department.search_schedules');
+    Route::post('/search/doctor/schedule',[DepartmentManagerDoctorController::class , 'searchDoctchedule'])->name('department.search_doctor_schedule');
+
+
+    //Patient
+    Route::get('/view/patients' ,[DepartmentManagerPatientController::class , 'viewPatients'])->name('department.view_patients');
+    Route::get('/search/patients' ,[DepartmentManagerPatientController::class , 'searchPatients'])->name('department.search_patients');
+    Route::get('/profile/patient/{id}',[DepartmentManagerPatientController::class , 'profilePatient'])->name('department.profile_patient');
+
+
+    //Appointment
+    Route::get('/view/appointments' ,[DepartmentManagerAppointmentController::class , 'viewAppointments'])->name('department.view_appointments');
+    Route::get('/search/appointments',[DepartmentManagerAppointmentController::class , 'searchAppointments'])->name('department.search_appointments');
+    Route::get('/details/appointment/{id}',[DepartmentManagerAppointmentController::class , 'detailsAppointment'])->name('department.details_appointment');
+    Route::delete('/delete/appointment/{id}' ,[DepartmentManagerAppointmentController::class ,'deleteAppointment'])->name('department.delete_appointment');
+
+
+    //Reports
+    Route::get('/view/reports' ,[DepartmentManagerReportController::class , 'viewReports'])->name('department.view_reports');
+    Route::get('/details/patients-reports' ,[DepartmentManagerReportController::class , 'detailsPatientsReports'])->name('department.details_patients_reports');
+    Route::get('/details/appointments-reports' ,[DepartmentManagerReportController::class , 'detailsAppointmentsReports'])->name('department.details_appointments_reports');
+    Route::get('/details/invoices-reports' ,[DepartmentManagerReportController::class , 'detailsInvoicesReports'])->name('department.details_invoices_reports');
+    Route::get('/details/doctors-reports' ,[DepartmentManagerReportController::class , 'detailsDoctorsReports'])->name('department.details_doctors_reports');
+
+
+    //Chart
+    Route::get('/department-manager/appointments-per-month', [DepartmentManagerChartController::class, 'departmentAppointmentsPerMonth'])->name('department_manager.appointments_per_month');
+    Route::get('/department-patients-monthly', [DepartmentManagerChartController::class, 'departmentPatientsMonthly'])->name('department_patients_monthly');
+    Route::get('/department-doctors-monthly', [DepartmentManagerChartController::class, 'departmentDoctorsMonthly'])->name('department_doctors_monthly');
 
 });
 

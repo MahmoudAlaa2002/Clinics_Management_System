@@ -489,20 +489,21 @@ $(document).ready(function () {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             success: function (response) {
                 if (response.data == 0) {
-                    Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' });
+                    Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 } else if (response.data == 1) {
-                    Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' });
+                    Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 } else if (response.data == 2) {
                     Swal.fire({
                         title: 'Success',
                         text: 'Employee updated successfully',
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#007BFF',
                     }).then(() => { window.location.href = '/clinic-manager/view/employees'; });
                 }
             },
             error: function() {
-                Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK' });
+                Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
             }
         });
     });

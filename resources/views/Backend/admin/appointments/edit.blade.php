@@ -162,6 +162,13 @@
         $appointmentDate = $appointment->date ?? null;
         $appointmentDay = $appointmentDate ? \Carbon\Carbon::parse($appointmentDate)->format('l') : '';
         $selectedTime = $appointment->time ?? '';
+
+        $originalClinic   = $appointment->clinic_id;
+        $originalDepartment = $appointment->clinicDepartment->department_id ?? '';
+        $originalDoctor     = $appointment->doctor_id;
+        $originalDay        = $appointmentDay;
+        $originalTime       = $selectedTime;
+        $originalNotes      = $appointment->notes ?? '';
     @endphp
 
 <script>
@@ -336,6 +343,32 @@
                 Swal.fire('Error!', 'Please Enter All Required Fields', 'error');
                 return;
             }
+
+            let originalClinic   = "{{ $originalClinic }}";
+            let originalDepartment = "{{ $originalDepartment }}";
+            let originalDoctor     = "{{ $originalDoctor }}";
+            let originalDay        = "{{ $originalDay }}";
+            let originalTime       = "{{ $originalTime }}";
+            let originalNotes      = @json($originalNotes);
+
+            if ($('#clinic_id').val() == originalClinic &&
+                $('#department_id').val() == originalDepartment &&
+                $('#doctor_id').val() == originalDoctor &&
+                $('#appointment_day').val() == originalDay &&
+                $('#appointment_time').val() == originalTime &&
+                $('#notes').val().trim() == originalNotes) {
+
+                Swal.fire({
+                    icon: 'info',
+                    title: 'No Changes',
+                    text: 'No updates were made to this appointment.',
+                    confirmButtonColor: '#007BFF',
+                });
+
+                return;
+            }
+
+
 
             $.ajax({
                 method: 'POST',

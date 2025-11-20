@@ -135,14 +135,16 @@
                     title: 'Error!',
                     text: 'Please fill in all required fields',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
             } else if (password !== password_confirmation) {
                 Swal.fire({
                     title: 'Error!',
                     text: 'The Password And Confirmation Password Do Not Match',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
             } else {
                 $.ajax({
@@ -164,7 +166,8 @@
                             title: 'Warning!',
                             text: 'Sorry , This Email Already Exists',
                             icon: 'warning',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
                         });
                         }else if(response.data == 1){
                             let userId = response.user_id;
@@ -172,7 +175,8 @@
                                 title: 'Success',
                                 text: 'Account Has Been Created Successfully',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 window.location.href = '/patient/dashboard/' + userId;
                             });
