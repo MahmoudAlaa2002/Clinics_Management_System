@@ -386,6 +386,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script>
 $(document).ready(function () {
+        let originalName              = "{{ $doctor->employee->user->name }}";
+        let originalDob               = "{{ $doctor->employee->user->date_of_birth }}";
+        let originalPhone             = "{{ $doctor->employee->user->phone }}";
+        let originalEmail             = "{{ $doctor->employee->user->email }}";
+        let originalAddress           = "{{ $doctor->employee->user->address }}";
+        let originalGender            = "{{ $doctor->employee->user->gender }}";
+        let originalStatus            = "{{ $doctor->employee->status }}";
+        let originalDepartment        = "{{ $doctor->employee->department_id }}";
+        let originalWorkStart         = "{{ $doctor->employee->work_start_time }}";
+        let originalWorkEnd           = "{{ $doctor->employee->work_end_time }}";
+        let originalShortBio          = "{{ $doctor->employee->short_biography }}";
+        let originalWorkingDays       = @json($doctor->employee->working_days ?? []);
+
+        let originalSpeciality        = "{{ $doctor->speciality }}";
+        let originalQualification     = "{{ $doctor->qualification }}";
+        let originalConsultationFee   = "{{ $doctor->consultation_fee }}";
+        let originalRating            = "{{ $doctor->rating }}";
     $('.editBtn').click(function (e) {
         e.preventDefault();
 
@@ -452,6 +469,35 @@ $(document).ready(function () {
         formData.append('consultation_fee', consultation_fee);
         formData.append('rating', rating);
 
+        let newImageSelected = image ? true : false;
+
+        let noChanges =
+            !newImageSelected &&
+            name === originalName &&
+            date_of_birth === originalDob &&
+            phone === originalPhone &&
+            email === originalEmail &&
+            address === originalAddress &&
+            gender === originalGender &&
+            status === originalStatus &&
+            department_id == originalDepartment &&
+            work_start_time === originalWorkStart &&
+            work_end_time === originalWorkEnd &&
+            short_biography === originalShortBio &&
+            JSON.stringify(workingDays.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
+            speciality === originalSpeciality &&
+            qualification === originalQualification &&
+            consultation_fee == originalConsultationFee &&
+            rating == originalRating;
+
+        if (noChanges) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'No Changes',
+                text: 'No updates were made to this doctor',
+                confirmButtonColor: '#007BFF',
+            });
+        }
 
         $.ajax({
             method: 'POST',

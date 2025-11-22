@@ -133,7 +133,15 @@
                         </div>
                     </div>
 
-                    {{-- Submit --}}
+                    <input type="hidden" id="orig_name" value="{{ $user->name }}">
+                    <input type="hidden" id="orig_date" value="{{ $user->date_of_birth }}">
+                    <input type="hidden" id="orig_email" value="{{ $user->email }}">
+                    <input type="hidden" id="orig_phone" value="{{ $user->phone }}">
+                    <input type="hidden" id="orig_address" value="{{ $user->address }}">
+                    <input type="hidden" id="orig_gender" value="{{ $user->gender }}">
+                    <input type="hidden" id="orig_image" value="{{ $user->image }}">
+
+
                     <div class="text-center" style="margin-top:20px;">
                         <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
                             Edit Profile
@@ -187,6 +195,34 @@
                 if (image) {
                     formData.append('image', image);
                 }
+
+                let orig_name = $('#orig_name').val();
+                let orig_date = $('#orig_date').val();
+                let orig_email = $('#orig_email').val();
+                let orig_phone = $('#orig_phone').val();
+                let orig_address = $('#orig_address').val();
+                let orig_gender = $('#orig_gender').val();
+                let orig_image = $('#orig_image').val();
+
+                let noChanges =
+                    name === orig_name &&
+                    date_of_birth === orig_date &&
+                    email === orig_email &&
+                    phone === orig_phone &&
+                    address === orig_address &&
+                    gender === orig_gender &&
+                    !image;
+
+                if (noChanges) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this profile',
+                        confirmButtonColor: '#007BFF',
+                    });
+                    return false;
+                }
+
 
                 $.ajax({
                     type: 'POST',

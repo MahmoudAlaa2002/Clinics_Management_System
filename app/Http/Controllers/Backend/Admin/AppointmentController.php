@@ -215,8 +215,10 @@ class AppointmentController extends Controller{
         $appointmentDate = $appointmentDate->toDateString();
 
         $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)
-            ->where('department_id', $request->department_id)->value('id');
+            ->where('department_id', $request->department_id)
+            ->value('id');
 
+        // 0️⃣ نفس الموعد موجود للمريض والدكتور
         $exists = Appointment::where('patient_id', $request->patient_id)
             ->where('doctor_id', $request->doctor_id)
             ->where('clinic_department_id', $clinicDepartmentId)
@@ -226,10 +228,10 @@ class AppointmentController extends Controller{
             ->exists();
 
         if ($exists) {
-            return response()->json(['data' => 0]); // موجود مسبقا
+            return response()->json(['data' => 0]);
         }
 
-        // فحص تعارض قريب للدكتور نفسه
+        // 1️⃣ تعارض مع دكتور بنفس الوقت
         $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
             ->where('date', $appointmentDate)
             ->where('time', $selectedTime)
@@ -237,10 +239,10 @@ class AppointmentController extends Controller{
             ->exists();
 
         if ($doctorConflict) {
-            return response()->json(['data' => 2]); // الدكتور لديه موعد في هذا الوقت
+            return response()->json(['data' => 1]);
         }
 
-        // فحص تعارض مع عيادة أخرى
+        // 2️⃣ موعد آخر في عيادة أخرى
         $anotherClinic = Appointment::where('patient_id', $request->patient_id)
             ->where('date', $appointmentDate)
             ->where('time', $selectedTime)
@@ -249,10 +251,15 @@ class AppointmentController extends Controller{
             ->exists();
 
         if ($anotherClinic) {
-            return response()->json(['data' => 3]); // لديه موعد في عيادة أخرى
+            return response()->json(['data' => 2]);
         }
 
-        // تحديث الموعد
+        // 3️⃣ الموعد في الماضي
+        if (Carbon::parse("$appointmentDate $selectedTime")->isPast()) {
+            return response()->json(['data' => 3]);
+        }
+
+        // 4️⃣ تحديث ناجح
         Appointment::findOrFail($id)->update([
             'patient_id' => $request->patient_id,
             'doctor_id' => $request->doctor_id,
@@ -262,8 +269,9 @@ class AppointmentController extends Controller{
             'notes' => $request->notes,
         ]);
 
-        return response()->json(['data' => 1]); // نجاح
+        return response()->json(['data' => 4]);
     }
+
 
 
 

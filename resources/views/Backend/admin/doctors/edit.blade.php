@@ -291,11 +291,8 @@
                     <div class="mb-3 col-sm-12">
                         <label for="short_biography">Short Biography</label>
                         <div class="input-group">
-                            <textarea id="short_biography"
-                                      name="short_biography"
-                                      class="form-control"
-                                      rows="4"
-                                      placeholder="Write a short bio...">{{ old('short_biography', $doctor->employee->short_biography ?? '') }}</textarea>
+                            <textarea id="short_biography" name="short_biography" class="form-control" rows="4"
+                                placeholder="Write a short bio...">{{ old('short_biography', $doctor->employee->short_biography ?? '') }}</textarea>
                         </div>
                     </div>
 
@@ -315,6 +312,25 @@
                 </div>
             </div>
         </div>
+
+        <input type="hidden" id="orig_name" value="{{ $user->name }}">
+        <input type="hidden" id="orig_date" value="{{ $user->date_of_birth }}">
+        <input type="hidden" id="orig_phone" value="{{ $user->phone }}">
+        <input type="hidden" id="orig_email" value="{{ $user->email }}">
+        <input type="hidden" id="orig_address" value="{{ $user->address }}">
+        <input type="hidden" id="orig_clinic" value="{{ $doctor->employee->clinic_id }}">
+        <input type="hidden" id="orig_department" value="{{ $doctor->employee->department_id }}">
+        <input type="hidden" id="orig_short_bio" value="{{ $doctor->employee->short_biography }}">
+        <input type="hidden" id="orig_gender" value="{{ $user->gender }}">
+        <input type="hidden" id="orig_status" value="{{ $doctor->employee->status }}">
+        <input type="hidden" id="orig_start" value="{{ $doctor->employee->work_start_time }}">
+        <input type="hidden" id="orig_end" value="{{ $doctor->employee->work_end_time }}">
+        <input type="hidden" id="orig_speciality" value="{{ $doctor->speciality }}">
+        <input type="hidden" id="orig_qualification" value="{{ $doctor->qualification }}">
+        <input type="hidden" id="orig_rating" value="{{ $doctor->rating }}">
+        <input type="hidden" id="orig_fee" value="{{ $doctor->consultation_fee }}">
+        <input type="hidden" id="orig_working_days" value="{{ implode(',', $doctor->employee->working_days ?? []) }}">
+
 
         <div class="text-center" style="margin-top:20px;">
             <button type="button" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
@@ -371,7 +387,6 @@
                     });
 
 
-                    // ✅ استخدم FormData
                     let formData = new FormData();
                     formData.append('_method', 'PUT');
                     formData.append('name', name);
@@ -407,8 +422,8 @@
 
 
                     if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || email === '' || phone === '' || address === '' ||
-                    speciality === '' || !isValidSelectValue('qualification') || rating === '' || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
-                    !isValidSelectValue('work_end_time') || gender === undefined ||workingDays.length === 0) {
+                        speciality === '' || !isValidSelectValue('qualification') || rating === '' || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
+                        !isValidSelectValue('work_end_time') || gender === undefined ||workingDays.length === 0) {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please enter all required fields',
@@ -454,6 +469,41 @@
                         });
                         return;
                     } else{
+                        let origDays = $('#orig_working_days').val().split(',');
+
+                        let noChanges =
+                            name === $('#orig_name').val() &&
+                            date_of_birth === $('#orig_date').val() &&
+                            phone === $('#orig_phone').val() &&
+                            email === $('#orig_email').val() &&
+                            address === $('#orig_address').val() &&
+                            clinic_id === $('#orig_clinic').val() &&
+                            department_id === $('#orig_department').val() &&
+                            speciality === $('#orig_speciality').val() &&
+                            qualification === $('#orig_qualification').val() &&
+                            rating === $('#orig_rating').val() &&
+                            consultation_fee === $('#orig_fee').val() &&
+                            work_start_time === $('#orig_start').val() &&
+                            work_end_time === $('#orig_end').val() &&
+                            short_biography === $('#orig_short_bio').val() &&
+                            status === $('#orig_status').val() &&
+                            gender === $('#orig_gender').val() &&
+                            workingDays.sort().toString() === origDays.sort().toString();
+
+
+                            let imageChanged = image ? true : false;
+
+                            if (noChanges && !imageChanged) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'No Changes',
+                                    text: 'No updates were made to this doctor',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                                return false;
+                            }
+
+
                         $.ajax({
                             method: 'POST',
                             url: "{{ route('update_doctor', ['id' => $doctor->id]) }}",
@@ -534,7 +584,7 @@
 
                 for (let h = sHour; h <= eHour; h++) {
                 let hh = (h < 10 ? '0' : '') + h;
-                let value = hh + ':00:00';   // صيغة كاملة مع الثواني
+                let value = hh + ':00';   // صيغة كاملة مع الثواني
                 let label = hh + ':00';      // للعرض فقط
 
                 // قائمة البداية

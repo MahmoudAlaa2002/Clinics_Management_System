@@ -85,7 +85,7 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>id</th>
+                                <th>#</th>
                                 <th>Patient Name</th>
                                 <th>Clinic Name</th>
                                 <th>Department Name</th>
@@ -100,7 +100,7 @@
                             @if($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
                                     <tr>
-                                        <td>{{ $appointment->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
                                         <td>{{ $appointment->clinicDepartment->clinic->name }}</td>
                                         <td>{{ $appointment->clinicDepartment->department->name }}</td>

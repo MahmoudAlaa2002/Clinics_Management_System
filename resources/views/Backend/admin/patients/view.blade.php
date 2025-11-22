@@ -48,7 +48,7 @@
             <table class="table mb-0 text-center table-bordered table-striped custom-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Patient Name</th>
                         <th>Email</th>
                         <th>Phone</th>

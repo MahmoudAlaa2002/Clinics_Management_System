@@ -66,7 +66,7 @@
             <table class="table mb-0 text-center table-bordered table-striped custom-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Clinic Name</th>
                         <th>Location</th>
                         <th>Email</th>
@@ -78,7 +78,7 @@
                 <tbody id="clinics_table_body">
                         @foreach ($clinics as $clinic)
                             <tr>
-                                <td>{{ $clinic->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $clinic->name }}</td>
                                 <td>{{ $clinic->location }}</td>
                                 <td>{{ $clinic->email }}</td>

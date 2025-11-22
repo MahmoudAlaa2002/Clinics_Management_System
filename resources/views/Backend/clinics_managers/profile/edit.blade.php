@@ -148,6 +148,14 @@
 @section('js')
     <script>
         $(document).ready(function () {
+            let originalName       = "{{ $clinicManager->name }}";
+            let originalDob        = "{{ $clinicManager->date_of_birth }}";
+            let originalEmail      = "{{ $clinicManager->email }}";
+            let originalPhone      = "{{ $clinicManager->phone }}";
+            let originalAddress    = "{{ $clinicManager->address }}";
+            let originalGender     = "{{ $clinicManager->gender }}";
+            let originalImage      = "{{ $clinicManager->image }}";
+
             $('.editBtn').click(function (e) {
                 e.preventDefault();
 
@@ -185,6 +193,27 @@
                 formData.append('gender', gender);
                 if (image) {
                     formData.append('image', image);
+                }
+
+                let newImageSelected = image ? true : false;
+
+                let noChanges =
+                    !newImageSelected &&
+                    name === originalName &&
+                    date_of_birth === originalDob &&
+                    email === originalEmail &&
+                    phone === originalPhone &&
+                    address === originalAddress &&
+                    gender === originalGender &&
+                    password === "";
+
+                if (noChanges) {
+                    return Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this profile',
+                        confirmButtonColor: '#007BFF',
+                    });
                 }
 
                 $.ajax({

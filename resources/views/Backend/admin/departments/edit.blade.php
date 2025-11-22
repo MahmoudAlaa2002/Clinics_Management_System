@@ -100,8 +100,13 @@
         </div>
     </div>
 </div>
-
 @endsection
+
+@php
+    $originalName = $department->name;
+    $originalDescription = $department->description ?? '';
+    $originalStatus = $department->status;
+@endphp
 
 @section('js')
     <script>
@@ -121,8 +126,23 @@
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#007BFF',
                     });
-                }else{
-                    $.ajax({
+                }
+
+                let originalName = "{{ $originalName }}";
+                let originalDescription = "{{ $originalDescription }}";
+                let originalStatus = "{{ $originalStatus }}";
+
+                if (name === originalName && description === originalDescription && status === originalStatus){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this department',
+                        confirmButtonColor: '#007BFF',
+                    });
+                    return;
+                }
+
+                $.ajax({
                     method: 'POST',
                     url: "{{ route('update_department', ['id' => $department->id]) }}",
                     data: {
@@ -148,8 +168,7 @@
                         }
                     },
                 });
-            }
+            });
         });
-    });
     </script>
 @endsection

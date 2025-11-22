@@ -2,7 +2,7 @@
     @if(isset($searching) && $searching)
         @foreach ($clinics as $clinic)
             <tr style="vertical-align: middle;">
-                <td style="font-weight: bold;">{{ $clinic->id }}</td>
+                <td style="font-weight: bold;">{{ $loop->iteration }}</td>
                 <td>{{ $clinic->name ?? '—' }}</td>
                 <td>{{ $clinic->location ?? $clinic->address ?? '—' }}</td>
                 <td>{{ $clinic->email ?? '—' }}</td>

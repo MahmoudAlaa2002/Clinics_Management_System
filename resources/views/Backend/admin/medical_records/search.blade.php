@@ -1,7 +1,7 @@
 @if($medical_records->count() > 0)
     @foreach ($medical_records as $medical_record)
         <tr>
-            <td>{{ $medical_record->id }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $medical_record->appointment_id }}</td>
             <td>{{ $medical_record->patient->user->name ?? 'Unknown' }}</td>
             <td>{{ $medical_record->doctor->employee->user->name ?? 'Unknown' }}</td>

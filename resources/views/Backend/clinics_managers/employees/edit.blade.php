@@ -410,6 +410,27 @@ $(document).ready(function () {
         }
     });
 
+
+    let originalName               = "{{ $employee->user->name }}";
+    let originalDob                = "{{ $employee->user->date_of_birth }}";
+    let originalPhone              = "{{ $employee->user->phone }}";
+    let originalEmail              = "{{ $employee->user->email }}";
+    let originalAddress            = "{{ $employee->user->address }}";
+    let originalGender             = "{{ $employee->user->gender }}";
+    let originalStatus             = "{{ $employee->status }}";
+    let originalDepartment         = "{{ $employee->department_id }}";
+    let originalJobTitle           = "{{ $employee->job_title }}";
+    let originalWorkStart          = "{{ $employee->work_start_time }}";
+    let originalWorkEnd            = "{{ $employee->work_end_time }}";
+    let originalWorkingDays        = @json($employee->working_days ?? []);
+    let originalBiography          = "{{ $employee->short_biography }}";
+
+    let originalSpeciality         = "{{ optional($employee->doctor)->speciality }}";
+    let originalQualification      = "{{ optional($employee->doctor)->qualification }}";
+    let originalFee                = "{{ optional($employee->doctor)->consultation_fee }}";
+    let originalRating             = "{{ optional($employee->doctor)->rating }}";
+
+
     $('.editBtn').click(function (e) {
         e.preventDefault();
 
@@ -478,6 +499,40 @@ $(document).ready(function () {
         formData.append('qualification', qualification);
         formData.append('consultation_fee', consultation_fee);
         formData.append('rating', rating);
+
+        let newImageSelected = image ? true : false;
+
+        let noChanges = !newImageSelected &&
+            name === originalName &&
+            date_of_birth === originalDob &&
+            phone === originalPhone &&
+            email === originalEmail &&
+            address === originalAddress &&
+            gender === originalGender &&
+            status === originalStatus &&
+            department_id == originalDepartment &&
+            job_title === originalJobTitle &&
+            work_start_time === originalWorkStart &&
+            work_end_time === originalWorkEnd &&
+            short_biography === originalBiography &&
+            JSON.stringify(workingDays.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
+
+            (!$('#doctor_info_card').is(':visible') ||
+                (speciality === originalSpeciality &&
+                qualification === originalQualification &&
+                consultation_fee == originalFee &&
+                rating == originalRating)
+            );
+
+        if (noChanges) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Changes',
+                text: 'No updates were made to this employee',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
 
 
         $.ajax({

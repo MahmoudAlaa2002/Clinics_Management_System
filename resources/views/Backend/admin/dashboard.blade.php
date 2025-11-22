@@ -194,7 +194,7 @@
                                         <h5 style="color: #555; font-weight: 500;">There are currently no scheduled appointments</h5>
                                     </div>
                                 @else
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="min-height: 350px; max-height: 350px; overflow-y: auto;">
                                         <table class="table mb-0">
 
                                             <thead class="d-none">
@@ -337,7 +337,7 @@
                                         <h5 style="color: #555; font-weight: 500;">No patients available at the moment</h5>
                                     </div>
                                 @else
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="min-height: 350px; max-height: 350px; overflow-y: auto;">
                                         <table class="table mb-0 new-patient-table">
                                             <tbody>
                                                 @foreach ($patients as $patient)

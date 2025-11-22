@@ -46,7 +46,7 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>id</th>
+                                <th>#</th>
                                 <th>Department Name</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -55,7 +55,7 @@
                         <tbody>
                             @foreach ($departments as $department)
                                 <tr>
-                                    <td>{{ $department->id }}</td>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $department->name }}</td>
                                     <td>
                                         @if($department->status === 'active')

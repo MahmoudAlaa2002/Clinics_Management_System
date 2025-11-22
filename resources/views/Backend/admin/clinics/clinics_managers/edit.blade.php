@@ -263,214 +263,253 @@
 
 
 @section('js')
-@php
-  $workStart = old('work_start_time', $clinic_manager->employee->work_start_time ?? '');
-  $workEnd   = old('work_end_time',   $clinic_manager->employee->work_end_time   ?? '');
-  $currentClinicId = optional($clinic_manager->employee)->clinic_id ?? '';
-  $selectedDepartmentId =  $clinic_manager->department->id ?? '';
+    @php
+        $workStart = old('work_start_time', $clinic_manager->employee->work_start_time ?? '');
+        $workEnd   = old('work_end_time',   $clinic_manager->employee->work_end_time   ?? '');
+        $currentClinicId = optional($clinic_manager->employee)->clinic_id ?? '';
+        $selectedDepartmentId =  $clinic_manager->department->id ?? '';
 
-
-@endphp
+        $origName = $clinic_manager->name;
+        $origEmail = $clinic_manager->email;
+        $origPhone = $clinic_manager->phone;
+        $origAddress = $clinic_manager->address;
+        $origGender = $clinic_manager->gender;
+        $origDOB = $clinic_manager->date_of_birth;
+        $origClinic = optional($clinic_manager->employee)->clinic_id ?? '';
+        $origWorkStart = $clinic_manager->employee->work_start_time ?? '';
+        $origWorkEnd = $clinic_manager->employee->work_end_time ?? '';
+        $origBio = $clinic_manager->employee->short_biography ?? '';
+        $origStatus = $clinic_manager->employee->status ?? '';
+        $origWorkingDays = $clinic_manager->employee->working_days ?? [];
+    @endphp
 
 <script>
-  // Helper: ensure select has a non-empty value
-  function isValidSelectValue(id) {
-    const el = document.getElementById(id);
-    if (!el) return false;
-    const v = el.value;
-    return v !== '' && v !== null && v !== undefined;
-  }
-
-
-
-  function loadWorkingDaysForClinic(id, selectedDays) {
-    $.get('/admin/clinic-working-days/' + id, function (resp) {
-        // 🔹 استخراج الأيام المفعلة من العيادة
-        const clinicDays = Array.isArray(resp.working_days) ? resp.working_days : [];
-
-        const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
-
-        allDays.forEach(day => {
-            const $cb = $('#day_' + day);
-            const isAvailable = clinicDays.includes(day);
-
-            if (isAvailable) {
-                // ✅ الأيام الخاصة بالعيادة تكون مفعّلة
-                $cb.prop('disabled', false).closest('label, .form-check-label').removeClass('text-muted');
-                if (selectedDays.includes(day)) $cb.prop('checked', true);
-            } else {
-                // ❌ الأيام الغير موجودة في العيادة تُعطّل وتُرمّد
-                $cb.prop('disabled', true).prop('checked', false);
-                $cb.closest('label, .form-check-label').addClass('text-muted');
-            }
-        });
-    });
-}
-
-
-
-  function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
-    if (!clinicId) return;
-    $.get('/admin/get-clinic-info/' + clinicId, function (data) {
-      const openingTime = (data.opening_time || '08:00:00').substring(0,5); // "HH:MM"
-      const closingTime = (data.closing_time || '16:00:00').substring(0,5);
-
-      const startHour = parseInt(openingTime.substring(0,2));
-      const endHour   = parseInt(closingTime.substring(0,2));
-
-      const $start = $('#work_start_time');
-      const $end   = $('#work_end_time');
-      $start.empty().append('<option disabled hidden>Select Start Time</option>');
-      $end.empty().append('<option disabled hidden>Select End Time</option>');
-
-      for (let hour = startHour; hour <= endHour; hour++) {
-        const hh = hour.toString().padStart(2,'0');
-        const opt = `${hh}:00`;
-        $start.append(`<option value="${opt}">${opt}</option>`);
-        $end.append(`<option value="${opt}">${opt}</option>`);
-      }
-
-      if (selectedStart) $start.val(selectedStart.substring(0,5));
-      if (selectedEnd)   $end.val(selectedEnd.substring(0,5));
-    });
-  }
-
-  $(document).ready(function () {
-
-    const currentClinicId = "{{ $currentClinicId }}";
-    const selectedDepartmentId = "{{ $selectedDepartmentId }}";
-    const selectedDays = {!! json_encode($doctor->working_days ?? $working_days ?? []) !!};
-    const selectedStart = "{{ $workStart }}";
-    const selectedEnd   = "{{ $workEnd }}";
-
-
-    if (currentClinicId) {
-      $('#clinic_id').val(String(currentClinicId));
-      loadWorkingDaysForClinic(currentClinicId, selectedDays);
-      loadWorkingTimes(currentClinicId, selectedStart, selectedEnd);
+    // Helper: ensure select has a non-empty value
+    function isValidSelectValue(id) {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const v = el.value;
+        return v !== '' && v !== null && v !== undefined;
     }
 
-    $('#clinic_id').on('change', function () {
-      const clinicId = $(this).val();
-      $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
-      loadWorkingTimes(clinicId);
-      loadWorkingDaysForClinic(clinicId, []);
-    });
 
 
-    $('.editBtn').on('click', function (e) {
-      e.preventDefault();
+    function loadWorkingDaysForClinic(id, selectedDays) {
+        $.get('/admin/clinic-working-days/' + id, function (resp) {
+            // 🔹 استخراج الأيام المفعلة من العيادة
+            const clinicDays = Array.isArray(resp.working_days) ? resp.working_days : [];
 
-      const name = $('#name').val().trim();
-      const date_of_birth = $('#date_of_birth').val().trim();
-      const clinic_id = $('#clinic_id').val();
-      const department_id = $('#department_id').val();
-      const email = $('#email').val();
-      const password = $('#password').val();
-      const confirm_password = $('#confirm_password').val();
-      const phone = $('#phone').val().trim();
-      const address = $('#address').val().trim();
-      const work_start_time = $('#work_start_time').val();
-      const work_end_time = $('#work_end_time').val();
-      const gender = $('input[name="gender"]:checked').val();
-      const short_biography = $('#short_biography').val().trim();
-      const status = $('input[name="status"]:checked').val();
-      const image = document.querySelector('#image').files[0];
+            const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 
-      let workingDays = [];
-      $('input[name="working_days[]"]:checked').each(function () {
-        workingDays.push($(this).val());
-      });
+            allDays.forEach(day => {
+                const $cb = $('#day_' + day);
+                const isAvailable = clinicDays.includes(day);
 
-      if (!name || !date_of_birth || !clinic_id  || !email || !phone || !address || !gender
-        || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Please enter all required fields',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#007BFF',
+                if (isAvailable) {
+                    // ✅ الأيام الخاصة بالعيادة تكون مفعّلة
+                    $cb.prop('disabled', false).closest('label, .form-check-label').removeClass('text-muted');
+                    if (selectedDays.includes(day)) $cb.prop('checked', true);
+                } else {
+                    // ❌ الأيام الغير موجودة في العيادة تُعطّل وتُرمّد
+                    $cb.prop('disabled', true).prop('checked', false);
+                    $cb.closest('label, .form-check-label').addClass('text-muted');
+                }
+            });
         });
-        return;
-      }
+    }
 
-      if (password && password !== confirm_password) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Password confirmation does not match',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#007BFF',
+
+
+    function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
+        if (!clinicId) return;
+        $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+        const openingTime = (data.opening_time || '08:00:00').substring(0,5); // "HH:MM"
+        const closingTime = (data.closing_time || '16:00:00').substring(0,5);
+
+        const startHour = parseInt(openingTime.substring(0,2));
+        const endHour   = parseInt(closingTime.substring(0,2));
+
+        const $start = $('#work_start_time');
+        const $end   = $('#work_end_time');
+        $start.empty().append('<option disabled hidden>Select Start Time</option>');
+        $end.empty().append('<option disabled hidden>Select End Time</option>');
+
+        for (let hour = startHour; hour <= endHour; hour++) {
+            const hh = hour.toString().padStart(2,'0');
+            const opt = `${hh}:00`;
+            $start.append(`<option value="${opt}">${opt}</option>`);
+            $end.append(`<option value="${opt}">${opt}</option>`);
+        }
+
+        if (selectedStart) $start.val(selectedStart.substring(0,5));
+        if (selectedEnd)   $end.val(selectedEnd.substring(0,5));
         });
-        return;
-      }
+    }
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('date_of_birth', date_of_birth);
-      formData.append('clinic_id', clinic_id);
-      formData.append('department_id', department_id);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('confirm_password', confirm_password);
-      formData.append('phone', phone);
-      formData.append('address', address);
-      formData.append('work_start_time', work_start_time);
-      formData.append('work_end_time', work_end_time);
-      formData.append('gender', gender);
-      formData.append('short_biography', short_biography);
-      formData.append('status', status);
-      if (image) formData.append('image', image);
-      workingDays.forEach(d => formData.append('working_days[]', d));
+    $(document).ready(function () {
 
-      $.ajax({
-        type: 'POST',
-        url: "{{ route('update_clinics_managers', ['id' => $clinic_manager->id]) }}",
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          'X-HTTP-Method-Override': 'PUT'
-        },
-        success: function (response) {
-          if (response.data == 0) {
+        const currentClinicId = "{{ $currentClinicId }}";
+        const selectedDepartmentId = "{{ $selectedDepartmentId }}";
+        const selectedDays = {!! json_encode($doctor->working_days ?? $working_days ?? []) !!};
+        const selectedStart = "{{ $workStart }}";
+        const selectedEnd   = "{{ $workEnd }}";
+
+
+        if (currentClinicId) {
+        $('#clinic_id').val(String(currentClinicId));
+        loadWorkingDaysForClinic(currentClinicId, selectedDays);
+        loadWorkingTimes(currentClinicId, selectedStart, selectedEnd);
+        }
+
+        $('#clinic_id').on('change', function () {
+        const clinicId = $(this).val();
+        $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
+        loadWorkingTimes(clinicId);
+        loadWorkingDaysForClinic(clinicId, []);
+        });
+
+
+        $('.editBtn').on('click', function (e) {
+        e.preventDefault();
+
+        const name = $('#name').val().trim();
+        const date_of_birth = $('#date_of_birth').val().trim();
+        const clinic_id = $('#clinic_id').val();
+        const department_id = $('#department_id').val();
+        const email = $('#email').val();
+        const password = $('#password').val();
+        const confirm_password = $('#confirm_password').val();
+        const phone = $('#phone').val().trim();
+        const address = $('#address').val().trim();
+        const work_start_time = $('#work_start_time').val();
+        const work_end_time = $('#work_end_time').val();
+        const gender = $('input[name="gender"]:checked').val();
+        const short_biography = $('#short_biography').val().trim();
+        const status = $('input[name="status"]:checked').val();
+        const image = document.querySelector('#image').files[0];
+
+        let workingDays = [];
+        $('input[name="working_days[]"]:checked').each(function () {
+            workingDays.push($(this).val());
+        });
+
+        if (!name || !date_of_birth || !clinic_id  || !email || !phone || !address || !gender
+            || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
             Swal.fire({
                 title: 'Error!',
-                text: 'This clinic manager already exists',
+                text: 'Please enter all required fields',
                 icon: 'error',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#007BFF',
             });
-          } else if (response.data == 1) {
+            return;
+        }
+
+        if (password && password !== confirm_password) {
             Swal.fire({
-                title: 'Success',
-                text: 'Clinic Manager has been updated successfully',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
-            }).then(() => window.location.href = '/admin/view/clinics-managers');
-          } else {
-            Swal.fire({
-                title: 'Notice',
-                text: 'Unexpected response. Please try again.',
-                icon: 'info',
+                title: 'Error!',
+                text: 'Password confirmation does not match',
+                icon: 'error',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#007BFF',
             });
-          }
-        },
-        error: function(xhr){
-          Swal.fire({
-            title: 'Error!',
-            text: (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Request failed',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#007BFF',
-          });
+            return;
         }
-      });
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('date_of_birth', date_of_birth);
+        formData.append('clinic_id', clinic_id);
+        formData.append('department_id', department_id);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('confirm_password', confirm_password);
+        formData.append('phone', phone);
+        formData.append('address', address);
+        formData.append('work_start_time', work_start_time);
+        formData.append('work_end_time', work_end_time);
+        formData.append('gender', gender);
+        formData.append('short_biography', short_biography);
+        formData.append('status', status);
+        if (image) formData.append('image', image);
+        workingDays.forEach(d => formData.append('working_days[]', d));
+
+        let noChanges =
+            name === "{{ $origName }}" &&
+            email === "{{ $origEmail }}" &&
+            phone === "{{ $origPhone }}" &&
+            address === "{{ $origAddress }}" &&
+            gender === "{{ $origGender }}" &&
+            date_of_birth === "{{ $origDOB }}" &&
+            clinic_id == "{{ $origClinic }}" &&
+            work_start_time === "{{ $origWorkStart }}" &&
+            work_end_time === "{{ $origWorkEnd }}" &&
+            short_biography === "{{ $origBio }}" &&
+            status === "{{ $origStatus }}" &&
+            JSON.stringify(workingDays.sort()) === JSON.stringify(@json($origWorkingDays).sort()) &&
+            !image &&
+            password === "" &&
+            confirm_password === "";
+
+        // إذا لم يحدث أي تعديل
+        if (noChanges) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Changes',
+                text: 'No updates were made to this clinic manager',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('update_clinics_managers', ['id' => $clinic_manager->id]) }}",
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'X-HTTP-Method-Override': 'PUT'
+            },
+            success: function (response) {
+            if (response.data == 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'This clinic manager already exists',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
+                });
+            } else if (response.data == 1) {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Clinic Manager has been updated successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
+                }).then(() => window.location.href = '/admin/view/clinics-managers');
+            } else {
+                Swal.fire({
+                    title: 'Notice',
+                    text: 'Unexpected response. Please try again.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
+                });
+            }
+            },
+            error: function(xhr){
+            Swal.fire({
+                title: 'Error!',
+                text: (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Request failed',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            }
+        });
+        });
     });
-  });
 </script>
 @endsection

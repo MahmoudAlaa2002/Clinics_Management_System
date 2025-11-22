@@ -147,6 +147,14 @@
 @section('js')
     <script>
         $(document).ready(function () {
+            let originalName         = "{{ $department_manager->name }}";
+            let originalDob          = "{{ $department_manager->date_of_birth }}";
+            let originalEmail        = "{{ $department_manager->email }}";
+            let originalPhone        = "{{ $department_manager->phone }}";
+            let originalAddress      = "{{ $department_manager->address }}";
+            let originalGender       = "{{ $department_manager->gender }}";
+            let originalImage        = "{{ $department_manager->image }}";
+
             $('.editBtn').click(function (e) {
                 e.preventDefault();
 
@@ -184,6 +192,26 @@
                 formData.append('gender', gender);
                 if (image) {
                     formData.append('image', image);
+                }
+
+                let newImageSelected = image ? true : false;
+                let noChanges =
+                    !newImageSelected &&
+                    name === originalName &&
+                    date_of_birth === originalDob &&
+                    email === originalEmail &&
+                    phone === originalPhone &&
+                    address === originalAddress &&
+                    gender === originalGender &&
+                    password === "";
+
+                if (noChanges) {
+                    return Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this profile',
+                        confirmButtonColor: '#007BFF',
+                    });
                 }
 
                 $.ajax({

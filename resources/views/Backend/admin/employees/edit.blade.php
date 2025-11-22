@@ -323,6 +323,22 @@
                         </div>
                     </div>
 
+                    <input type="hidden" id="orig_name" value="{{ $employee->user->name }}">
+                    <input type="hidden" id="orig_date_of_birth" value="{{ $employee->user->date_of_birth }}">
+                    <input type="hidden" id="orig_phone" value="{{ $employee->user->phone }}">
+                    <input type="hidden" id="orig_email" value="{{ $employee->user->email }}">
+                    <input type="hidden" id="orig_address" value="{{ $employee->user->address }}">
+                    <input type="hidden" id="orig_clinic_id" value="{{ $employee->clinic_id }}">
+                    <input type="hidden" id="orig_department_id" value="{{ $employee->department_id }}">
+                    <input type="hidden" id="orig_job_title" value="{{ $employee->job_title }}">
+                    <input type="hidden" id="orig_work_start" value="{{ $employee->work_start_time }}">
+                    <input type="hidden" id="orig_work_end" value="{{ $employee->work_end_time }}">
+                    <input type="hidden" id="orig_status" value="{{ $employee->status }}">
+                    <input type="hidden" id="orig_bio" value="{{ $employee->short_biography }}">
+                    <input type="hidden" id="orig_gender" value="{{ $employee->user->gender }}">
+                    <input type="hidden" id="orig_working_days" value="{{ implode(',', $employee->working_days ?? []) }}">
+
+
                     {{-- Submit --}}
                     <div class="text-center" style="margin-top:20px;">
                         <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
@@ -485,6 +501,38 @@
             formData.append('qualification', qualification);
             formData.append('consultation_fee', consultation_fee);
             formData.append('rating', rating);
+
+
+            let origWorkingDays = $('#orig_working_days').val().split(',');
+            let noChanges =
+                name === $('#orig_name').val() &&
+                date_of_birth === $('#orig_date_of_birth').val() &&
+                phone === $('#orig_phone').val() &&
+                email === $('#orig_email').val() &&
+                address === $('#orig_address').val() &&
+                clinic_id === $('#orig_clinic_id').val() &&
+                job_title === $('#orig_job_title').val() &&
+                work_start_time === $('#orig_work_start').val() &&
+                work_end_time === $('#orig_work_end').val() &&
+                short_biography === $('#orig_bio').val() &&
+                status === $('#orig_status').val() &&
+                gender === $('#orig_gender').val() &&
+                workingDays.sort().toString() === origWorkingDays.sort().toString();
+
+            if ($('#department_field').is(':visible')) {
+                noChanges = noChanges && department_id === $('#orig_department_id').val();
+            }
+
+            if (noChanges) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this employee',
+                    confirmButtonColor: '#007BFF',
+                });
+                return false;
+            }
+
 
             $.ajax({
                 method: 'POST',

@@ -103,28 +103,28 @@ class MedicalRecordController extends Controller{
 
 
 
-    public function editMedicalRecord($id){
-        $medical_record = MedicalRecord::findOrFail($id);
-        return view ('Backend.admin.medical_records.edit' , compact('medical_record'));
-    }
+    // public function editMedicalRecord($id){
+    //     $medical_record = MedicalRecord::findOrFail($id);
+    //     return view ('Backend.admin.medical_records.edit' , compact('medical_record'));
+    // }
 
 
 
 
 
-    public function updateMedicalRecord(Request $request, $id){
-        $medical_record = MedicalRecord::findOrFail($id);
-        $medical_record->update([
-            'diagnosis' => $request->diagnosis,
-            'treatment' => $request->treatment,
-            'record_date' => $request->record_date,
-            'prescriptions' => $request->prescriptions,
-            'attachments'  => $request->attachments,
-            'notes'  => $request->notes,
-        ]);
+    // public function updateMedicalRecord(Request $request, $id){
+    //     $medical_record = MedicalRecord::findOrFail($id);
+    //     $medical_record->update([
+    //         'diagnosis' => $request->diagnosis,
+    //         'treatment' => $request->treatment,
+    //         'record_date' => $request->record_date,
+    //         'prescriptions' => $request->prescriptions,
+    //         'attachments'  => $request->attachments,
+    //         'notes'  => $request->notes,
+    //     ]);
 
-        return response()->json(['data' => 1]);
-    }
+    //     return response()->json(['data' => 1]);
+    // }
 
 
 

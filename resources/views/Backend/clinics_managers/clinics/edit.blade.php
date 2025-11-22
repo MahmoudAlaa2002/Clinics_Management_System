@@ -237,6 +237,16 @@
             return value !== '' && value !== '0';
         }
 
+        let originalName = "{{ $clinic->name }}";
+        let originalLocation = "{{ $clinic->location }}";
+        let originalEmail = "{{ $clinic->email }}";
+        let originalPhone = "{{ $clinic->phone }}";
+        let originalOpening = "{{ $clinic->opening_time }}";
+        let originalClosing = "{{ $clinic->closing_time }}";
+        let originalDescription = "{{ $clinic->description ?? '' }}";
+        let originalStatus = "{{ $clinic->status }}";
+        let originalWorkingDays = @json($working_days ?? []);
+        let originalDepartments = @json($clinic->departments->pluck('id')->toArray());
 
         $(document).ready(function () {
             $('.editBtn').click(function (e) {
@@ -272,6 +282,29 @@
                     });
                     return;
                 }
+
+                let noChanges =
+                    name === originalName &&
+                    location === originalLocation &&
+                    email === originalEmail &&
+                    phone === originalPhone &&
+                    opening_time === originalOpening &&
+                    closing_time === originalClosing &&
+                    description === originalDescription &&
+                    status === originalStatus &&
+                    JSON.stringify(working_days.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
+                    JSON.stringify(departments.map(Number).sort()) === JSON.stringify(originalDepartments.map(Number).sort());
+
+                if (noChanges) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this clinic',
+                        confirmButtonColor: '#007BFF',
+                    });
+                    return;
+                }
+
 
                 $.ajax({
                     method: 'POST',

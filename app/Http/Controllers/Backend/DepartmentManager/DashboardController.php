@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Backend\DepartmentManager;
 
+use Carbon\Carbon;
+use App\Models\Doctor;
+use App\Models\Patient;
+use App\Models\Employee;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +15,58 @@ use Illuminate\Support\Facades\Hash;
 class DashboardController extends Controller{
 
     public function departmentManagerDashboard(){
-        return view ('Backend.departments_managers.dashboard');
+        $clinic = Auth::user()->employee->clinic;
+        $department = Auth::user()->employee->department;
+        $employee_count = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic->id)->where('department_id' , $department->id)->count();
+
+        $doctor_count = Doctor::whereHas('employee', function ($q) use ($clinic , $department) {
+            $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
+        })->count();
+
+        $doctors = Doctor::whereHas('employee', function ($q) use ($clinic , $department) {
+            $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
+        })->take(5)->get();
+
+
+        $patient_count = Patient::whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->count();
+
+
+        $patients = Patient::whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->orderBy('created_at', 'desc')->take(5)->get();
+
+
+        $all_appointments = Appointment::whereHas('clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->count();
+
+        $appointments = Appointment::whereHas('clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->orderBy('created_at', 'desc')->take(5)->get();
+
+
+        $today_appointments = Appointment::whereHas('clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->whereDate('date', Carbon::today())->count();
+
+
+        return view ('Backend.departments_managers.dashboard' , compact('employee_count',
+            'doctor_count',
+            'doctors',
+            'patient_count',
+            'patients',
+            'all_appointments',
+            'appointments',
+            'today_appointments',
+            'today_appointments',
+        ));
     }
 
 
@@ -36,7 +92,7 @@ class DashboardController extends Controller{
             $password = Hash::make($request->password);
         }
 
-        $imagePath = $department_manager->image; 
+        $imagePath = $department_manager->image;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $imageName = time() . '_' . $file->getClientOriginalName();

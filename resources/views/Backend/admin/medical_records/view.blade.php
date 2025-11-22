@@ -3,6 +3,7 @@
 @section('title', 'View Medical Records')
 
 @section('content')
+
 <style>
     html, body {
         height: 100%;
@@ -66,7 +67,7 @@
             <table class="table mb-0 text-center table-bordered table-striped custom-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Appointment ID</th>
                         <th>Patient Name</th>
                         <th>Doctor Name</th>

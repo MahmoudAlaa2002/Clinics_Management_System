@@ -132,7 +132,7 @@
 
                                 {{-- Working Days --}}
                                 <div class="row small-gutter" style="width:100%; margin:0;">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
                                         <label>Working Days <span class="text-danger">*</span></label>
                                         <div class="row gx-1">
                                             <div class="col-6">
@@ -158,7 +158,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- /Working Days --}}
                             </div>
                         </div>
                     </div>
@@ -230,13 +229,26 @@
 </div>
 @endsection
 
+@php
+    $originalName = $clinic->name;
+    $originalLocation = $clinic->location;
+    $originalEmail = $clinic->email;
+    $originalPhone = $clinic->phone;
+    $originalOpening = $clinic->opening_time;
+    $originalClosing = $clinic->closing_time;
+    $originalDescription = $clinic->description ?? '';
+    $originalStatus = $clinic->status;
+    $originalWorkingDays = $working_days ?? [];
+    $clinicDepartmentIds = $clinic->departments->pluck('id')->toArray();
+@endphp
+
+
 @section('js')
     <script>
         function isValidSelectValue(id) {
             let value = document.getElementById(id).value;
             return value !== '' && value !== '0';
         }
-
 
         $(document).ready(function () {
             $('.editBtn').click(function (e) {
@@ -258,8 +270,9 @@
 
                 let departments = [];
                 $('input[name="departments[]"]:checked').each(function () {
-                    departments.push($(this).val());
+                    departments.push(Number($(this).val()));
                 });
+
 
                 if (name === '' || location === '' || email === '' || phone === '' || !isValidSelectValue('opening_time')
                     || !isValidSelectValue('closing_time') || working_days.length === 0 || departments.length === 0) {
@@ -272,6 +285,34 @@
                     });
                     return;
                 }
+
+                let originalWorkingDays = @json($originalWorkingDays);
+                let originalDepartments = @json($clinicDepartmentIds).map(Number);
+
+
+                let noChanges =
+                    name === "{{ $originalName }}" &&
+                    location === "{{ $originalLocation }}" &&
+                    email === "{{ $originalEmail }}" &&
+                    phone === "{{ $originalPhone }}" &&
+                    opening_time === "{{ $originalOpening }}" &&
+                    closing_time === "{{ $originalClosing }}" &&
+                    description === "{{ $originalDescription }}" &&
+                    status === "{{ $originalStatus }}" &&
+                    JSON.stringify(working_days.sort()) === JSON.stringify(originalWorkingDays.sort())&&
+                    JSON.stringify(departments.sort()) === JSON.stringify(originalDepartments.sort());
+
+
+                if (noChanges) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this clinic',
+                        confirmButtonColor: '#007BFF',
+                    });
+                    return;
+                }
+
 
                 $.ajax({
                     method: 'POST',

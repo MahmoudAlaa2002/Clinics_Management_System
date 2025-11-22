@@ -1,7 +1,7 @@
 @if($invoices->count() > 0)
     @foreach ($invoices as $invoice)
         <tr>
-            <td>{{ $invoice->id }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $invoice->appointment_id }}</td>
             <td>{{ $invoice->patient->user->name ?? 'Unknown' }}</td>
             <td>${{ number_format($invoice->total_amount, 2) }}</td>

@@ -72,7 +72,7 @@
                                         <select class="form-control" id="clinic_id" name="clinic_id">
                                             <option value="" disabled hidden>Select Clinic</option>
                                             @foreach($clinics as $clinic)
-                                                <option value="{{ $clinic->id }}" {{ $clinic->id == $appointment->clinic_id ? 'selected' : '' }}>
+                                                <option value="{{ $clinic->id }}" {{ $clinic->id == $appointment->clinicDepartment->clinic_id ? 'selected' : '' }}>
                                                     {{ $clinic->name }}
                                                 </option>
                                             @endforeach
@@ -134,7 +134,7 @@
                         </div>
                     </div>
 
-                    <!-- Notes -->
+
                     <div class="mt-3 card">
                         <div class="card-header">Notes</div>
                         <div class="card-body">
@@ -142,7 +142,12 @@
                         </div>
                     </div>
 
-                    <!-- Submit -->
+
+                    <!-- Hidden Inputs -->
+                    <input type="hidden" id="old_clinic_id" value="{{ $appointment->clinicDepartment->clinic_id }}">
+                    <input type="hidden" id="old_department_id" value="{{ $appointment->clinicDepartment->department_id }}">
+
+
                     <div class="text-center" style="margin-top:20px;">
                         <button type="submit" class="px-5 btn btn-primary submit-btn editBtn rounded-pill" style="text-transform: none !important;">
                             Edit Appointment
@@ -162,13 +167,6 @@
         $appointmentDate = $appointment->date ?? null;
         $appointmentDay = $appointmentDate ? \Carbon\Carbon::parse($appointmentDate)->format('l') : '';
         $selectedTime = $appointment->time ?? '';
-
-        $originalClinic   = $appointment->clinic_id;
-        $originalDepartment = $appointment->clinicDepartment->department_id ?? '';
-        $originalDoctor     = $appointment->doctor_id;
-        $originalDay        = $appointmentDay;
-        $originalTime       = $selectedTime;
-        $originalNotes      = $appointment->notes ?? '';
     @endphp
 
 <script>
@@ -328,47 +326,57 @@
         $('.editBtn').click(function (e) {
             e.preventDefault();
 
-            let formData = new FormData();
-            formData.append('_method', 'PUT');
-            formData.append('patient_id', $('#patient_id').val());
-            formData.append('clinic_id', $('#clinic_id').val());
-            formData.append('department_id', $('#department_id').val());
-            formData.append('doctor_id', $('#doctor_id').val());
-            formData.append('appointment_time', $('#appointment_time').val());
-            formData.append('appointment_day', $('#appointment_day').val());
-            formData.append('notes', $('#notes').val().trim());
+            let patient_id = $('#patient_id').val();
+            let clinic_id = $('#clinic_id').val();
+            let department_id = $('#department_id').val();
+            let doctor_id = $('#doctor_id').val();
+            let appointment_day = $('#appointment_day').val();
+            let appointment_time = $('#appointment_time').val();
+            let notes = $('#notes').val().trim();
 
-            if (!isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') ||
-                !isValidSelectValue('doctor_id') || !isValidSelectValue('appointment_time') || !isValidSelectValue('appointment_day')) {
+
+            let original = {
+                clinic: $('#old_clinic_id').val(),
+                department: $('#old_department_id').val(),
+                doctor: "{{ $appointment->doctor_id }}",
+                day: "{{ $appointmentDay }}",
+                time: "{{ $selectedTime }}",
+                notes: `{{ $appointment->notes }}`
+            };
+
+            let noChanges =
+                clinic_id == original.clinic &&
+                department_id == original.department &&
+                doctor_id == original.doctor &&
+                appointment_day == original.day &&
+                appointment_time == original.time &&
+                notes == original.notes.trim();
+
+            if (noChanges) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this appointment',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+
+            if (!clinic_id || !department_id || !doctor_id || !appointment_day || !appointment_time) {
                 Swal.fire('Error!', 'Please Enter All Required Fields', 'error');
                 return;
             }
 
-            let originalClinic   = "{{ $originalClinic }}";
-            let originalDepartment = "{{ $originalDepartment }}";
-            let originalDoctor     = "{{ $originalDoctor }}";
-            let originalDay        = "{{ $originalDay }}";
-            let originalTime       = "{{ $originalTime }}";
-            let originalNotes      = @json($originalNotes);
-
-            if ($('#clinic_id').val() == originalClinic &&
-                $('#department_id').val() == originalDepartment &&
-                $('#doctor_id').val() == originalDoctor &&
-                $('#appointment_day').val() == originalDay &&
-                $('#appointment_time').val() == originalTime &&
-                $('#notes').val().trim() == originalNotes) {
-
-                Swal.fire({
-                    icon: 'info',
-                    title: 'No Changes',
-                    text: 'No updates were made to this appointment.',
-                    confirmButtonColor: '#007BFF',
-                });
-
-                return;
-            }
-
-
+            let formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('patient_id', patient_id);
+            formData.append('clinic_id', clinic_id);
+            formData.append('department_id', department_id);
+            formData.append('doctor_id', doctor_id);
+            formData.append('appointment_day', appointment_day);
+            formData.append('appointment_time', appointment_time);
+            formData.append('notes', notes);
 
             $.ajax({
                 method: 'POST',
@@ -378,6 +386,7 @@
                 contentType: false,
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (response) {
+
                     if (response.data == 0) {
                         Swal.fire('Error!', 'This patient already has an appointment at this time', 'error');
                     }
@@ -391,17 +400,16 @@
                         Swal.fire('Error!', 'You already have an appointment scheduled at another clinic at this time', 'error');
                     }
                     else if (response.data == 4) {
-                        Swal.fire('Success', 'appointment has been added successfully', 'success')
+                        Swal.fire('Success', 'appointment has been updated successfully', 'success')
                             .then(() => {
-                            window.location.href = '/admin/view/appointments';
-                        });
+                                window.location.href = '/admin/view/appointments';
+                            });
                     }
                 }
             });
+
         });
     });
 
 </script>
-
-
 @endsection

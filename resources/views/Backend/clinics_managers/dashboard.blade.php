@@ -143,7 +143,7 @@
                                         <h5 style="color: #555; font-weight: 500;">There are currently no scheduled appointments</h5>
                                     </div>
                                 @else
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="min-height: 350px; max-height: 350px; overflow-y: auto;">
                                         <table class="table mb-0">
 
                                             <thead class="d-none">
@@ -159,8 +159,6 @@
                                             @foreach ($appointments as $appointment)
                                                 <tr>
                                                     <td style="min-width: 200px;">
-
-                                                        {{-- Avatar --}}
                                                         @if($appointment->patient && $appointment->patient->user)
                                                             <a class="avatar"
                                                                href="{{ route('clinic.profile_patient', ['id' => $appointment->patient->id]) }}">
@@ -169,8 +167,6 @@
                                                         @else
                                                             <span class="avatar bg-danger text-white">?</span>
                                                         @endif
-
-                                                        {{-- Patient Name + Address --}}
                                                         @if($appointment->patient && $appointment->patient->user)
                                                             <h2>
                                                                 <a href="{{ route('clinic.profile_patient', ['id' => $appointment->patient->id]) }}">
@@ -288,7 +284,7 @@
                                         <h5 style="color: #555; font-weight: 500;">No patients available at the moment</h5>
                                     </div>
                                 @else
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="min-height: 350px; max-height: 350px; overflow-y: auto;">
                                         <table class="table mb-0 new-patient-table">
                                             <tbody>
                                                 @foreach ($patients as $patient)

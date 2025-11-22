@@ -147,14 +147,34 @@ $(document).ready(function () {
         const formData = new FormData(form);
         formData.append('_method', 'PUT');
 
-        let totalAmount = $('#total_amount').val().trim();
+        let invoice_date = $('#invoice_date').val().trim();
+        let due_date = $('#due_date').val().trim();
+        let total_amount = $('#total_amount').val().trim();
+        let payment_status = $('#payment_status').val();
 
-        if (totalAmount === '') {
+        if (invoice_date === '' || due_date === '' || total_amount === '' || payment_status === '') {
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter all required fields',
                 icon: 'error',
                 confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        // 🔍 التحقق من عدم وجود تغيير
+        let noChanges =
+            invoice_date === "{{ $invoice->invoice_date }}" &&
+            due_date === "{{ $invoice->due_date }}" &&
+            total_amount === "{{ $invoice->total_amount }}" &&
+            payment_status === "{{ $invoice->payment_status }}";
+
+        if (noChanges) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Changes',
+                text: 'No updates were made to this invoice',
                 confirmButtonColor: '#007BFF',
             });
             return;
@@ -166,7 +186,7 @@ $(document).ready(function () {
             data: formData,
             processData: false,
             contentType: false,
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             success: function (res) {
                 if (res.data == 1){
                     Swal.fire(
@@ -184,5 +204,6 @@ $(document).ready(function () {
         });
     });
 });
+
 </script>
 @endsection

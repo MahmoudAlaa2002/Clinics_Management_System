@@ -4,7 +4,7 @@
             <table class="table mb-0 text-center table-bordered table-striped custom-table">
                 <thead>
                     <tr>
-                        <th>id</th>
+                        <th>#</th>
                         <th>Employee Name</th>
                         <th>Job Title</th>
                         <th>Email</th>
@@ -16,7 +16,7 @@
                     @if($employees->count() > 0)
                         @foreach ($employees as $employee)
                             <tr>
-                                <td>{{ $employee->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $employee->user->name ?? '-' }}</td>
                                 <td>{{ $employee->job_title }}</td>
                                 <td>{{ $employee->user->email ?? '-' }}</td>

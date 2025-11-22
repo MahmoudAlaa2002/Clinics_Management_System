@@ -212,6 +212,17 @@
                             </div>
                         </div>
 
+                        <input type="hidden" id="orig_name" value="{{ $patient->user->name }}">
+                        <input type="hidden" id="orig_date_of_birth" value="{{ $patient->user->date_of_birth }}">
+                        <input type="hidden" id="orig_email" value="{{ $patient->user->email }}">
+                        <input type="hidden" id="orig_phone" value="{{ $patient->user->phone }}">
+                        <input type="hidden" id="orig_address" value="{{ $patient->user->address }}">
+                        <input type="hidden" id="orig_gender" value="{{ $patient->user->gender }}">
+                        <input type="hidden" id="orig_blood" value="{{ $patient->blood_type }}">
+                        <input type="hidden" id="orig_emergency" value="{{ $patient->emergency_contact }}">
+                        <input type="hidden" id="orig_allergies" value="{{ $patient->allergies }}">
+                        <input type="hidden" id="orig_chronic" value="{{ $patient->chronic_diseases }}">
+
 
                         <div class="text-center m-t-20" style="margin-top:20px;">
                             <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">Edit Patient</button>
@@ -295,6 +306,30 @@
                 });
                 return;
             }
+
+            let noChanges =
+                name === $('#orig_name').val() &&
+                date_of_birth === $('#orig_date_of_birth').val() &&
+                email === $('#orig_email').val() &&
+                phone === $('#orig_phone').val() &&
+                address === $('#orig_address').val() &&
+                gender === $('#orig_gender').val() &&
+                blood_type === $('#orig_blood').val() &&
+                emergency_contact === $('#orig_emergency').val() &&
+                allergies === $('#orig_allergies').val() &&
+                chronic_diseases === $('#orig_chronic').val() &&
+                !image; // الصورة فقط إذا تم رفع واحدة جديدة تُعتبر تغيير
+
+            if (noChanges) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this patient',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
 
             $.ajax({
                 method: 'POST',

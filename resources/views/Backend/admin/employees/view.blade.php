@@ -3,6 +3,7 @@
 @section('title' , 'View Employees')
 
 @section('content')
+
 <style>
     html, body {
         height: 100%;
