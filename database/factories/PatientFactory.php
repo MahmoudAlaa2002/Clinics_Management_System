@@ -17,7 +17,7 @@ class PatientFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
+            'user_id' => \App\Models\User::where('role', 'patient')->inRandomOrder()->first()->id,
             'blood_type' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']),
             'emergency_contact' => $this->faker->phoneNumber(),
             'allergies' => $this->faker->sentence(),

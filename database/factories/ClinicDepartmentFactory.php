@@ -17,8 +17,8 @@ class ClinicDepartmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'clinic_id' => \App\Models\Clinic::factory(),
-            'department_id' => \App\Models\Department::factory(),
+            'clinic_id' => \App\Models\Clinic::inRandomOrder()->first()->id,
+            'department_id' => \App\Models\Department::inRandomOrder()->first()->id,
         ];
     }
 }

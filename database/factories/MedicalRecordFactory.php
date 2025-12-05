@@ -17,14 +17,14 @@ class MedicalRecordFactory extends Factory
     public function definition(): array
     {
         return [
-            'appointment_id' => \App\Models\Appointment::factory(),
-            'doctor_id' => \App\Models\Doctor::factory(),
-            'patient_id' => \App\Models\Patient::factory(),
+            'appointment_id' => \App\Models\Appointment::inRandomOrder()->first()->id,
+            'doctor_id' => \App\Models\Doctor::inRandomOrder()->first()->id,
+            'patient_id' => \App\Models\Patient::inRandomOrder()->first()->id,
             'diagnosis' => $this->faker->sentence(),
             'treatment' => $this->faker->sentence(),
             'record_date' => $this->faker->date(),
             'prescriptions' => $this->faker->text(50),
-            'attachmentss' => null,
+            'attachments' => null,
             'notes' => $this->faker->text(50),
         ];
     }

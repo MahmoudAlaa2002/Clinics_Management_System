@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->date('date');
             $table->time('time');
-            $table->enum('status', ['Pending', 'Accepted', 'Rejected', 'Cancelled', 'Completed'])->default('Pending');
+            $table->enum('status', ['pending_payment' ,'Pending', 'Accepted', 'Rejected', 'Cancelled', 'Completed'])->default('Pending');
             $table->text('notes')->nullable();
 
             $table->decimal('consultation_fee', 5, 2);    //   سعر الكشفية

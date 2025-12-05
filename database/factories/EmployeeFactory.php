@@ -17,8 +17,8 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'clinic_id' => \App\Models\Clinic::factory(),
+            'user_id' => \App\Models\User::where('role', 'doctor')->inRandomOrder()->first()->id,
+            'clinic_id' => \App\Models\Clinic::inRandomOrder()->first()->id,
             'department_id' => \App\Models\Department::inRandomOrder()->first()->id,
             'job_title' => $this->faker->jobTitle(),
             'work_start_time' => '09:00:00',

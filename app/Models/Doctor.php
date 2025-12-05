@@ -11,12 +11,16 @@ class Doctor extends Model{
 
     protected $fillable = [
         'employee_id',
+        'clinic_department_id',
         'speciality',
         'qualification',
         'consultation_fee',
         'rating',
     ];
 
+    public function clinicDepartment(){
+        return $this->belongsTo(ClinicDepartment::class, 'clinic_department_id');
+    }
 
     public function employee(){
         return $this->belongsTo(Employee::class, 'employee_id');

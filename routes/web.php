@@ -43,7 +43,7 @@ use App\Http\Controllers\Backend\Doctor\ProfileController as DoctorProfileContro
 use App\Http\Controllers\Backend\Doctor\ClinicController as DoctorClinicController;
 
 use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
-
+use App\Http\Controllers\Backend\Patient\BookingController;
 use App\Http\Controllers\Backend\shared\CommonDoctorController;
 
 
@@ -419,6 +419,8 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     Route::get('/edit/profile' , [PatientDashboardController::class , 'patientEditProfile'])->name('patient_edit_profile');
     Route::put('/update/profile' , [PatientDashboardController::class , 'patientUpdateProfile'])->name('patient_update_profile');
     Route::get('/personalityStatistics', [PatientDashboardController::class, 'personalityStatistics'])->name('patient.personalityStatistics');
+    Route::get('/booking', [BookingController::class, 'showBookingPage'])->name('booking');
+    Route::get('doctors/{id}/book-appointment', [BookingController::class, 'bookAppointment'])->name('book_appointment');
 
 });
 

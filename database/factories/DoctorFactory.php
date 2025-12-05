@@ -17,7 +17,10 @@ class DoctorFactory extends Factory
     public function definition(): array
     {
         return [
-            'employee_id' => \App\Models\Employee::factory(),
+            'employee_id' => \App\Models\Employee::with('user')->whereHas('user', function ($query) {
+                $query->where('role', 'doctor');
+            })->inRandomOrder()->first()->id,
+            'clinic_department_id' => \App\Models\ClinicDepartment::inRandomOrder()->first()->id,
             'speciality' => $this->faker->word(),
             'qualification' => $this->faker->sentence(3),
             'consultation_fee' => $this->faker->randomFloat(2, 20, 100),

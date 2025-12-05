@@ -17,12 +17,13 @@ class InvoiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'appointment_id' => \App\Models\Appointment::factory(),
-            'patient_id' => \App\Models\Patient::factory(),
+            'appointment_id' => \App\Models\Appointment::inRandomOrder()->first()->id,
+            'patient_id' => \App\Models\Patient::inRandomOrder()->first()->id,
             'total_amount' => $this->faker->randomFloat(2, 20, 200),
             'payment_status' => $this->faker->randomElement(['Paid', 'Partially Paid', 'Unpaid']),
             'invoice_date' => $this->faker->date(),
             'due_date' => $this->faker->date(),
+            'notes' => $this->faker->paragraph(),
         ];
     }
 }
