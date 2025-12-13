@@ -73,6 +73,29 @@
 
 
                                 <div class="col-sm-6">
+                                    <label>Total Amount <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" id="total_amount" name="total_amount"
+                                               value="{{ $invoice->total_amount }}" min="0" step="0.01">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                    <label>Paid Amount <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" id="paid_amount" name="paid_amount"
+                                               value="{{ $invoice->paid_amount }}" min="0" step="0.01">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
                                     <label>Invoice Date <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -95,31 +118,34 @@
                                     </div>
                                 </div>
 
-
                                 <div class="col-sm-6">
-                                    <label>Total Amount <span class="text-danger">*</span></label>
+                                    <label>Payment Method <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                                            <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
                                         </div>
-                                        <input type="number" class="form-control" id="total_amount" name="total_amount"
-                                               value="{{ $invoice->total_amount }}" min="0" step="0.01">
+
+                                        <select class="form-control" id="payment_method" name="payment_method">
+                                            <option value="" disabled hidden>-- Select Method --</option>
+
+                                            <option value="Cash"   {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>Cash</option>
+                                            <option value="Bank"   {{ $invoice->payment_method == 'Bank' ? 'selected' : '' }}>Bank</option>
+                                            <option value="PayPal" {{ $invoice->payment_method == 'PayPal' ? 'selected' : '' }}>PayPal</option>
+                                            <option value="None"   {{ $invoice->payment_method == 'None' ? 'selected' : '' }}>None</option>
+                                        </select>
                                     </div>
                                 </div>
-
-
-                                <div class="col-sm-6">
-                                    <label>Payment Status <span class="text-danger">*</span></label>
-                                    <select id="payment_status" name="payment_status" class="form-control">
-                                        <option value="Paid" {{ $invoice->payment_status == 'Paid' ? 'selected' : '' }}>Paid</option>
-                                        <option value="Partially Paid" {{ $invoice->payment_status == 'Partially Paid' ? 'selected' : '' }}>Partially Paid</option>
-                                        <option value="Unpaid" {{ $invoice->payment_status == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
-                                    </select>
-                                </div>
-
                             </div>
                         </div>
                     </div>
+
+                    <div class="card">
+                        <div class="card-header">Notes</div>
+                        <div class="card-body">
+                            <textarea id="notes" name="notes" class="form-control" rows="4">{{ old('notes', $invoice->notes) }}</textarea>
+                        </div>
+                    </div>
+
 
 
                     <div class="text-center" style="margin-top:20px;">
@@ -150,9 +176,10 @@ $(document).ready(function () {
         let invoice_date = $('#invoice_date').val().trim();
         let due_date = $('#due_date').val().trim();
         let total_amount = $('#total_amount').val().trim();
-        let payment_status = $('#payment_status').val();
+        let paid_amount = $('#paid_amount').val();
+        let payment_method = $('#payment_method').val();
 
-        if (invoice_date === '' || due_date === '' || total_amount === '' || payment_status === '') {
+        if (invoice_date === '' || total_amount === '' || paid_amount === '') {
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter all required fields',
@@ -163,12 +190,61 @@ $(document).ready(function () {
             return;
         }
 
-        // 🔍 التحقق من عدم وجود تغيير
+        if(total_amount < 0){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter a valid total amount',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        if(paid_amount < 0){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter a valid paid amount',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        if (paid_amount > 0 && payment_method === 'None') {
+            Swal.fire({
+                title: 'Error!',
+                text: `Payment method cannot be None when paid amount is $${paid_amount}`,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        if (due_date !== '' && invoice_date !== '') {
+            let invoiceDateObj = new Date(invoice_date);
+            let dueDateObj = new Date(due_date);
+
+            if (dueDateObj < invoiceDateObj) {
+                Swal.fire({
+                    title: 'Invalid Date',
+                    text: 'Due date must be after the invoice date',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+        }
+
         let noChanges =
             invoice_date === "{{ $invoice->invoice_date }}" &&
             due_date === "{{ $invoice->due_date }}" &&
             total_amount === "{{ $invoice->total_amount }}" &&
-            payment_status === "{{ $invoice->payment_status }}";
+            payment_method === "{{ $invoice->payment_method }}" &&
+            paid_amount === "{{ $invoice->paid_amount }}";
 
         if (noChanges) {
             Swal.fire({
@@ -188,13 +264,23 @@ $(document).ready(function () {
             contentType: false,
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             success: function (res) {
-                if (res.data == 1){
-                    Swal.fire(
-                        'Success',
-                        'Invoice has been updated successfully',
-                        'success'
-                    ).then(() => window.location.href = '/admin/view/invoices');
-                }else{
+                if (res.data == 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Paid amount cannot be greater than total amount',
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
+                } else if (res.data == 1) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Invoice has been updated successfully',
+                        icon: 'success',
+                        confirmButtonColor: '#007BFF'
+                    }).then(() => {
+                        window.location.href = '/admin/view/invoices';
+                    });
+                } else{
                     Swal.fire('Info', 'Unknown response received', 'info');
                 }
             },

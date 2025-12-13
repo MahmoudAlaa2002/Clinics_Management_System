@@ -55,7 +55,7 @@
                         <tbody>
                             @foreach ($departments as $department)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $departments->firstItem() + $loop->index }}</td>
                                     <td>{{ $department->name }}</td>
                                     <td>
                                         @if($department->status === 'active')
@@ -115,7 +115,8 @@
                                 Swal.fire({
                                     title: 'Deleted',
                                     text: 'Department has been deleted successfully',
-                                    icon: 'success'
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
                                 }).then(() => {
                                     location.reload();
                                 });

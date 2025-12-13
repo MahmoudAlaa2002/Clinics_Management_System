@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('doctor_id')->constrained()->onDelete('set null');
+            $table->foreignId('doctor_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('patient_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('clinic_department_id')->constrained()->onDelete('set null');
+            $table->foreignId('clinic_department_id')->nullable()->constrained()->onDelete('set null');
 
             $table->date('date');
             $table->time('time');
@@ -24,6 +24,11 @@ return new class extends Migration
             $table->text('notes')->nullable();
 
             $table->decimal('consultation_fee', 5, 2);    //   سعر الكشفية
+
+            $table->unique(['doctor_id', 'date', 'time']);     // عملت قفل بحيث لو أكثر من موظف أدخل نفس الدكتور وبنفس التاريخ واليوم وفي نفس اللحظة وتجاوز الشروط في الكود ,الداتا بيز تصده
+
+            $table->timestamp('admin_deleted_at')->nullable();
+            $table->timestamp('clinic_manager_deleted_at')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patient_specialty');
+        Schema::dropIfExists('appointments');
     }
 };

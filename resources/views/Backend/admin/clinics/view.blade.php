@@ -78,7 +78,7 @@
                 <tbody id="clinics_table_body">
                         @foreach ($clinics as $clinic)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $clinics->firstItem() + $loop->index }}</td>
                                 <td>{{ $clinic->name }}</td>
                                 <td>{{ $clinic->location }}</td>
                                 <td>{{ $clinic->email }}</td>
@@ -139,7 +139,7 @@
             success: function (response) {
                 $('#clinics_table_body').html(response.html);
                 if (response.searching) {
-                    if (response.count > 12) {
+                    if (response.count > 10) {
                         $('#clinics-pagination').html(response.pagination).show();
                     } else {
                         $('#clinics-pagination').empty().hide();
@@ -202,7 +202,8 @@
                             Swal.fire({
                                 title: 'Deleted',
                                 text: 'Clinic has been deleted successfully',
-                                icon: 'success'
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => location.reload());
                         } else {
                             Swal.fire('Error!', 'Something went wrong.', 'error');

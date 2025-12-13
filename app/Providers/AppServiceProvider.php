@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
                 'Backend.employees.layout.*',
                 'Backend.employees.nurses.layout.*',
                 'Backend.employees.receptionists.layout.*',
+                'Backend.employees.accountants.layout.*',
                 'Backend.patients.layout.*',
             ], function ($view) {
             $currentUser = null;
@@ -40,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             $doctor = null; // غيرت الاسم لتجنب التعارض
             $nurse = null;
             $receptionist = null;
+            $accountant = null;
 
 
             $employee = null;
@@ -70,6 +72,8 @@ class AppServiceProvider extends ServiceProvider
                         $receptionist = $user;
                     } elseif ($employeeJobTitle === 'nurse') {
                         $nurse = $user;
+                    } elseif ($employeeJobTitle === 'accountant') {
+                        $accountant = $user;
                     }
 
                 } elseif ($user->role == 'patient') {
@@ -85,6 +89,7 @@ class AppServiceProvider extends ServiceProvider
                 'doctor',  // اسم مختلف عن الـ Controller
                 'nurse',
                 'receptionist',
+                'accountant',
                 'employee',
                 'employeeJobTitle',
                 'patient'

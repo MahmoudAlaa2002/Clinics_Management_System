@@ -45,6 +45,10 @@ class DoctorController extends Controller{
                 $query->whereHas('employee.user', function ($q) use ($keyword) {
                     $q->where('name', 'like', $keyword . '%');
                 });
+            } elseif ($filter === 'rating') {
+                $query->whereHas('employee.doctor', function ($q) use ($keyword) {
+                    $q->where('rating', 'like', $keyword . '%');
+                });
             } elseif ($filter === 'status') {
                 $query->whereHas('employee', function ($q) use ($keyword) {
                     $q->where('status', 'like', $keyword . '%');
@@ -61,8 +65,6 @@ class DoctorController extends Controller{
         }
 
         $doctors = $query->orderBy('id')->paginate(12);
-
-        // Render the search Blade
         $html = view('Backend.departments_managers.doctors.search', compact('doctors'))->render();
 
         return response()->json([

@@ -174,14 +174,13 @@
                             </p>
                         </div>
                     </div>
-
-                    <div class="mb-3 d-flex justify-content-end">
-                        <a href="{{ Route('view_employees') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
-                            Back
-                        </a>
-                    </div>
                 </div>
             </div>
+        </div>
+        <div class="mb-3 d-flex justify-content-end">
+            <a href="{{ Route('view_employees') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
+                Back
+            </a>
         </div>
     </div>
 </div>

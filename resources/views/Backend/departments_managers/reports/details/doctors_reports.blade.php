@@ -76,14 +76,6 @@
 
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stats-card text-center p-3">
-                    <i class="fas fa-award icon"></i>
-                    <h5 class="fw-bold">Top Doctors</h5>
-                    <h3 class="text-warning mb-0">{{ $top_doctors_count }}</h3>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card text-center p-3">
                     <i class="fas fa-check-circle icon"></i>
                     <h5 class="fw-bold">Active Doctors</h5>
                     <h3 class="text-success mb-0">{{ $active_doctor_count }}</h3>
@@ -95,6 +87,14 @@
                     <i class="fas fa-ban icon"></i>
                     <h5 class="fw-bold">Inactive Doctors</h5>
                     <h3 class="text-danger mb-0">{{ $inactive_doctor_count }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card text-center p-3">
+                    <i class="fas fa-award icon"></i>
+                    <h5 class="fw-bold">Top Doctors</h5>
+                    <h3 class="text-warning mb-0">{{ $top_doctors_count }}</h3>
                 </div>
             </div>
 

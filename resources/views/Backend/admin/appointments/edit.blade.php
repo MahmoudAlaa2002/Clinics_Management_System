@@ -264,8 +264,7 @@
         let selectedDepartmentId = "{{ $appointment->clinicDepartment->department_id ?? '' }}";
         let selectedDoctorId = "{{ $appointment->doctor_id ?? '' }}";
 
-        //Load departments on first load
-        $.get('{{ url("admin/get-departments-by-clinic") }}/' + currentClinicId, function (departments) {
+        $.get('{{ url("clinics-management/get-departments-by-clinic") }}/' + currentClinicId, function (departments) {
 
             let depSelect = $('#department_id');
             depSelect.empty()
@@ -277,7 +276,6 @@
                 );
             });
 
-            // تحميل الأطباء + بيانات الدكتور
             if (selectedDepartmentId) {
                 loadDoctors(currentClinicId, selectedDepartmentId, selectedDoctorId);
             }
@@ -292,7 +290,7 @@
             $('#appointment_time').empty().append('<option disabled selected hidden>Select Appointment Time</option>');
             $('#appointment_day').empty().append('<option disabled selected hidden>Select Day</option>');
 
-            $.get('{{ url("admin/get-departments-by-clinic") }}/' + clinicId, function (departments) {
+            $.get('{{ url("clinics-management/get-departments-by-clinic") }}/' + clinicId, function (departments) {
 
                 departments.forEach(function (dep) {
                     $('#department_id').append(`<option value="${dep.id}">${dep.name}</option>`);
@@ -386,26 +384,51 @@
                 contentType: false,
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (response) {
-
                     if (response.data == 0) {
-                        Swal.fire('Error!', 'This patient already has an appointment at this time', 'error');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This patient already has an appointment at this time',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                     else if (response.data == 1) {
-                        Swal.fire('Warning', 'This appointment slot is already booked. Please choose another time', 'warning');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: 'This appointment slot is already booked. Please choose another time',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                     else if (response.data == 2) {
-                        Swal.fire('Error!', 'This appointment time has already passed. please select another time', 'error');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'This appointment time has already passed. Please select another time',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                     else if (response.data == 3) {
-                        Swal.fire('Error!', 'You already have an appointment scheduled at another clinic at this time', 'error');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'You already have an appointment scheduled at another clinic at this time',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                     else if (response.data == 4) {
-                        Swal.fire('Success', 'appointment has been updated successfully', 'success')
-                            .then(() => {
-                                window.location.href = '/admin/view/appointments';
-                            });
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Appointment has been updated successfully',
+                            confirmButtonColor: '#007BFF'
+                        }).then(() => {
+                            window.location.href = '/admin/view/appointments';
+                        });
                     }
-                }
+
+                    }
+
             });
 
         });

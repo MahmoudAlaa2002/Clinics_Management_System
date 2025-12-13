@@ -78,8 +78,57 @@
 
                     {{-- Diagnosis --}}
                     <div class="form-group mb-3">
-                        <label class="form-label"><i class="fa fa-stethoscope text-primary me-2"></i> Diagnosis</label>
-                        <input type="text" name="diagnosis" class="form-control" value="{{ old('diagnosis') }}" required>
+                        <label><i class="fas fa-stethoscope text-primary me-2"></i> Diagnosis</label>
+                        <select name="diagnosis" id="diagnosis" class="form-control" required>
+                            <option value="" disabled selected hidden>-- Select Diagnosis --</option>
+
+                            <option value="General Checkup">General Checkup</option>
+                            <option value="Follow-up Visit">Follow-up Visit</option>
+                            <option value="Chronic Disease Follow-up">Chronic Disease Follow-up</option>
+                            <option value="Acute Illness Evaluation">Acute Illness Evaluation</option>
+
+                            <option value="Injury / Trauma">Injury / Trauma</option>
+
+                            <option value="Pediatric Consultation">Pediatric Consultation</option>
+
+                            <option value="Gynecology Consultation">Gynecology Consultation</option>
+                            <option value="Pregnancy Follow-up">Pregnancy Follow-up</option>
+
+                            <option value="Ophthalmology Consultation">Ophthalmology Consultation</option>
+
+                            <option value="ENT Consultation">ENT Consultation</option>
+
+                            <option value="Dental Treatment">Dental Treatment</option>
+
+                            <option value="Dermatology Consultation">Dermatology Consultation</option>
+
+                            <option value="Cardiology Consultation">Cardiology Consultation</option>
+
+                            <option value="Orthopedic Consultation">Orthopedic Consultation</option>
+
+                            <option value="Neurology Consultation">Neurology Consultation</option>
+
+                            <option value="Psychiatry Consultation">Psychiatry Consultation</option>
+
+                            <option value="Nephrology/Urology Consultation">Nephrology/Urology Consultation</option>
+
+                            <option value="Oncology Consultation">Oncology Consultation</option>
+
+                            <option value="Emergency Visit">Emergency Visit</option>
+
+                            <option value="Family Medicine Consultation">Family Medicine Consultation</option>
+
+                            <option value="Surgical Evaluation">Surgical Evaluation</option>
+
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+
+                    <!-- حقل إضافي يظهر فقط إذا اختار Other -->
+                    <div class="form-group mb-3" id="other_diagnosis_group" style="display:none;">
+                        <label><i class="fas fa-stethoscope text-primary me-2"></i> Specify Other Diagnosis</label>
+                        <input type="text" name="other_diagnosis" class="form-control" placeholder="Enter diagnosis...">
                     </div>
 
                     {{-- Treatment --}}
@@ -131,5 +180,19 @@
             var patientId = selectedOption.getAttribute('data-patient');
             document.getElementById('patient_id').value = patientId || '';
         });
+
+
+        // إذا اختار الدكتور التشخيص شئ آخر يظهر لي حقل كتابة لأكتب التشخيص المناسب
+        document.getElementById('diagnosis').addEventListener('change', function () {
+            let otherField = document.getElementById('other_diagnosis_group');
+
+            if (this.value === 'Other') {
+                otherField.style.display = 'block';
+            } else {
+                otherField.style.display = 'none';
+                document.querySelector('input[name="other_diagnosis"]').value = "";
+            }
+        });
     </script>
+
 @endsection

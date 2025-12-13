@@ -107,6 +107,75 @@
                         </div>
 
                     </div>
+
+
+                    <hr>
+
+                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:20px;">
+                        <i class="fas fa-info-circle me-2 text-primary"></i> Employment Information
+                    </h5>
+                    <div class="mb-4 row" style="margin-left:5px;">
+
+                        <!-- Column 1 -->
+                        <div class="col-md-6">
+
+                            <div class="mb-3 profile-item d-flex align-items-center">
+                                <i class="far fa-clock me-2 text-primary"></i>
+                                <strong>Work Start Time:</strong>&nbsp;
+                                <span class="text-muted">{{ $department_manager->employee->work_start_time }}</span>
+                            </div>
+
+                            <div class="mb-3 profile-item d-flex align-items-center">
+                                <i class="far fa-clock me-2 text-primary"></i>
+                                <strong>Work End Time:</strong>&nbsp;
+                                <span class="text-muted">{{ $department_manager->employee->work_end_time }}</span>
+                            </div>
+
+                            <div class="mb-3 profile-item d-flex align-items-center">
+                                <i class="fa fa-calendar-day me-2 text-primary"></i>
+                                <strong>Hire Date:</strong>&nbsp;
+                                <span class="text-muted">{{ $department_manager->employee->hire_date }}</span>
+                            </div>
+
+                        </div>
+
+                        <!-- Column 2 -->
+                        <div class="col-md-6">
+
+                            <div class="mb-3 profile-item d-flex align-items-center">
+                                <i class="fas fa-calendar-check me-2 text-primary"></i>
+                                <strong>Working Days:</strong>&nbsp;
+                                <span class="text-muted">
+                                    @php
+                                        $days = $department_manager->employee->working_days ?? [];
+                                    @endphp
+                                    {{ implode(', ', $days) }}
+                                </span>
+                            </div>
+
+
+                            <div class="mb-3 profile-item d-flex align-items-center">
+                                <i class="fas fa-user-check me-2 text-primary"></i>
+                                <strong>Status:</strong>&nbsp;
+                                <span class="text-muted">{{ ucfirst($department_manager->employee->status) }}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:20px;">
+                        <i class="fas fa-info-circle me-2 text-primary"></i> Short Biography
+                    </h5>
+
+                    <div class="mb-4" style="background:#f9f9f9; padding:20px 25px; border-radius:12px; border-left:4px solid #03A9F4;">
+                        <p class="text-muted" style="line-height:1.8; font-size:15px;">
+                            {{ $department_manager->employee->short_biography ?? 'No biography available.' }}
+                        </p>
+                    </div>
                 </div>
                 <div class="mb-3 d-flex justify-content-end" style="margin-top:15px;">
                     <a href="{{ Route('department_manager_dashboard') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">

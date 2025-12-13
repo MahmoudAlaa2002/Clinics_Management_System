@@ -79,6 +79,22 @@
 
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stats-card text-center p-3">
+                    <i class="fa fa-file-text-o icon"></i>
+                    <h5 class="fw-bold text-secondary">Total Issued Invoices</h5>
+                    <h3 class="text-primary mb-0">{{ $issued_invoices_count }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card text-center p-3">
+                    <i class="fa fa-file-excel-o icon"></i>
+                    <h5 class="fw-bold text-secondary">Total cancelled Invoices</h5>
+                    <h3 class="text-danger mb-0">{{ $cancelled_invoices_count }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stats-card text-center p-3">
                     <i class="fas fa-check-circle icon"></i>
                     <h5 class="fw-bold text-secondary">Paid</h5>
                     <h3 class="text-success mb-0">{{ $paid_invoices_count }}</h3>

@@ -3,253 +3,230 @@
 @section('title', 'Patient Invoice')
 
 @section('content')
+
 <style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        background-color: #f8f9fa;
-        overflow-x: hidden;
+    .content-fluid {
+        transition: all 0.3s ease;
+        padding: 20px;
     }
 
-    /* 🔹 غلاف عام لتوسيط الفاتورة وجعلها تتفاعل مع sidebar */
-    .page-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        padding: 40px 20px;
-        transition: margin-left 0.3s ease; /* عشان تتحرك بسلاسة مع sidebar */
-    }
-
-    /* 🔹 لما تتسكر لوحة التحكم (sidebar)، المحتوى يتحرك */
-    .mini-sidebar .page-wrapper {
-        margin-left: 80px !important;
-    }
-
-    .invoice-card {
-        max-width: 700px;
-        width: 100%;
+    .invoice-wrapper {
+        max-width: 800px;
+        margin: 40px auto;
         background: #ffffff;
-        border-radius: 12px;
-        padding: 40px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        font-family: 'Segoe UI', sans-serif;
-        color: #2c3e50;
-        margin: auto;
+        border-radius: 16px;
+        padding: 45px 50px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     }
 
-    .invoice-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .invoice-header img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .invoice-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: #03A9F4;
-        margin-top: 15px;
-    }
-
-    .invoice-meta {
+    .header-flex {
         display: flex;
         justify-content: space-between;
-        font-size: 14px;
-        color: #6b7280;
-        margin-top: 20px;
+        align-items: center;
     }
 
-    .invoice-grid {
+    .invoice-logo img {
+        width: 80px;
+    }
+
+    .invoice-header-text h2 {
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0;
+        color: #03A9F4;
+    }
+
+    .invoice-header-text p {
+        font-size: 14px;
+        margin: 4px 0;
+        color: #6b7280;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1.5px solid #e5e7eb;
+        margin: 30px 0;
+    }
+
+    .info-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        font-size: 14px;
-        margin-top: 30px;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px 40px;
+        margin-bottom: 35px;
     }
 
-    .invoice-item {
-        margin-bottom: 20px;
-    }
-
-    .invoice-item .label {
-        color: #6b7280;
+    .info-item .label {
         font-size: 12px;
-        margin-bottom: 3px;
+        color: #6b7280;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
     }
 
-    .invoice-item .value {
+    .info-item .value {
+        font-size: 15px;
         font-weight: 600;
-        color: black;
+        color: #111827;
     }
 
     table.invoice-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 30px;
-        font-size: 14px;
+        margin-top: 15px;
+        font-size: 15px;
     }
 
-    .invoice-table th, .invoice-table td {
-        padding: 12px;
-        border: 1px solid #e5e7eb;
+    .invoice-table th {
         text-align: left;
+        padding: 14px;
+        background: #f3f4f6;
+        color: #111827;
+        font-weight: 700;
     }
 
-    .invoice-table thead {
-        background-color: #f3f4f6;
+    .invoice-table td {
+        padding: 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
     }
 
-    .invoice-table td:last-child, .invoice-table th:last-child {
-        text-align: right;
+    .created-by {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 14px;
+        color: #374151;
     }
 
-    .notes {
-        font-size: 13px;
-        color: black;
-        margin-top: 25px;
-        background: #c9c8c8;
-        padding: 15px;
-        border-radius: 8px;
+    .created-by span {
+        font-weight: 700;
+        color: #03A9F4;
     }
 
-    .actions {
+    .action-buttons {
+        margin-top: 40px;
         display: flex;
         justify-content: space-between;
-        margin-top: 30px;
-        gap: 10px;
     }
 
-    .btn {
-        flex: 1;
-        text-align: center;
-        padding: 12px;
-        border-radius: 8px;
+    .btn-custom {
+        padding: 12px 30px;
+        border-radius: 10px;
         font-weight: 600;
         text-decoration: none;
-        transition: background 0.3s;
+        color: white;
+        transition: 0.3s;
     }
 
     .btn-back {
-        background-color: #03A9F4;
-        color: white;
+        background: #03A9F4;
     }
 
     .btn-back:hover {
-        background-color: #0288d1;
-        color: white;
+        background: #0288d1;
     }
 
     .btn-print {
-        background-color: #10b981;
-        color: white;
+        background: #10b981;
     }
 
     .btn-print:hover {
-        background-color: #059669;
-        color: white;
+        background: #059669;
     }
 
 </style>
 
-<div class="page-wrapper">
-    <div class="invoice-card">
-        <div class="invoice-header">
-            <img src="{{ asset('assets/img/logo-dark.png') }}" alt="Clinic Logo">
-            <div class="invoice-title">Patient Invoice</div>
+<div class="content-fluid">
+<div class="invoice-wrapper">
+
+    <div class="header-flex">
+        <div class="invoice-header-text">
+            <h2>Invoice</h2>
+            <p><strong>Invoice ID:</strong> #INV-{{ $invoice->id }}</p>
+            <p><strong>Date:</strong> {{ $invoice->invoice_date ?? '-' }}</p>
         </div>
 
-        <div class="invoice-meta">
-            <div style="color: black;">Invoice ID : <strong>#INV-{{ $invoice->id }}</strong></div>
-            <div style="color: black;">Issue Date : <strong>{{ $invoice->invoice_date ? \Carbon\Carbon::parse($invoice->invoice_date)->format('Y-m-d') : '-' }}</strong></div>
-        </div>
-
-        <hr style="margin-top: 40px; border: 1.5px solid #111827;">
-
-        <div class="invoice-grid">
-            <div class="invoice-item">
-                <div class="label">Clinic Name</div>
-                <div class="value">{{ $invoice->appointment->clinicDepartment->clinic->name ?? 'N/A' }}</div>
-            </div>
-
-            <div class="invoice-item">
-                <div class="label">Appointment ID</div>
-                <div class="value" style="margin-left:30px;">{{ $invoice->appointment_id ?? '---' }}</div>
-            </div>
-
-            <div class="invoice-item">
-                <div class="label">Patient</div>
-                <div class="value">{{ $invoice->patient->user->name ?? 'N/A' }}</div>
-            </div>
-
-            <div class="invoice-item">
-                <div class="label">Total Amount</div>
-                <div class="value">$ {{ number_format($invoice->total_amount, 2) }}</div>
-            </div>
-
-            <div class="invoice-item">
-                <div class="label">Due Date</div>
-                <div class="value">{{ $invoice->due_date ? \Carbon\Carbon::parse($invoice->due_date)->format('Y-m-d') : '-' }}</div>
-            </div>
-
-            <div class="invoice-item">
-                <div class="label">Status</div>
-                <div class="value">
-                    @if ($invoice->payment_status === 'Paid')
-                        <span>Paid</span>
-                    @elseif ($invoice->payment_status === 'Partially Paid')
-                        <span>Partially Paid</span>
-                    @else
-                        <span>Unpaid</span>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        {{-- @if($invoice->items && $invoice->items->count())
-            <h4 style="margin-top: 30px; font-weight: bold; color: #374151;">Invoice Items</h4>
-            <table class="invoice-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Service Name</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $total = 0; @endphp
-                    @foreach($invoice->items as $index => $item)
-                        @php $total += $item->total_amount; @endphp
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $item->service_name }}</td>
-                            <td style="text-transform: capitalize;">{{ $item->quantity }}</td>
-                            <td>${{ number_format($item->unit_price, 2) }}</td>
-                            <td>${{ number_format($item->total_amount, 2) }}</td>
-                        </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="4" style="border: none;"></td>
-                        <td style="text-align: center; font-weight: bold;">Total = ${{ number_format($total, 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        @endif --}}
-
-        {{-- <div class="notes">
-            <strong>Notes:</strong><br>
-            {{ $invoice->notes ?? 'No notes provided.' }}
-        </div> --}}
-
-        <div class="actions">
-            <a href="{{ route('view_invoices') }}" class="btn btn-back">Back</a>
-            <a href="#" onclick="window.print()" class="btn btn-print">Print</a>
+        <div class="invoice-logo">
+            <img src="{{ asset('assets/img/logo-dark.png') }}">
         </div>
     </div>
+
+    <hr>
+
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="label">Clinic</div>
+            <div class="value">{{ $invoice->appointment->clinicDepartment->clinic->name ?? 'N/A' }}</div>
+        </div>
+
+        <div class="info-item">
+            <div class="label">Appointment ID</div>
+            <div class="value">#{{ $invoice->appointment_id }}</div>
+        </div>
+
+        <div class="info-item">
+            <div class="label">Patient</div>
+            <div class="value">{{ $invoice->patient->user->name ?? 'N/A' }}</div>
+        </div>
+
+        <div class="info-item">
+            <div class="label">Payment Method</div>
+            <div class="value">{{ $invoice->payment_method }}</div>
+        </div>
+
+        <div class="info-item">
+            <div class="label">Due Date</div>
+            <div class="value">{{ $invoice->due_date ?? '-' }}</div>
+        </div>
+
+        <div class="info-item">
+            <div class="label">Status</div>
+            <div class="value">{{ $invoice->payment_status }}</div>
+        </div>
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th style="text-align:right;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Consultation Fee</td>
+                <td style="text-align:right;">$ {{ number_format($invoice->total_amount, 2) }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Paid Amount</strong></td>
+                <td style="text-align:right;"><strong>$ {{ number_format($invoice->paid_amount, 2) }}</strong></td>
+            </tr>
+
+            <tr>
+                <td><strong>Remaining</strong></td>
+                <td style="text-align:right;"><strong>$ {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="created-by">
+        Created By <span>{{ $invoice->creator->user->name ?? 'Admin' }}</span>
+    </div>
+
+
+    @if($invoice->payment_status === 'Paid')
+        <div style="margin-top: 60px; text-align: left;">
+            <p style="font-size: 14px; color:#6b7280;">Authorized Signature</p>
+            <img src="{{ asset('assets/img/signature/t3.png') }}" style="width: 180px; margin-bottom: 8px;">
+        </div>
+    @endif
+
+    <div class="action-buttons">
+        <a href="{{ route('view_invoices') }}" class="btn-custom btn-back">Back</a>
+        <a href="{{ route('invoice_pdf', $invoice->id) }}" class="btn-custom btn-print">Print</a>
+    </div>
+
 </div>
+</div>
+
 @endsection

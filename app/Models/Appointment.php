@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model{
@@ -18,6 +19,8 @@ class Appointment extends Model{
         'status',
         'notes',
         'consultation_fee',
+        'admin_deleted_at',
+        'clinic_manager_deleted_at',
     ];
 
     // العلاقة المباشرة مع جدول clinic_departments
@@ -53,16 +56,25 @@ class Appointment extends Model{
         return $this->belongsTo(Doctor::class);
     }
 
+
     public function patient(){
         return $this->belongsTo(Patient::class);
     }
+
 
     public function medicalRecord(){
         return $this->hasOne(MedicalRecord::class);
     }
 
+
+    public function vitalSigns(){
+        return $this->hasOne(VitalSign::class);
+    }
+
+
     public function invoice(){
         return $this->hasOne(Invoice::class);
     }
+
 
 }

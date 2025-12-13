@@ -210,24 +210,49 @@
                     },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire('Error!', 'This patient already has an appointment at this time', 'error');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This patient already has an appointment at this time',
+                                confirmButtonColor: '#007BFF'
+                            });
                         }
                         else if (response.data == 1) {
-                            Swal.fire('Warning', 'This appointment slot is already booked. Please choose another time', 'warning');
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: 'This appointment slot is already booked. Please choose another time',
+                                confirmButtonColor: '#007BFF'
+                            });
                         }
                         else if (response.data == 2) {
-                            Swal.fire('Error!', 'This appointment time has already passed. please select another time', 'error');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This appointment time has already passed. please select another time',
+                                confirmButtonColor: '#007BFF'
+                            });
                         }
                         else if (response.data == 3) {
-                            Swal.fire('Error!', 'You already have an appointment scheduled at another clinic at this time', 'error');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'You already have an appointment scheduled at another clinic at this time',
+                                confirmButtonColor: '#007BFF'
+                            });
                         }
                         else if (response.data == 4) {
-                            Swal.fire('Success', 'Appointment has been added successfully', 'success')
-                                .then(() => {
-                                    window.location.href = '/admin/view/appointments';
-                                });
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Appointment has been added successfully',
+                                confirmButtonColor: '#007BFF'
+                            }).then(() => {
+                                window.location.href = '/admin/view/appointments';
+                            });
                         }
                     }
+
                 });
             }
         });
@@ -243,7 +268,7 @@
         if (clinicId) {
             // جلب التخصصات من العيادة
             $.ajax({
-                url: '/admin/get-departments-by-clinic/' + clinicId,
+                url: '/clinics-management/get-departments-by-clinic/' + clinicId,
                 type: 'GET',
                 success: function (data) {
                     let departmentSelect = $('#department_id');

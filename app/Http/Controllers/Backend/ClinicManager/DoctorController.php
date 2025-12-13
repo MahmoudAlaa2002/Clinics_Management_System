@@ -31,11 +31,10 @@ class DoctorController extends Controller{
 
 
     public function storeDoctor(Request $request){
-        $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
-        $existingUser = User::whereRaw('LOWER(name) = ?', [$normalizedName])->orWhereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+        $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
 
-        if ($existingUser) {
+        if ($existingEmail) {
             return response()->json(['data' => 0]);
         } else {
 
@@ -152,7 +151,6 @@ class DoctorController extends Controller{
                     break;
 
                 default:
-                    // 🔍 بحث عام
                     $doctors->where(function ($q) use ($keyword) {
                         $q->where('speciality', 'LIKE', "%{$keyword}%")
                         ->orWhere('qualification', 'LIKE', "%{$keyword}%")
@@ -224,13 +222,11 @@ class DoctorController extends Controller{
         $employee = Employee::findOrFail($doctor->employee_id);
         $user = User::findOrFail($employee->user_id);
 
-        $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
 
-        $existingUser = User::whereRaw('LOWER(name) = ?', [$normalizedName])
-            ->where('id', '!=', $user->id)->orWhereRaw('LOWER(email) = ?', [$normalizedEmail])->where('id', '!=', $user->id)->first();
+        $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->where('id', '!=', $user->id)->first();
 
-        if ($existingUser) {
+        if ($existingEmail) {
             return response()->json(['data' => 0]); // موجود مسبقاً
         }
 
@@ -331,8 +327,9 @@ class DoctorController extends Controller{
         $endOfWeek = Carbon::now()->endOfWeek(Carbon::FRIDAY)->addWeeks($offset);
 
         $appointments = Appointment::where('doctor_id', $doctor_id)
-            ->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
-            ->get();
+        ->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
+        ->whereIn('status', ['Pending', 'Accepted', 'Completed'])
+        ->get();
 
         return view('Backend.clinics_managers.doctors.schedules', [
             'appointments' => $appointments,

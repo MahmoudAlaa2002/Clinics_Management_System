@@ -46,6 +46,12 @@
         margin: 0;
     }
 
+    .stats-card h4 {
+        font-size: 28px !important;
+        font-weight: 700;
+        margin: 0;
+    }
+
     .stats-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 8px 18px rgba(0,0,0,0.08);
@@ -96,7 +102,7 @@
                 <div class="stats-card text-center p-3">
                     <i class="fas fa-venus-mars icon"></i>
                     <h5 class="fw-bold">Gender Ratio</h5>
-                    <h3 class="text-primary mb-0">{{ $male_percentage }}% ♂ / {{ $female_percentage }}% ♀</h3>
+                    <h4 class="text-primary mb-0">{{ $male_percentage }}% ♂ / {{ $female_percentage }}% ♀</h4>
                 </div>
             </div>
 

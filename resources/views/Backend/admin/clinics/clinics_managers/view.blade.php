@@ -128,7 +128,8 @@
                             Swal.fire({
                                 title: 'Deleted',
                                 text: 'Clinic Manager Has Been Deleted Successfully',
-                                icon: 'success'
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 location.reload();
                             });

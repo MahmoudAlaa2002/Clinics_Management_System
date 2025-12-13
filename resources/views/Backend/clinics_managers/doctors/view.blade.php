@@ -81,8 +81,8 @@
                                     <a class="dropdown-item delete-doctor" data-id="{{ $doctor->id }}" href="{{ Route('clinic.delete_doctor' , ['id' => $doctor->id]) }}" data-toggle="modal" data-target="#delete_doctor"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                 </div>
                             </div>
-                            <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('clinic.profile_doctor' , ['id' => $doctor->id]) }}">{{ $doctor->employee->user->name }}</a></h4>
-                            <div class="doc-prof">{{ optional($doctor->employee->clinic)->name }}</div>
+                            <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('clinic.profile_doctor' , ['id' => $doctor->id]) }}">Dr. {{ $doctor->employee->user->name }}</a></h4>
+                            <div class="doc-prof">{{ optional($doctor->employee->department)->name }}</div>
                             <div class="user-country">
                                 <i class="fa fa-map-marker"></i> {{ $doctor->employee->user->address }}
                             </div>
@@ -134,7 +134,8 @@
                             Swal.fire({
                                 title: 'Deleted',
                                 text: 'Doctor has been deleted successfully',
-                                icon: 'success'
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 location.reload();
                             });
@@ -153,10 +154,9 @@
     function fetchDoctors(url = "{{ route('clinic.search_doctors') }}") {
         let $searchInput = $('#search_input');
         let $filter       = $('#search_filter');
-        let $container    = $('#doctors_container');     // بدّلنا الهدف لكونتينر الكروت
-        let $pagination   = $('#doctors-pagination');    // بدّلنا هدف الباجينيشن
+        let $container    = $('#doctors_container');
+        let $pagination   = $('#doctors-pagination');
 
-        // تأكد من وجود العناصر قبل أي شيء
         if ($searchInput.length === 0 || $container.length === 0) {
             return;
         }
@@ -164,12 +164,10 @@
         let keyword = $searchInput.val().trim();
         let filter  = $filter.length ? $filter.val() : '';
 
-        // إذا البحث فاضي وكان آخر مرة فاضي → لا تعمل شيء
         if (keyword === '' && lastDoctorKeyword === '') {
             return;
         }
 
-        // إذا البحث فاضي وكان قبلها فيه كلمة → رجّع الواجهة الأصلية
         if (keyword === '' && lastDoctorKeyword !== '') {
             lastDoctorKeyword = '';
             window.location.href = "{{ route('clinic.view_doctors') }}";
@@ -184,12 +182,10 @@
             dataType: 'json',
             data: { keyword: keyword, filter: filter },
             success: function (response) {
-                // response.html = أعمدة الكروت فقط (بدون row)
-                $container.html(response.html);      // استبدال الأعمدة داخل نفس الـ row.doctor-grid
-
+                $container.html(response.html);
                 if (response.searching) {
                     if (response.count > 12) {
-                        $pagination.html(response.pagination).show();  // استبدال الباجينيشن فقط
+                        $pagination.html(response.pagination).show();
                     } else {
                         $pagination.empty().hide();
                     }

@@ -84,10 +84,8 @@
         let keyword = $searchInput.val().trim();
         let filter  = $filter.length ? $filter.val() : '';
 
-        // أول مرة فارغ -> لا تعمل بحث
         if (keyword === '' && lastEmployeeKeyword === '') return;
 
-        // إذا رجع المستخدم ومسح النص -> ارجع للوضع العادي
         if (keyword === '' && lastEmployeeKeyword !== '') {
             lastEmployeeKeyword = '';
             window.location.href = "{{ route('department.view_employees') }}";

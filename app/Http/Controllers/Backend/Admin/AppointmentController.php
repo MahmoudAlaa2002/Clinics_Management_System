@@ -6,12 +6,13 @@ namespace App\Http\Controllers\Backend\Admin;
 use Carbon\Carbon;
 use App\Models\Clinic;
 use App\Models\Doctor;
+use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Department;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Models\ClinicPatient;
 use App\Models\ClinicDepartment;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class AppointmentController extends Controller{
@@ -83,11 +84,18 @@ class AppointmentController extends Controller{
             return response()->json(['data' => 3]); // لديه موعد في عيادة أخرى أو قسم آخر بنفس الوقت
         }
 
-        // احضار رسوم الكشف
         $consultation_fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
 
-        // إنشاء الموعد الجديد
-        Appointment::create([
+        $clinicId = Doctor::where('id', $request->doctor_id)->with('employee')->first()->employee->clinic_id;
+        $linked = ClinicPatient::where('clinic_id', $clinicId)->where('patient_id', $request->patient_id)->exists();
+        if (!$linked) {
+            ClinicPatient::create([
+                'clinic_id'  => $clinicId,
+                'patient_id' => $request->patient_id,
+            ]);
+        }
+
+        $appointment = Appointment::create([
             'patient_id'            => $request->patient_id,
             'doctor_id'             => $request->doctor_id,
             'clinic_department_id'  => $clinicDepartmentId,
@@ -95,7 +103,17 @@ class AppointmentController extends Controller{
             'time'                  => $request->appointment_time,
             'consultation_fee'      => $consultation_fee,
             'notes'                 => $request->notes,
-            'status'                => 'Pending',
+            'status'                => 'Accepted',
+        ]);
+
+        $invoice = Invoice::create([
+            'appointment_id'  => $appointment->id,
+            'patient_id'      => $request->patient_id,
+            'total_amount'    => $consultation_fee,
+            'paid_amount'     => 0,
+            'payment_method'  => 'None',
+            'payment_status'  => 'Unpaid',
+            'invoice_date'    => now()->toDateString(),
         ]);
 
         return response()->json(['data' => 4]); // تم الحجز بنجاح
@@ -107,7 +125,9 @@ class AppointmentController extends Controller{
 
 
     public function viewAppointments(){
-        $appointments = Appointment::orderBy('id', 'asc')->paginate(12);
+        $appointments = Appointment::whereNull('admin_deleted_at') // لم يُحذف من الآدمن
+            ->orderBy('id', 'asc')
+            ->paginate(50);
         return view('Backend.admin.appointments.view' , compact('appointments'));
     }
 
@@ -116,7 +136,8 @@ class AppointmentController extends Controller{
         $keyword = trim($request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        $appointments = Appointment::with([
+        $appointments = Appointment::whereNull('admin_deleted_at')
+        ->with([
             'patient.user',
             'doctor.employee.user',
             'clinicDepartment.clinic',
@@ -170,10 +191,10 @@ class AppointmentController extends Controller{
             }
         }
 
-        $appointments = $appointments->orderBy('id', 'asc')->paginate(12);
+        $appointments = $appointments->orderBy('id', 'asc')->paginate(50);
 
         $view = view('Backend.admin.appointments.search', compact('appointments'))->render();
-        $pagination = $appointments->total() > 12 ? $appointments->links('pagination::bootstrap-4')->render() : '';
+        $pagination = ($appointments->total() > $appointments->perPage()) ? $appointments->links('pagination::bootstrap-4')->render() : '';
 
         return response()->json([
             'html'       => $view,
@@ -214,9 +235,18 @@ class AppointmentController extends Controller{
         }
         $appointmentDate = $appointmentDate->toDateString();
 
-        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)
-            ->where('department_id', $request->department_id)
-            ->value('id');
+        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
+
+        $clinicId = Doctor::where('id', $request->doctor_id)->with('employee')->first()->employee->clinic_id;
+
+        $linked = ClinicPatient::where('clinic_id', $clinicId)->where('patient_id', $request->patient_id)->exists();
+
+        if (!$linked) {
+            ClinicPatient::create([
+                'clinic_id'  => $clinicId,
+                'patient_id' => $request->patient_id,
+            ]);
+        }
 
         // 0️⃣ نفس الموعد موجود للمريض والدكتور
         $exists = Appointment::where('patient_id', $request->patient_id)
@@ -267,6 +297,7 @@ class AppointmentController extends Controller{
             'date' => $appointmentDate,
             'time' => $selectedTime,
             'notes' => $request->notes,
+            'status'=> 'Accepted',
         ]);
 
         return response()->json(['data' => 4]);
@@ -277,11 +308,149 @@ class AppointmentController extends Controller{
 
 
 
-
-
+    // نقل الموعد لسلة محذوفات الآدمن
     public function deleteAppointment($id){
         $appointment = Appointment::findOrFail($id);
-        $appointment->delete();
+        if ($appointment->invoice && $appointment->invoice->invoice_status !== 'Cancelled') {
+            return response()->json(['data' => 0]);   // ممنوع الحذف إذا الفاتورة صادرة
+        }
+
+        // تسجيل حذف الآدمن
+        $appointment->admin_deleted_at = now();
+        $appointment->save();
+
         return response()->json(['success' => true]);
     }
+
+
+
+
+
+    // تعرض المواعيد الموجودة في سلة المحذوفات
+    public function trash(){
+        $appointments = Appointment::whereNotNull('admin_deleted_at')
+            ->with(['patient', 'doctor', 'invoice'])
+            ->orderBy('admin_deleted_at', 'desc')
+            ->paginate(50);
+
+        return view('Backend.admin.appointments.trash.view', compact('appointments'));
+    }
+
+
+
+
+    // إرجاع الموعد من سلة المحذوفات
+    public function restore($id){
+        $appointment = Appointment::whereNotNull('admin_deleted_at')->findOrFail($id);
+        $appointment->update([
+            'admin_deleted_at' => null,    // إلغاء حذف الآدمن
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+
+
+
+    // حذف تام
+    public function forceDelete($id){
+        $appointment = Appointment::whereNotNull('admin_deleted_at')->findOrFail($id);
+        if ($appointment->invoice && $appointment->invoice->invoice_status !== 'Cancelled') {
+            return response()->json(['data' => 0]);
+        }
+
+        if ($appointment->invoice) {
+            $appointment->invoice->delete();
+        }
+
+        $appointment->forceDelete();
+        return response()->json(['success' => true]);
+    }
+
+
+
+
+    public function searchAppointmentsTrash(Request $request){
+        $keyword = trim($request->input('keyword', ''));
+        $filter  = $request->input('filter', '');
+
+        $appointments = Appointment::whereNotNull('admin_deleted_at')
+        ->with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.clinic',
+            'clinicDepartment.department'
+        ]);
+
+        if ($keyword !== '') {
+
+            switch ($filter) {
+
+                case 'patient':
+                    $appointments->whereHas('patient.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "{$keyword}%");
+                    });
+                    break;
+
+                case 'doctor':
+                    $appointments->whereHas('doctor.employee.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "{$keyword}%");
+                    });
+                    break;
+
+                case 'clinic':
+                    $appointments->whereHas('clinicDepartment.clinic', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "{$keyword}%");
+                    });
+                    break;
+
+                case 'department':
+                    $appointments->whereHas('clinicDepartment.department', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "{$keyword}%");
+                    });
+                    break;
+
+                case 'date': // البحث بتاريخ الحذف
+                    $appointments->whereDate('admin_deleted_at', 'like', "{$keyword}%");
+                    break;
+
+                default:
+                    $appointments->where(function ($q) use ($keyword) {
+
+                        $q->whereHas('patient.user', fn($qq) =>
+                            $qq->where('name', 'like', "%{$keyword}%"))
+
+                        ->orWhereHas('doctor.employee.user', fn($qq) =>
+                            $qq->where('name', 'like', "%{$keyword}%"))
+
+                        ->orWhereHas('clinicDepartment.clinic', fn($qq) =>
+                            $qq->where('name', 'like', "%{$keyword}%"))
+
+                        ->orWhereHas('clinicDepartment.department', fn($qq) =>
+                            $qq->where('name', 'like', "%{$keyword}%"))
+
+                        ->orWhereDate('admin_deleted_at', 'like', "%{$keyword}%");
+                    });
+                    break;
+            }
+        }
+
+        $appointments = $appointments->orderBy('admin_deleted_at', 'desc')->paginate(50);
+
+        $view = view('Backend.admin.appointments.trash.search', compact('appointments'))->render();
+
+        $pagination = ($appointments->total() > $appointments->perPage())
+            ? $appointments->links('pagination::bootstrap-4')->render()
+            : '';
+
+        return response()->json([
+            'html'       => $view,
+            'pagination' => $pagination,
+            'count'      => $appointments->total(),
+            'searching'  => $keyword !== '',
+        ]);
+    }
+
+
+
 }

@@ -33,6 +33,17 @@ class Clinic extends Model{
         return $this->hasMany(Employee::class, 'clinic_id');
     }
 
+    public function doctors(){
+        return $this->hasManyThrough(
+            Doctor::class,     // الجدول النهائي
+            Employee::class,   // الجدول الوسيط
+            'clinic_id',       // FK في employees
+            'employee_id',     // FK في doctors
+            'id',              // PK في clinics
+            'id'               // PK في employees
+        );
+    }
+
 
     // علاقة مباشرة العيادة مع المواعيد
     public function appointments(){
@@ -50,5 +61,10 @@ class Clinic extends Model{
     public function clinicDepartments(){
         return $this->hasMany(ClinicDepartment::class, 'clinic_id');
     }
+
+    public function patients(){
+        return $this->belongsToMany(Patient::class, 'clinic_patients');
+    }
+
 
 }

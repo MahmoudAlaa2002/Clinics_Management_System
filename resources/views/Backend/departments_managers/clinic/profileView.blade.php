@@ -4,6 +4,74 @@
 
 @section('content')
 
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #0062ff, #00c6ff);
+        padding: 80px 20px 110px;
+        border-radius: 20px;
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .profile-logo {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 5px solid white;
+        position: absolute;
+        left: 50%;
+        bottom: -70px;
+        transform: translateX(-50%);
+        background: #fff;
+        object-fit: cover;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .profile-container {
+        margin-top: 90px;
+    }
+
+    .info-card {
+        padding: 20px;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: all .3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .info-icon {
+        width: 55px;
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 22px;
+        color: white;
+        margin-right: 18px;
+    }
+
+    .about-section {
+        background: white;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .btn-back {
+        font-weight: bold;
+        border-radius: 50px;
+        padding: 10px 20px;
+    }
+</style>
+
+
 <div class="page-wrapper">
     <div class="content container-fluid">
 
@@ -14,93 +82,94 @@
                 </div>
             </div>
         </div>
-        <div class="border-0 shadow-sm card rounded-4">
-            <div class="card-body">
 
-                <div class="mb-4 text-center">
-                    <img src="{{ asset('assets/img/logo-dark.png') }}"
-                         alt="Clinic Logo"
-                         class="border shadow-sm rounded-circle border-3 border-light"
-                         width="120" height="120">
-                    <h2 class="mt-3 mb-1 fw-bold">{{ $clinic->name }}</h2>
-                    <p class="mb-0 text-muted"><i class="fa fa-map-marker-alt"></i> {{ $clinic->location }}</p>
-                </div>
+        <!-- ===================== HEADER ===================== -->
+        <div class="profile-header">
+            <h1 class="fw-bold">{{ $clinic->name }}</h1>
+            <p class="mb-0"><i class="fa fa-map-marker-alt"></i> {{ $clinic->location }}</p>
 
-                <hr>
+            <img src="{{ asset('assets/img/logo-dark.png') }}" class="profile-logo">
+        </div>
 
-                <div class="row text-start">
-                    <div class="mb-3 col-md-6">
-                        <div class="p-3 rounded shadow-sm d-flex align-items-center" style="background-color: #ebeaea;">
-                            <span class="p-3 badge bg-danger rounded-circle me-4">
-                                <i class="text-white fa fa-envelope fa-lg"></i>
-                            </span>
-                            <div>
-                                <span class="fw-bold text-dark">&nbsp;&nbsp; Email</span><br>
-                                <span class="text-dark">&nbsp;&nbsp; {{ $clinic->email }}</span>
-                            </div>
+        <!-- ===================== CONTENT ===================== -->
+        <div class="profile-container container">
+
+            <div class="row g-4">
+
+                <!-- Email -->
+                <div class="col-md-6">
+                    <div class="d-flex info-card">
+                        <div class="info-icon" style="background:#ff4b5c;">
+                            <i class="fa fa-envelope"></i>
                         </div>
-                    </div>
-
-                    <div class="mb-3 col-md-6">
-                        <div class="p-3 rounded shadow-sm d-flex align-items-center" style="background-color: #ebeaea;">
-                            <span class="p-3 badge bg-success rounded-circle me-4">
-                                <i class="text-white fa fa-phone fa-lg"></i>
-                            </span>
-                            <div>
-                                <span class="fw-bold text-dark">&nbsp;&nbsp; Phone</span><br>
-                                <span class="text-dark">&nbsp;&nbsp; {{ $clinic->phone }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 col-md-6">
-                        <div class="p-3 rounded shadow-sm d-flex align-items-center" style="background-color: #ebeaea;">
-                            <span class="p-3 badge bg-warning rounded-circle me-4">
-                                <i class="text-white fa fa-clock fa-lg"></i>
-                            </span>
-                            <div>
-                                <span class="fw-bold text-dark">&nbsp;&nbsp; Working Hours</span><br>
-                                <span class="text-dark">&nbsp;&nbsp;
-                                    {{ \Carbon\Carbon::parse($clinic->opening_time)->format('H:i') }}
-                                    -
-                                    {{ \Carbon\Carbon::parse($clinic->closing_time)->format('H:i') }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 col-md-6">
-                        <div class="p-3 rounded shadow-sm d-flex align-items-center" style="background-color: #ebeaea;">
-                            <span class="p-3 badge bg-primary rounded-circle me-4">
-                                <i class="text-white fa fa-calendar fa-lg"></i>
-                            </span>
-                            <div>
-                                <span class="fw-bold text-dark">&nbsp;&nbsp; Working Days</span><br>
-                                <span class="text-dark">&nbsp;&nbsp; {{ implode(', ', $clinic->working_days) }}</span>
-                            </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Email</h5>
+                            <p class="mb-0 text-muted">{{ $clinic->email }}</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <div class="card-body" style="background-color: #ebeaea;">
-                        <h4 class="mb-3 fw-bold d-flex align-items-center" style="font-size: 20px;">
-                            <i class="fas fa-align-left me-3 text-primary" style="font-size: 22px;"></i>
-                            &nbsp;&nbsp; About the Clinic
-                        </h4>
-                        <p class="mb-0" style="font-size: 15px; color: #333;">
-                            {{ $clinic->description ? $clinic->description : 'No Description Available Yet' }}
-                        </p>
+                <!-- Phone -->
+                <div class="col-md-6">
+                    <div class="d-flex info-card">
+                        <div class="info-icon" style="background:#28c76f;">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Phone</h5>
+                            <p class="mb-0 text-muted">{{ $clinic->phone }}</p>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Working Hours -->
+                <div class="col-md-6" style="margin-top: 20px;">
+                    <div class="d-flex info-card">
+                        <div class="info-icon" style="background:#ff9f43;">
+                            <i class="fa fa-clock"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Working Hours</h5>
+                            <p class="mb-0 text-muted">
+                                {{ \Carbon\Carbon::parse($clinic->opening_time)->format('H:i') }} -
+                                {{ \Carbon\Carbon::parse($clinic->closing_time)->format('H:i') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Working Days -->
+                <div class="col-md-6" style="margin-top: 20px;">
+                    <div class="d-flex info-card">
+                        <div class="info-icon" style="background:#7367f0;">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Working Days</h5>
+                            <p class="mb-0 text-muted">{{ implode(', ', $clinic->working_days) }}</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
+            <!-- About -->
+            <div class="mt-5 about-section">
+                <h4 class="fw-bold mb-3">
+                    <i class="fas fa-info-circle text-primary me-2"></i>
+                    About the Clinic
+                </h4>
+                <p style="font-size: 16px;">
+                    {{ $clinic->description ? $clinic->description : 'No Description Available Yet' }}
+                </p>
+            </div>
+
+            <div class="my-4 d-flex justify-content-end">
+                <a href="{{ Route('department_manager_dashboard') }}" class="btn btn-primary btn-back">Back</a>
+            </div>
+
         </div>
 
-        <div class="mb-3 d-flex justify-content-end">
-            <a href="{{ Route('department_manager_dashboard') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
-                Back
-            </a>
-        </div>
     </div>
 </div>
 

@@ -92,47 +92,6 @@
 
 @section('js')
 <script>
-    // حذف الموظف
-    $(document).on('click', '.delete-medical-record', function () {
-        let medicalRecordsId = $(this).data('id');
-        let url = `/admin/delete/medical-record/${medicalRecordsId}`;
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            imageUrl: 'https://img.icons8.com/ios-filled/50/fa314a/delete-trash.png',
-            imageWidth: 60,
-            imageHeight: 60,
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete it'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Deleted',
-                                text: 'Medical Record has been deleted successfully',
-                                icon: 'success'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
-                        }
-                    },
-                });
-            }
-        });
-    });
-
-
-
     let lastKeyword = '';
 
     function fetchMedicalRecords(url = "{{ route('search_medical_records') }}") {
@@ -157,7 +116,7 @@
             success: function (response) {
                 $('#medical_records_table_body').html(response.html);
                 if (response.searching) {
-                    if (response.count > 12) {
+                    if (response.count > 50) {
                         $('#medical_records-pagination').html(response.pagination).show();
                     } else {
                         $('#medical_records-pagination').empty().hide();

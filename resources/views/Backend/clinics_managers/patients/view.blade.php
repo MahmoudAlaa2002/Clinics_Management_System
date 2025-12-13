@@ -64,8 +64,49 @@
 @endsection
 
 
-@section('js')
+{{-- @section('js')
+
     <script>
+        $(document).on('click', '.delete-patient', function () {
+            let patientId = $(this).data('id');
+            let url = `/clinic-manager/delete/patient/${patientId}`;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                imageUrl: 'https://img.icons8.com/ios-filled/50/fa314a/delete-trash.png',
+                imageWidth: 60,
+                imageHeight: 60,
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            if (response.success == true) {
+                                Swal.fire({
+                                    title: 'Deleted',
+                                    text: 'Patient has been deleted successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+
         let lastKeyword = '';
 
         function fetchPatients(url = "{{ route('clinic.search_patients') }}") {
@@ -90,7 +131,7 @@
                 success: function (response) {
                     $('#patients_table_body').html(response.html);
                     if (response.searching) {
-                        if (response.count > 12) {
+                        if (response.count > 50) {
                             $('#patients-pagination').html(response.pagination).show();
                         } else {
                             $('#patients-pagination').empty().hide();
@@ -117,4 +158,4 @@
             }
         });
     </script>
-@endsection
+@endsection --}}

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->time('closing_time');
             $table->json('working_days');
             $table->text('description')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');         
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

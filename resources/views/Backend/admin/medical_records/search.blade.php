@@ -13,12 +13,6 @@
                     <a href="{{ route('details_medical_record', ['id' => $medical_record->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
                         <i class="fa fa-eye"></i>
                     </a>
-                    <a href="{{ route('edit_medical_record', ['id' => $medical_record->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <button class="btn btn-outline-danger btn-sm delete-medical-record" data-id="{{ $medical_record->id }}">
-                        <i class="fa fa-trash"></i>
-                    </button>
                 </div>
             </td>
         </tr>

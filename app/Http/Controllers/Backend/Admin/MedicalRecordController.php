@@ -9,10 +9,9 @@ use App\Http\Controllers\Controller;
 class MedicalRecordController extends Controller{
 
     public function viewMedicalRecords(){
-        $medical_records = MedicalRecord::orderBy('id', 'asc')->paginate(12);
+        $medical_records = MedicalRecord::orderBy('id', 'asc')->paginate(50);
         return view('Backend.admin.medical_records.view' , compact('medical_records'));
     }
-
 
 
 
@@ -22,7 +21,6 @@ class MedicalRecordController extends Controller{
         $keyword = trim($request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        // العلاقات الضرورية
         $medical_records = MedicalRecord::with([
             'patient.user',
             'doctor.employee.user',
@@ -75,12 +73,11 @@ class MedicalRecordController extends Controller{
             }
         }
 
-        $medical_records = $medical_records->orderBy('id', 'asc')->paginate(12);
+        $medical_records = $medical_records->orderBy('id', 'asc')->paginate(50);
 
         $view = view('Backend.admin.medical_records.search', compact('medical_records'))->render();
-        $pagination = $medical_records->total() > 12
-            ? $medical_records->links('pagination::bootstrap-4')->render()
-            : '';
+        $pagination = ($medical_records->total() > $medical_records->perPage()) ? $medical_records->links('pagination::bootstrap-4')->render() : '';
+
 
         return response()->json([
             'html'       => $view,
@@ -97,43 +94,6 @@ class MedicalRecordController extends Controller{
     public function detailsMedicalRecord($id){
         $medical_record = MedicalRecord::findOrFail($id);
         return view ('Backend.admin.medical_records.details' , compact('medical_record'));
-    }
-
-
-
-
-
-    // public function editMedicalRecord($id){
-    //     $medical_record = MedicalRecord::findOrFail($id);
-    //     return view ('Backend.admin.medical_records.edit' , compact('medical_record'));
-    // }
-
-
-
-
-
-    // public function updateMedicalRecord(Request $request, $id){
-    //     $medical_record = MedicalRecord::findOrFail($id);
-    //     $medical_record->update([
-    //         'diagnosis' => $request->diagnosis,
-    //         'treatment' => $request->treatment,
-    //         'record_date' => $request->record_date,
-    //         'prescriptions' => $request->prescriptions,
-    //         'attachments'  => $request->attachments,
-    //         'notes'  => $request->notes,
-    //     ]);
-
-    //     return response()->json(['data' => 1]);
-    // }
-
-
-
-
-
-    public function deleteMedicalRecord($id){
-        $medical_record = MedicalRecord::findOrFail($id);
-        $medical_record->delete();
-        return response()->json(['success' => true]);
     }
 
 

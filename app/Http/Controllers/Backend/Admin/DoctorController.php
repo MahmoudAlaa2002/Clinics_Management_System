@@ -24,11 +24,10 @@ class DoctorController extends Controller{
 
 
     public function storeDoctor(Request $request){
-        $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
-        $existingUser = User::whereRaw('LOWER(name) = ?', [$normalizedName])->orWhereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+        $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
 
-        if ($existingUser) {
+        if ($existingEmail) {
             return response()->json(['data' => 0]);
         } else {
 
@@ -105,45 +104,45 @@ class DoctorController extends Controller{
 
         if ($keyword !== '') {
             switch ($filter) {
-                case 'name': // البحث باسم الطبيب (من جدول users)
+                case 'name':
                     $doctors->whereHas('employee.user', function ($q) use ($keyword) {
                         $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'clinic': // البحث باسم العيادة
+                case 'clinic':
                     $doctors->whereHas('employee.clinic', function ($q) use ($keyword) {
                         $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'department': // البحث باسم القسم
+                case 'department':
                     $doctors->whereHas('employee.department', function ($q) use ($keyword) {
                         $q->where('name', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'status': // البحث حسب حالة الموظف
+                case 'status':
                     $doctors->whereHas('employee', function ($q) use ($keyword) {
                         $q->where('status', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'job': // البحث بعنوان الوظيفة من جدول employees
+                case 'job':
                     $doctors->whereHas('employee', function ($q) use ($keyword) {
                         $q->where('job_title', 'LIKE', "{$keyword}%");
                     });
                     break;
 
-                case 'speciality': // البحث بالتخصص (speciality)
+                case 'speciality':
                     $doctors->where('speciality', 'LIKE', "{$keyword}%");
                     break;
 
-                case 'qualification': // البحث بالمؤهل العلمي
+                case 'qualification':
                     $doctors->where('qualification', 'LIKE', "{$keyword}%");
                     break;
 
-                default: // بحث عام يشمل الاسم، الوظيفة، التخصص، المؤهل
+                default:
                     $doctors->where(function ($q) use ($keyword) {
                         $q->where('speciality', 'LIKE', "%{$keyword}%")
                         ->orWhere('qualification', 'LIKE', "%{$keyword}%")
@@ -209,13 +208,9 @@ class DoctorController extends Controller{
         $employee = Employee::findOrFail($doctor->employee_id);
         $user = User::findOrFail($employee->user_id);
 
-        $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
-
-        $existingUser = User::whereRaw('LOWER(name) = ?', [$normalizedName])
-            ->where('id', '!=', $user->id)->orWhereRaw('LOWER(email) = ?', [$normalizedEmail])->where('id', '!=', $user->id)->first();
-
-        if ($existingUser) {
+        $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->where('id', '!=', $user->id)->first();
+        if ($existingEmail) {
             return response()->json(['data' => 0]); // موجود مسبقاً
         }
 
@@ -317,6 +312,7 @@ class DoctorController extends Controller{
 
         $appointments = Appointment::where('doctor_id', $doctor_id)
             ->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
+            ->whereIn('status', ['Pending', 'Accepted', 'Completed'])
             ->get();
 
         return view('Backend.admin.doctors.schedules', [
@@ -335,49 +331,5 @@ class DoctorController extends Controller{
     }
 
 
-
-
-    public function getDepartmentsByClinic($clinic_id){
-        $clinic = Clinic::with('departments')->find($clinic_id);
-        if (!$clinic) {
-            return response()->json([]);
-        }
-        return response()->json($clinic->departments);
-    }
-
-
-
-    public function getClinicInfo($id){
-        $clinic = Clinic::findOrFail($id);
-        return response()->json([
-            'opening_time' => $clinic->opening_time,
-            'closing_time' => $clinic->closing_time,
-        ]);
-    }
-
-
-    public function getWorkingTimes($doctor_id){
-        $doctor = Doctor::findOrFail($doctor_id);
-
-        $workingDays = json_decode($doctor->employee->working_days, true);
-        $times = [];
-
-        foreach ($workingDays as $day) {
-            $times[] = [
-                'day' => $day,
-                'from' => $doctor->employee->work_start_time,
-                'to' => $doctor->employee->work_end_time,
-            ];
-        }
-
-        return response()->json($times);
-    }
-
-    public function getWorkingDays($id) {
-        $clinic = Clinic::findOrFail($id);
-        return response()->json([
-            'working_days' => $clinic->working_days,
-        ]);
-    }
 
 }

@@ -66,7 +66,6 @@
             </div>
         </div>
 
-
         <div id="employees_container">
             @include('Backend.admin.employees.search', ['employees' => $employees])
         </div>
@@ -164,7 +163,8 @@
                             Swal.fire({
                                 title: 'Deleted',
                                 text: 'Employee has been deleted successfully',
-                                icon: 'success'
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 location.reload();
                             });

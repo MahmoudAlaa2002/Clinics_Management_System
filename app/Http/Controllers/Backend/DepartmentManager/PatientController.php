@@ -16,7 +16,7 @@ class PatientController extends Controller{
         $patients = Patient::whereHas('appointments.clinicDepartment', function ($q) use ($clinicId , $departmentId) {
             $q->where('clinic_id', $clinicId)
               ->where('department_id', $departmentId);
-        })->orderBy('id', 'asc')->paginate(12);
+        })->orderBy('id', 'asc')->paginate(50);
         return view('Backend.departments_managers.patients.view' , compact('patients'));
     }
 
@@ -47,9 +47,9 @@ class PatientController extends Controller{
             }
         }
 
-        $patients   = $patients->orderBy('id')->paginate(12);
+        $patients   = $patients->orderBy('id')->paginate(50);
         $view       = view('Backend.departments_managers.patients.search', compact('patients'))->render();
-        $pagination = $patients->total() > 12 ? $patients->links('pagination::bootstrap-4')->render() : '';
+        $pagination = $patients->total() > 50 ? $patients->links('pagination::bootstrap-4')->render() : '';
 
         return response()->json([
             'html'       => $view,

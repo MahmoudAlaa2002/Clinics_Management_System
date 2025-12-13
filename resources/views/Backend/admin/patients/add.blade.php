@@ -296,7 +296,7 @@
                         if (response.data == 0) {
                             Swal.fire({
                                 title: 'Error!',
-                                text: 'The patient already exists',
+                                text: 'This email is already used by another user',
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#007BFF',

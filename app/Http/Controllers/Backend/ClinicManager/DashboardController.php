@@ -25,13 +25,12 @@ class DashboardController extends Controller{
             $q->where('clinic_id', $clinic->id);
         })->take(5)->get();
 
-        $patient_count = $clinic->appointments()->distinct('patient_id')->count('patient_id');
-        $patients = Patient::whereHas('appointments', function($q) use ($clinic) {
-            $q->whereIn(
-                'clinic_department_id',
-                $clinic->clinicDepartments()->pluck('id')
-            );
-        })->orderBy('created_at', 'desc')->take(5)->get();
+        $patient_count = $clinic->patients()->count();
+        $patients = $clinic->patients()
+            ->orderBy('clinic_patients.created_at', 'desc')
+            ->take(5)
+            ->get();
+
 
 
         $all_appointments = $clinic->appointments()->count();

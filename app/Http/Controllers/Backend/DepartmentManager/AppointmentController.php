@@ -14,7 +14,7 @@ class AppointmentController extends Controller{
         $clinicId = Auth::user()->employee->clinic_id;
         $departmentId = Auth::user()->employee->department_id;
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinicId)->where('department_id', $departmentId)->pluck('id');
-        $appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)->orderBy('id', 'asc')->paginate(12);
+        $appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)->orderBy('id', 'asc')->paginate(50);
         return view('Backend.departments_managers.appointments.view' , compact('appointments'));
     }
 
@@ -69,10 +69,10 @@ class AppointmentController extends Controller{
             }
         }
 
-        $appointments = $appointments->orderBy('id', 'asc')->paginate(12);
+        $appointments = $appointments->orderBy('id', 'asc')->paginate(50);
 
         $view = view('Backend.departments_managers.appointments.search', compact('appointments'))->render();
-        $pagination = $appointments->total() > 12 ? $appointments->links('pagination::bootstrap-4')->render() : '';
+        $pagination = $appointments->total() > 50 ? $appointments->links('pagination::bootstrap-4')->render() : '';
 
         return response()->json([
             'html'       => $view,

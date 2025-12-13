@@ -12,7 +12,7 @@ class EmployeeController extends Controller{
     public function viewEmployees(){
         $clinic_id = Auth::user()->employee->clinic->id;
         $department_id = Auth::user()->employee->department->id;
-        $employees = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic_id)->where('department_id' , $department_id)->orderBy('id', 'asc')->paginate(12);
+        $employees = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic_id)->where('department_id' , $department_id)->orderBy('id', 'asc')->paginate(20);
         return view ('Backend.departments_managers.employees.view' , compact('employees'));
     }
 
@@ -45,7 +45,7 @@ class EmployeeController extends Controller{
             }
         }
 
-        $employees = $query->orderBy('id')->paginate(12);
+        $employees = $query->orderBy('id')->paginate(20);
         $html = view('Backend.departments_managers.employees.search', compact('employees'))->render();
 
         return response()->json([

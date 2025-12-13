@@ -1,7 +1,7 @@
 @if($appointments->count() > 0)
     @foreach ($appointments as $appointment)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $appointment->id }}</td>
             <td>{{ $appointment->patient->user->name }}</td>
             <td>{{ $appointment->doctor->employee->user->name }}</td>
             <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
@@ -32,7 +32,6 @@
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
                     <a href="{{ route('department.details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                    <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}"><i class="fa fa-trash"></i></button>
                 </div>
             </td>
         </tr>

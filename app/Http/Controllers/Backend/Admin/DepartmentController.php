@@ -6,12 +6,8 @@ use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Employee;
-use App\Models\JobTitle;
-use App\Models\Specialty;
 use App\Models\Department;
 use Illuminate\Http\Request;
-use App\Models\ClinicDepartment;
-use App\Models\EmployeeJobTitle;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -135,7 +131,6 @@ class DepartmentController extends Controller{
                     break;
 
                 case 'clinic':
-                    // ✅ إصلاح رئيسي: لازم تمر من العلاقة employee أولًا
                     $departments_managers->whereHas('employee', function ($q) use ($keyword) {
                         $q->whereHas('clinic', function ($qq) use ($keyword) {
                             $qq->where('name', 'LIKE', "{$keyword}%");
@@ -157,7 +152,6 @@ class DepartmentController extends Controller{
         }
 
         $departments_managers = $departments_managers->orderBy('id', 'asc')->paginate(12);
-
         $view = view('Backend.admin.departments.departments_managers.search', compact('departments_managers'))->render();
         $pagination = $departments_managers->total() > 12 ? $departments_managers->links('pagination::bootstrap-4')->render() : '';
 
@@ -168,10 +162,6 @@ class DepartmentController extends Controller{
             'searching'  => $keyword !== '',
         ]);
     }
-
-
-
-
 
 
 
@@ -197,7 +187,7 @@ class DepartmentController extends Controller{
         $department_manager = User::findOrFail($id);
         $employee = Employee::where('user_id', $department_manager->id)->first();
 
-        if (User::where('name', $request->name)->where('id', '!=', $id)->exists() || User::where('email', $request->email)->where('id', '!=', $id)->exists()) {
+        if (User::where('email', $request->email)->where('id', '!=', $id)->exists()) {
             return response()->json(['data' => 0]);
         }else{
             $imagePath = $department_manager->image;

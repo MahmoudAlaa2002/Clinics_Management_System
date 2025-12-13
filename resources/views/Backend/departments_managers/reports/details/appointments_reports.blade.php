@@ -69,7 +69,7 @@
 
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stats-card text-center p-3">
-                    <i class="fas fa-calendar-check icon"></i>
+                    <i class="fas fa-calendar-alt icon"></i>
                     <h5 class="fw-bold">Total Appointments</h5>
                     <h3 class="text-primary mb-0">{{ $appointments_count }}</h3>
                 </div>
@@ -85,7 +85,7 @@
 
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stats-card text-center p-3">
-                    <i class="fas fa-user-md icon"></i>
+                    <i class="fas fa-calendar-check icon"></i>
                     <h5 class="fw-bold">Completed</h5>
                     <h3 class="text-success mb-0">{{ $completed_appointments_count }}</h3>
                 </div>

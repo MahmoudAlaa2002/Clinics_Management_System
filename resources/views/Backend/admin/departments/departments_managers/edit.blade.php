@@ -309,7 +309,7 @@
         $('#department_id').empty().append('<option value="" disabled hidden>Select Department</option>');
         if (!clinicId) return;
 
-        $.get('/admin/get-departments-by-clinic/' + clinicId, function (departments) {
+        $.get('/clinics-management/get-departments-by-clinic/' + clinicId, function (departments) {
         if (departments.length === 0) {
             $('#department_id').append('<option disabled>No departments available</option>');
         } else {
@@ -323,7 +323,7 @@
 
     // تحميل أيام العمل الخاصة بالعيادة
     function loadWorkingDaysForClinic(clinicId, selectedDays) {
-            $.get('/admin/clinic-working-days/' + clinicId, function (resp) {
+            $.get('/clinics-management/clinic-working-days/' + clinicId, function (resp) {
                 const clinicDays = resp.working_days || [];
                 const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 
@@ -345,7 +345,7 @@
     // تحميل أوقات العمل الخاصة بالعيادة
     function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
         if (!clinicId) return;
-        $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+        $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
         const openingTime = (data.opening_time || '08:00:00').substring(0,5); // "HH:MM"
         const closingTime = (data.closing_time || '16:00:00').substring(0,5);
 
@@ -501,7 +501,7 @@
             if (response.data == 0) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'This department manager already exists',
+                    text: 'This email is already used by another user',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',

@@ -337,6 +337,11 @@
                     <input type="hidden" id="orig_bio" value="{{ $employee->short_biography }}">
                     <input type="hidden" id="orig_gender" value="{{ $employee->user->gender }}">
                     <input type="hidden" id="orig_working_days" value="{{ implode(',', $employee->working_days ?? []) }}">
+                    <input type="hidden" id="orig_speciality" value="{{ optional($employee->doctor)->speciality }}">
+                    <input type="hidden" id="orig_qualification" value="{{ optional($employee->doctor)->qualification }}">
+                    <input type="hidden" id="orig_consultation_fee" value="{{ optional($employee->doctor)->consultation_fee }}">
+                    <input type="hidden" id="orig_rating" value="{{ optional($employee->doctor)->rating }}">
+
 
 
                     {{-- Submit --}}
@@ -377,7 +382,7 @@
 
         function loadDepartments(id, selected='') {
             $('#department_id').empty().append('<option disabled selected hidden>Loading...</option>');
-            $.get('/admin/get-departments-by-clinic/' + id, function (data) {
+            $.get('/clinics-management/get-departments-by-clinic/' + id, function (data) {
                 $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
                 data.forEach(dep => {
                     $('#department_id').append(`<option value="${dep.id}" ${dep.id == selected ? 'selected' : ''}>${dep.name}</option>`);
@@ -386,7 +391,7 @@
         }
 
         function loadWorkingTimes(id, start='', end='') {
-            $.get('/admin/get-clinic-info/' + id, function (data) {
+            $.get('/clinics-management/get-clinic-info/' + id, function (data) {
                 const sHour = parseInt(data.opening_time.split(':')[0]);
                 const eHour = parseInt(data.closing_time.split(':')[0]);
                 const $s = $('#work_start_time'), $e = $('#work_end_time');
@@ -402,7 +407,7 @@
         }
 
         function loadWorkingDaysForClinic(id, selectedDays) {
-            $.get('/admin/clinic-working-days/' + id, function (resp) {
+            $.get('/clinics-management/clinic-working-days/' + id, function (resp) {
                 const clinicDays = resp.working_days || [];
                 const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
                 allDays.forEach(day => {
@@ -417,7 +422,7 @@
             });
         }
 
-        // ✅ إظهار أو إخفاء القسم وحقول الدكتور حسب الوظيفة
+        // إظهار أو إخفاء القسم وحقول الدكتور حسب الوظيفة
         $(document).on('change', '.job-title-radio', function () {
             const job = $(this).val().toLowerCase();
             const jobsNeedDept = ['department manager','doctor','nurse','receptionist'];
@@ -428,7 +433,7 @@
             else $('#doctor_info_card').slideUp(200);
         });
 
-        // ✅ زر التعديل
+        // زر التعديل
         $('.editBtn').click(function (e) {
             e.preventDefault();
 
@@ -457,23 +462,48 @@
             $('input[name="working_days[]"]:checked').each(function () { workingDays.push($(this).val()); });
 
             if (!name || !date_of_birth || !clinic_id || !email || !phone || !gender || !work_start_time || !work_end_time || workingDays.length === 0 || !job_title) {
-                return Swal.fire('Error!', 'Please Enter All Required Fields', 'error');
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Enter All Required Fields',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
             }
 
             if (password !== confirm_password) {
-                return Swal.fire('Error!', 'Password confirmation does not match', 'error');
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Password confirmation does not match',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
             }
 
             if (work_start_time >= work_end_time) {
-                return Swal.fire('Error!', 'Invalid work time range', 'error');
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Invalid work time range',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
             }
 
             if ($('#department_field').is(':visible') && !department_id) {
-                return Swal.fire('Error!', 'Please Select Department', 'error');
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Select Department',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
             }
 
             if ($('#doctor_info_card').is(':visible') && (!speciality || !qualification || !consultation_fee || !rating)) {
-                return Swal.fire('Error!', 'Please Fill All Doctor Fields', 'error');
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Fill All Doctor Fields',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
             }
 
             let formData = new FormData();
@@ -519,6 +549,14 @@
                 gender === $('#orig_gender').val() &&
                 workingDays.sort().toString() === origWorkingDays.sort().toString();
 
+                if (job_title === 'Doctor') {
+                    noChanges = noChanges &&
+                    speciality === $('#orig_speciality').val() &&
+                    qualification === $('#orig_qualification').val() &&
+                    consultation_fee === $('#orig_consultation_fee').val() &&
+                    rating === $('#orig_rating').val();
+                }
+
             if ($('#department_field').is(':visible')) {
                 noChanges = noChanges && department_id === $('#orig_department_id').val();
             }
@@ -542,15 +580,46 @@
                 contentType: false,
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (res) {
-                    if (res.data == 0) Swal.fire('Error!', 'This Employee Already Exists', 'error');
-                    else if (res.data == 1) Swal.fire('Error!', 'Clinic Already Has A Manager', 'error');
-                    else if (res.data == 2) Swal.fire('Error!', 'Department Already Has A Manager', 'error');
-                    else if (res.data == 3)
-                        Swal.fire('Success', 'Employee Updated Successfully', 'success')
-                            .then(() => window.location.href = '/admin/view/employees');
+                    if (res.data == 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'This email is already used by another user',
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF'
+                        });
+                    }
+                    else if (res.data == 1) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Clinic already has a manager',
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF'
+                        });
+                    }
+                    else if (res.data == 2) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Department already has a manager',
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF'
+                        });
+                    }
+                    else if (res.data == 3) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Employee updated successfully',
+                            icon: 'success',
+                            confirmButtonColor: '#007BFF'
+                        }).then(() => window.location.href = '/admin/view/employees');
+                    }
                 },
                 error: function () {
-                    Swal.fire('Error!', 'Unexpected error occurred', 'error');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Unexpected error occurred',
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
                 }
             });
         });

@@ -33,15 +33,14 @@
                 <!-- Doctor Info -->
                 <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;">
                     <a href="{{ route('profile_doctor', ['id' => $doctor->id]) }}">
-                        {{ $doctor->employee->user->name }}
+                        Dr. {{ $doctor->employee->user->name }}
                     </a>
                 </h4>
                 <div class="doc-prof">
-                    {{ optional($doctor->employee->clinic)->name }}
+                    {{ optional($doctor->employee->department)->name }}
                 </div>
                 <div class="user-country">
-                    <i class="fa fa-map-marker"></i>
-                    {{ $doctor->employee->user->address ?? 'No Address Available' }}
+                    {{ $doctor->employee->clinic->name }}
                 </div>
             </div>
         </div>

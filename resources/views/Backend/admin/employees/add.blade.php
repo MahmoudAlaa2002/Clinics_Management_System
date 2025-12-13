@@ -95,7 +95,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Address</label>
+                                    <label>Address <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
@@ -209,7 +209,7 @@
                                                 </label>
                                             </div>
 
-                                            <div class="form-check">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="receptionist" value="Receptionist"
                                                        {{ old('job_title', $employee->job_title ?? '') == 'receptionist' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="receptionist">
@@ -217,10 +217,17 @@
                                                 </label>
                                             </div>
 
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="job_title" id="accountant" value="Accountant"
+                                                       {{ old('job_title', $employee->job_title ?? '') == 'accountant' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="accountant">
+                                                    Accountant
+                                                </label>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -476,7 +483,7 @@
             // التحقق
             if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
                 email === '' || phone === '' || job_title === undefined ||
-                workingDays.length === 0 || !work_start_time || !work_end_time || gender === undefined) {
+                workingDays.length === 0 || !work_start_time || !work_end_time || address === '' || gender === undefined) {
                 Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if (password !== confirm_password) {
@@ -507,12 +514,26 @@
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                        } else if (response.data == 1) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'This email is already used by another user',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        }else if (response.data == 1) {
                             Swal.fire({ title: 'Error!', text: 'This clinic already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 2) {
                             Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 3) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'This clinic already has a accountant',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        } else if (response.data == 4) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Employee has been added successfully',
@@ -526,13 +547,12 @@
             }
         });
 
-        // ✅ عند اختيار العيادة
         $('#clinic_id').on('change', function () {
             const clinicId = $(this).val();
             if (!clinicId) return;
 
             // تحميل الأقسام
-            $.get('/admin/get-departments-by-clinic/' + clinicId, function (data) {
+            $.get('/clinics-management/get-departments-by-clinic/' + clinicId, function (data) {
                 const departmentSelect = $('#department_id');
                 departmentSelect.empty().append('<option value="" disabled selected hidden>Select Department</option>');
                 $.each(data, function (i, department) {
@@ -541,7 +561,7 @@
             });
 
             // تحميل أوقات العمل
-            $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+            $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
                 const start = parseInt(data.opening_time.split(':')[0]);
                 const end = parseInt(data.closing_time.split(':')[0]);
 
@@ -559,7 +579,7 @@
             });
 
             // تفعيل/تعطيل أيام العمل
-            $.get('/admin/clinic-working-days/' + clinicId, function (response) {
+            $.get('/clinics-management/clinic-working-days/' + clinicId, function (response) {
                 const clinicDays = response.working_days || [];
                 const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 

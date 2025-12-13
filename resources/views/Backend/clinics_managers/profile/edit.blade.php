@@ -1,6 +1,6 @@
 @extends('Backend.clinics_managers.master')
 
-@section('title' , 'Edit Clinic Manager Profile')
+@section('title' , 'Edit Profile')
 
 @section('content')
 <style>
@@ -15,7 +15,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <h4 class="page-title" style="margin-bottom:30px;">Edit Clinic Manager Profile</h4>
+                <h4 class="page-title" style="margin-bottom:30px;">Edit Profile</h4>
             </div>
         </div>
 

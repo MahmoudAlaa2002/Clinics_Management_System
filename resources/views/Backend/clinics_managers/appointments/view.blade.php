@@ -2,7 +2,6 @@
 
 @section('title' , 'View Appointments')
 
-
 @section('content')
 
 <style>
@@ -25,26 +24,36 @@
 
     .pagination-wrapper {
         margin-top: auto;
-        padding-top: 80px; /* مسافة من الجدول */
+        padding-top: 80px;
         padding-bottom: 30px;
     }
 
     .table-responsive {
         overflow-x: auto;
-        scrollbar-width: none; /* لإخفاء الشريط في فايرفوكس */
+        scrollbar-width: none;
     }
 
     .table-responsive::-webkit-scrollbar {
-        display: none; /* لإخفاء الشريط في كروم */
+        display: none;
     }
-
 </style>
 
 <div class="page-wrapper">
     <div class="content">
-        <div class="row">
-            <div class="col-sm-4 col-3">
-                <h4 class="page-title">View Appointments</h4>
+
+        <div class="row align-items-center mb-3">
+            <div class="col-sm-6">
+                <h4 class="page-title mb-0">
+                    View Appointments
+                </h4>
+            </div>
+
+            <div class="col-sm-6 text-right">
+                <a href="{{ route('clinic.appointments_trash') }}"
+                   class="btn btn-danger btn-rounded"
+                   style="font-weight: bold;">
+                    <i class="fa fa-trash"></i> Appointments Trash
+                </a>
             </div>
         </div>
 
@@ -59,6 +68,7 @@
                     <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -81,7 +91,7 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Patient Name</th>
                                 <th>Department Name</th>
                                 <th>Doctor Name</th>
@@ -95,7 +105,7 @@
                             @if($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $appointment->id }}</td>
                                         <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
                                         <td>{{ $appointment->clinicDepartment->department->name }}</td>
                                         <td>{{ optional(optional(optional($appointment->doctor)->employee)->user)->name ?? '-' }}</td>
@@ -179,11 +189,19 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function (response) {
-                        if (response.success) {
+                        if (response.data == 0) {
+                            Swal.fire({
+                                title: 'Cannot Delete',
+                                text: 'This appointment has an issued invoice, so it cannot be deleted',
+                                icon: 'error',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        } else if (response.success == true) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Appointment has been deleted successfully',
-                                icon: 'success'
+                                text: 'The appointment has been moved to the trash',
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 location.reload();
                             });
@@ -212,17 +230,14 @@
             let keyword = $searchInput.val().trim();
             let filter  = $filter.length ? $filter.val() : '';
 
-            // ⛔ أول مرة يكون البحث فارغ، لا تعمل شيء
             if (keyword === '' && lastAppointmentKeyword === '') return;
 
-            // 🔁 إذا المستخدم مسح النص بعد بحث سابق → ارجع للوضع العادي (إعادة تحميل الصفحة)
             if (keyword === '' && lastAppointmentKeyword !== '') {
                 lastAppointmentKeyword = '';
                 window.location.href = "{{ route('clinic.view_appointments') }}";
                 return;
             }
 
-            // تحديث آخر كلمة بحث
             lastAppointmentKeyword = keyword;
 
             $.ajax({
@@ -234,7 +249,7 @@
                     $tableBody.html(response.html);
 
                     if (response.searching) {
-                        if (response.count > 12) {
+                        if (response.count > 50) {
                             $pagination.html(response.pagination).show();
                         } else {
                             $pagination.empty().hide();

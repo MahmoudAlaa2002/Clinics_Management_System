@@ -84,7 +84,7 @@
                         </li>
 
                         <li>
-                            <a href="{{ route('view_departments_managers') }}" class="{{ Request::is('admin/view/departments-managers') ? 'active' : '' }}">
+                            <a href="{{ route('view_departments_managers') }}" class="{{ Request::is('admin/view/departments-managers') || Request::is('admin/profile/department-manager/*') || Request::is('admin/edit/department-manager/*') ? 'active' : '' }}">
                                 Departments Managers
                             </a>
                         </li>
@@ -132,16 +132,16 @@
                 </li>
 
 
-                <li class="submenu {{ Request::is('admin/add/appointment') || Request::is('admin/view/appointments') || Request::is('admin/search/appointments') || Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('admin/add/appointment') || Request::is('admin/view/appointments') || Request::is('admin/search/appointments') || Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') || Request::is('admin/appointments-trash') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-calendar-alt"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
                     <ul style="{{ Request::is('admin/add/appointment') || Request::is('admin/view/appointments') || Request::is('admin/search/appointments') ||
-                        Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') ? '' : 'display: none;' }}">
+                        Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') || Request::is('admin/appointments-trash') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('add_appointment') }}" class="{{ Request::is('admin/add/appointment') ? 'active' : '' }}">Add Appointment</a>
                         </li>
                         <li>
                             <a href="{{ route('view_appointments') }}"
-                            class="{{ Request::is('admin/view/appointments') || Request::is('admin/search/appointments') || Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') ? 'active' : '' }}">View Appointments</a>
+                            class="{{ Request::is('admin/view/appointments') || Request::is('admin/search/appointments') || Request::is('admin/edit/appointment/*') || Request::is('admin/details/appointment/*') || Request::is('admin/appointments-trash') ? 'active' : '' }}">View Appointments</a>
                         </li>
                     </ul>
                 </li>
@@ -164,49 +164,133 @@
                         </li>
                     </ul>
                 </li>
-
             </ul>
 
 
-
-
             <ul>
-                <li class="menu-title">Invoices & Reports</li>
-                <li class="submenu {{ Request::is('admin/view/invoices') || Request::is('admin/edit/invoice/*') || Request::is('admin/details/invoice/*') ? 'active' : '' }}">
+                <li class="menu-title">Invoices</li>
+                <li class="submenu {{ Request::is('admin/view/invoices') || Request::is('admin/search/invoices') || Request::is('admin/details/invoice/*') || Request::is('admin/edit/invoice/*') || Request::is('admin/invoice-pdf/view/*') || Request::is('admin/cancelled-invoice-pdf/view/*') || Request::is('admin/details/refund-invoice/*') ? 'active' : '' }}">
                     <a href="#">
                         <i class="fas fa-file-invoice-dollar"></i>
                         <span> Invoices </span>
                         <span class="menu-arrow"></span>
                     </a>
-
-                    <ul style="{{ Request::is('admin/view/invoices') || Request::is('admin/edit/invoice/*') || Request::is('admin/details/invoice/*') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('admin/view/invoices') || Request::is('admin/search/invoices') || Request::is('admin/details/invoice/*') || Request::is('admin/edit/invoice/*') || Request::is('admin/invoice-pdf/view/*') || Request::is('admin/cancelled-invoice-pdf/view/*') || Request::is('admin/details/refund-invoice/*') ? '' : 'display: none;' }}">
                         <li>
-                            <a href="{{ route('view_invoices') }}"
-                               class="{{ Request::is('admin/view/invoices') || Request::is('admin/edit/invoice/*') || Request::is('admin/details/invoice/*') ? 'active' : '' }}">
+                            <a href="{{ route('view_invoices') }}" class="{{ Request::is('admin/view/invoices') || Request::is('admin/search/invoices') || Request::is('admin/details/invoice/*') || Request::is('admin/edit/invoice/*') || Request::is('admin/invoice-pdf/view/*') || Request::is('admin/cancelled-invoice-pdf/view/*') || Request::is('admin/details/refund-invoice/*') ? 'active' : '' }}">
                                 View Invoices
                             </a>
                         </li>
                     </ul>
                 </li>
+            </ul>
 
 
-                <li class="submenu {{ Request::is('admin/view/reports') || Request::is('admin/edit/report/*') || Request::is('admin/details/report/*') ? 'active' : '' }}">
+
+            <ul>
+                <li class="menu-title">Reports & Analytics</li>
+
+                <li class="submenu
+                    {{ Request::is('admin/employees/reports/*')
+                        || Request::is('admin/doctors/reports/*')
+                        || Request::is('admin/patients/reports/*')
+                        || Request::is('admin/appointments/reports/*')
+                        || Request::is('admin/invoices/reports/*')
+                        ? 'active' : '' }}">
+
                     <a href="#">
-                        <i class="fas fa-file-alt"></i>
+                        <i class="fas fa-file-pdf"></i>
                         <span> Reports </span>
                         <span class="menu-arrow"></span>
                     </a>
 
-                    <ul style="{{ Request::is('admin/view/reports') || Request::is('admin/edit/report/*') || Request::is('admin/details/report/*') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('admin/*/reports/*') ? 'display:block;' : '' }}">
+
                         <li>
-                            <a href="{{ route('view_reports') }}"
-                               class="{{ Request::is('admin/view/reports') || Request::is('admin/edit/report/*') || Request::is('admin/details/report/*') ? 'active' : '' }}">
-                                View Reports
+                            <a href="{{ route('employees_reports_view') }}"
+                            class="{{ Request::is('admin/employees/reports/*') ? 'active' : '' }}">
+                            Employees Report
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('doctors_reports_view') }}"
+                            class="{{ Request::is('admin/doctors/reports/*') ? 'active' : '' }}">
+                            Doctors Report
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('patients_reports_view') }}"
+                            class="{{ Request::is('admin/patients/reports/*') ? 'active' : '' }}">
+                            Patients Report
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('appointments_reports_view') }}"
+                            class="{{ Request::is('admin/appointments/reports/*') ? 'active' : '' }}">
+                            Appointments Report
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('invoices_reports_view') }}"
+                            class="{{ Request::is('admin/invoices/reports/*') ? 'active' : '' }}">
+                            Financial Summary
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <!-- Analytics -->
+                <li class="submenu {{ Request::is('admin/employees/analytics') || Request::is('admin/doctors/analytics') || Request::is('admin/patients/analytics') || Request::is('admin/appointments/analytics') || Request::is('admin/invoices/analytics') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fas fa-chart-line"></i>
+                        <span> Analytics </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <ul style="{{ Request::is('admin/employees/analytics') || Request::is('admin/doctors/analytics') || Request::is('admin/patients/analytics') || Request::is('admin/appointments/analytics') || Request::is('admin/invoices/analytics') ? 'active' : '' }}">
+                        <li>
+                            <a href="{{ route('employees_analytics') }}"
+                                class="{{ Request::is('admin/employees/analytics') ? 'active' : '' }}">
+                                Employees Analytics
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('doctors_analytics') }}"
+                                class="{{ Request::is('admin/doctors/analytics') ? 'active' : '' }}">
+                                Doctors Analytics
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('patients_analytics') }}"
+                                class="{{ Request::is('admin/patients/analytics') ? 'active' : '' }}">
+                                Patients Analytics
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('appointments_analytics') }}"
+                                class="{{ Request::is('admin/appointments/analytics') ? 'active' : '' }}">
+                                Appointments Analytics
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('invoices_analytics') }}"
+                                class="{{ Request::is('admin/invoices/analytics') ? 'active' : '' }}">
+                                Invoices Analytics
                             </a>
                         </li>
                     </ul>
                 </li>
+
             </ul>
+
 
 
 

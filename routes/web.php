@@ -6,11 +6,11 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 use App\Http\Controllers\Backend\Shared\CommonDoctorController;
+use App\Http\Controllers\Backend\Shared\CommonClinicController;
 
 use App\Http\Controllers\Backend\Admin\ChartController as AdminChartController;
 use App\Http\Controllers\Backend\Admin\ClinicController as AdminClinicController;
 use App\Http\Controllers\Backend\Admin\DoctorController as AdminDoctorController;
-use App\Http\Controllers\Backend\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Backend\Admin\InvoiceController as AdminInvoiceController;
 use App\Http\Controllers\Backend\Admin\PatientController as AdminPatientController;
 use App\Http\Controllers\Backend\Admin\EmployeeController as AdminEmployeeController;
@@ -19,6 +19,13 @@ use App\Http\Controllers\Backend\Admin\DepartmentController as AdminDepartmentCo
 use App\Http\Controllers\Backend\Admin\AppointmentController as AdminAppointmentController;
 use App\Http\Controllers\Backend\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Backend\Admin\MedicalRecordController as AdminMedicalRecordController;
+use App\Http\Controllers\Backend\Admin\AnalyticController as AdminAnalyticController;
+use App\Http\Controllers\Backend\Admin\Report\PatientController as AdminReportPatientController;
+use App\Http\Controllers\Backend\Admin\Report\EmployeeController as AdminReportEmployeeController;
+use App\Http\Controllers\Backend\Admin\Report\DoctorController as AdminReportDoctorController;
+use App\Http\Controllers\Backend\Admin\Report\AppointmentController as AdminReportAppointmentController;
+use App\Http\Controllers\Backend\Admin\Report\InvoiceController as AdminReportInvoiceController;
+
 
 use App\Http\Controllers\Backend\ClinicManager\ChartController as ClinicManagerChartController;
 use App\Http\Controllers\Backend\ClinicManager\ClinicController as ClinicManagerClinicController;
@@ -53,10 +60,33 @@ use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointme
 use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
 
 
-use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
-
-
 use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
+use App\Http\Controllers\Backend\Employee\Nurse\ClinicController as NurseClinicController;
+use App\Http\Controllers\Backend\Employee\Nurse\DepartmentController as NurseDepartmentController;
+use App\Http\Controllers\Backend\Employee\Nurse\DoctorController as NurseDoctorController;
+use App\Http\Controllers\Backend\Employee\Nurse\PatientController as NursePatientController;
+use App\Http\Controllers\Backend\Employee\Nurse\VitalSignsController as NurseVitalSignsController;
+use App\Http\Controllers\Backend\Employee\Nurse\AppointmentController as NurseAppointmentController;
+use App\Http\Controllers\Backend\Employee\Nurse\MedicalRecordController as NurseMedicalRecordController;
+use App\Http\Controllers\Backend\Employee\Nurse\NurseTaskController as NurseNurseTaskController;
+
+
+use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
+use App\Http\Controllers\Backend\Employee\Receptionist\ClinicController as ReceptionisClinicController;
+use App\Http\Controllers\Backend\Employee\Receptionist\DepartmentController as ReceptionisDepartmentController;
+use App\Http\Controllers\Backend\Employee\Receptionist\DoctorController as ReceptionisDoctorController;
+use App\Http\Controllers\Backend\Employee\Receptionist\PatientController as ReceptionisPatientController;
+use App\Http\Controllers\Backend\Employee\Receptionist\AppointmentController as ReceptionisAppointmentController;
+use App\Http\Controllers\Backend\Employee\Receptionist\InvoiceController as ReceptionisInvoiceController;
+
+
+use App\Http\Controllers\Backend\Employee\Accountant\DashboardController as AccountantDashboardController;
+use App\Http\Controllers\Backend\Employee\Accountant\ClinicController as AccountantClinicController;
+use App\Http\Controllers\Backend\Employee\Accountant\DepartmentController as AccountantDepartmentController;
+use App\Http\Controllers\Backend\Employee\Accountant\DoctorController as AccountantDoctorController;
+use App\Http\Controllers\Backend\Employee\Accountant\PatientController as AccountantPatientController;
+use App\Http\Controllers\Backend\Employee\Accountant\InvoiceController as AccountantInvoiceController;
+use App\Http\Controllers\Backend\Employee\Accountant\AppointmentController as AccountantAppointmentController;
 
 
 use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
@@ -83,6 +113,10 @@ Route::prefix('clinics-management')->group(function () {
     Route::get('/get-doctor-info/{id}', [CommonDoctorController::class, 'getDoctorInfo']);   // يرجع أوقات الدكتور للحجز معاه
     Route::get('/doctor-working-days/{id}', [CommonDoctorController::class, 'getWorkingDays']);  // يرجع أيام الدكتور للحجز معاه
 
+
+    Route::get('/get-departments-by-clinic/{clinic_id}', [CommonClinicController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط أقسامها في فورم إضافة طبيب
+    Route::get('/get-clinic-info/{id}', [CommonClinicController::class, 'getClinicInfo']);  // بحضر لي أوقات العيادة في فورم الطبيب عشان أختار أوقات الطبيب بناء ع وقت العيادة
+    Route::get('/clinic-working-days/{id}', [CommonClinicController::class, 'getWorkingDays']);    // برجع الأيام المحددة
 
 
 });
@@ -161,10 +195,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/search/schedules',[AdminDoctorController::class ,  'searchSchedules'])->name('search_schedules');
     Route::post('/search/doctor/schedule',[AdminDoctorController::class , 'searchDoctSchedule'])->name('search_doctor_schedule');
 
-    Route::get('/get-departments-by-clinic/{clinic_id}', [AdminDoctorController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط أقسامها في فورم إضافة طبيب
-    Route::get('/get-clinic-info/{id}', [AdminDoctorController::class, 'getClinicInfo']);  // بحضر لي أوقات العيادة في فورم الطبيب عشان أختار أوقات الطبيب بناء ع وقت العيادة
-    Route::get('/clinic-working-days/{id}', [AdminDoctorController::class, 'getWorkingDays']);    // برجع الأيام المحددة
-
 
     //Patient
     Route::get('/add/patient' ,[AdminPatientController::class , 'addPatient'])->name('add_patient');
@@ -185,46 +215,78 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/details/appointment/{id}',[AdminAppointmentController::class , 'detailsAppointment'])->name('details_appointment');
     Route::get('/edit/appointment/{id}' ,[AdminAppointmentController::class , 'editAppointment'])->name('edit_appointment');
     Route::put('/update/appointment/{id}' ,[AdminAppointmentController::class , 'updateAppointment'])->name('update_appointment');
+
     Route::delete('/delete/appointment/{id}' ,[AdminAppointmentController::class ,'deleteAppointment'])->name('delete_appointment');
-
-
-
-    //Invoices
-    Route::get('/view/invoices' ,[AdminInvoiceController::class , 'viewInvoices'])->name('view_invoices');
-    Route::get('/search/invoices',[AdminInvoiceController::class , 'searchInvoices'])->name('search_invoices');
-    Route::get('/details/invoice/{id}',[AdminInvoiceController::class , 'detailsInvoice'])->name('details_invoice');
-    Route::get('/edit/invoice/{id}' ,[AdminInvoiceController::class , 'editInvoice'])->name('edit_invoice');
-    Route::put('/update/invoice/{id}' ,[AdminInvoiceController::class , 'updateInvoice'])->name('update_invoice');
-    Route::delete('/delete/invoice/{id}' ,[AdminInvoiceController::class ,'deleteInvoice'])->name('delete_invoice');
-
-
-    //Reports
-    Route::get('/view/reports' ,[AdminReportController::class , 'viewReports'])->name('view_reports');
-    Route::get('/details/patients-reports' ,[AdminReportController::class , 'detailsPatientsReports'])->name('details_patients_reports');
-    Route::get('/details/appointments-reports' ,[AdminReportController::class , 'detailsAppointmentsReports'])->name('details_appointments_reports');
-    Route::get('/details/invoices-reports' ,[AdminReportController::class , 'detailsInvoicesReports'])->name('details_invoices_reports');
-    Route::get('/details/doctors-reports' ,[AdminReportController::class , 'detailsDoctorsReports'])->name('details_doctors_reports');
+    Route::get('/appointments-trash',[AdminAppointmentController::class, 'trash'])->name('appointments_trash');   // عرض سلة محذوفات المواعيد
+    Route::get('/appointments-trash/search', [AdminAppointmentController::class, 'searchAppointmentsTrash'])->name('appointments_trash_search');
+    Route::post('/appointments/restore/{id}',[AdminAppointmentController::class, 'restore'])->name('appointment_restore');   // استرجاع موعد من سلة المحذوفات
+    Route::delete('/appointments/force-delete/{id}',[AdminAppointmentController::class, 'forceDelete'])->name('appointment_forceDelete');  // حذف نهائي من سلة المحذوفات
 
 
     //Medical Records
     Route::get('/view/medical-records' ,[AdminMedicalRecordController::class , 'viewMedicalRecords'])->name('view_medical_records');
     Route::get('/search/medical-records',[AdminMedicalRecordController::class , 'searchMedicalRecords'])->name('search_medical_records');
     Route::get('/details/medical-record/{id}',[AdminMedicalRecordController::class , 'detailsMedicalRecord'])->name('details_medical_record');
-    Route::get('/edit/medical-record/{id}' ,[AdminMedicalRecordController::class , 'editMedicalRecord'])->name('edit_medical_record');
-    Route::put('/update/medical-record/{id}' ,[AdminMedicalRecordController::class , 'updateMedicalRecord'])->name('update_medical_record');
-    Route::delete('/delete/medical-record/{id}' ,[AdminMedicalRecordController::class ,'deleteMedicalRecord'])->name('delete_medical_record');
+
+
+    //Invoices
+    Route::get('/view/invoices' ,[AdminInvoiceController::class , 'viewInvoices'])->name('view_invoices');
+    Route::get('/search/invoices',[AdminInvoiceController::class , 'searchInvoices'])->name('search_invoices');
+    Route::get('/details/invoice/{id}',[AdminInvoiceController::class , 'detailsInvoice'])->name('details_invoice');
+    Route::get('/details/refund-invoice/{id}',[AdminInvoiceController::class , 'detailsRefundInvoice'])->name('details_refund_invoice');
+    Route::get('/edit/invoice/{id}' ,[AdminInvoiceController::class , 'editInvoice'])->name('edit_invoice');
+    Route::put('/update/invoice/{id}' ,[AdminInvoiceController::class , 'updateInvoice'])->name('update_invoice');
+    Route::delete('/delete/invoice/{id}' ,[AdminInvoiceController::class ,'deleteInvoice'])->name('delete_invoice');
+
+
+    Route::get('/invoice-pdf/view/{id}', [AdminInvoiceController::class, 'invoicePDF'])->name('invoice_pdf');
+    Route::get('/invoice-pdf/raw/{id}', [AdminInvoiceController::class, 'invoicePDFRaw'])->name('invoice_pdf_raw');
+    Route::get('/cancelled-invoice-pdf/view/{id}', [AdminInvoiceController::class, 'cancelledinvoicePDF'])->name('cancelled_invoice_pdf');
+    Route::get('/cancelled-invoice-pdf/raw/{id}', [AdminInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('cancelled_invoice_pdf_raw');
+
+
+    //Reports
+
+    //Printable Employee Report
+    Route::get('/employees/reports/view', [AdminReportEmployeeController::class, 'employeesReportsView'])->name('employees_reports_view');
+    Route::get('/employees/reports/pdf', [AdminReportEmployeeController::class, 'employeesReportsRaw'])->name('employees_reports_raw');
+
+    //Printable Doctor Report
+    Route::get('/doctors/reports/view', [AdminReportDoctorController::class, 'doctorsReportsView'])->name('doctors_reports_view');
+    Route::get('/doctors/reports/pdf', [AdminReportDoctorController::class, 'doctorsReportsRaw'])->name('doctors_reports_raw');
+
+    //Printable Patient Report
+    Route::get('/patients/reports/view', [AdminReportPatientController::class, 'patientsReportsView'])->name('patients_reports_view');
+    Route::get('/patients/reports/pdf', [AdminReportPatientController::class, 'patientsReportsRaw'])->name('patients_reports_raw');
+
+    //Printable Appointment Report
+    Route::get('/appointments/reports/view', [AdminReportAppointmentController::class, 'appointmentsReportsView'])->name('appointments_reports_view');
+    Route::get('/appointments/reports/pdf', [AdminReportAppointmentController::class, 'appointmentsReportsRaw'])->name('appointments_reports_raw');
+
+    //Printable Invoice Report
+    Route::get('/invoices/reports/view', [AdminReportInvoiceController::class, 'invoicesReportsView'])->name('invoices_reports_view');
+    Route::get('/invoices/reports/pdf', [AdminReportInvoiceController::class, 'invoicesReportsRaw'])->name('invoices_reports_raw');
+
+
+    //Analytics
+    Route::get('/employees/analytics', [AdminAnalyticController::class, 'employeesAnalytics'])->name('employees_analytics');
+    Route::get('/doctors/analytics', [AdminAnalyticController::class, 'doctorsAnalytics'])->name('doctors_analytics');
+    Route::get('/patients/analytics', [AdminAnalyticController::class, 'patientsAnalytics'])->name('patients_analytics');
+    Route::get('/appointments/analytics', [AdminAnalyticController::class, 'appointmentsAnalytics'])->name('appointments_analytics');
+    Route::get('/invoices/analytics', [AdminAnalyticController::class, 'invoicesAnalytics'])->name('invoices_analytics');
+
 
 
     //Chart
-    Route::get('/chart/appointments-monthly', [AdminChartController::class, 'appointmentsMonthly'])->name('appointments_monthly');
+    Route::get('/chart/employees/monthly', [AdminChartController::class, 'employeesMonthly'])->name('employees_monthly');
+    Route::get('/chart/doctors-monthly', [AdminChartController::class, 'doctorsMonthly'])->name('doctors_monthly');
+    Route::get('/chart/doctors-by-department', [AdminChartController::class, 'doctorsByDepartment'])->name('doctors_by_department');
     Route::get('/chart/patients-per-clinic', [AdminChartController::class, 'patientsPerClinic'])->name('patients_per_clinic');
     Route::get('/chart/patients-monthly', [AdminChartController::class, 'patientsPerMonth'])->name('patients_monthly');
     Route::get('/chart/appointments-by-clinic', [AdminChartController::class, 'getAppointmentsByClinic'])->name('appointments_by_clinic');
+    Route::get('/chart/appointments-monthly', [AdminChartController::class, 'appointmentsMonthly'])->name('appointments_monthly');
     Route::get('/chart/revenue-monthly', [AdminChartController::class, 'monthlyRevenue'])->name('monthly_revenue');
     Route::get('/chart/revenue-per-clinic', [AdminChartController::class, 'revenuePerClinic'])->name('revenue_per_clinic');
-    Route::get('/chart/doctors-monthly', [AdminChartController::class, 'doctorsMonthly'])->name('doctors_monthly');
-    Route::get('/chart/doctors-by-department', [AdminChartController::class, 'doctorsByDepartment'])->name('doctors_by_department');
-
 
 
     // Notifications
@@ -264,6 +326,13 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
     Route::get('/details/department/{id}' ,[ClinicManagerDepartmentController::class , 'detailsDepartment'])->name('clinic.details_department');
     Route::delete('/delete/department/{id}' ,[ClinicManagerDepartmentController::class , 'deleteDepartment'])->name('clinic.delete_department');
 
+    Route::get('/view/departments-managers', [ClinicManagerDepartmentController::class, 'viewDepartmentsManagers'])->name('clinic.view_departments_managers');
+    Route::get('/search/departments-managers',[ClinicManagerDepartmentController::class , 'searchDepartmentsManagers'])->name('clinic.search_departments_managers');
+    Route::get('/profile/department-manager/{id}',[ClinicManagerDepartmentController::class , 'profileDepartmentManager'])->name('clinic.profile_department_manager');
+    Route::get('/edit/department-manager/{id}' ,[ClinicManagerDepartmentController::class , 'editDepartmentManager'])->name('clinic.edit_department_manager');
+    Route::put('/update/department-manager/{id}' ,[ClinicManagerDepartmentController::class , 'updateDepartmentManager'])->name('clinic.update_department_manager');
+    Route::delete('/delete/department-manager/{id}' ,[ClinicManagerDepartmentController::class , 'deleteDepartmentManager'])->name('clinic.delete_department_manager');
+
 
     //Employees
     Route::get('/add/employee' ,[ClinicManagerEmployeeController::class , 'addEmployee'])->name('clinic.add_employee');
@@ -291,16 +360,26 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
 
 
     //Patient
+    Route::get('/add/patient' ,[ClinicManagerPatientController::class , 'addPatient'])->name('clinic.add_patient');
+    Route::post('/store/patient',[ClinicManagerPatientController::class , 'storePatient'])->name('clinic.store_patient');
     Route::get('/view/patients' ,[ClinicManagerPatientController::class , 'viewPatients'])->name('clinic.view_patients');
     Route::get('/search/patients' ,[ClinicManagerPatientController::class , 'searchPatients'])->name('clinic.search_patients');
     Route::get('/profile/patient/{id}',[ClinicManagerPatientController::class , 'profilePatient'])->name('clinic.profile_patient');
+    Route::get('/edit/patient/{id}' ,[ClinicManagerPatientController::class , 'editPatient'])->name('clinic.edit_patient');
+    Route::put('/update/patient/{id}' ,[ClinicManagerPatientController::class , 'updatePatient'])->name('clinic.update_patient');
+    // Route::delete('/delete/patient/{id}' ,[ClinicManagerPatientController::class , 'deletePatient'])->name('clinic.delete_patient');
 
 
     //Appointment
     Route::get('/view/appointments' ,[ClinicManagerAppointmentController::class , 'viewAppointments'])->name('clinic.view_appointments');
     Route::get('/search/appointments',[ClinicManagerAppointmentController::class , 'searchAppointments'])->name('clinic.search_appointments');
     Route::get('/details/appointment/{id}',[ClinicManagerAppointmentController::class , 'detailsAppointment'])->name('clinic.details_appointment');
+
     Route::delete('/delete/appointment/{id}' ,[ClinicManagerAppointmentController::class ,'deleteAppointment'])->name('clinic.delete_appointment');
+    Route::get('/appointments-trash',[ClinicManagerAppointmentController::class, 'trash'])->name('clinic.appointments_trash');   // عرض سلة محذوفات المواعيد
+    Route::get('/appointments-trash/search', [ClinicManagerAppointmentController::class, 'searchAppointmentsTrash'])->name('clinic.appointments_trash_search');
+    Route::post('/appointments/restore/{id}',[ClinicManagerAppointmentController::class, 'restore'])->name('clinic.appointment_restore');   // استرجاع موعد من سلة المحذوفات
+    Route::delete('/appointments/force-delete/{id}',[ClinicManagerAppointmentController::class, 'forceDelete'])->name('clinic.appointment_forceDelete');  // حذف نهائي من سلة المحذوفات
 
 
     //Reports
@@ -315,6 +394,13 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
     Route::get('/view/invoices' ,[ClinicManagerInvoiceController::class , 'viewInvoices'])->name('clinic.view_invoices');
     Route::get('/search/invoices',[ClinicManagerInvoiceController::class , 'searchInvoices'])->name('clinic.search_invoices');
     Route::get('/details/invoice/{id}',[ClinicManagerInvoiceController::class , 'detailsInvoice'])->name('clinic.details_invoice');
+    Route::get('/details/refund-invoice/{id}',[ClinicManagerInvoiceController::class , 'detailsRefundInvoice'])->name('clinic.details_refund_invoice');
+
+    Route::get('/invoice-pdf/view/{id}', [ClinicManagerInvoiceController::class, 'invoicePDF'])->name('clinic.invoice_pdf');
+    Route::get('/invoice-pdf/raw/{id}', [ClinicManagerInvoiceController::class, 'invoicePDFRaw'])->name('clinic.invoice_pdf_raw');
+    Route::get('/cancelled-invoice-pdf/view/{id}', [ClinicManagerInvoiceController::class, 'cancelledinvoicePDF'])->name('clinic.cancelled_invoice_pdf');
+    Route::get('/cancelled-invoice-pdf/raw/{id}', [ClinicManagerInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('clinic.cancelled_invoice_pdf_raw');
+
 
 
     //Chart
@@ -373,7 +459,6 @@ Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:depar
     Route::get('/view/appointments' ,[DepartmentManagerAppointmentController::class , 'viewAppointments'])->name('department.view_appointments');
     Route::get('/search/appointments',[DepartmentManagerAppointmentController::class , 'searchAppointments'])->name('department.search_appointments');
     Route::get('/details/appointment/{id}',[DepartmentManagerAppointmentController::class , 'detailsAppointment'])->name('department.details_appointment');
-    Route::delete('/delete/appointment/{id}' ,[DepartmentManagerAppointmentController::class ,'deleteAppointment'])->name('department.delete_appointment');
 
 
     //Reports
@@ -442,7 +527,54 @@ Route::prefix('employee/nurse')->middleware(['auth', 'verified', 'role:employee'
     Route::put('/update/profile' , [NurseDashboardController::class , 'nurseUpdateProfile'])->name('nurse_update_profile');
 
 
+    //Clinic
+    Route::get('/clinic-profile', [NurseClinicController::class, 'clinicProfile'])->name('nurse.clinic_profile');
 
+
+    //Department
+    Route::get('/depratment-profile', [NurseDepartmentController::class, 'depratmentProfile'])->name('nurse.depratment_profile');
+
+
+    //Doctors
+    Route::get('/view/doctors' ,[NurseDoctorController::class , 'viewDoctors'])->name('nurse.view_doctors');
+    Route::get('/search/doctors',[NurseDoctorController::class , 'searchDoctors'])->name('nurse.search_doctors');
+    Route::get('/profile/doctor/{id}',[NurseDoctorController::class , 'profileDoctor'])->name('nurse.profile_doctor');
+
+    Route::get('/search/schedules',[NurseDoctorController::class ,  'searchSchedules'])->name('nurse.search_schedules');
+    Route::post('/search/doctor/schedule',[NurseDoctorController::class , 'searchDoctchedule'])->name('nurse.search_doctor_schedule');
+
+
+    //Patient
+    Route::get('/view/patients' ,[NursePatientController::class , 'viewPatients'])->name('nurse.view_patients');
+    Route::get('/search/patients' ,[NursePatientController::class , 'searchPatients'])->name('nurse.search_patients');
+    Route::get('/profile/patient/{id}',[NursePatientController::class , 'profilePatient'])->name('nurse.profile_patient');
+
+
+    //Appointment
+    Route::get('/view/appointments' ,[NurseAppointmentController::class , 'viewAppointments'])->name('nurse.view_appointments');
+    Route::get('/search/appointments',[NurseAppointmentController::class , 'searchAppointments'])->name('nurse.search_appointments');
+
+
+    //Vital Signs
+    Route::get('/add/vital-signs/{appointment_id}' ,[NurseVitalSignsController::class , 'addVitalSigns'])->name('nurse.add_vital_signs');
+    Route::post('/store/vital-signs' ,[NurseVitalSignsController::class , 'storeVitalSigns'])->name('nurse.store_vital_signs');
+    Route::get('/view/vital-signs/{appointment_id}' ,[NurseVitalSignsController::class , 'viewVitalSigns'])->name('nurse.view_vital_signs');
+    Route::get('/search/vital-signs',[NurseVitalSignsController::class , 'searchVitalSigns'])->name('nurse.search_vital_signs');
+    Route::get('/edit/vital-signs/{id}' ,[NurseVitalSignsController::class , 'editVitalSigns'])->name('nurse.edit_vital_signs');
+    Route::put('/update/vital-signs/{id}' ,[NurseVitalSignsController::class , 'updateVitalSigns'])->name('nurse.update_vital_signs');
+
+
+    //Medical Record
+    Route::get('/view/medical-records' ,[NurseMedicalRecordController::class , 'viewMedicalRecords'])->name('nurse.view_medical_records');
+    Route::get('/search/medical-records',[NurseMedicalRecordController::class , 'searchMedicalRecords'])->name('nurse.search_medical_records');
+    Route::get('/details/medical-record/{id}' ,[NurseMedicalRecordController::class , 'detailsMedicalRecord'])->name('nurse.details_medical_record');
+
+
+    //Nurse Tasks
+    Route::get('/view/nurse-tasks' ,[NurseNurseTaskController::class , 'viewNurseTasks'])->name('nurse.view_nurse_tasks');
+    Route::get('/search/nurse-tasks',[NurseNurseTaskController::class , 'searchNurseTasks'])->name('nurse.search_nurse_tasks');
+    Route::get('/details/nurse-task/{id}' ,[NurseNurseTaskController::class , 'detailsNurseTask'])->name('nurse.details_nurse_task');
+    Route::post('/completed/nurse-task/{id}' ,[NurseNurseTaskController::class , 'completedNurseTask'])->name('nurse.completed_nurse_task');
 
 });
 
@@ -460,7 +592,117 @@ Route::prefix('employee/receptionist')->middleware(['auth', 'verified', 'role:em
     Route::put('/update/profile' , [ReceptionistDashboardController::class , 'receptionistUpdateProfile'])->name('receptionist_update_profile');
 
 
+    //Clinic
+    Route::get('/clinic-profile', [ReceptionisClinicController::class, 'clinicProfile'])->name('receptionist.clinic_profile');
 
+
+    //Department
+    Route::get('/depratment-profile', [ReceptionisDepartmentController::class, 'depratmentProfile'])->name('receptionist.depratment_profile');
+
+
+    //Doctors
+    Route::get('/view/doctors' ,[ReceptionisDoctorController::class , 'viewDoctors'])->name('receptionist.view_doctors');
+    Route::get('/search/doctors',[ReceptionisDoctorController::class , 'searchDoctors'])->name('receptionist.search_doctors');
+    Route::get('/profile/doctor/{id}',[ReceptionisDoctorController::class , 'profileDoctor'])->name('receptionist.profile_doctor');
+
+    Route::get('/search/schedules',[ReceptionisDoctorController::class ,  'searchSchedules'])->name('receptionist.search_schedules');
+    Route::post('/search/doctor/schedule',[ReceptionisDoctorController::class , 'searchDoctchedule'])->name('receptionist.search_doctor_schedule');
+
+
+    //Patient
+    Route::get('/add/patient' ,[ReceptionisPatientController::class , 'addPatient'])->name('receptionist.add_patient');
+    Route::post('/store/patient' ,[ReceptionisPatientController::class , 'storePatient'])->name('receptionist.store_patient');
+    Route::get('/view/patients' ,[ReceptionisPatientController::class , 'viewPatients'])->name('receptionist.view_patients');
+    Route::get('/search/patients' ,[ReceptionisPatientController::class , 'searchPatients'])->name('receptionist.search_patients');
+    Route::get('/profile/patient/{id}',[ReceptionisPatientController::class , 'profilePatient'])->name('receptionist.profile_patient');
+    Route::get('/edit/patient/{id}' ,[ReceptionisPatientController::class , 'editPatient'])->name('receptionist.edit_patient');
+    Route::put('/update/patient/{id}' ,[ReceptionisPatientController::class , 'updatePatient'])->name('receptionist.update_patient');
+    Route::delete('/delete/patient/{id}' ,[ReceptionisPatientController::class , 'deletePatient'])->name('receptionist.delete_patient');
+
+
+    //Appointment
+    Route::get('/add/appointment' ,[ReceptionisAppointmentController::class , 'addAppointment'])->name('receptionist.add_appointment');
+    Route::post('/store/appointment',[ReceptionisAppointmentController::class , 'storeAppointment'])->name('receptionist.store_appointment');
+    Route::get('/view/appointments' ,[ReceptionisAppointmentController::class , 'viewAppointments'])->name('receptionist.view_appointments');
+    Route::get('/search/appointments',[ReceptionisAppointmentController::class , 'searchAppointments'])->name('receptionist.search_appointments');
+    Route::get('/details/appointment/{id}',[ReceptionisAppointmentController::class , 'detailsAppointment'])->name('receptionist.details_appointment');
+    Route::get('/edit/appointment/{id}' ,[ReceptionisAppointmentController::class , 'editAppointment'])->name('receptionist.edit_appointment');
+    Route::put('/update/appointment/{id}' ,[ReceptionisAppointmentController::class , 'updateAppointment'])->name('receptionist.update_appointment');
+
+    Route::post('/appointments/update-status/{id}', [ReceptionisAppointmentController::class, 'updateStatus']);
+    Route::post('/check-appointment', [ReceptionisAppointmentController::class, 'checkAppointment'])->name('receptionist.check_appointment');
+
+
+    //Invoices
+    Route::get('/view/invoices' ,[ReceptionisInvoiceController::class , 'viewInvoices'])->name('receptionist.view_invoices');
+    Route::get('/search/invoices',[ReceptionisInvoiceController::class , 'searchInvoices'])->name('receptionist.search_invoices');
+    Route::get('/details/invoice/{id}',[ReceptionisInvoiceController::class , 'detailsInvoice'])->name('receptionist.details_invoice');
+
+    Route::get('/invoice-pdf/view/{id}', [ReceptionisInvoiceController::class, 'invoicePDF'])->name('receptionist.invoice_pdf');
+    Route::get('/invoice-pdf/raw/{id}', [ReceptionisInvoiceController::class, 'invoicePDFRaw'])->name('receptionist.invoice_pdf_raw');
+
+});
+
+
+
+
+
+/**  Accountants **/
+Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:employee'])->group(function () {
+
+    //Dashboard
+    Route::get('/dashboard', [AccountantDashboardController::class, 'accountantDashboard'])->name('accountant_dashboard');
+    Route::get('/profile' , [AccountantDashboardController::class , 'accountantProfile'])->name('accountant_profile');
+    Route::get('/edit/profile' , [AccountantDashboardController::class , 'accountantEditProfile'])->name('accountant_edit_profile');
+    Route::put('/update/profile' , [AccountantDashboardController::class , 'accountantUpdateProfile'])->name('accountant_update_profile');
+
+
+    //Clinic
+    Route::get('/clinic-profile', [AccountantClinicController::class, 'clinicProfile'])->name('accountant.clinic_profile');
+
+
+    //Departments
+    Route::get('/view/depratments', [AccountantDepartmentController::class, 'viewDepratments'])->name('accountant.view_depratments');
+
+
+    //Doctors
+    Route::get('/view/doctors' ,[AccountantDoctorController::class , 'viewDoctors'])->name('accountant.view_doctors');
+    Route::get('/search/doctors',[AccountantDoctorController::class , 'searchDoctors'])->name('accountant.search_doctors');
+    Route::get('/profile/doctor/{id}',[AccountantDoctorController::class , 'profileDoctor'])->name('accountant.profile_doctor');
+
+
+
+    //Patient
+    Route::get('/view/patients' ,[AccountantPatientController::class , 'viewPatients'])->name('accountant.view_patients');
+    Route::get('/search/patients' ,[AccountantPatientController::class , 'searchPatients'])->name('accountant.search_patients');
+    Route::get('/profile/patient/{id}',[AccountantPatientController::class , 'profilePatient'])->name('accountant.profile_patient');
+    Route::get('/view/invoices-patients/{id}' ,[AccountantPatientController::class , 'viewInvoicesPatients'])->name('accountant.view_invoices_patients');
+    Route::get('/search/invoices-patients/{id}' ,[AccountantPatientController::class , 'searchInvoicesPatients'])->name('accountant.search_invoices_patients');
+
+
+
+    //Appointment
+    Route::get('/view/appointments' ,[AccountantAppointmentController::class , 'viewAppointments'])->name('accountant.view_appointments');
+    Route::get('/search/appointments',[AccountantAppointmentController::class , 'searchAppointments'])->name('accountant.search_appointments');
+
+
+
+    //Invoices
+    Route::get('/view/invoices' ,[AccountantInvoiceController::class , 'viewInvoices'])->name('accountant.view_invoices');
+    Route::get('/search/invoices',[AccountantInvoiceController::class , 'searchInvoices'])->name('accountant.search_invoices');
+    Route::get('/details/invoice/{id}',[AccountantInvoiceController::class , 'detailsInvoice'])->name('accountant.details_invoice');
+    Route::get('/edit/invoice/{id}' ,[AccountantInvoiceController::class , 'editInvoice'])->name('accountant.edit_invoice');
+    Route::put('/update/invoice/{id}' ,[AccountantInvoiceController::class , 'updateInvoice'])->name('accountant.update_invoice');
+
+    Route::get('/details/refund-invoice/{id}',[AccountantInvoiceController::class , 'detailsRefundInvoice'])->name('accountant.details_refund_invoice');
+    Route::get('/refund-confirm/{id}' ,[AccountantInvoiceController::class , 'refundConfirmation'])->name('accountant.refund_confirm');
+    Route::put('/update/refund-confirm/{id}' ,[AccountantInvoiceController::class , 'updateRefundConfirmation'])->name('accountant.update_refund_confirm');
+
+
+    Route::get('/invoice-pdf/view/{id}', [AccountantInvoiceController::class, 'invoicePDF'])->name('accountant.invoice_pdf');
+    Route::get('/invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'invoicePDFRaw'])->name('accountant.invoice_pdf_raw');
+    Route::get('/cancelled-invoice-pdf/view/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDF'])->name('accountant.cancelled_invoice_pdf');
+    Route::get('/cancelled-invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('accountant.cancelled_invoice_pdf_raw');
 
 });
 

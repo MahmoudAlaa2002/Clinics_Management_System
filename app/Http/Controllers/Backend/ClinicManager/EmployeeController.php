@@ -34,9 +34,9 @@ class EmployeeController extends Controller{
     public function storeEmployee(Request $request){
         $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
-        $existingEmployee = User::whereRaw('LOWER(name) = ?', [$normalizedName])->whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
+        $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
 
-        if ($existingEmployee) {
+        if ($existingEmail) {
             return response()->json(['data' => 0]);
         }
 
@@ -63,6 +63,17 @@ class EmployeeController extends Controller{
 
             if ($departmentHasManager) {
                 return response()->json(['data' => 1]);
+            }
+        }
+
+        // تحقق من عدم وجود محاسب للعيادة
+        if ($request->job_title === 'Accountant') {
+            $clinicHasAccountant = Employee::where('clinic_id', $request->clinic_id)
+                ->where('job_title', 'Accountant')
+                ->exists();
+
+            if ($clinicHasAccountant) {
+                return response()->json(['data' => 2]);
             }
         }
 
@@ -104,7 +115,7 @@ class EmployeeController extends Controller{
             ]);
         }
 
-        return response()->json(['data' => 2]);
+        return response()->json(['data' => 3]);
     }
 
 
@@ -114,7 +125,7 @@ class EmployeeController extends Controller{
 
     public function viewEmployees(){
         $clinic_id =  Auth::user()->employee->clinic->id;
-        $employees = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic_id)->orderBy('id', 'asc')->paginate(12);
+        $employees = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic_id)->orderBy('id', 'asc')->paginate(30);
         return view('Backend.clinics_managers.employees.view' , compact('employees'));
     }
 
@@ -149,7 +160,7 @@ class EmployeeController extends Controller{
             }
         }
 
-        $employees = $query->orderBy('id')->paginate(12);
+        $employees = $query->orderBy('id')->paginate(30);
         $html = view('Backend.clinics_managers.employees.search', compact('employees'))->render();
 
         return response()->json([
@@ -197,15 +208,9 @@ class EmployeeController extends Controller{
         $employee = Employee::findOrFail($id);
         $user = $employee->user;
 
-        $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
-
-        $existingEmployee = User::whereRaw('LOWER(name) = ?', [$normalizedName])
-            ->whereRaw('LOWER(email) = ?', [$normalizedEmail])
-            ->where('id', '!=', $user->id) // استثناء المستخدم الحالي
-            ->first();
-
-        if ($existingEmployee) {
+        $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->where('id', '!=', $user->id)->first();
+        if ($existingEmail) {
             return response()->json(['data' => 0]); // موجود مسبقا
         }
 

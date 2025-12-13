@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
+use PDF;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,20 +10,49 @@ use App\Http\Controllers\Controller;
 class InvoiceController extends Controller{
 
 
-    public function viewInvoices(){
-        $invoices = Invoice::orderBy('id', 'asc')->paginate(12);
-        return view ('Backend.admin.invoices.view' , compact('invoices'));
+    public function viewInvoices(Request $request){
+        $statusFilter = $request->input('invoiceFilter', 'Issued');
+
+        $invoices = Invoice::with(['patient.user', 'appointment'])
+            ->when($statusFilter, function ($query) use ($statusFilter) {
+                return $query->where('invoice_status', $statusFilter);
+            })->orderBy('id', 'asc')->paginate(50);
+
+        return view ('Backend.admin.invoices.view' , compact('invoices' , 'statusFilter'));
     }
 
 
 
 
-
     public function searchInvoices(Request $request){
-        $keyword = trim($request->input('keyword', ''));
-        $filter  = $request->input('filter', '');
+        $keyword       = trim($request->input('keyword', ''));
+        $filter        = $request->input('filter', '');
+        $statusFilter  = $request->input('invoiceFilter', 'Issued');
 
-        $invoices = Invoice::with(['patient.user', 'appointment']);
+        $header = '<tr>
+                <th>ID</th>
+                <th>Appointment ID</th>
+                <th>Patient Name</th>';
+
+        if ($statusFilter === 'Issued') {
+            $header .= '
+                <th>Invoice Date</th>
+                <th>Due Date</th>';
+        } else {
+            $header .= '
+                <th>Refund Amount</th>
+                <th>Refund Date</th>';
+        }
+
+        $header .= '
+                <th>Payment Status</th>
+                <th>Action</th>
+            </tr>';
+
+        $invoices = Invoice::with(['patient.user', 'appointment'])
+            ->when($statusFilter, function ($query) use ($statusFilter) {
+                return $query->where('invoice_status', $statusFilter);
+            });
 
         if ($keyword !== '') {
             switch ($filter) {
@@ -45,36 +75,49 @@ class InvoiceController extends Controller{
                     $invoices->where('due_date', 'like', "{$keyword}%");
                     break;
 
+                case 'refund_date':
+                    $invoices->where('refund_date', 'like', "{$keyword}%");
+                    break;
+
                 case 'payment_status':
                     $invoices->where('payment_status', 'like', "{$keyword}%");
                     break;
 
                 default:
                     $invoices->where(function ($q) use ($keyword) {
-                        $q->where('appointment_id', 'like', "%{$keyword}%")
-                        ->orWhere('invoice_date', 'like', "%{$keyword}%")
-                        ->orWhere('due_date', 'like', "%{$keyword}%")
-                        ->orWhere('payment_status', 'like', "%{$keyword}%")
-                        ->orWhereHas('patient.user', function ($qq) use ($keyword) {
-                            $qq->where('name', 'like', "%{$keyword}%");
-                        });
+                        $q->where('appointment_id', 'like', "{$keyword}%")
+                          ->orWhere('invoice_date', 'like', "{$keyword}%")
+                          ->orWhere('due_date', 'like', "{$keyword}%")
+                          ->orWhere('refund_date', 'like', "{$keyword}%")
+                          ->orWhere('payment_status', 'like', "{$keyword}%")
+                          ->orWhereHas('patient.user', function ($qq) use ($keyword) {
+                              $qq->where('name', 'like', "{$keyword}%");
+                          });
                     });
                     break;
             }
         }
 
-        $invoices = $invoices->orderBy('id', 'asc')->paginate(12);
+        $invoices = $invoices->orderBy('id', 'asc')->paginate(50);
 
-        $view = view('Backend.admin.invoices.search', compact('invoices'))->render();
-        $pagination = $invoices->total() > 12 ? $invoices->links('pagination::bootstrap-4')->render() : '';
+        $view = view(
+            'Backend.admin.invoices.search',
+            compact('invoices', 'statusFilter')
+        )->render();
+
+        $pagination = ($invoices->total() > $invoices->perPage())
+            ? $invoices->links('pagination::bootstrap-4')->render()
+            : '';
 
         return response()->json([
             'html'       => $view,
             'pagination' => $pagination,
             'count'      => $invoices->total(),
             'searching'  => $keyword !== '',
+            'header'     => $header,
         ]);
     }
+
 
 
 
@@ -98,16 +141,43 @@ class InvoiceController extends Controller{
 
 
 
-    public function updateInvoice(Request $request, $id){
+    public function updateInvoice(Request $request , $id){
         $invoice = Invoice::findOrFail($id);
+
+        $total = $request->total_amount;
+        $paid  = $request->paid_amount;
+
+        if ($paid > $total) {
+            return response()->json(['data' => 0]);   // Check for overpayment
+        }
+
+        if ($paid == 0) {
+            $payment_status = 'Unpaid';
+        } elseif ($paid == $total) {
+            $payment_status = 'Paid';
+        } else {
+            $payment_status = 'Partially Paid';
+        }
+
         $invoice->update([
-            'total_amount' => $request->total_amount,
-            'payment_status' => $request->payment_status,
-            'invoice_date' => $request->invoice_date,
-            'due_date' => $request->due_date,
+            'total_amount'  => $request->total_amount,
+            'paid_amount'   => $request->paid_amount,
+            'invoice_date'  => $request->invoice_date,
+            'due_date'      => $request->due_date,
+            'payment_method' => $request->payment_method,
+            'payment_status' => $payment_status
         ]);
 
         return response()->json(['data' => 1]);
+    }
+
+
+
+
+
+    public function detailsRefundInvoice($id){
+        $refund_invoice = Invoice::findOrFail($id);
+        return view ('Backend.admin.invoices.cancelled.details' , compact('refund_invoice'));
     }
 
 
@@ -119,5 +189,44 @@ class InvoiceController extends Controller{
         $invoice->delete();
         return response()->json(['success' => true]);
     }
+
+
+
+
+
+    public function invoicePDF($id){
+        $invoice = Invoice::findOrFail($id);
+        return view('Backend.admin.invoices.invoice_pdf' , compact('invoice'));
+    }
+
+
+    public function invoicePDFRaw($id){
+        $invoice = Invoice::with(['appointment.clinicDepartment.clinic', 'patient.user'])->findOrFail($id);
+        $pdf = PDF::loadView('Backend.admin.invoices.invoice_pdf_raw', compact('invoice'))->setPaper('A4', 'portrait');
+        return response()->json([
+            'pdf' => base64_encode($pdf->output())
+        ]);
+    }
+
+
+
+
+
+    public function cancelledinvoicePDF($id){
+        $refund_invoice = Invoice::findOrFail($id);
+        return view('Backend.admin.invoices.cancelled.invoice_pdf' , compact('refund_invoice'));
+    }
+
+
+    public function cancelledinvoicePDFRaw($id){
+        $refund_invoice = Invoice::with(['appointment.clinicDepartment.clinic', 'patient.user'])->findOrFail($id);
+        $pdf = PDF::loadView('Backend.admin.invoices.cancelled.invoice_pdf_raw', compact('refund_invoice'))->setPaper('A4', 'portrait');
+        return response()->json([
+            'pdf' => base64_encode($pdf->output())
+        ]);
+    }
+
+
+
 
 }

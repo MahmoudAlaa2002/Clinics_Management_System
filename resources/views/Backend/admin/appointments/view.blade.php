@@ -46,9 +46,24 @@
             <div class="col-sm-4 col-3">
                 <h4 class="page-title">View Appointments</h4>
             </div>
-            <div class="text-right col-sm-8 col-9 m-b-20">
-                <a href="{{ Route('add_appointment') }}" class="float-right btn btn-primary btn-rounded" style="font-weight: bold;"><i class="fa fa-plus"></i> Add Appointment</a>
+            <div class="text-right col-sm-8 col-9 m-b-20 d-flex justify-content-end gap-2">
+
+                {{-- زر سلة المحذوفات --}}
+                <a href="{{ route('appointments_trash') }}"
+                   class="btn btn-danger btn-rounded"
+                   style="font-weight: bold; margin-right: 10px;">
+                    <i class="fa fa-trash"></i> Appointments Trash
+                </a>
+
+                {{-- زر إضافة موعد --}}
+                <a href="{{ Route('add_appointment') }}"
+                   class="btn btn-primary btn-rounded"
+                   style="font-weight: bold;">
+                    <i class="fa fa-plus"></i> Add Appointment
+                </a>
+
             </div>
+
         </div>
 
         <div class="mb-4 row">
@@ -85,7 +100,7 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Patient Name</th>
                                 <th>Clinic Name</th>
                                 <th>Department Name</th>
@@ -100,7 +115,7 @@
                             @if($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $appointment->id }}</td>
                                         <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
                                         <td>{{ $appointment->clinicDepartment->clinic->name }}</td>
                                         <td>{{ $appointment->clinicDepartment->department->name }}</td>
@@ -133,8 +148,22 @@
                                         <td class="action-btns">
                                             <div class="d-flex justify-content-center">
                                                 <a href="{{ route('details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                                <a href="{{ route('edit_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                                <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}"><i class="fa fa-trash"></i></button>
+
+                                                {{-- السماح بالتعديل فقط إذا كانت الحالة Pending أو Accepted --}}
+                                                @if(in_array($appointment->status, ['Pending', 'Accepted']))
+                                                    <a href="{{ route('edit_appointment', ['id' => $appointment->id]) }}"
+                                                    class="mr-1 btn btn-outline-primary btn-sm">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                @endif
+
+                                                {{-- السماح بالحذف فقط إذا لم يكن Completed --}}
+                                                @if($appointment->status !== 'Completed')
+                                                    <button class="btn btn-outline-danger btn-sm delete-appointment"
+                                                            data-id="{{ $appointment->id }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -169,7 +198,7 @@
 
         Swal.fire({
             title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            text: "This appointment will be moved to the trash",
             imageUrl: 'https://img.icons8.com/ios-filled/50/fa314a/delete-trash.png',
             imageWidth: 60,
             imageHeight: 60,
@@ -186,11 +215,19 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function (response) {
-                        if (response.success) {
+                        if (response.data == 0) {
+                            Swal.fire({
+                                title: 'Cannot Delete',
+                                text: 'This appointment has an issued invoice, so it cannot be deleted',
+                                icon: 'error',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        } else if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Appointment has been deleted successfully',
-                                icon: 'success'
+                                text: 'The appointment has been moved to the trash',
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 location.reload();
                             });
@@ -241,7 +278,7 @@
                     $tableBody.html(response.html);
 
                     if (response.searching) {
-                        if (response.count > 12) {
+                        if (response.count > 50) {
                             $pagination.html(response.pagination).show();
                         } else {
                             $pagination.empty().hide();

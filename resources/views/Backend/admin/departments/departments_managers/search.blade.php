@@ -30,7 +30,7 @@
                 </h4>
                 <div class="doc-prof">{{ $department_manager->employee->department->name }}</div>
                 <div class="user-country">
-                    <i class="fa fa-map-marker"></i> {{ $department_manager->employee->user->address }}
+                    {{ $department_manager->employee->clinic->name }}
                 </div>
             </div>
         </div>

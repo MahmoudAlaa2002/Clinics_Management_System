@@ -124,7 +124,12 @@
 
                     success: function(response) {
                         if (response.data === 0) {
-                            Swal.fire('Error', 'Invalid Email or Password', 'error');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Invalid Email or Password',
+                                confirmButtonColor: '#007BFF'
+                            });
 
                         } else if (response.data === 1) {
                             window.location.href = '/admin/dashboard';
@@ -145,6 +150,8 @@
                                 window.location.href = '/employee/receptionist/dashboard';
                             } else if (position === 'Nurse') {
                                 window.location.href = '/employee/nurse/dashboard';
+                            } else if (position === 'Accountant') {
+                                window.location.href = '/employee/accountant/dashboard';
                             }
 
                         } else if (response.data === 6) {

@@ -79,13 +79,13 @@
                             <h4 class="clinics-managers-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('profile_department_manager' , ['id' => $department_manager->id]) }}">{{ $department_manager->name }}</a></h4>
                             <div class="doc-prof">{{ $department_manager->employee->department->name }}</div>
                             <div class="user-country">
-                                <i class="fa fa-map-marker"></i> {{ $department_manager->employee->user->address }}
+                                {{ $department_manager->employee->clinic->name }}
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
-            <div class="pagination-wrapper d-flex justify-content-center" id="clinics-managers-pagination">
+            <div class="pagination-wrapper d-flex justify-content-center" id="departments_managers-pagination">
                 {{ $departments_managers->links('pagination::bootstrap-4') }}
             </div>
         @else
@@ -128,8 +128,9 @@
                         if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
-                                text: 'Department Manager Has Been Deleted Successfully',
-                                icon: 'success'
+                                text: 'Department manager has been deleted successfully',
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 location.reload();
                             });

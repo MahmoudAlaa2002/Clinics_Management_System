@@ -434,19 +434,19 @@
                     confirmButtonColor: '#007BFF',
                 });
                 return;
-            } else if (rating < 1 || rating > 5) {
+            } else if (consultation_fee <= 0) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'The rating must be between 1 and 5',
+                    text: 'The consultation fee is invalid',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',
                 });
                 return;
-            }else if (consultation_fee <= 0) {
+            } else if (rating < 1 || rating > 5) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'The consultation fee is invalid',
+                    text: 'The rating must be between 1 and 5',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',
@@ -505,7 +505,7 @@
                     if (response.data == 0) {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'This doctor already exists',
+                            text: 'This email is already used by another user',
                             icon: 'error',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#007BFF',
@@ -531,8 +531,7 @@
 
         if (!clinicId) return;
 
-        // ✅ تحميل التخصصات
-        $.get('/admin/get-departments-by-clinic/' + clinicId, function (data) {
+        $.get('/clinics-management/get-departments-by-clinic/' + clinicId, function (data) {
             const departmentSelect = $('#department_id');
             departmentSelect.empty().append('<option value="" disabled selected hidden>Select Department</option>');
             $.each(data, function (i, department) {
@@ -540,8 +539,8 @@
         });
     });
 
-    // ✅ تحميل أوقات العمل
-    $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+
+    $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
         const start = parseInt(data.opening_time.split(':')[0]);
         const end = parseInt(data.closing_time.split(':')[0]);
 
@@ -558,8 +557,7 @@
         }
     });
 
-    // ✅ تفعيل وتعطيل أيام العمل
-    $.get('/admin/clinic-working-days/' + clinicId, function (response) {
+    $.get('/clinics-management/clinic-working-days/' + clinicId, function (response) {
         const clinicDays = response.working_days || []; // الأيام من السيرفر
         console.log(clinicDays);
         const allDays = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];

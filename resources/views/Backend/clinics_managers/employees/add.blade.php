@@ -94,7 +94,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Address</label>
+                                    <label>Address <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
@@ -152,7 +152,7 @@
                                 </div>
 
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" id="department_field">
                                     <label>Department <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -166,6 +166,7 @@
                                         </select>
                                     </div>
                                 </div>
+
 
 
                                 <div class="col-sm-12">
@@ -197,11 +198,19 @@
                                                 </label>
                                             </div>
 
-                                            <div class="form-check">
+                                            <div class="mb-2 form-check">
                                                 <input class="form-check-input" type="radio" name="job_title" id="receptionist" value="Receptionist"
                                                        {{ old('job_title', $employee->job_title ?? '') == 'receptionist' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="receptionist">
                                                     Receptionist
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="job_title" id="accountant" value="Accountant"
+                                                       {{ old('job_title', $employee->job_title ?? '') == 'accountant' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="accountant">
+                                                    Accountant
                                                 </label>
                                             </div>
 
@@ -421,20 +430,30 @@
         }
 
 
-        // عند اختيار وظيفة دكتور
-        $('input[name="job_title"]').on('change', function () {
-        const selected = $(this).val();
+        // عند تغيير الوظيفة
+        $('input[name="job_title"]').change(function () {
+            let job = $(this).val().toLowerCase();
 
-        if (selected === 'Doctor') {
-            $('#doctor_info_card').slideDown(200);
-        } else {
-            $('#doctor_info_card').slideUp(200);
-            $('#speciality').val('');
-            $('#qualification').val('');
-            $('#consultation_fee').val('');
-            $('#rating').val('');
-        }
-    });
+            // الوظائف التي تحتاج قسم
+            const jobsNeedDepartment = ['department manager', 'doctor', 'nurse', 'receptionist'];
+
+            if (jobsNeedDepartment.includes(job)) {
+                $('#department_field').slideDown(200);
+                $('#department_id').prop('required', true);
+            } else {
+                $('#department_field').slideUp(200);
+                $('#department_id').prop('required', false).val('');
+            }
+
+            // كرت الدكتور
+            if (job === 'doctor') {
+                $('#doctor_info_card').slideDown(200);
+                $('#qualification, #consultation_fee').prop('required', true);
+            } else {
+                $('#doctor_info_card').slideUp(200);
+                $('#qualification, #consultation_fee').prop('required', false).val('');
+            }
+        });
 
 
         $('.addBtn').click(function (e) {
@@ -497,8 +516,8 @@
             let end = moment(work_end_time, "HH:mm");
 
             // التحقق
-            if (name === '' || date_of_birth === '' || email === '' || phone === '' || !isValidSelectValue('department_id') || job_title === undefined ||
-                workingDays.length === 0 || !work_start_time || !work_end_time || gender === undefined) {
+            if (name === '' || date_of_birth === '' || email === '' || phone === '' || job_title === undefined ||
+                workingDays.length === 0 || !work_start_time || !work_end_time || address === '' || gender === undefined) {
                 Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
             } else if (password !== confirm_password) {
@@ -516,6 +535,9 @@
             } else if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
                 Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 return;
+            }else if ($('#department_field').is(':visible') && !department_id) {
+                Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
+                return;
             }else {
                 $.ajax({
                     method: 'POST',
@@ -526,10 +548,12 @@
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
+                            Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 1) {
                             Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                         } else if (response.data == 2) {
+                            Swal.fire({ title: 'Error!', text: 'This clinic already has a accountant', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
+                        } else if (response.data == 3) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Employee has been added successfully',

@@ -509,7 +509,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.data == 0) {
                     Swal.fire({ title: 'Error!',
-                    text: 'This Doctor Already Exists',
+                    text: 'This email is already used by another user',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',

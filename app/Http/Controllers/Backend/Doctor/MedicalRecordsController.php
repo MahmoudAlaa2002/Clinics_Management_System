@@ -76,6 +76,7 @@ class MedicalRecordsController extends Controller
             'patient_id' => 'required|exists:patients,id',
             'appointment_id' => 'required|exists:appointments,id',
             'diagnosis' => 'nullable|string|max:1000',
+            'other_diagnosis' => 'nullable|string|max:1000',
             'treatment' => 'nullable|string|max:1000',
             'prescriptions' => 'nullable|string|max:1000',
             'attachmentss.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx',
@@ -84,6 +85,10 @@ class MedicalRecordsController extends Controller
 
         $validated['doctor_id'] = $doctor->id;
         $validated['record_date'] = now()->format('Y-m-d');
+
+        if ($request->diagnosis === 'Other') {
+            $validated['diagnosis'] = $request->other_diagnosis;
+        }
 
         $appointment = Appointment::where('id', $request->appointment_id)
             ->where('doctor_id', $doctor->id)
@@ -98,7 +103,6 @@ class MedicalRecordsController extends Controller
         try {
             DB::beginTransaction();
 
-            // معالجة الملفات داخل الترانزكشن
             $uploadedFiles = [];
             if ($request->hasFile('attachmentss')) {
                 foreach ($request->file('attachmentss') as $file) {
@@ -109,10 +113,8 @@ class MedicalRecordsController extends Controller
                 $validated['attachmentss'] = json_encode($uploadedFiles);
             }
 
-            // تحديث حالة الموعد
             $appointment->update(['status' => 'Completed']);
 
-            // إنشاء السجل الطبي
             MedicalRecord::create($validated);
 
             DB::commit();
@@ -124,7 +126,6 @@ class MedicalRecordsController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // حذف أي ملفات تم رفعها قبل الفشل
             if (!empty($uploadedFiles)) {
                 foreach ($uploadedFiles as $file) {
                     Storage::disk('public')->delete($file);
@@ -134,6 +135,7 @@ class MedicalRecordsController extends Controller
             return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
+
 
     public function show(MedicalRecord $medicalRecord)
     {
@@ -149,6 +151,7 @@ class MedicalRecordsController extends Controller
     {
         $validated = $request->validate([
             'diagnosis' => 'nullable|string|max:1000',
+            'other_diagnosis' => 'nullable|string|max:1000',
             'treatment' => 'nullable|string|max:1000',
             'record_date' => 'required|date',
             'prescriptions' => 'nullable|string|max:1000',
@@ -156,21 +159,22 @@ class MedicalRecordsController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
+        if ($request->diagnosis === 'Other') {
+            $validated['diagnosis'] = $request->other_diagnosis;
+        }
+
         try {
             DB::beginTransaction();
 
-            // جلب الملفات القديمة
             $oldFiles = $medicalRecord->attachmentss ? json_decode($medicalRecord->attachmentss, true) : [];
 
-            // حذف الملفات المحددة من الطلب
             if ($request->has('remove_files')) {
                 foreach ($request->remove_files as $fileToRemove) {
-                    Storage::disk('public')->delete($fileToRemove); // حذف فعلي من storage
+                    Storage::disk('public')->delete($fileToRemove);
                     $oldFiles = array_filter($oldFiles, fn($f) => $f !== $fileToRemove);
                 }
             }
 
-            // إضافة ملفات جديدة إن وجدت
             if ($request->hasFile('attachmentss')) {
                 $newFiles = [];
                 foreach ($request->file('attachmentss') as $file) {
@@ -184,7 +188,6 @@ class MedicalRecordsController extends Controller
 
             $validated['attachmentss'] = json_encode(array_values($oldFiles));
 
-            // تحديث السجل
             $medicalRecord->update($validated);
 
             DB::commit();
@@ -198,6 +201,7 @@ class MedicalRecordsController extends Controller
             return back()->with('error', 'Something went wrong while updating the record.');
         }
     }
+
 
     public function patientRecords(Patient $patient)
     {

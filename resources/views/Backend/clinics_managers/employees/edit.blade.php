@@ -3,6 +3,7 @@
 @section('title', 'Edit Employee')
 
 @section('content')
+
 <style>
     .col-sm-6 { margin-bottom: 20px; }
     input[type="date"] { direction: ltr; text-align: left; }
@@ -150,7 +151,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" id="department_field" style="display:none;">
                                     <label>Department <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -169,10 +170,10 @@
                                 <div class="col-sm-12 mt-3">
                                     <label class="fw-bold">Job Title <span class="text-danger">*</span></label>
                                     <div class="p-3 card" style="border: 1px solid #ddd; border-radius: 8px;">
-                                        @php $jobs = ['Department Manager','Doctor','Nurse','Receptionist']; @endphp
+                                        @php $jobs = ['Department Manager','Doctor','Nurse','Receptionist','Accountant']; @endphp
                                         @foreach($jobs as $job)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="radio" name="job_title" value="{{ $job }}" {{ $employee->job_title == $job ? 'checked' : '' }}>
+                                                <input class="form-check-input job-title-radio" type="radio" name="job_title" value="{{ $job }}" {{ $employee->job_title == $job ? 'checked' : '' }}>
                                                 <label class="form-check-label">{{ $job }}</label>
                                             </div>
                                         @endforeach
@@ -431,6 +432,30 @@ $(document).ready(function () {
     let originalRating             = "{{ optional($employee->doctor)->rating }}";
 
 
+    $(document).on('change', '.job-title-radio', function () {
+        const job = $(this).val().toLowerCase();
+
+        // كل الوظائف تحتاج قسم ماعدا المحاسب
+        const jobsNeedDept = ['department manager', 'doctor', 'nurse', 'receptionist'];
+
+        if (jobsNeedDept.includes(job)) {
+            $('#department_field').show();
+        } else {
+            $('#department_field').hide();
+        }
+
+        // إظهار/إخفاء معلومات الدكتور
+        if (job === 'doctor') {
+            $('#doctor_info_card').slideDown(200);
+        } else {
+            $('#doctor_info_card').slideUp(200);
+        }
+    });
+
+    $('.job-title-radio:checked').trigger('change');
+
+
+
     $('.editBtn').click(function (e) {
         e.preventDefault();
 
@@ -459,20 +484,50 @@ $(document).ready(function () {
         $('input[name="working_days[]"]:checked').each(function () { workingDays.push($(this).val()); });
 
         if (!name || !date_of_birth || !department_id || !email || !phone || !gender || !work_start_time || !work_end_time || workingDays.length === 0 || !job_title) {
-                return Swal.fire('Error!', 'Please enter all required fields', 'error');
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please enter all required fields',
+                confirmButtonColor: '#007BFF'
+            });
         }
 
         if (password !== confirm_password) {
-            return Swal.fire('Error!', 'Password confirmation does not match', 'error');
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Password confirmation does not match',
+                confirmButtonColor: '#007BFF'
+            });
         }
 
         if (work_start_time >= work_end_time) {
-            return Swal.fire('Error!', 'invalid work time range', 'error');
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Invalid work time range',
+                confirmButtonColor: '#007BFF'
+            });
+        }
+
+        if ($('#department_field').is(':visible') && !department_id) {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'Please Select Department',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
         }
 
         if ($('#doctor_info_card').is(':visible') && (!speciality || !qualification || !consultation_fee || !rating)) {
-            return Swal.fire('Error!', 'Please fill all doctor fields', 'error');
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please fill all doctor fields',
+                confirmButtonColor: '#007BFF'
+            });
         }
+
 
         let formData = new FormData();
         formData.append('_method', 'PUT');
@@ -544,7 +599,7 @@ $(document).ready(function () {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             success: function (response) {
                 if (response.data == 0) {
-                    Swal.fire({ title: 'Error!', text: 'This employee already exists', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
+                    Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 } else if (response.data == 1) {
                     Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
                 } else if (response.data == 2) {

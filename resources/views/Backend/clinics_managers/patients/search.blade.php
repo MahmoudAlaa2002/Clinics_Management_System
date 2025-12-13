@@ -11,6 +11,12 @@
                     <a href="{{ route('clinic.profile_patient', ['id' => $patient->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
                         <i class="fa fa-eye"></i>
                     </a>
+
+                    <a href="{{ route('clinic.edit_patient', ['id' => $patient->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
+                        <i class="fa fa-edit"></i>
+                    </a>
+
+                    {{-- <button class="btn btn-outline-danger btn-sm delete-patient" data-id="{{ $patient->id }}"><i class="fa fa-trash"></i></button> --}}
                 </div>
             </td>
         </tr>
@@ -18,7 +24,7 @@
 @else
     <tr>
         <td colspan="6" class="p-4 text-center">
-            <strong style="font-weight: bold; font-size: 18px; margin-top:50px;">No Patients Available At The Moment</strong>
+            <strong style="font-weight: bold; font-size: 18px; margin-top:50px;">No patients available at the moment</strong>
         </td>
     </tr>
 @endif

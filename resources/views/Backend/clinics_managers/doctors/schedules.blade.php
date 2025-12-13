@@ -28,10 +28,10 @@
                     @csrf
                     <div class="mb-3 row">
                         <div class="col-md-4">
-                            <label>Clinic <span class="text-danger">*</span></label>
+                            <label>Clinic</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                    <span class="input-group-text"><i class="fas fa-hospital text-primary"></i></span>
                                 </div>
                                 <input type="text" class="form-control" value="{{ $clinic->name }}" readonly>
                                 <input type="hidden" id="clinic_id" name="clinic_id" value="{{ $clinic->id }}">
@@ -39,28 +39,50 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label><i class="fas fa-stethoscope text-primary"></i> Department</label>
-                            <select class="form-control" name="department_id" id="department_id" required>
-                                <option value="" disabled {{ !isset($department_id) ? 'selected' : '' }} hidden>Select Department</option>
-                                @foreach($departments as $department)
-                                    <option value="{{ $department->id }}" {{ (isset($department_id) && $department_id == $department->id) ? 'selected' : '' }}>
-                                        {{ $department->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label>Department <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-building text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <select class="form-control" name="department_id" id="department_id">
+                                    <option value="" selected disabled hidden>Select Department</option>
+                                    @foreach($departments as $department)
+                                        <option value="{{ $department->id }}"
+                                            {{ (isset($department_id) && $department_id == $department->id) ? 'selected' : '' }}>
+                                            {{ $department->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
+
                         <div class="col-md-4">
-                            <label><i class="fas fa-user-md text-primary"></i> Doctor</label>
-                            <select class="form-control" name="doctor_id" id="doctor_id" required>
-                                <option value="" disabled {{ !isset($doctor_id) ? 'selected' : '' }} hidden>Select Doctor</option>
-                                @foreach($doctors as $doctor)
-                                    <option value="{{ $doctor->id }}" {{ (isset($doctor_id) && $doctor_id == $doctor->id) ? 'selected' : '' }}>
-                                        {{ $doctor->employee->user->name }}
+                            <label>Doctor <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user-md text-primary"></i>
+                                    </span>
+                                </div>
+
+                                <select class="form-control" name="doctor_id" id="doctor_id">
+                                    <option value="" disabled {{ !isset($doctor_id) ? 'selected' : '' }} hidden>
+                                        Select Doctor
                                     </option>
-                                @endforeach
-                            </select>
+                                    @foreach($doctors as $doctor)
+                                        <option value="{{ $doctor->id }}"
+                                            {{ (isset($doctor_id) && $doctor_id == $doctor->id) ? 'selected' : '' }}>
+                                            {{ $doctor->employee->user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
+
                     </div>
 
                     <input type="hidden" name="offset" id="week_offset" value="{{ $offset ?? 0 }}">
@@ -169,7 +191,13 @@
 
 
 @section('js')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        var selectedDepartmentId = '{{ isset($department_id) ? $department_id : '' }}';
+        var selectedDoctorId = '{{ isset($doctor_id) ? $doctor_id : '' }}';
+
+
         $('#clinic_id').on('change', function () {
             var clinicId = $(this).val();
 
@@ -185,7 +213,7 @@
 
             if (clinicId) {
                 $.ajax({
-                    url: '/admin/get-departments-by-clinic/' + clinicId,
+                    url: '/clinics-management/get-departments-by-clinic/' + clinicId,
                     type: 'GET',
                     success: function (data) {
                         // عبّي الأقسام وفعّل القائمة
@@ -193,6 +221,10 @@
                             departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
                         });
                         departmentSelect.prop('disabled', false);
+
+                        if (selectedDepartmentId) {
+                            departmentSelect.val(selectedDepartmentId);
+                        }
                     }
                 });
             }
@@ -233,7 +265,7 @@
         // تهيئة الصفحة: عطّل القوائم التابعة إذا لا يوجد عيادة محددة
         $(document).ready(function () {
             const selectedClinicId     = $('#clinic_id').val();
-            const selectedDepartmentId = '{{ $department_id ?? '' }}';
+            const selectedDepartmentId = '{{ isset($department_id) ? $department_id : null }}';
             const selectedDoctorId     = '{{ $doctor_id ?? '' }}';
 
             if (!selectedClinicId) {
@@ -246,16 +278,18 @@
 
             // في حالة التعديل: حمّل الأقسام للعيادة المحددة ثم عيّن التخصص المختار
             $.ajax({
-                url: '/admin/get-departments-by-clinic/' + selectedClinicId,
+                url: '/clinics-management/get-departments-by-clinic/' + selectedClinicId,
                 type: 'GET',
                 success: function (data) {
                     let departmentSelect = $('#department_id');
-                    departmentSelect.empty().append('<option value="" disabled hidden>Select Department</option>');
+                    departmentSelect.empty().append('<option value="" selected disabled hidden>Select Department</option>');
+                    // $('#department_id option:first').prop('selected', true);
 
                     $.each(data, function (key, department) {
-                        let selected = (department.id == selectedDepartmentId) ? 'selected' : '';
+                        let selected = (selectedDepartmentId && department.id == selectedDepartmentId) ? 'selected' : '';
                         departmentSelect.append('<option value="' + department.id + '" ' + selected + '>' + department.name + '</option>');
                     });
+
                     departmentSelect.prop('disabled', false);
 
                     if (selectedDepartmentId) {
@@ -306,8 +340,50 @@
             form.action = "{{ route('clinic.search_doctor_schedule') }}";
             form.method = "POST";
 
-
             form.submit();
             }
+
+
+
+
+            $('#doctor-schedule-form').on('submit', function (e) {
+
+                let department = $('#department_id').val();
+                let doctor     = $('#doctor_id').val();
+
+                // 1️⃣ فحص القسم أولاً
+                if (!department) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'You have not selected a department',
+                        confirmButtonColor: '#007BFF',
+                        confirmButtonText: 'OK'
+                    });
+
+                    return false;
+                }
+
+                // 2️⃣ فحص الطبيب ثانيًا
+                if (!doctor) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'You have not selected a doctor',
+                        confirmButtonColor: '#007BFF',
+                        confirmButtonText: 'OK'
+                    });
+
+                    return false;
+                }
+
+            });
+
+
+
         </script>
 @endsection

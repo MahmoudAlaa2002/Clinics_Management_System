@@ -8,13 +8,10 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Employee;
 use App\Models\Department;
-use App\Models\Medication;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-use App\Models\MedicineStock;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
-use App\Models\Specialty;
 use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller{

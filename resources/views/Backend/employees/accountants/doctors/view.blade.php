@@ -1,0 +1,182 @@
+@extends('Backend.employees.accountants.master')
+
+@section('title' , 'View Doctors')
+
+@section('content')
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pagination-wrapper {
+        margin-top: auto;
+        padding-top: 80px; /* مسافة من الجدول */
+        padding-bottom: 30px;
+    }
+
+</style>
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-4 col-3">
+                <h4 class="page-title">View Doctors</h4>
+            </div>
+        </div>
+        <div class="mb-4 row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" id="search_input" name="keyword" class="form-control" placeholder="Search...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Search by:</span>
+                  </div>
+                  <select id="search_filter" name="filter" class="form-control">
+                    <option value="name">Name</option>
+                    <option value="department_name">Department Name</option>
+                    <option value="status">Status</option>
+                  </select>
+                </div>
+            </div>
+        </div>
+        @if ($doctors->count() > 0)
+            <div class="row doctor-grid" id="doctors_container">
+                @foreach ($doctors as $doctor)
+                    <div class="col-md-4 col-sm-4 col-lg-3">
+                        <div class="profile-widget">
+                            <div class="doctor-img">
+                                <a class="avatar" href="{{ Route('accountant.profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
+                                    ? asset(optional($doctor->employee->user)->image)
+                                    : asset('assets/img/user.jpg') }}"></a>
+                            </div>
+
+                            <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('accountant.profile_doctor' , ['id' => $doctor->id]) }}">{{ $doctor->employee->user->name }}</a></h4>
+                            <div class="doc-prof">{{ optional($doctor->employee->department)->name }}</div>
+                            <div class="user-country">
+                                <i class="fa fa-map-marker"></i> {{ $doctor->employee->user->address }}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="pagination-wrapper d-flex justify-content-center" id="doctors-pagination">
+                {{ $doctors->links('pagination::bootstrap-4') }}
+            </div>
+        @else
+            <div class="text-center col-12">
+                <div class="alert alert-info" style="font-weight: bold; font-size: 18px; margin-top:50px;">
+                    There Are No Doctors Listed Yet
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
+@endsection
+
+
+@section('js')
+<script>
+
+    let lastDoctorKeyword = '';
+
+    function fetchDoctors(url = "{{ route('accountant.search_doctors') }}") {
+        let $searchInput = $('#search_input');
+        let $filter       = $('#search_filter');
+        let $container    = $('#doctors_container');     // بدّلنا الهدف لكونتينر الكروت
+        let $pagination   = $('#doctors-pagination');    // بدّلنا هدف الباجينيشن
+
+        // تأكد من وجود العناصر قبل أي شيء
+        if ($searchInput.length === 0 || $container.length === 0) {
+            return;
+        }
+
+        let keyword = $searchInput.val().trim();
+        let filter  = $filter.length ? $filter.val() : '';
+
+        // إذا البحث فاضي وكان آخر مرة فاضي → لا تعمل شيء
+        if (keyword === '' && lastDoctorKeyword === '') {
+            return;
+        }
+
+        // إذا البحث فاضي وكان قبلها فيه كلمة → رجّع الواجهة الأصلية
+        if (keyword === '' && lastDoctorKeyword !== '') {
+            lastDoctorKeyword = '';
+            window.location.href = "{{ route('accountant.view_doctors') }}";
+            return;
+        }
+
+        lastDoctorKeyword = keyword;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            data: { keyword: keyword, filter: filter },
+            success: function (response) {
+                // response.html = أعمدة الكروت فقط (بدون row)
+                $container.html(response.html);      // استبدال الأعمدة داخل نفس الـ row.doctor-grid
+
+                if (response.searching) {
+                    if (response.count > 12) {
+                        $pagination.html(response.pagination).show();  // استبدال الباجينيشن فقط
+                    } else {
+                        $pagination.empty().hide();
+                    }
+                } else {
+                    $pagination.show();
+                }
+            },
+            error: function () {
+                console.error("Failed to fetch doctors.");
+            }
+        });
+    }
+
+    // البحث عند الكتابة
+    $(document).on('input', '#search_input', function () {
+        fetchDoctors();
+    });
+
+    // البحث عند تغيير الفلتر
+    $(document).on('change', '#search_filter', function () {
+        fetchDoctors();
+    });
+
+    // دعم الباجينيشن في حالة البحث
+    $(document).on('click', '#doctors-pagination .page-link', function (e) {
+        let keyword = $('#search_input').val().trim();
+        if (keyword !== '') {
+            e.preventDefault();
+            let url = $(this).attr('href');
+            if (url && url !== '#') {
+                fetchDoctors(url);
+            }
+        }
+    });
+</script>
+@endsection
+
+
+

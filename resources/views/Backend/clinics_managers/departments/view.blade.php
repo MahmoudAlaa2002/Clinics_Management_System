@@ -111,7 +111,8 @@
                                 Swal.fire({
                                     title: 'Deleted',
                                     text: 'Department removed from this clinic successfully',
-                                    icon: 'success'
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
                                 }).then(() => {
                                     location.reload();
                                 });

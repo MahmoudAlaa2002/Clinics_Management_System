@@ -28,7 +28,7 @@
                     @csrf
                     <div class="mb-3 row">
                         <div class="col-md-4">
-                            <label>Clinic <span class="text-danger">*</span></label>
+                            <label>Clinic</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-hospital text-primary"></i></span>
@@ -40,27 +40,16 @@
 
 
                         <div class="col-md-4">
-                            <label>Department <span class="text-danger">*</span></label>
+                            <label>Department</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-stethoscope text-primary"></i></span>
+                                    <span class="input-group-text"><i class="fas fa-building text-primary"></i></span>
                                 </div>
                                 <input type="text" class="form-control" value="{{ $department->name }}" readonly>
                                 <input type="hidden" id="department_id" name="department_id" value="{{ $department->id }}">
                             </div>
                         </div>
 
-                        {{-- <div class="col-md-4">
-                            <label><i class="fas fa-stethoscope text-primary"></i> Department</label>
-                            <select class="form-control" name="department_id" id="department_id" required>
-                                <option value="" disabled {{ !isset($department_id) ? 'selected' : '' }} hidden>Select Department</option>
-                                @foreach($departments as $department)
-                                    <option value="{{ $department->id }}" {{ (isset($department_id) && $department_id == $department->id) ? 'selected' : '' }}>
-                                        {{ $department->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div> --}}
 
                         <div class="col-md-4">
                             <label>Doctor <span class="text-danger">*</span></label>

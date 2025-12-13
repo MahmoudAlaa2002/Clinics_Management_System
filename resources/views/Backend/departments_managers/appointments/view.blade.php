@@ -80,7 +80,7 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Patient Name</th>
                                 <th>Doctor Name</th>
                                 <th>Appointment Date</th>
@@ -93,7 +93,7 @@
                             @if($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $appointment->id }}</td>
                                         <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
                                         <td>{{ optional(optional(optional($appointment->doctor)->employee)->user)->name ?? '-' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
@@ -124,7 +124,6 @@
                                         <td class="action-btns">
                                             <div class="d-flex justify-content-center">
                                                 <a href="{{ route('department.details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                                <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}"><i class="fa fa-trash"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -153,45 +152,6 @@
 
 @section('js')
 <script>
-    $(document).on('click', '.delete-appointment', function () {
-        let appointmentId = $(this).data('id');
-        let url = `/department-manager/delete/appointment/${appointmentId}`;
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            imageUrl: 'https://img.icons8.com/ios-filled/50/fa314a/delete-trash.png',
-            imageWidth: 60,
-            imageHeight: 60,
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete it'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Deleted',
-                                text: 'Appointment has been deleted successfully',
-                                icon: 'success'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error!', 'Something went wrong.', 'error');
-                        }
-                    },
-                });
-            }
-        });
-    });
 
     $(document).ready(function () {
         let lastAppointmentKeyword = '';
@@ -219,7 +179,6 @@
                 return;
             }
 
-            // تحديث آخر كلمة بحث
             lastAppointmentKeyword = keyword;
 
             $.ajax({
@@ -231,7 +190,7 @@
                     $tableBody.html(response.html);
 
                     if (response.searching) {
-                        if (response.count > 12) {
+                        if (response.count > 50) {
                             $pagination.html(response.pagination).show();
                         } else {
                             $pagination.empty().hide();

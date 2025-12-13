@@ -34,9 +34,9 @@
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('department-manager/depratment-profile') || Request::is('department-manager//edit/depratment-profile') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('department-manager/depratment-profile') || Request::is('department-manager/edit/depratment-profile') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-building"></i> <span> Department </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('department-manager/depratment-profile') || Request::is('department-manager//edit/depratment-profile') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('department-manager/depratment-profile') || Request::is('department-manager/edit/depratment-profile') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('depratment_profile') }}" class="{{ Request::is('department-manager/depratment-profile') ? 'active' : '' }}">
                                 Department Profile
@@ -88,7 +88,7 @@
                     <a href="#"><i class="fas fa-calendar-alt"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
                     <ul style="{{ Request::is('department-manager/view/appointments') || Request::is('department-manager/search/appointments') || Request::is('department-manager/details/appointment/*') ? '' : 'display: none;' }}">
                         <li>
-                            <a href="{{ route('department.view_appointments') }}"department
+                            <a href="{{ route('department.view_appointments') }}"
                             class="{{ Request::is('department-manager/view/appointments') || Request::is('department-manager/search/appointments') || Request::is('department-manager/details/appointment/*') ? 'active' : '' }}">View Appointments</a>
                         </li>
                     </ul>

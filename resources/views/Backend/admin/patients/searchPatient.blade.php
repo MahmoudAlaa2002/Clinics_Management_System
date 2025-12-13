@@ -1,7 +1,7 @@
 @if($patients->count() > 0)
     @foreach ($patients as $patient)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $patients->firstItem() + $loop->index }}</td>
             <td>{{ $patient->user->name }}</td>
             <td>{{ $patient->user->email }}</td>
             <td>{{ $patient->user->phone }}</td>

@@ -98,7 +98,8 @@
                                 Swal.fire({
                                     title: 'Deleted',
                                     text: 'Patient Has Been Deleted Successfully',
-                                    icon: 'success'
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
                                 }).then(() => {
                                     location.reload();
                                 });
@@ -136,7 +137,7 @@
             success: function (response) {
                 $('#patients_table_body').html(response.html);
                 if (response.searching) {
-                    if (response.count > 12) {
+                    if (response.count > 50) {
                         $('#patients-pagination').html(response.pagination).show();
                     } else {
                         $('#patients-pagination').empty().hide();

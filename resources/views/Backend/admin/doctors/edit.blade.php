@@ -518,7 +518,7 @@
                             if (response.data == 0) {
                                 Swal.fire({
                                     title: 'Error!',
-                                    text: 'This doctor already exists',
+                                    text: 'This email is already used by another user',
                                     icon: 'error',
                                     confirmButtonText: 'OK',
                                     confirmButtonColor: '#007BFF',
@@ -564,7 +564,7 @@
 
         function loadDepartments(clinicId, selected = '') {
         $('#department_id').empty().append('<option disabled selected hidden>Select Department</option>');
-        $.get('/admin/get-departments-by-clinic/' + clinicId, function (data) {
+        $.get('/clinics-management/get-departments-by-clinic/' + clinicId, function (data) {
             data.forEach(d => {
             $('#department_id').append(`<option value="${d.id}" ${d.id == selected ? 'selected':''}>${d.name}</option>`);
             });
@@ -572,7 +572,7 @@
         }
 
         function loadWorkingTimes(clinicId, start='', end='') {
-            $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+            $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
                 const sHour = parseInt(data.opening_time.split(':')[0]);
                 const eHour = parseInt(data.closing_time.split(':')[0]);
 
@@ -598,7 +598,7 @@
 
 
         function loadWorkingDaysForClinic(clinicId, selectedDays) {
-            $.get('/admin/clinic-working-days/' + clinicId, function (resp) {
+            $.get('/clinics-management/clinic-working-days/' + clinicId, function (resp) {
                 const clinicDays = resp.working_days || [];
                 const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
 

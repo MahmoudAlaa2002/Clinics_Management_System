@@ -25,8 +25,7 @@ class PatientController extends Controller{
 
 
     public function storePatient(Request $request){
-        $user = User::whereRaw('LOWER(email) = ?', [strtolower($request->email)])
-            ->orWhereRaw('LOWER(name) = ?', [strtolower($request->name)])->first();
+        $user = User::whereRaw('LOWER(email) = ?', [strtolower($request->email)])->first();
 
         if ($user) {
             return response()->json(['data' => 0]); // موجود مسبقاً
@@ -72,7 +71,7 @@ class PatientController extends Controller{
 
 
     public function viewPatients(){
-        $patients = Patient::orderBy('id', 'asc')->paginate(12);
+        $patients = Patient::orderBy('id', 'asc')->paginate(50);
         return view('Backend.admin.patients.view' , compact('patients'));
     }
 
@@ -94,9 +93,10 @@ class PatientController extends Controller{
             }
         }
 
-        $patients   = $patients->orderBy('id')->paginate(12);
+        $patients   = $patients->orderBy('id')->paginate(50);
         $view       = view('Backend.admin.patients.searchPatient', compact('patients'))->render();
-        $pagination = $patients->total() > 12 ? $patients->links('pagination::bootstrap-4')->render() : '';
+        $pagination = ($patients->total() > $patients->perPage()) ? $patients->links('pagination::bootstrap-4')->render() : '';
+
 
         return response()->json([
             'html'       => $view,
@@ -131,8 +131,7 @@ class PatientController extends Controller{
         $user = User::findOrFail($patient->user_id);
 
         $patientExists = User::where(function ($query) use ($request) {
-            $query->whereRaw('LOWER(email) = ?', [strtolower($request->email)])
-                  ->orWhereRaw('LOWER(name) = ?', [strtolower($request->name)]);
+            $query->whereRaw('LOWER(email) = ?', [strtolower($request->email)]);
         })->where('id', '!=', $user->id)->exists();
 
         if ($patientExists) {

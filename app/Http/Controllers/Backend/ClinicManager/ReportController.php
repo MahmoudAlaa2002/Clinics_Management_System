@@ -6,9 +6,10 @@ use Auth;
 use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\Patient;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use Illuminate\Http\Request;
+use App\Models\ClinicPatient;
+use App\Http\Controllers\Controller;
 
 class ReportController extends Controller{
 
@@ -20,50 +21,37 @@ class ReportController extends Controller{
 
 
     public function detailsPatientsReports(){
-        $clinicId = Auth::user()->employee->clinic_id;
+        $clinic = Auth::user()->employee->clinic;
 
-        $patients_count = Patient::whereHas('appointments.clinicDepartment', function ($q) use ($clinicId) {
-            $q->where('clinic_id', $clinicId);
-        })->count();
+        $patients_count = $clinic->patients()->count();
 
-        $patients_current_month = Patient::whereHas('appointments', function ($q) use ($clinicId) {
-            $q->whereHas('clinicDepartment', function ($d) use ($clinicId) {
-                $d->where('clinic_id', $clinicId);
-            })
-            ->whereMonth('appointments.created_at', now()->month)
-            ->whereYear('appointments.created_at', now()->year);
-        })
-        ->distinct()
-        ->count();
-
+        $patients_current_month = $clinic->patients()
+            ->whereMonth('clinic_patients.created_at', now()->month)
+            ->whereYear('clinic_patients.created_at', now()->year)
+            ->count();
 
         // عدد المرضى الذين زياراتهم مكتملة
-        $completed_visits = Patient::whereHas('appointments', function ($q) use ($clinicId) {
-            $q->whereHas('clinicDepartment', function ($d) use ($clinicId) {
-                $d->where('clinic_id', $clinicId);
+        $completed_visits = Patient::whereHas('appointments', function ($q) use ($clinic) {
+            $q->whereHas('clinicDepartment', function ($d) use ($clinic) {
+                $d->where('clinic_id', $clinic->id);
             })
             ->where('status', 'Completed');
         })->count();
 
-        $male_patients_count = Patient::whereHas('user', function ($u) {
-            $u->where('gender', 'male');
-        })
-        ->whereHas('appointments', function ($q) use ($clinicId) {
-            $q->whereHas('clinicDepartment', function ($d) use ($clinicId) {
-                $d->where('clinic_id', $clinicId);
-            });
-        })->distinct()->count();
+        $male_patients_count = ClinicPatient::join('patients', 'clinic_patients.patient_id', '=', 'patients.id')
+            ->join('users', 'patients.user_id', '=', 'users.id')
+            ->where('clinic_patients.clinic_id', $clinic->id)
+            ->where('users.gender', 'male')
+            ->distinct('patients.id')
+            ->count('patients.id');
 
-
-
-        $female_patients_count = Patient::whereHas('user', function ($u) {
-            $u->where('gender', 'female');
-        })
-        ->whereHas('appointments', function ($q) use ($clinicId) {
-            $q->whereHas('clinicDepartment', function ($d) use ($clinicId) {
-                $d->where('clinic_id', $clinicId);
-            });
-        })->distinct()->count();
+        // عدد المرضى الإناث
+        $female_patients_count = ClinicPatient::join('patients', 'clinic_patients.patient_id', '=', 'patients.id')
+            ->join('users', 'patients.user_id', '=', 'users.id')
+            ->where('clinic_patients.clinic_id', $clinic->id)
+            ->where('users.gender', 'female')
+            ->distinct('patients.id')
+            ->count('patients.id');
 
         $total_patients_gender = $male_patients_count + $female_patients_count;
 
@@ -121,21 +109,33 @@ class ReportController extends Controller{
             $q->where('clinic_id', $clinic->id);
         })->count();
 
-        $paid_invoices_count = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
+
+        $issued_invoices_count = Invoice::where('invoice_status' , 'Issued')->whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
+            $q->where('clinic_id', $clinic->id);
+        })->count();
+
+        $cancelled_invoices_count = Invoice::where('invoice_status' , 'Cancelled')->whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
+            $q->where('clinic_id', $clinic->id);
+        })->count();
+
+        $paid_invoices_count = Invoice::where('invoice_status' , 'Issued')->whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id);
         })->where('payment_status', 'Paid')->count();
 
-        $partially_paid_invoices_count = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
+        $partially_paid_invoices_count = Invoice::where('invoice_status' , 'Issued')->whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id);
         })->where('payment_status', 'Partially Paid')->count();
 
 
-        $unpaid_invoices_count = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
+        $unpaid_invoices_count = Invoice::where('invoice_status' , 'Issued')->whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id);
         })->where('payment_status', 'Unpaid')->count();
 
 
-        return view('Backend.clinics_managers.reports.details.invoices_reports' , compact('invoices_count',
+        return view('Backend.clinics_managers.reports.details.invoices_reports' , compact(
+            'invoices_count',
+            'issued_invoices_count',
+            'cancelled_invoices_count',
             'paid_invoices_count',
             'partially_paid_invoices_count',
             'unpaid_invoices_count',

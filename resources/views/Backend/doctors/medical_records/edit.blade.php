@@ -51,7 +51,6 @@
         @csrf
         @method('PUT')
 
-        {{-- Display Validation Errors --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -67,10 +66,91 @@
                 Medical Record Information
             </div>
             <div class="card-body">
+
                 <div class="mb-3">
                     <label class="form-label">Diagnosis</label>
-                    <textarea name="diagnosis" class="form-control" rows="2">{{ old('diagnosis', $medicalRecord->diagnosis) }}</textarea>
+                    <select name="diagnosis" id="diagnosis" class="form-control" required>
+                        <option value="" disabled hidden>-- Select Diagnosis --</option>
+
+                        <option value="General Checkup" {{ $medicalRecord->diagnosis == "General Checkup" ? 'selected' : '' }}>General Checkup</option>
+                        <option value="Follow-up Visit" {{ $medicalRecord->diagnosis == "Follow-up Visit" ? 'selected' : '' }}>Follow-up Visit</option>
+                        <option value="Chronic Disease Follow-up" {{ $medicalRecord->diagnosis == "Chronic Disease Follow-up" ? 'selected' : '' }}>Chronic Disease Follow-up</option>
+                        <option value="Acute Illness Evaluation" {{ $medicalRecord->diagnosis == "Acute Illness Evaluation" ? 'selected' : '' }}>Acute Illness Evaluation</option>
+
+                        <option value="Injury / Trauma" {{ $medicalRecord->diagnosis == "Injury / Trauma" ? 'selected' : '' }}>Injury / Trauma</option>
+
+                        <option value="Pediatric Consultation" {{ $medicalRecord->diagnosis == "Pediatric Consultation" ? 'selected' : '' }}>Pediatric Consultation</option>
+
+                        <option value="Gynecology Consultation" {{ $medicalRecord->diagnosis == "Gynecology Consultation" ? 'selected' : '' }}>Gynecology Consultation</option>
+                        <option value="Pregnancy Follow-up" {{ $medicalRecord->diagnosis == "Pregnancy Follow-up" ? 'selected' : '' }}>Pregnancy Follow-up</option>
+
+                        <option value="Ophthalmology Consultation" {{ $medicalRecord->diagnosis == "Ophthalmology Consultation" ? 'selected' : '' }}>Ophthalmology Consultation</option>
+
+                        <option value="ENT Consultation" {{ $medicalRecord->diagnosis == "ENT Consultation" ? 'selected' : '' }}>ENT Consultation</option>
+
+                        <option value="Dental Treatment" {{ $medicalRecord->diagnosis == "Dental Treatment" ? 'selected' : '' }}>Dental Treatment</option>
+
+                        <option value="Dermatology Consultation" {{ $medicalRecord->diagnosis == "Dermatology Consultation" ? 'selected' : '' }}>Dermatology Consultation</option>
+
+                        <option value="Cardiology Consultation" {{ $medicalRecord->diagnosis == "Cardiology Consultation" ? 'selected' : '' }}>Cardiology Consultation</option>
+
+                        <option value="Orthopedic Consultation" {{ $medicalRecord->diagnosis == "Orthopedic Consultation" ? 'selected' : '' }}>Orthopedic Consultation</option>
+
+                        <option value="Neurology Consultation" {{ $medicalRecord->diagnosis == "Neurology Consultation" ? 'selected' : '' }}>Neurology Consultation</option>
+
+                        <option value="Psychiatry Consultation" {{ $medicalRecord->diagnosis == "Psychiatry Consultation" ? 'selected' : '' }}>Psychiatry Consultation</option>
+
+                        <option value="Nephrology/Urology Consultation" {{ $medicalRecord->diagnosis == "Nephrology/Urology Consultation" ? 'selected' : '' }}>Nephrology/Urology Consultation</option>
+
+                        <option value="Oncology Consultation" {{ $medicalRecord->diagnosis == "Oncology Consultation" ? 'selected' : '' }}>Oncology Consultation</option>
+
+                        <option value="Emergency Visit" {{ $medicalRecord->diagnosis == "Emergency Visit" ? 'selected' : '' }}>Emergency Visit</option>
+
+                        <option value="Family Medicine Consultation" {{ $medicalRecord->diagnosis == "FamilyMedicine Consultation" ? 'selected' : '' }}>Family Medicine Consultation</option>
+
+                        <option value="Surgical Evaluation" {{ $medicalRecord->diagnosis == "Surgical Evaluation" ? 'selected' : '' }}>Surgical Evaluation</option>
+
+                        <option value="Other" {{ !in_array($medicalRecord->diagnosis, [
+                            "General Checkup","Follow-up Visit","Chronic Disease Follow-up","Acute Illness Evaluation",
+                            "Injury / Trauma","Pediatric Consultation","Gynecology Consultation","Pregnancy Follow-up",
+                            "Ophthalmology Consultation","ENT Consultation","Dental Treatment","Dermatology Consultation",
+                            "Cardiology Consultation","Orthopedic Consultation","Neurology Consultation","Psychiatry Consultation",
+                            "Nephrology/Urology Consultation","Oncology Consultation","Emergency Visit",
+                            "Family Medicine Consultation","Surgical Evaluation"
+                        ]) ? 'selected' : '' }}>Other</option>
+                    </select>
                 </div>
+
+                <div class="mb-3" id="other_diagnosis_group" style="display: none;">
+                    <label class="form-label">Specify Other Diagnosis</label>
+                    <input type="text" name="other_diagnosis" class="form-control"
+                           value="{{ !in_array($medicalRecord->diagnosis, [
+                                "General Checkup","Follow-up Visit","Chronic Disease Follow-up","Acute Illness Evaluation",
+                                "Injury / Trauma","Pediatric Consultation","Gynecology Consultation","Pregnancy Follow-up",
+                                "Ophthalmology Consultation","ENT Consultation","Dental Treatment","Dermatology Consultation",
+                                "Cardiology Consultation","Orthopedic Consultation","Neurology Consultation","Psychiatry Consultation",
+                                "Nephrology/Urology Consultation","Oncology Consultation","Emergency Visit",
+                                "Family Medicine Consultation","Surgical Evaluation"
+                           ]) ? $medicalRecord->diagnosis : '' }}">
+                </div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const select = document.getElementById('diagnosis');
+                        const group = document.getElementById('other_diagnosis_group');
+
+                        function toggleOther() {
+                            if (select.value === 'Other') {
+                                group.style.display = 'block';
+                            } else {
+                                group.style.display = 'none';
+                            }
+                        }
+
+                        toggleOther();
+                        select.addEventListener('change', toggleOther);
+                    });
+                </script>
 
                 <div class="mb-3">
                     <label class="form-label">Treatment</label>
@@ -112,6 +192,7 @@
                         </ul>
                     @endif
                 </div>
+
             </div>
         </div>
 
@@ -121,6 +202,7 @@
                 <i class="fa fa-save me-1"></i> Save Changes
             </button>
         </div>
+
     </form>
 </div>
 @endsection

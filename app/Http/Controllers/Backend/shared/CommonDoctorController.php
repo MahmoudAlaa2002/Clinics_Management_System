@@ -30,6 +30,7 @@ class CommonDoctorController extends Controller{
         return response()->json([
             'work_start_time' => $doctor->employee?->work_start_time,
             'work_end_time'   => $doctor->employee?->work_end_time,
+            'consultation_fee' => $doctor->consultation_fee,
         ]);
     }
 

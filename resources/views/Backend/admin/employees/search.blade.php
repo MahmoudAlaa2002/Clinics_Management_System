@@ -16,7 +16,7 @@
                     @if($employees->count() > 0)
                         @foreach ($employees as $employee)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $employees->firstItem() + $loop->index }}</td>
                                 <td>{{ $employee->user->name ?? '-' }}</td>
                                 <td>{{ $employee->job_title }}</td>
                                 <td>{{ $employee->user->email ?? '-' }}</td>

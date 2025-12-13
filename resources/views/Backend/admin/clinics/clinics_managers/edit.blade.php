@@ -295,7 +295,7 @@
 
 
     function loadWorkingDaysForClinic(id, selectedDays) {
-        $.get('/admin/clinic-working-days/' + id, function (resp) {
+        $.get('/clinics-management/clinic-working-days/' + id, function (resp) {
             // 🔹 استخراج الأيام المفعلة من العيادة
             const clinicDays = Array.isArray(resp.working_days) ? resp.working_days : [];
 
@@ -322,7 +322,7 @@
 
     function loadWorkingTimes(clinicId, selectedStart = '', selectedEnd = '') {
         if (!clinicId) return;
-        $.get('/admin/get-clinic-info/' + clinicId, function (data) {
+        $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
         const openingTime = (data.opening_time || '08:00:00').substring(0,5); // "HH:MM"
         const closingTime = (data.closing_time || '16:00:00').substring(0,5);
 
@@ -476,7 +476,7 @@
             if (response.data == 0) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'This clinic manager already exists',
+                    text: 'This email is already used by another user',
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',

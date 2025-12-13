@@ -83,10 +83,9 @@ class ClinicController extends Controller{
             }
         }
 
-        $clinics    = $clinics->orderBy('id', 'asc')->paginate(12);
+        $clinics    = $clinics->orderBy('id', 'asc')->paginate(10);
         $view       = view('Backend.admin.clinics.searchClinic', compact('clinics'))->render();
-        $pagination = $clinics->total() > 12 ? $clinics->links('pagination::bootstrap-4')->render() : '';
-
+        $pagination = ($clinics->total() > $clinics->perPage()) ? $clinics->links('pagination::bootstrap-4')->render() : '';
         return response()->json([
             'html'       => $view,
             'pagination' => $pagination,
@@ -256,10 +255,7 @@ class ClinicController extends Controller{
         $clinic_manager = User::findOrFail($id);
         $employee = Employee::where('user_id', $clinic_manager->id)->first();
 
-        if (
-            User::where('name', $request->name)->where('id', '!=', $id)->exists() ||
-            User::where('email', $request->email)->where('id', '!=', $id)->exists()
-        ) {
+        if (User::where('email', $request->email)->where('id', '!=', $id)->exists()) {
             return response()->json(['data' => 0]);
         }
 
