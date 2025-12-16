@@ -68,12 +68,12 @@
                 </li>
 
 
-                <li class="submenu {{ Request::is('employee/nurse/view/appointments') || Request::is('employee/nurse/search/appointments') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('employee/nurse/view/appointments') || Request::is('employee/nurse/search/appointments') || Request::is('employee/nurse/add/vital-signs/*') || Request::is('employee/nurse/view/vital-signs/*') || Request::is('employee/nurse/edit/vital-signs/*') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-calendar-alt"></i> <span> Appointments </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('employee/nurse/view/appointments') || Request::is('employee/nurse/search/appointments') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('employee/nurse/view/appointments') || Request::is('employee/nurse/search/appointments') || Request::is('employee/nurse/add/vital-signs/*') || Request::is('employee/nurse/view/vital-signs/*') || Request::is('employee/nurse/edit/vital-signs/*') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('nurse.view_appointments') }}"
-                            class="{{ Request::is('employee/nurse/view/appointments') || Request::is('employee/nurse/search/appointments') ? 'active' : '' }}">View Appointments</a>
+                            class="{{ Request::is('employee/nurse/view/appointments') || Request::is('employee/nurse/search/appointments') || Request::is('employee/nurse/add/vital-signs/*') || Request::is('employee/nurse/view/vital-signs/*') || Request::is('employee/nurse/edit/vital-signs/*') ? 'active' : '' }}">View Appointments</a>
                         </li>
                     </ul>
                 </li>

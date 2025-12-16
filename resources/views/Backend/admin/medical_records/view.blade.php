@@ -27,6 +27,16 @@
         padding-top: 80px; /* مسافة من الجدول */
         padding-bottom: 30px;
     }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -92,6 +102,7 @@
 
 @section('js')
 <script>
+    initTooltips();
     let lastKeyword = '';
 
     function fetchMedicalRecords(url = "{{ route('search_medical_records') }}") {
@@ -115,6 +126,7 @@
             data: { keyword: keyword, filter: filter },
             success: function (response) {
                 $('#medical_records_table_body').html(response.html);
+                initTooltips();
                 if (response.searching) {
                     if (response.count > 50) {
                         $('#medical_records-pagination').html(response.pagination).show();

@@ -94,7 +94,7 @@
             <div class="col-lg-10 offset-lg-1">
                 <div class="mr-header-card">
                     <div class="mr-header-details">
-                        Appointment #: <strong>{{ $medical_record->appointment_id }}</strong><br>
+                        Appointment: <strong>#{{ $medical_record->appointment_id }}</strong><br>
                         Patient: <strong>{{ $medical_record->patient->user->name }}</strong><br>
                         Doctor: <strong>Dr. {{ $medical_record->doctor->employee->user->name }}</strong><br>
                         Record Date: <strong>{{ \Carbon\Carbon::parse($medical_record->record_date)->format('d M Y') }}</strong>
@@ -169,7 +169,7 @@
             <div class="col-lg-10 offset-lg-1 text-right">
                 <a href="{{ route('nurse.view_medical_records') }}"
                    class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: bold;">
-                    <i class="fas fa-arrow-left mr-1"></i>Back
+                    Back
                 </a>
             </div>
         </div>

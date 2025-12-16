@@ -28,6 +28,16 @@
         padding-bottom: 30px;
     }
 
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -66,9 +76,9 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <a href="{{ route('details_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ route('edit_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                            <button class="btn btn-outline-danger btn-sm delete-department" data-id="{{ $department->id }}"><i class="fa fa-trash"></i></button>
+                                            <a href="{{ route('details_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Department"><i class="fa fa-eye"></i></a>
+                                            <a href="{{ route('edit_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Edit Department"><i class="fa fa-edit"></i></a>
+                                            <button class="btn btn-outline-danger btn-sm delete-department" data-id="{{ $department->id }}"><i class="fa fa-trash" data-bs-toggle="tooltip" title="Delete Department"></i></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -88,6 +98,8 @@
 
 @section('js')
     <script>
+        initTooltips();
+
         $(document).on('click', '.delete-department', function () {
             let departmentId = $(this).data('id');
             let url = `/admin/delete/department/${departmentId}`;

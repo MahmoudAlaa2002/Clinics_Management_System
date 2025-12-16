@@ -35,21 +35,21 @@
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
                     @if ($statusFilter === 'Issued')
-                        <a href="{{ route('details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                        <a href="{{ route('details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Invoice">
                             <i class="fa fa-eye"></i>
                         </a>
 
-                        <a href="{{ route('edit_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
+                        <a href="{{ route('edit_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Edit Invoice">
                             <i class="fa fa-edit"></i>
                         </a>
                     @else
-                        <a href="{{ route('details_refund_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                        <a href="{{ route('details_refund_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Refund Invoice">
                             <i class="fa fa-eye"></i>
                         </a>
                     @endif
 
 
-                    <a href="{{ route('profile_patient', ['id' => $invoice->patient->id]) }}" class="mr-1 btn btn-outline-warning btn-sm">
+                    <a href="{{ route('profile_patient', ['id' => $invoice->patient->id]) }}" class="mr-1 btn btn-outline-warning btn-sm text-white-hover" data-bs-toggle="tooltip" title="Profile Patient">
                         <i class="fas fa-user-injured"></i>
                     </a>
                 </div>

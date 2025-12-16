@@ -77,7 +77,7 @@
                     <span class="input-group-text">Search by:</span>
                   </div>
                   <select id="search_filter" name="filter" class="form-control">
-                    <option value="name">Name</option>
+                    <option value="name">Doctor Name</option>
                     <option value="rating">Rating</option>
                     <option value="status">Status</option>
                   </select>

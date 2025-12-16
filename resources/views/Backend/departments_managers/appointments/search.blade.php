@@ -31,7 +31,7 @@
             </td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
-                    <a href="{{ route('department.details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
+                    <a href="{{ route('department.details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Appointment"><i class="fa fa-eye"></i></a>
                 </div>
             </td>
         </tr>

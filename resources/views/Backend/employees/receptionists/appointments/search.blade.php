@@ -1,7 +1,7 @@
 @if($appointments->count() > 0)
     @foreach ($appointments as $appointment)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $appointment->id }}</td>
             <td>{{ $appointment->patient->user->name }}</td>
             <td>{{ $appointment->doctor->employee->user->name }}</td>
             <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
@@ -47,14 +47,16 @@
 
                         {{-- قبول --}}
                         <button class="btn btn-outline-success btn-sm complete-btn" style="margin-right: 3px;"
+                                data-bs-toggle="tooltip" title="Accept Appointment"
                                 data-id="{{ $appointment->id }}">
-                            <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-check-circle"></i>
                         </button>
 
                         {{-- رفض --}}
                         <button class="btn btn-outline-danger btn-sm reject-btn"
+                                data-bs-toggle="tooltip" title="Reject Appointment"
                                 data-id="{{ $appointment->id }}">
-                            <i class="fa fa-times"></i>
+                                <i class="fa fa-times"></i>
                         </button>
 
 
@@ -62,13 +64,15 @@
 
                         {{-- تفاصيل --}}
                         <a href="{{ route('receptionist.details_appointment', ['id' => $appointment->id]) }}"
-                           class="mr-1 btn btn-outline-success btn-sm">
+                            data-bs-toggle="tooltip" title="Details Appointment"
+                            class="mr-1 btn btn-outline-success btn-sm">
                             <i class="fa fa-eye"></i>
                         </a>
 
                         {{-- تعديل --}}
                         <a href="{{ route('receptionist.edit_appointment', ['id' => $appointment->id]) }}"
-                           class="mr-1 btn btn-outline-primary btn-sm">
+                            data-bs-toggle="tooltip" title="Edit Appointment"
+                            class="mr-1 btn btn-outline-primary btn-sm">
                             <i class="fa fa-edit"></i>
                         </a>
 
@@ -76,7 +80,8 @@
 
                         {{-- تفاصيل --}}
                         <a href="{{ route('receptionist.details_appointment', ['id' => $appointment->id]) }}"
-                           class="mr-1 btn btn-outline-success btn-sm">
+                            data-bs-toggle="tooltip" title="Details Appointment"
+                            class="mr-1 btn btn-outline-success btn-sm">
                             <i class="fa fa-eye"></i>
                         </a>
 

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Backend\ClinicManager;
 
 use App\Models\User;
+use App\Models\Doctor;
 use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +17,7 @@ class DepartmentController extends Controller{
     public function viewDepartments(){
         $clinicManager = Auth::user();
         $clinic = $clinicManager->employee->clinic;
-        $departments = $clinic->departments;
+        $departments = ClinicDepartment::with('department')->where('clinic_id', $clinic->id)->get();
         return view('Backend.clinics_managers.departments.view', compact('departments'));
     }
 
@@ -45,15 +47,25 @@ class DepartmentController extends Controller{
 
 
     public function detailsDepartment($id){
-        $clinic = Auth::user()->employee->clinic;
-        $department = $clinic->departments()->where('departments.id', $id)->first();
+        $employee = Auth::user()->employee;
+        $clinic   = $employee->clinic;
 
-        // يحضر الدكاترة الموجودين في هادا القسم وفي العيادة المحددة
-        $doctors = $department->doctors()->whereHas('employee', function ($q) use ($clinic) {
-            $q->where('clinic_id', $clinic->id);
-        })->with('employee.user')->get();
-        return view('Backend.clinics_managers.departments.details', compact('department' , 'doctors'));
+        // القسم المرتبط بهذه العيادة تحديدًا
+        $clinicDepartment = ClinicDepartment::with(['department', 'clinic'])
+            ->where('clinic_id', $clinic->id)
+            ->where('department_id', $id)
+            ->firstOrFail();
+
+        // الدكاترة في هذا القسم وضمن نفس العيادة
+        $doctors = Doctor::whereHas('employee', function ($q) use ($clinic, $id) {
+                $q->where('clinic_id', $clinic->id)
+                ->where('department_id', $id);
+            })->with('employee.user')->get();
+
+        return view('Backend.clinics_managers.departments.details',compact('clinicDepartment', 'doctors')
+        );
     }
+
 
 
 

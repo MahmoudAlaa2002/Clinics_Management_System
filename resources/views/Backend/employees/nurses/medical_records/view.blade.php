@@ -34,8 +34,8 @@
                             <span class="input-group-text">Search by:</span>
                         </div>
                         <select id="search_filter" name="filter" class="form-control">
-                            <option value="doctor_name">Doctor Name</option>
                             <option value="patient_name">Patient Name</option>
+                            <option value="doctor_name">Doctor Name</option>
                             <option value="record_date">Record Date</option>
                         </select>
                     </div>
@@ -47,10 +47,8 @@
                         <tr>
                             <th>#</th>
                             <th>Appointment ID</th>
-                            <th>Doctor Name</th>
                             <th>Patient Name</th>
-                            <th>Diagnosis</th>
-                            <th>Treatment</th>
+                            <th>Doctor Name</th>
                             <th>Record Date</th>
                             <th>Action</th>
                         </tr>
@@ -70,6 +68,8 @@
 
 @section('js')
     <script>
+
+        initTooltips();
         let lastKeyword = '';
 
         function fetchMedicalRecords(url = "{{ route('nurse.search_medical_records') }}") {
@@ -93,6 +93,8 @@
                 data: { keyword: keyword, filter: filter },
                 success: function (response) {
                     $('#medical_records_table_body').html(response.html);
+                    initTooltips();
+
                     if (response.searching) {
                         if (response.count > 12) {
                             $('#medical-records-pagination').html(response.pagination).show();

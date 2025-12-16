@@ -51,13 +51,13 @@ class AppointmentsSeeder extends Seeder{
             // Patients: 15 → 20
             // ================================
 
-            ['doctor_id'=>21,'patient_id'=>15,'clinic_department_id'=>9,'date'=>'2025-12-07','time'=>'10:00:00','status'=>'Accepted','notes'=>'General consult','consultation_fee'=>50,'created_at'=>now(),'updated_at'=>now()],
-            ['doctor_id'=>22,'patient_id'=>16,'clinic_department_id'=>9,'date'=>'2025-12-07','time'=>'11:30:00','status'=>'Pending','notes'=>'Dental pain','consultation_fee'=>60,'created_at'=>now(),'updated_at'=>now()],
-            ['doctor_id'=>23,'patient_id'=>17,'clinic_department_id'=>9,'date'=>'2025-12-09','time'=>'13:00:00','status'=>'Completed','notes'=>'Bone screening','consultation_fee'=>70,'created_at'=>now(),'updated_at'=>now()],
+            // ['doctor_id'=>21,'patient_id'=>15,'clinic_department_id'=>9,'date'=>'2025-12-07','time'=>'10:00:00','status'=>'Accepted','notes'=>'General consult','consultation_fee'=>50,'created_at'=>now(),'updated_at'=>now()],
+            // ['doctor_id'=>22,'patient_id'=>16,'clinic_department_id'=>9,'date'=>'2025-12-07','time'=>'11:30:00','status'=>'Pending','notes'=>'Dental pain','consultation_fee'=>60,'created_at'=>now(),'updated_at'=>now()],
+            // ['doctor_id'=>23,'patient_id'=>17,'clinic_department_id'=>9,'date'=>'2025-12-09','time'=>'13:00:00','status'=>'Completed','notes'=>'Bone screening','consultation_fee'=>70,'created_at'=>now(),'updated_at'=>now()],
 
-            ['doctor_id'=>26,'patient_id'=>18,'clinic_department_id'=>10,'date'=>'2025-12-09','time'=>'10:30:00','status'=>'Accepted','notes'=>'ENT followup','consultation_fee'=>55,'created_at'=>now(),'updated_at'=>now()],
-            ['doctor_id'=>27,'patient_id'=>19,'clinic_department_id'=>10,'date'=>'2025-12-11','time'=>'12:00:00','status'=>'Pending','notes'=>'Blood pressure','consultation_fee'=>50,'created_at'=>now(),'updated_at'=>now()],
-            ['doctor_id'=>28,'patient_id'=>20,'clinic_department_id'=>10,'date'=>'2025-12-11','time'=>'13:30:00','status'=>'Accepted','notes'=>'Internal review','consultation_fee'=>50,'created_at'=>now(),'updated_at'=>now()],
+            // ['doctor_id'=>26,'patient_id'=>18,'clinic_department_id'=>10,'date'=>'2025-12-09','time'=>'10:30:00','status'=>'Accepted','notes'=>'ENT followup','consultation_fee'=>55,'created_at'=>now(),'updated_at'=>now()],
+            // ['doctor_id'=>27,'patient_id'=>19,'clinic_department_id'=>10,'date'=>'2025-12-11','time'=>'12:00:00','status'=>'Pending','notes'=>'Blood pressure','consultation_fee'=>50,'created_at'=>now(),'updated_at'=>now()],
+            // ['doctor_id'=>28,'patient_id'=>20,'clinic_department_id'=>10,'date'=>'2025-12-11','time'=>'13:30:00','status'=>'Accepted','notes'=>'Internal review','consultation_fee'=>50,'created_at'=>now(),'updated_at'=>now()],
 
         ]);
     }

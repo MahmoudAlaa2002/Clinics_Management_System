@@ -85,6 +85,10 @@
         box-shadow: 0 3px 8px rgba(0, 169, 244, 0.4);
     }
 
+    .btn:hover i {
+        color: #fff !important;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -144,7 +148,7 @@
                 <thead id="invoices_table_head">
                     @if ($statusFilter === 'Issued')
                         <tr>
-                            <th>#</th>
+                            <th>ID</th>
                             <th>Appointment ID</th>
                             <th>Patient Name</th>
                             <th>Invoice Date</th>
@@ -154,7 +158,7 @@
                         </tr>
                     @else
                         <tr>
-                            <th>#</th>
+                            <th>ID</th>
                             <th>Appointment ID</th>
                             <th>Patient Name</th>
                             <th>Refund Amount</th>
@@ -180,6 +184,8 @@
 
 @section('js')
 <script>
+
+    initTooltips();
     let lastKeyword = '';
 
     function fetchInvoices(url = "{{ route('accountant.search_invoices') }}") {
@@ -198,8 +204,9 @@
             },
             success: function (response) {
                 $('#invoices_table_body').html(response.html);
-                $('#invoices_table_head').html(response.header);
+                initTooltips();
 
+                $('#invoices_table_head').html(response.header);
                 if (response.searching) {
                     if (response.count > 50) {
                         $('#invoices-pagination').html(response.pagination).show();

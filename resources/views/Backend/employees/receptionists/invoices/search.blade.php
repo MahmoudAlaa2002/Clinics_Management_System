@@ -1,7 +1,7 @@
 @if($invoices->count() > 0)
     @foreach ($invoices as $invoice)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $invoice->id }}</td>
             <td>{{ $invoice->appointment_id }}</td>
             <td>{{ $invoice->patient->user->name ?? 'Unknown' }}</td>
             <td>{{ $invoice->invoice_date }}</td>
@@ -29,7 +29,7 @@
             </td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
-                    <a href="{{ route('receptionist.details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                    <a href="{{ route('receptionist.details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Invoice">
                         <i class="fa fa-eye"></i>
                     </a>
                 </div>

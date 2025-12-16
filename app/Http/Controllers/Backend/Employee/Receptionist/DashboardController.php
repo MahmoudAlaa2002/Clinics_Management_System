@@ -38,11 +38,28 @@ class DashboardController extends Controller {
               });
         }) ->count();
 
+
+        $doctors = Doctor::whereHas('employee', function ($query) use ($clinic_id, $department_id) {
+            $query->where('clinic_id', $clinic_id)
+                  ->where('department_id', $department_id);
+        })->latest('id')->take(5)->get();
+
+
+        $patients = Patient::whereHas('clinicPatients', function ($q) use ($clinic_id) {
+            $q->where('clinic_id', $clinic_id);
+        })->latest('id')->take(5)->get();
+
+        $appointments = Appointment::where('clinic_department_id', $clinicDepartmentId)->latest('id')->take(5)->get();
+
+
         return view ('Backend.employees.receptionists.dashboard' , compact(
             'doctors_count',
             'patients_count',
+            'doctors',
+            'patients',
             'all_appointments',
             'today_appointments',
+            'appointments',
             'invoices_count',
         ));
     }

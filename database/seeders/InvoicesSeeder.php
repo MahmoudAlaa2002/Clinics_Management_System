@@ -275,26 +275,9 @@ class InvoicesSeeder extends Seeder{
 
             // ============================
             //  Clinic C فواتير مواعيد
-            // (appointments 15 → 17)
+            // (appointments 15 → 20)
             // ============================
 
-            // [
-            //     'appointment_id' => 15,
-            //     'patient_id' => 15,
-            //     'total_amount' => 50,
-            //     'paid_amount' => 50,
-            //     'payment_method' => 'PayPal',
-            //     'payment_status' => 'Paid',
-            //     'invoice_date' => '2025-02-01',
-            //     'due_date' => null,
-            //     'created_by' => 47,  // موظف الاستقبال الخاص بالعيادة والقسم
-            //     'refund_amount' => null,
-            //     'refund_date' => null,
-            //     'invoice_status' => 'Issued',
-            //     'refunded_by' => null,
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ],
 
         ]);
     }

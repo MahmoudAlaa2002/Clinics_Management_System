@@ -171,9 +171,11 @@ $(document).ready(function () {
     $('.editBtn').on('click', function (e) {
         e.preventDefault();
 
+        const redirectUrl = "{{ route('accountant.view_invoices_patients', $invoice->patient_id) }}";
         const form = $('#editInvoiceForm')[0];
         const formData = new FormData(form);
         formData.append('_method', 'PUT');
+
 
         let invoice_date = $('#invoice_date').val().trim();
         let due_date = $('#due_date').val().trim();
@@ -264,9 +266,9 @@ $(document).ready(function () {
                         icon: 'success',
                         confirmButtonColor: '#007BFF'
                     }).then(() => {
-                        window.location.href = '/employee/accountant/view/invoices';
+                        window.location.href = redirectUrl;
                     });
-                } else{
+                } else {
                     Swal.fire('Info', 'Unknown response received', 'info');
                 }
             },

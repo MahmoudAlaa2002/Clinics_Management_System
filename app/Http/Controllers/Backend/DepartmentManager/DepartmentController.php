@@ -11,26 +11,53 @@ use Illuminate\Support\Facades\Auth;
 class DepartmentController extends Controller{
 
     public function depratmentProfile(){
-        $clinic = Auth::user()->employee->clinic;
-        $department = Auth::user()->employee->department;
-        $created_at = ClinicDepartment::where('clinic_id', $clinic->id)->where('department_id', $department->id)->value('created_at');
-        $departmentCreatedAt = \Carbon\Carbon::parse($created_at)->toDateString();
-        return view('Backend.departments_managers.department.profile' , compact('clinic' , 'department' , 'departmentCreatedAt'));
+        $employee = Auth::user()->employee;
+        $clinic   = $employee->clinic;
+
+        $clinicDepartment = ClinicDepartment::with('department')
+            ->where('clinic_id', $employee->clinic_id)
+            ->where('department_id', $employee->department_id)
+            ->firstOrFail();
+
+        $departmentCreatedAt = $clinicDepartment->created_at->toDateString();
+
+        return view('Backend.departments_managers.department.profile',compact(
+            'clinic',
+            'clinicDepartment',
+            'departmentCreatedAt'
+        ));
     }
 
 
 
 
     public function editDepratmentProfile(){
-        $department = Auth::user()->employee->department;
-        return view('Backend.departments_managers.department.editProfile' , compact('department'));
+        $employee = Auth::user()->employee;
+        $clinicDepartment = ClinicDepartment::with('department')
+            ->where('clinic_id', $employee->clinic_id)
+            ->where('department_id', $employee->department_id)
+            ->firstOrFail();
+
+        return view('Backend.departments_managers.department.editProfile',compact('clinicDepartment')
+        );
     }
 
 
 
+
     public function updateDepratmentProfile(Request $request){
-        $department = Auth::user()->employee->department;
-        $department->update([
+        $employee = Auth::user()->employee;
+
+        $clinicDepartment = ClinicDepartment::with('department')
+            ->where('clinic_id', $employee->clinic_id)
+            ->where('department_id', $employee->department_id)
+            ->firstOrFail();
+
+        if ($clinicDepartment->department->status !== 'active' && $request->status === 'active') {  // لا يمكن نعديل القسم طالما القسم العام غير فعال
+            return response()->json(['data' => 0]);
+        }
+
+        $clinicDepartment->update([
             'description'   => $request->description,
             'status'        => $request->status,
 

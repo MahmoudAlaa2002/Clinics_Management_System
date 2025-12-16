@@ -1,7 +1,7 @@
 @if($invoices->count() > 0)
     @foreach ($invoices as $invoice)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $invoice->id }}</td>
             <td>{{ $invoice->appointment_id }}</td>
             <td>{{ $invoice->patient->user->name ?? 'Unknown' }}</td>
             @if ($statusFilter === 'Issued')
@@ -35,25 +35,37 @@
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
                     @if ($statusFilter === 'Issued')
-                        <a href="{{ route('accountant.details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                        <a href="{{ route('accountant.details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Invoice">
                             <i class="fa fa-eye"></i>
                         </a>
 
-                        <a href="{{ route('accountant.edit_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
-                            <i class="fa fa-edit"></i>
-                        </a>
+                        {{-- تعديل الفاتورة (فقط إذا لم تكن مدفوعة) --}}
+                        @if($invoice->payment_status !== 'Paid')
+                            <a href="{{ route('accountant.edit_invoice', $invoice->id) }}"
+                                data-bs-toggle="tooltip" title="Edit Invoice"
+                                class="mr-1 btn btn-outline-primary btn-sm">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        @endif
+
                     @else
-                        <a href="{{ route('accountant.details_refund_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                        <a href="{{ route('accountant.details_refund_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Refund Invoice">
                             <i class="fa fa-eye"></i>
                         </a>
 
-                        <a href="{{ route('accountant.refund_confirm', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
-                            <i class="fa fa-calendar-check"></i>
-                        </a>
+                        @if($invoice->refund_date === null)
+                            <a href="{{ route('accountant.refund_confirm', ['id' => $invoice->id]) }}"
+                                data-bs-toggle="tooltip" title="Add Refund Confirmation Date"
+                                class="mr-1 btn btn-outline-primary btn-sm">
+                                <i class="fa fa-calendar-check"></i>
+                            </a>
+                        @endif
                     @endif
 
 
-                    <a href="{{ route('accountant.profile_patient', ['id' => $invoice->patient->id]) }}" class="mr-1 btn btn-outline-warning btn-sm">
+                    <a href="{{ route('accountant.profile_patient', ['id' => $invoice->patient->id]) }}"
+                        data-bs-toggle="tooltip" title="Profile Patient"
+                        class="mr-1 btn btn-outline-warning btn-sm text-white-hover">
                         <i class="fas fa-user-injured"></i>
                     </a>
                 </div>

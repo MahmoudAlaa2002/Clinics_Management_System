@@ -1,31 +1,41 @@
 @if ($doctors->count() > 0)
     @foreach ($doctors as $doctor)
         <div class="col-md-4 col-sm-4 col-lg-3">
-            <div class="profile-widget">
-                <!-- Doctor Image -->
+            <div class="profile-widget text-center">
+
                 <div class="doctor-img">
-                    <a class="avatar" href="{{ route('nurse.profile_doctor', ['id' => $doctor->id]) }}">
-                        <img src="{{ $doctor->employee->user->image
+                    <a class="avatar" href="{{ route('nurse.profile_doctor', $doctor->id) }}">
+                        <img src="{{ optional(optional($doctor->employee)->user)->image
                             ? asset($doctor->employee->user->image)
-                            : asset('assets/img/user.jpg') }}"
-                             alt="">
+                            : asset('assets/img/user.jpg') }}">
                     </a>
                 </div>
 
-
-                <!-- Doctor Info -->
-                <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;">
-                    <a href="{{ route('nurse.profile_doctor', ['id' => $doctor->id]) }}">
+                <h4 class="doctor-name text-ellipsis mb-2">
+                    <a href="{{ route('nurse.profile_doctor', $doctor->id) }}">
                         {{ $doctor->employee->user->name }}
                     </a>
                 </h4>
-                <div class="doc-prof">
-                    {{ optional($doctor->employee->clinic)->name }}
+
+                {{-- Qualification --}}
+                @if($doctor->qualification)
+                    <div class="doctor-qualification">
+                        <i class="fa fa-graduation-cap text-primary me-1"></i>
+                        {{ $doctor->qualification }}
+                    </div>
+                @endif
+
+                {{-- Rating Stars --}}
+                <div class="doctor-rating">
+                    @php
+                        $rating = floor($doctor->rating); 
+                    @endphp
+
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="fa fa-star {{ $i <= $rating ? 'star-filled' : 'star-empty' }}"></i>
+                    @endfor
                 </div>
-                <div class="user-country">
-                    <i class="fa fa-map-marker"></i>
-                    {{ $doctor->employee->user->address ?? 'No Address Available' }}
-                </div>
+
             </div>
         </div>
     @endforeach

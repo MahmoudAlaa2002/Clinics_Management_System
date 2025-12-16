@@ -26,6 +26,16 @@
         padding-top: 80px; /* مسافة من الجدول */
         padding-bottom: 30px;
     }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -75,6 +85,7 @@
 
 @section('js')
 <script>
+    initTooltips();
     let lastEmployeeKeyword = '';
 
     function fetchEmployees(url = "{{ route('clinic.search_employees') }}") {
@@ -108,6 +119,7 @@
             data: { keyword: keyword, filter: filter },
             success: function (response) {
                 $container.html(response.html);
+                initTooltips();
             },
             error: function () {
                 console.error("Failed to fetch employees.");

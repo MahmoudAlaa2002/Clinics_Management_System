@@ -33,7 +33,7 @@ class InvoiceController extends Controller{
 
 
         $header = '<tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Appointment ID</th>
                 <th>Patient Name</th>';
 
@@ -208,7 +208,7 @@ class InvoiceController extends Controller{
 
     public function refundConfirmation($id){
         $invoice = Invoice::findOrFail($id);
-        return view('Backend.employees.accountants.invoices.cancelled.edit', compact('invoice'));
+        return view('Backend.employees.accountants.invoices.cancelled.confirmation', compact('invoice'));
     }
 
 

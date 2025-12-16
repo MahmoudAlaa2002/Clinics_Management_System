@@ -119,7 +119,7 @@ class AppointmentController extends Controller{
     public function trash(){
         $appointments = Appointment::whereNotNull('clinic_manager_deleted_at')
             ->with(['patient', 'doctor', 'invoice'])
-            ->orderBy('clinic_manager_deleted_at', 'desc')
+            ->orderBy('clinic_manager_deleted_at', 'asc')
             ->paginate(50);
 
         return view('Backend.clinics_managers.appointments.trash.view', compact('appointments'));

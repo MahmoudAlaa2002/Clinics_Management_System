@@ -55,7 +55,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $department->department->name }}</td>
                                     <td>
-                                        @if($department->status === 'active')
+                                        @if($department->status == 'active')
                                             <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #13ee29; color: white;">Active</span>
                                         @else
                                             <span class="status-badge" style="padding: 6px 20px; font-size: 18px; border-radius: 50px; background-color: #f90d25; color: white;">Inactive</span>

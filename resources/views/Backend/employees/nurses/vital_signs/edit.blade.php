@@ -34,7 +34,7 @@
                             <div class="row">
 
                                 <div class="col-sm-6">
-                                    <label>Blood Pressure (mmHg)</label>
+                                    <label>Blood Pressure (mmHg) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-heartbeat"></i></span>
                                         <input type="text" class="form-control" id="blood_pressure" name="blood_pressure" value="{{ old('blood_pressure', $vitalSigns->blood_pressure) }}">
@@ -42,7 +42,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Heart Rate (bpm)</label>
+                                    <label>Heart Rate (bpm) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-heart"></i></span>
                                         <input type="number" class="form-control" id="heart_rate" name="heart_rate" value="{{ old('heart_rate', $vitalSigns->heart_rate) }}">
@@ -50,7 +50,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Temperature (°C)</label>
+                                    <label>Temperature (°C) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-thermometer-half"></i></span>
                                         <input type="number" step="0.1" class="form-control" id="temperature" name="temperature" value="{{ old('temperature', $vitalSigns->temperature) }}">
@@ -58,7 +58,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Oxygen Saturation (%)</label>
+                                    <label>Oxygen Saturation (%) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-lungs"></i></span>
                                         <input type="number" class="form-control" id="oxygen_saturation" name="oxygen_saturation" value="{{ old('oxygen_saturation', $vitalSigns->oxygen_saturation) }}">
@@ -66,7 +66,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Blood Sugar (mg/dL)</label>
+                                    <label>Blood Sugar (mg/dL) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-tint"></i></span>
                                         <input type="number" step="0.1" class="form-control" id="blood_sugar" name="blood_sugar" value="{{ old('blood_sugar', $vitalSigns->blood_sugar) }}">
@@ -84,8 +84,8 @@
                         </div>
                     </div>
 
-                    <div class="text-center" style="margin-top:20px;">
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 editBtn" style="text-transform:none;">
+                    <div class="text-center m-t-20" style="margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform: none !important;">
                             Edit Vital Signs
                         </button>
                     </div>
@@ -103,42 +103,74 @@
 
 @section('js')
 <script>
-$(document).ready(function () {
-    $('.editBtn').click(function (e) {
-        e.preventDefault();
+    let originalBloodPressure     = "{{ $vitalSigns->blood_pressure }}";
+    let originalHeartRate         = "{{ $vitalSigns->heart_rate }}";
+    let originalTemperature       = "{{ $vitalSigns->temperature }}";
+    let originalOxygenSaturation  = "{{ $vitalSigns->oxygen_saturation }}";
+    let originalBloodSugar        = "{{ $vitalSigns->blood_sugar }}";
+    let originalNotes             = "{{ trim($vitalSigns->notes ?? '') }}";
 
-        let id = $('#vital_id').val();
 
-        let data = {
-            _method: 'PUT',
-            blood_pressure: $('#blood_pressure').val(),
-            heart_rate: $('#heart_rate').val(),
-            temperature: $('#temperature').val(),
-            oxygen_saturation: $('#oxygen_saturation').val(),
-            blood_sugar: $('#blood_sugar').val(),
-            notes: $('#notes').val().trim(),
-        };
+    $(document).ready(function () {
+        $('.editBtn').click(function (e) {
+            e.preventDefault();
 
-        $.ajax({
-            method: 'POST',
-            url: "/employee/nurse/update/vital-signs/" + id,
-            data: data,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            success: function(response){
-                if (response.data === 1) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated Successfully',
-                        text: 'Vital signs have been updated.',
-                        confirmButtonColor: '#007BFF',
-                    }).then(() => {
-                        window.location.href = "{{ route('nurse.view_appointments') }}";
-                    });
-                }
+            let id = $('#vital_id').val();
+
+            let blood_pressure     = $('#blood_pressure').val().trim();
+            let heart_rate         = $('#heart_rate').val();
+            let temperature        = $('#temperature').val();
+            let oxygen_saturation  = $('#oxygen_saturation').val();
+            let blood_sugar        = $('#blood_sugar').val();
+            let notes              = $('#notes').val().trim();
+
+            let noChanges =
+                blood_pressure === originalBloodPressure &&
+                heart_rate == originalHeartRate &&
+                temperature == originalTemperature &&
+                oxygen_saturation == originalOxygenSaturation &&
+                blood_sugar == originalBloodSugar &&
+                notes === originalNotes;
+
+            if (noChanges) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to vital signs',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
             }
-        });
 
+            let data = {
+                _method: 'PUT',
+                blood_pressure,
+                heart_rate,
+                temperature,
+                oxygen_saturation,
+                blood_sugar,
+                notes,
+            };
+
+            $.ajax({
+                method: 'POST',
+                url: "/employee/nurse/update/vital-signs/" + id,
+                data: data,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function(response){
+                    if (response.data === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Updated Successfully',
+                            text: 'Vital signs have been updated',
+                            confirmButtonColor: '#007BFF',
+                        }).then(() => {
+                            window.location.href = "/employee/nurse/view/vital-signs/" + id ;
+                        });
+                    }
+                }
+            });
+        });
     });
-});
 </script>
 @endsection

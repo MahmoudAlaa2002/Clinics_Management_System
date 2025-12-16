@@ -57,16 +57,16 @@ class MedicalRecordsSeeder extends Seeder{
             'notes'          => 'Avoid spicy food and NSAIDs.',
         ]);
 
-        MedicalRecord::create([
-            'appointment_id' => 17,
-            'doctor_id'      => 23,
-            'patient_id'     => 17,
-            'diagnosis'      => 'Injury / Trauma',
-            'treatment'      => 'Iron supplementation + Nutritional therapy',
-            'record_date'    => '2025-12-01',
-            'prescriptions' => 'Ferrous Sulfate 325mg once daily',
-            'attachments'   => 'CBC Report',
-            'notes'          => 'Follow-up after one month recommended to reassess hemoglobin level.',
-        ]);
+        // MedicalRecord::create([
+        //     'appointment_id' => 17,
+        //     'doctor_id'      => 23,
+        //     'patient_id'     => 17,
+        //     'diagnosis'      => 'Injury / Trauma',
+        //     'treatment'      => 'Iron supplementation + Nutritional therapy',
+        //     'record_date'    => '2025-12-01',
+        //     'prescriptions' => 'Ferrous Sulfate 325mg once daily',
+        //     'attachments'   => 'CBC Report',
+        //     'notes'          => 'Follow-up after one month recommended to reassess hemoglobin level.',
+        // ]);
     }
 }

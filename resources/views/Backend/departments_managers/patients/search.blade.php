@@ -1,14 +1,14 @@
 @if($patients->count() > 0)
     @foreach ($patients as $patient)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $patients->firstItem() + $loop->index }}</td>
             <td>{{ $patient->user->name }}</td>
             <td>{{ $patient->user->email }}</td>
             <td>{{ $patient->user->phone }}</td>
             <td>{{ $patient->user->address }}</td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
-                    <a href="{{ route('department.profile_patient', ['id' => $patient->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                    <a href="{{ route('department.profile_patient', ['id' => $patient->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Profile Patient">
                         <i class="fa fa-eye"></i>
                     </a>
                 </div>

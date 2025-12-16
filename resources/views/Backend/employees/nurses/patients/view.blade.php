@@ -66,6 +66,8 @@
 
 @section('js')
     <script>
+
+        initTooltips();
         let lastKeyword = '';
 
         function fetchPatients(url = "{{ route('nurse.search_patients') }}") {
@@ -89,6 +91,8 @@
                 data: { keyword: keyword, filter: filter },
                 success: function (response) {
                     $('#patients_table_body').html(response.html);
+                    initTooltips();
+                    
                     if (response.searching) {
                         if (response.count > 12) {
                             $('#patients-pagination').html(response.pagination).show();

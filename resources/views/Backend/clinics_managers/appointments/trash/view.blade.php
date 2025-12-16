@@ -36,6 +36,16 @@
     .table-responsive::-webkit-scrollbar {
         display: none;
     }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -100,49 +110,10 @@
                         </thead>
 
                         <tbody>
-                        @if($appointments->count() > 0)
-                            @foreach ($appointments as $appointment)
-                                <tr>
-                                    <td>{{ $appointment->id }}</td>
-                                    <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
-                                    <td>{{ $appointment->clinicDepartment->department->name }}</td>
-                                    <td>{{ optional(optional(optional($appointment->doctor)->employee)->user)->name ?? '-' }}</td>
-
-                                    <td>{{ \Carbon\Carbon::parse($appointment->deleted_at)->format('Y-m-d') }}</td>
-
-                                    <td class="action-btns">
-                                        <div class="d-flex justify-content-center gap-1">
-
-                                            {{-- استرجاع --}}
-                                            <button class="btn btn-outline-success btn-sm restore-appointment"
-                                                    data-id="{{ $appointment->id }}"
-                                                    style="margin-right: 4px;">
-                                                <i class="fa fa-undo"></i>
-                                            </button>
-
-                                            {{-- حذف نهائي --}}
-                                            <button class="btn btn-outline-danger btn-sm force-delete-appointment"
-                                                    data-id="{{ $appointment->id }}">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="10" class="p-4 text-center">
-                                    <strong style="font-weight: bold; font-size: 18px;">
-                                        Trash Is Empty
-                                    </strong>
-                                </td>
-                            </tr>
-                        @endif
+                            @include('Backend.clinics_managers.appointments.trash.search', ['appointments' => $appointments])
                         </tbody>
                     </table>
 
-                    {{-- Pagination --}}
                     <div class="pagination-wrapper d-flex justify-content-center">
                         {{ $appointments->links('pagination::bootstrap-4') }}
                     </div>
@@ -160,7 +131,7 @@
 <script>
 
     $(document).ready(function () {
-
+        initTooltips();
         let lastKeyword = '';
 
         function fetchTrashAppointments(url = "{{ route('clinic.appointments_trash_search') }}") {
@@ -190,6 +161,7 @@
                 },
                 success: function (response) {
                     $('tbody').html(response.html);
+                    initTooltips();
 
                     if (response.searching) {
                         if (response.count > 50) {

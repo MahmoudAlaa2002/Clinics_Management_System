@@ -33,7 +33,7 @@
                             <div class="row">
 
                                 <div class="col-sm-6">
-                                    <label>Blood Pressure (mmHg) </label>
+                                    <label>Blood Pressure (mmHg) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-heartbeat"></i></span>
@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Heart Rate (bpm) </label>
+                                    <label>Heart Rate (bpm) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-heart"></i></span>
@@ -53,7 +53,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Temperature (°C) </label>
+                                    <label>Temperature (°C) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-thermometer-half"></i></span>
@@ -63,7 +63,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Oxygen Saturation (%) </label>
+                                    <label>Oxygen Saturation (%) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-lungs"></i></span>
@@ -73,7 +73,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Blood Sugar (mg/dL) </label>
+                                    <label>Blood Sugar (mg/dL) <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-tint"></i></span>
@@ -148,7 +148,7 @@
                 formData.append('notes', notes);
 
 
-                if (blood_pressure === '' && heart_rate === '' && temperature === '' && oxygen_saturation === '' &&blood_sugar === '') {
+                if (blood_pressure === '' && heart_rate === '' && temperature === '' && oxygen_saturation === '' && blood_sugar === '') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please enter at least one vital sign',

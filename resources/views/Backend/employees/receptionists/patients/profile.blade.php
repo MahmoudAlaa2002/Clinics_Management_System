@@ -63,33 +63,6 @@
                         </tr>
                     </table>
 
-
-                    <h5 class="fw-bold text-primary" style="font-size: 18px; margin-bottom:10px;">
-                        <i class="fas fa-info-circle me-2 text-primary"></i> Medical Information
-                    </h5>
-
-                    <table class="table table-borderless" style="margin-bottom:50px;">
-                        <tr>
-                            <th><i class="fas fa-tint text-primary me-2"></i> Blood Type:</th>
-                            <td>{{ $patient->blood_type ?? '-' }}</td>
-                        </tr>
-
-                        <tr>
-                            <th><i class="fas fa-phone-alt text-primary me-2"></i> Emergency Contact:</th>
-                            <td>{{ $patient->emergency_contact ?? '-' }}</td>
-                        </tr>
-
-                        <tr>
-                            <th><i class="fas fa-allergies text-primary me-2"></i> Allergies:</th>
-                            <td>{{ $patient->allergies ?? '-' }}</td>
-                        </tr>
-
-                        <tr>
-                            <th><i class="fas fa-heartbeat text-primary me-2"></i> Chronic Diseases:</th>
-                            <td>{{ $patient->chronic_diseases ?? '-' }}</td>
-                        </tr>
-                    </table>
-
                 </div>
             </div>
         </div>

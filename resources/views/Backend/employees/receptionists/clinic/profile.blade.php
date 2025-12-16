@@ -67,7 +67,7 @@
     .btn-back {
         font-weight: bold;
         border-radius: 50px;
-        padding: 10px 20px;
+        padding: 7px 15px;
     }
 </style>
 

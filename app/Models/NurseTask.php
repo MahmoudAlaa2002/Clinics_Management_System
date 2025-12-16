@@ -18,4 +18,9 @@ class NurseTask extends Model{
     public function appointment(){
         return $this->belongsTo(Appointment::class);
     }
+
+    public function nurse(){
+        return $this->belongsTo(Employee::class, 'nurse_id');
+    }
+
 }

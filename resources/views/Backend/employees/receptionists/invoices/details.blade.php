@@ -229,12 +229,20 @@
         </tbody>
     </table>
 
-    <!-- Created By -->
+
     <div class="created-by">
         Created By <span>{{ $invoice->creator->user->name ?? 'Admin' }}</span>
     </div>
 
-    <!-- ACTION BUTTONS -->
+
+    @if($invoice->payment_status === 'Paid')
+        <div class="signature">
+            <p style="font-size: 13px; color:#6b7280;">Authorized Signature</p>
+            <img src="{{ asset('assets/img/signature/t3.png') }}" style="width: 180px; margin-bottom: 8px;">
+        </div>
+    @endif
+
+
     <div class="action-buttons">
         <a href="{{ route('receptionist.view_invoices') }}" class="btn-custom btn-back">Back</a>
         <a href="{{ route('receptionist.invoice_pdf', $invoice->id) }}" class="btn-custom btn-print">Print</a>

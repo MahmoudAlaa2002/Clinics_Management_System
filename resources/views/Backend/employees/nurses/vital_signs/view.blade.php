@@ -97,10 +97,11 @@
             <div class="col-lg-10 offset-lg-1">
                 <div class="vs-header-card">
                     <div class="vs-header-details">
+                        Appointment: #<strong>{{ $vitalSigns->appointment->id }}</strong><br>
                         Patient: <strong>{{ $vitalSigns->appointment->patient->user->name ?? 'N/A' }}</strong><br>
+                        Nurse: <strong>{{ $vitalSigns->nurse->user->name ?? 'N/A' }}</strong><br>
                         Appointment Date: <strong>{{ \Carbon\Carbon::parse($vitalSigns->appointment->date)->format('d M Y') }}</strong><br>
-                        Appointment Time: <strong>{{ \Carbon\Carbon::parse($vitalSigns->appointment->time)->format('h:i A') }}</strong><br>
-                        Nurse: <strong>{{ $vitalSigns->nurse->user->name ?? 'N/A' }}</strong>
+                        Appointment Time: <strong>{{ \Carbon\Carbon::parse($vitalSigns->appointment->time)->format('h:i A') }}</strong>
                     </div>
                 </div>
             </div>
@@ -156,7 +157,7 @@
         <div class="row">
             <div class="col-lg-10 offset-lg-1 text-right">
                 <a href="{{ route('nurse.view_appointments') }}" class="btn btn-primary rounded-pill px-4 py-2" style="font-weight: bold;">
-                    <i class="fas fa-arrow-left mr-1"></i>Back
+                    Back
                 </a>
             </div>
         </div>

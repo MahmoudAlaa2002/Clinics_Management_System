@@ -1,13 +1,10 @@
 @if($appointments->count() > 0)
     @foreach ($appointments as $appointment)
         <tr>
-            <td>{{ $loop->iteration }}</td>
             <td>{{ $appointment->id }}</td>
             <td>{{ $appointment->patient->user->name }}</td>
-            <td>{{ $appointment->clinicDepartment->department->name }}</td>
             <td>{{ $appointment->doctor->employee->user->name }}</td>
             <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
-            <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
             <td>
                 @if($appointment->status === 'Pending')
                     <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#ffc107; color:white;">
@@ -30,6 +27,11 @@
                         Completed
                     </span>
                 @endif
+            </td>
+            <td class="action-btns">
+                <div class="d-flex justify-content-center">
+                    <a href="{{ route('accountant.details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Appointment"><i class="fa fa-eye"></i></a>
+                </div>
             </td>
         </tr>
     @endforeach

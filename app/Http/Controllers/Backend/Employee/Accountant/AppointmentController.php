@@ -28,7 +28,6 @@ class AppointmentController extends Controller{
         $appointments = Appointment::with([
             'patient.user',
             'doctor.employee.user',
-            'clinicDepartment.department'
         ])->whereIn('clinic_department_id', $clinicDepartmentIds);
 
         if ($keyword !== '') {
@@ -74,5 +73,13 @@ class AppointmentController extends Controller{
             'count'      => $appointments->total(),
             'searching'  => $keyword !== '',
         ]);
+    }
+
+
+
+
+    public function detailsAppointment($id){
+        $appointment = Appointment::findOrFail($id);
+        return view('Backend.employees.accountants.appointments.details', compact('appointment' ));
     }
 }

@@ -28,6 +28,29 @@
         padding-bottom: 30px;
     }
 
+    .doctor-qualification {
+        margin: 8px 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .doctor-rating {
+        margin: 10px 0;
+    }
+
+    .doctor-rating i {
+        font-size: 15px;
+        margin: 0 1px;
+    }
+
+    .star-filled {
+        color: #fbc02d; /* ذهبي */
+    }
+
+    .star-empty {
+        color: #ddd;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -54,7 +77,8 @@
                     <span class="input-group-text">Search by:</span>
                   </div>
                   <select id="search_filter" name="filter" class="form-control">
-                    <option value="name">Name</option>
+                    <option value="name">Doctor Name</option>
+                    <option value="rating">Rating</option>
                     <option value="status">Status</option>
                   </select>
                 </div>
@@ -64,22 +88,46 @@
             <div class="row doctor-grid" id="doctors_container">
                 @foreach ($doctors as $doctor)
                     <div class="col-md-4 col-sm-4 col-lg-3">
-                        <div class="profile-widget">
+                        <div class="profile-widget text-center">
+
                             <div class="doctor-img">
-                                <a class="avatar" href="{{ Route('receptionist.profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
-                                    ? asset(optional($doctor->employee->user)->image)
-                                    : asset('assets/img/user.jpg') }}"></a>
+                                <a class="avatar" href="{{ route('receptionist.profile_doctor', $doctor->id) }}">
+                                    <img src="{{ optional(optional($doctor->employee)->user)->image
+                                        ? asset($doctor->employee->user->image)
+                                        : asset('assets/img/user.jpg') }}">
+                                </a>
                             </div>
 
-                            <h4 class="doctor-name text-ellipsis" style="margin-bottom: 7px;"><a href="{{ Route('receptionist.profile_doctor' , ['id' => $doctor->id]) }}">{{ $doctor->employee->user->name }}</a></h4>
-                            <div class="doc-prof">{{ optional($doctor->employee->clinic)->name }}</div>
-                            <div class="user-country">
-                                <i class="fa fa-map-marker"></i> {{ $doctor->employee->user->address }}
+                            <h4 class="doctor-name text-ellipsis mb-2">
+                                <a href="{{ route('receptionist.profile_doctor', $doctor->id) }}">
+                                    {{ $doctor->employee->user->name }}
+                                </a>
+                            </h4>
+
+                            {{-- Qualification --}}
+                            @if($doctor->qualification)
+                                <div class="doctor-qualification">
+                                    <i class="fa fa-graduation-cap text-primary me-1"></i>
+                                    {{ $doctor->qualification }}
+                                </div>
+                            @endif
+
+                            {{-- Rating Stars --}}
+                            <div class="doctor-rating">
+                                @php
+                                    $rating = floor($doctor->rating); // عدد النجوم المضيئة
+                                @endphp
+
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa fa-star {{ $i <= $rating ? 'star-filled' : 'star-empty' }}"></i>
+                                @endfor
                             </div>
+
                         </div>
                     </div>
                 @endforeach
             </div>
+
             <div class="pagination-wrapper d-flex justify-content-center" id="doctors-pagination">
                 {{ $doctors->links('pagination::bootstrap-4') }}
             </div>

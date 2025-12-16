@@ -8,6 +8,7 @@ use App\Models\Doctor;
 use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -80,6 +81,16 @@ class DepartmentController extends Controller{
             'description' => $request->description,
             'status' => $request->status,
         ]);
+
+
+        /**
+        * إذا الآدمن عطّل القسم → عطّله في كل العيادات
+        */
+        if ($request->status === 'inactive') {
+            ClinicDepartment::where('department_id', $department->id)->update(['status' => 'inactive']);
+        }
+
+
         return response()->json(['data' => 1]);
     }
 

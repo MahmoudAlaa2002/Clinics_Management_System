@@ -33,9 +33,9 @@
             </td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
-                    <a href="{{ route('details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                    <a href="{{ route('edit_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
-                    <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}"><i class="fa fa-trash"></i></button>
+                    <a href="{{ route('details_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Appointment"><i class="fa fa-eye"></i></a>
+                    <a href="{{ route('edit_appointment', ['id' => $appointment->id]) }}" class="mr-1 btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Edit Appointment"><i class="fa fa-edit"></i></a>
+                    <button class="btn btn-outline-danger btn-sm delete-appointment" data-id="{{ $appointment->id }}" data-bs-toggle="tooltip" title="Delete Appointment"><i class="fa fa-trash"></i></button>
                 </div>
             </td>
         </tr>
@@ -47,6 +47,9 @@
         </td>
     </tr>
 @endif
+
+
+
 
 
 

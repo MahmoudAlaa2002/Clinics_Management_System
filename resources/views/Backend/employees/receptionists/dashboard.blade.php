@@ -157,6 +157,194 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="row">
+
+            {{-- Appointments View --}}
+            <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title d-inline-block">Appointments</h4>
+                        <a href="{{ route('receptionist.view_appointments') }}" class="float-right btn btn-primary">View all</a>
+                    </div>
+
+                    <div class="card-body p-0">
+                        @if($appointments->isEmpty())
+                            <div class="py-5 text-center">
+                                <h5 style="color: #555; font-weight: 500;">There are currently no scheduled appointments</h5>
+                            </div>
+                        @else
+                            <div class="table-responsive" style="min-height: 350px; max-height: 350px; overflow-y: auto;">
+                                <table class="table mb-0">
+
+                                    <thead class="d-none">
+                                        <tr>
+                                            <th>Patient Name</th>
+                                            <th>Doctor Name</th>
+                                            <th>Timing</th>
+                                            <th class="text-right">Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    @foreach ($appointments as $appointment)
+                                        <tr>
+                                            <td style="min-width: 200px;">
+
+                                                {{-- Avatar --}}
+                                                @if($appointment->patient && $appointment->patient->user)
+                                                    <a class="avatar"
+                                                       href="{{ route('receptionist.profile_patient', ['id' => $appointment->patient->id]) }}">
+                                                        {{ substr($appointment->patient->user->name, 0, 1) }}
+                                                    </a>
+                                                @else
+                                                    <span class="avatar bg-danger text-white">?</span>
+                                                @endif
+
+                                                {{-- Patient Name + Address --}}
+                                                @if($appointment->patient && $appointment->patient->user)
+                                                    <h2>
+                                                        <a href="{{ route('receptionist.profile_patient', ['id' => $appointment->patient->id]) }}">
+                                                            {{ $appointment->patient->user->name }}
+                                                            <span>{{ $appointment->patient->user->address ?? 'No address' }}</span>
+                                                        </a>
+                                                    </h2>
+                                                @else
+                                                    <h2>
+                                                        <span class="text-danger">Deleted Patient</span>
+                                                        <span class="d-block text-muted" style="font-size: 13px;">No address</span>
+                                                    </h2>
+                                                @endif
+
+                                            </td>
+
+                                            <td>
+                                                <h5 class="p-0 time-title">Appointment With</h5>
+
+                                                @if($appointment->doctor && $appointment->doctor->employee && $appointment->doctor->employee->user)
+                                                    <p>Dr. {{ $appointment->doctor->employee->user->name }}</p>
+                                                @else
+                                                    <p class="text-danger">Doctor Deleted</p>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <h5 class="p-0 time-title">Timing</h5>
+                                                <p>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</p>
+                                            </td>
+
+                                            <td class="text-right">
+                                                <a href="{{ route('receptionist.details_appointment', ['id' => $appointment->id]) }}"
+                                                   class="btn btn-outline-primary take-btn">
+                                                    Take up
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+
+
+            {{-- Doctors View --}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="card member-panel">
+                    <div class="bg-white card-header">
+                        <h4 class="mb-0 card-title">Doctors</h4>
+                    </div>
+                    <div class="card-body">
+                        @if($doctors->isEmpty())
+                        <div class="text-center" style="padding: 100px 0;">
+                            <h5 style="color: #555; font-weight: 500;">There are no doctors listed yet</h5>
+                        </div>
+                        @else
+                            <ul class="contact-list">
+                                @foreach ($doctors as $doctor)
+                                    <li>
+                                        <div class="contact-cont">
+                                            <div class="float-left user-img m-r-10">
+                                                <a href="{{ route('receptionist.profile_doctor' , ['id' => $doctor->id]) }}" title="{{ $doctor->employee->user->name }}">
+                                                    <img src="{{ asset($doctor->employee->user->image ?? 'assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle">
+                                                    <span class="status online"></span>
+                                                </a>
+                                            </div>
+                                            <div class="contact-info">
+                                                <a href="{{ route('receptionist.profile_doctor' , ['id' => $doctor->id]) }}"
+                                                    class="contact-name text-ellipsis"
+                                                    style="color: #00A8FF; font-weight: 600;">
+                                                     {{ $doctor->employee->user->name }}
+                                                 </a>
+                                                <span class="contact-date">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $doctor->rating)
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        @else
+                                                            <i class="far fa-star text-muted"></i>
+                                                        @endif
+                                                    @endfor
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                    <div class="text-center bg-white card-footer">
+                        <a href="{{ route('receptionist.view_doctors') }}" class="text-muted">View all Doctors</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Patients View --}}
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title d-inline-block">New Patients</h4>
+                        <a href="{{ route('receptionist.view_patients') }}" class="float-right btn btn-primary">View all</a>
+                    </div>
+                    <div class="card-block">
+                        @if($patients->isEmpty())
+                            <div class="text-center" style="padding: 100px 0;">
+                                <h5 style="color: #555; font-weight: 500;">No patients available at the moment</h5>
+                            </div>
+                        @else
+                            <div class="table-responsive" style="min-height: 350px; max-height: 350px; overflow-y: auto;">
+                                <table class="table mb-0 new-patient-table">
+                                    <tbody>
+                                        @foreach ($patients as $patient)
+                                            <tr>
+                                                <td>
+                                                    <img width="34" height="34" class="rounded-circle" src="{{ asset($patient->user->image ?? 'assets/img/user.jpg') }}" alt="">
+                                                    <h2>{{ $patient->user->name }}</h2>
+                                                </td>
+                                                <td>{{ $patient->user->email }}</td>
+                                                <td>{{ $patient->user->phone }}</td>
+                                                <td>
+                                                    <a href="{{ route('receptionist.profile_patient', ['id' => $patient->id]) }}"
+                                                       class="float-right border btn btn-primary btn-primary-one border-primary">
+                                                       Show
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="notification-box">

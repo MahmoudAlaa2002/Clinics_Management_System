@@ -33,7 +33,7 @@ class MedicalRecordController extends Controller{
         $departmentId = Auth::user()->employee->department_id;
 
         $records = MedicalRecord::with([
-            'appointment:id,doctor_id,patient_id,record_date',
+            'appointment:id,doctor_id,patient_id',
             'doctor.employee.user:id,name',
             'patient.user:id,name'
         ])

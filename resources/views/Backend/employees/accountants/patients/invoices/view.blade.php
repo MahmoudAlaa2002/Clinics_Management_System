@@ -100,6 +100,8 @@
 
 @section('js')
 <script>
+
+    initTooltips();
     let lastKeyword = '';
     let patientId = "{{ $patient->id }}";
 
@@ -124,6 +126,8 @@
             data: { keyword: keyword, filter: filter },
             success: function (response) {
                 $('#invoices_table_body').html(response.html);
+                initTooltips();
+
                 if (response.searching) {
                     if (response.count > 50) {
                         $('#invoices-pagination').html(response.pagination).show();

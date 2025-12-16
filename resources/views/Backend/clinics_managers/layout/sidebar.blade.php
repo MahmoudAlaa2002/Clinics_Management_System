@@ -40,11 +40,17 @@
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('clinic-manager/view/departments') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('clinic-manager/add/department/toClinic') || Request::is('clinic-manager/view/departments') || Request::is('clinic-manager/details/department/*') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-building"></i> <span> Departments </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('clinic-manager/view/departments') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('clinic-manager/add/department/toClinic') || Request::is('clinic-manager/view/departments') || Request::is('clinic-manager/details/department/*') ? '' : 'display: none;' }}">
                         <li>
-                            <a href="{{ route('clinic.view_departments') }}" class="{{ Request::is('clinic-manager/view/departments') ? 'active' : '' }}">
+                            <a href="{{ route('clinic.add_department') }}" class="{{ Request::is('clinic-manager/add/department/toClinic') ? 'active' : '' }}">
+                                Add Department
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('clinic.view_departments') }}" class="{{ Request::is('clinic-manager/view/departments') || Request::is('clinic-manager/details/department/*') ? 'active' : '' }}">
                                 View Departments
                             </a>
                         </li>

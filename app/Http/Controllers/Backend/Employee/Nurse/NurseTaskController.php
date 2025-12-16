@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Employee\Nurse;
 
+use Carbon\Carbon;
 use App\Models\NurseTask;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -82,8 +83,8 @@ class NurseTaskController extends Controller{
 
 
     public function detailsNurseTask($id){
-        $nurse_task = NurseTask::findOrFail($id);
-        return view('Backend.employees.nurses.nurse_tasks.details' , compact('nurse_task'));
+        $task = NurseTask::findOrFail($id);
+        return view('Backend.employees.nurses.nurse_tasks.details' , compact('task'));
     }
 
 
@@ -92,6 +93,7 @@ class NurseTaskController extends Controller{
     public function completedNurseTask($id){
         $nurse_task = NurseTask::findOrFail($id);
         $nurse_task->update([
+            'performed_at' => Carbon::now(),
             'status' => 'Completed',
         ]);
 

@@ -41,14 +41,38 @@ class DashboardController extends Controller{
         })->whereDate('date', Carbon::today())->count();
 
 
-        $nurse_tasks_count = NurseTask::where('nurse_id' , Auth::user()->employee->id)->count();
+        $pending_tasks_count = NurseTask::where('nurse_id' , Auth::user()->employee->id)->where('status' , 'Pending')->count();
+        $completed_tasks_count = NurseTask::where('nurse_id' , Auth::user()->employee->id)->where('status' , 'Completed')->count();
 
 
-        return view ('Backend.employees.nurses.dashboard' , compact('doctor_count' ,
+        $doctors = Doctor::whereHas('employee', function ($q) use ($clinic , $department) {
+            $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
+        })->latest('id')->take(5)->get();
+
+
+        $patients = Patient::whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->latest('id')->take(5)->get();
+
+
+        $appointments = Appointment::whereHas('clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+              ->where('department_id', $department->id);
+        })->latest('id')->take(5)->get();
+
+
+        return view ('Backend.employees.nurses.dashboard' , compact(
+            'doctor_count' ,
         'patient_count' ,
         'all_appointments' ,
         'today_appointments' ,
-        'nurse_tasks_count'));
+        'pending_tasks_count',
+        'completed_tasks_count',
+        'doctors',
+        'patients',
+        'appointments',
+        ));
     }
 
 

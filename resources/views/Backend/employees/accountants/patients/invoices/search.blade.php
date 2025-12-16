@@ -1,7 +1,7 @@
 @if($invoices->count() > 0)
     @foreach ($invoices as $invoice)
         <tr>
-            <td>{{ $loop->iteration }}</td>
+            <td>{{ $invoices->firstItem() + $loop->index }}</td>
             <td>{{ $invoice->appointment_id }}</td>
             <td>${{ number_format($invoice->total_amount, 2) }}</td>
             <td>{{ $invoice->invoice_date }}</td>
@@ -29,12 +29,21 @@
             </td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
-                    <a href="{{ route('accountant.details_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-success btn-sm">
+                    {{-- عرض الفاتورة --}}
+                    <a href="{{ route('accountant.details_invoice', $invoice->id) }}"
+                        class="mr-1 btn btn-outline-success btn-sm"
+                        data-bs-toggle="tooltip" title="Details Invoice">
                         <i class="fa fa-eye"></i>
                     </a>
-                    <a href="{{ route('accountant.edit_invoice', ['id' => $invoice->id]) }}" class="mr-1 btn btn-outline-primary btn-sm">
-                        <i class="fa fa-edit"></i>
-                    </a>
+
+                    {{-- تعديل الفاتورة (فقط إذا لم تكن مدفوعة) --}}
+                    @if($invoice->payment_status !== 'Paid')
+                        <a href="{{ route('accountant.edit_invoice', $invoice->id) }}"
+                            class="mr-1 btn btn-outline-primary btn-sm"
+                            data-bs-toggle="tooltip" title="Edit Invoice">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    @endif
                 </div>
             </td>
         </tr>

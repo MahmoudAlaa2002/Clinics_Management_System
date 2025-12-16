@@ -8,6 +8,16 @@
     .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
     .content { flex: 1; display: flex; flex-direction: column; }
     .pagination-wrapper { margin-top: auto; padding-top: 80px; padding-bottom: 30px; }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -113,55 +123,58 @@
         });
 
 
+        initTooltips();
         let lastKeyword = '';
 
-    function fetchPatients(url = "{{ route('receptionist.search_patients') }}") {
-        let keyword = $('#search_input').val().trim();
-        let filter  = $('#search_filter').val();
+        function fetchPatients(url = "{{ route('receptionist.search_patients') }}") {
+            let keyword = $('#search_input').val().trim();
+            let filter  = $('#search_filter').val();
 
-        if (keyword === '' && lastKeyword === '') return;
+            if (keyword === '' && lastKeyword === '') return;
 
-        if (keyword === '' && lastKeyword !== '') {
-            lastKeyword = '';
-            window.location.href = "{{ route('receptionist.view_patients') }}";
-            return;
+            if (keyword === '' && lastKeyword !== '') {
+                lastKeyword = '';
+                window.location.href = "{{ route('receptionist.view_patients') }}";
+                return;
+            }
+
+            lastKeyword = keyword;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: { keyword: keyword, filter: filter },
+                success: function (response) {
+                    $('#patients_table_body').html(response.html);
+                    initTooltips();
+                    
+                    if (response.searching) {
+                        if (response.count > 50) {
+                            $('#patients-pagination').html(response.pagination).show();
+                        } else {
+                            $('#patients-pagination').empty().hide();
+                        }
+                    } else {
+                        $('#patients-pagination').show();
+                    }
+                },
+                error: function () {
+                    console.error("Failed to fetch patients.");
+                }
+            });
         }
 
-        lastKeyword = keyword;
+        $(document).on('input', '#search_input', function () { fetchPatients(); });
+        $(document).on('change', '#search_filter', function () { fetchPatients(); });
 
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            data: { keyword: keyword, filter: filter },
-            success: function (response) {
-                $('#patients_table_body').html(response.html);
-                if (response.searching) {
-                    if (response.count > 50) {
-                        $('#patients-pagination').html(response.pagination).show();
-                    } else {
-                        $('#patients-pagination').empty().hide();
-                    }
-                } else {
-                    $('#patients-pagination').show();
-                }
-            },
-            error: function () {
-                console.error("Failed to fetch patients.");
+        $(document).on('click', '#patients-pagination .page-link', function (e) {
+            let keyword = $('#search_input').val().trim();
+            if (keyword !== '') {
+                e.preventDefault();
+                let url = $(this).attr('href');
+                if (url && url !== '#') fetchPatients(url);
             }
         });
-    }
-
-    $(document).on('input', '#search_input', function () { fetchPatients(); });
-    $(document).on('change', '#search_filter', function () { fetchPatients(); });
-
-    $(document).on('click', '#patients-pagination .page-link', function (e) {
-        let keyword = $('#search_input').val().trim();
-        if (keyword !== '') {
-            e.preventDefault();
-            let url = $(this).attr('href');
-            if (url && url !== '#') fetchPatients(url);
-        }
-    });
     </script>
 @endsection

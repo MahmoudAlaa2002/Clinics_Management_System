@@ -84,6 +84,21 @@
         color: #fff;
         box-shadow: 0 3px 8px rgba(0, 169, 244, 0.4);
     }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
+
+    .btn:hover i {
+        color: #fff !important;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -185,7 +200,6 @@
 <script>
 
     function fetchInvoices(url = "{{ route('search_invoices') }}") {
-
         let keyword = $('#search_input').val().trim();
         let filter  = $('#search_filter').val();
         let invoiceFilter = $('input[name="invoiceFilter"]:checked').val();
@@ -201,6 +215,7 @@
             },
             success: function (response) {
                 $('#invoices_table_body').html(response.html);
+                initTooltips();
 
                 if(response.header){
                     $('#invoices_table_head').html(response.header);
@@ -269,6 +284,8 @@
         updateSearchFilterOptions();
         fetchInvoices();
     });
+
+    initTooltips();
 
 </script>
 @endsection

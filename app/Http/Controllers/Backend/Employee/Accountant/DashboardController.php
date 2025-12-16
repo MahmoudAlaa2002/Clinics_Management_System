@@ -27,15 +27,21 @@ class DashboardController extends Controller{
 
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinic_id)->pluck('id');
         $all_appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)->count();
-        $invoices_count = $invoices = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic_id) {
+
+        $issued_invoices_count = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic_id) {
             $q->where('clinic_id', $clinic_id);
-        })->count();
+        })->where('invoice_status' , 'Issued')->count();
+
+        $cancelled_invoices_count = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic_id) {
+            $q->where('clinic_id', $clinic_id);
+        })->where('invoice_status' , 'Cancelled')->count();
 
         return view ('Backend.employees.accountants.dashboard' , compact(
             'doctors_count',
             'patients_count',
             'all_appointments',
-            'invoices_count',
+            'issued_invoices_count',
+            'cancelled_invoices_count',
         ));
     }
 

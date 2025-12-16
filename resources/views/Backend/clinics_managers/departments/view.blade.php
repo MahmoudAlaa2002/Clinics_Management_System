@@ -28,6 +28,16 @@
         padding-bottom: 30px;
     }
 
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -53,12 +63,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($departments as $department)
+                            @foreach ($departments as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $department->name }}</td>
+                                    <td>{{ $item->department->name }}</td>
                                     <td>
-                                        @if($department->status === 'active')
+                                        @if($item->status === 'active')
                                             <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #13ee29; color: white;">Active</span>
                                         @else
                                             <span class="status-badge" style="padding: 6px 20px; font-size: 18px; border-radius: 50px; background-color: #f90d25; color: white;">Inactive</span>
@@ -66,8 +76,8 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <a href="{{ route('clinic.details_department', ['id' => $department->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                            <button class="btn btn-outline-danger btn-sm delete-department" data-id="{{ $department->id }}"><i class="fa fa-trash"></i></button>
+                                            <a href="{{ route('clinic.details_department', ['id' => $item->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Department"><i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-outline-danger btn-sm delete-department" data-id="{{ $item->id }}" data-bs-toggle="tooltip" title="Delete Department"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -84,6 +94,8 @@
 
 @section('js')
     <script>
+        initTooltips();
+
         $(document).on('click', '.delete-department', function () {
             let departmentId = $(this).data('id');
             let url = `/clinic-manager/delete/department/${departmentId}`;

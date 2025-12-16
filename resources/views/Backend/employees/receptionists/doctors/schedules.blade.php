@@ -43,7 +43,7 @@
                             <label>Department <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-stethoscope text-primary"></i></span>
+                                    <span class="input-group-text"><i class="fas fa-building text-primary"></i></span>
                                 </div>
                                 <input type="text" class="form-control" value="{{ $department->name }}" readonly>
                                 <input type="hidden" id="department_id" name="department_id" value="{{ $department->id }}">
@@ -59,7 +59,7 @@
                                     </span>
                                 </div>
 
-                                <select class="form-control" name="doctor_id" id="doctor_id" required>
+                                <select class="form-control" name="doctor_id" id="doctor_id">
                                     <option value="" disabled {{ !isset($doctor_id) ? 'selected' : '' }} hidden>Select Doctor</option>
 
                                     @foreach($doctors as $doctor)
@@ -196,6 +196,24 @@
 
         form.submit();
     }
+
+
+    $('#doctor-schedule-form').on('submit', function (e) {
+        let doctor = $('#doctor_id').val();
+
+        if (!doctor) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'You have not selected a doctor',
+                confirmButtonColor: '#007BFF',
+                confirmButtonText: 'OK'
+            });
+
+            return false;
+        }
+    });
 </script>
 
 @endsection

@@ -56,7 +56,7 @@
                 <div class="circle-icon mb-3">
                     <i class="fa fa-building"></i>
                 </div>
-                <h2 class="fw-bold mb-1">{{ $department->name }}</h2>
+                <h2 class="fw-bold mb-1">{{ $clinicDepartment->department->name }}</h2>
                 <p class="mb-0" style="font-size: 15px;">
                     Clinic: <strong>{{ $clinic->name }}</strong>
                 </p>
@@ -84,7 +84,7 @@
             <div class="col-md-6">
                 <div class="info-card d-flex align-items-center">
 
-                    @if($department->status === 'active')
+                    @if($clinicDepartment->status === 'active')
                         <span class="rounded-circle bg-success text-white p-3 me-3 shadow-sm">
                             <i class="fa fa-check fa-lg"></i>
                         </span>
@@ -99,7 +99,7 @@
                             &nbsp;&nbsp;Status
                         </h6>
                         <p class="text-dark m-0" style="font-size: 15px;">
-                            &nbsp;&nbsp;{{ ucfirst($department->status) }}
+                            &nbsp;&nbsp;{{ ucfirst($clinicDepartment->status) }}
                         </p>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
 
                 <p class="text-secondary mt-2"
                    style="font-size: 16px; line-height: 1.9; padding-left: 5px;">
-                    {{ $department->description ? $department->description : 'No Description Available Yet' }}
+                    {{ $clinicDepartment->description ? $clinicDepartment->description : 'No Description Available Yet' }}
                 </p>
             </div>
         </div>

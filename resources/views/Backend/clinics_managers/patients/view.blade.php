@@ -8,6 +8,16 @@
     .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
     .content { flex: 1; display: flex; flex-direction: column; }
     .pagination-wrapper { margin-top: auto; padding-top: 80px; padding-bottom: 30px; }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -64,7 +74,7 @@
 @endsection
 
 
-{{-- @section('js')
+@section('js')
 
     <script>
         $(document).on('click', '.delete-patient', function () {
@@ -90,7 +100,14 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function (response) {
-                            if (response.success == true) {
+                            if (response.data === 0) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'This patient has issued invoices and cannot be removed',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                            } else if (response.success === true) {
                                 Swal.fire({
                                     title: 'Deleted',
                                     text: 'Patient has been deleted successfully',
@@ -106,7 +123,7 @@
             });
         });
 
-
+        initTooltips();
         let lastKeyword = '';
 
         function fetchPatients(url = "{{ route('clinic.search_patients') }}") {
@@ -133,6 +150,7 @@
                     if (response.searching) {
                         if (response.count > 50) {
                             $('#patients-pagination').html(response.pagination).show();
+                            initTooltips();
                         } else {
                             $('#patients-pagination').empty().hide();
                         }
@@ -158,4 +176,4 @@
             }
         });
     </script>
-@endsection --}}
+@endsection

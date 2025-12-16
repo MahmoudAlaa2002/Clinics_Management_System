@@ -34,8 +34,8 @@
                             <span class="input-group-text">Search by:</span>
                         </div>
                         <select id="search_filter" name="filter" class="form-control">
-                            <option value="doctor_name">Doctor Name</option>
                             <option value="patient_name">Patient Name</option>
+                            <option value="doctor_name">Doctor Name</option>
                             <option value="performed_at">Performed At</option>
                             <option value="status">Status</option>
                         </select>
@@ -48,8 +48,8 @@
                         <tr>
                             <th>#</th>
                             <th>Appointment ID</th>
-                            <th>Doctor Name</th>
                             <th>Patient Name</th>
+                            <th>Doctor Name</th>
                             <th>Task</th>
                             <th>Performed At</th>
                             <th>Status</th>
@@ -71,6 +71,8 @@
 
 @section('js')
 <script>
+    initTooltips();
+
     let lastKeyword = '';
 
     function fetchNurseTasks(url = "{{ route('nurse.search_nurse_tasks') }}") {
@@ -94,10 +96,9 @@
             data: { keyword: keyword, filter: filter },
             success: function (response) {
 
-                // تعبئة الجدول بالنتائج الجديدة
                 $('#nurse_tasks_table_body').html(response.html);
+                initTooltips();
 
-                // التحكم في إظهار / إخفاء الباجينيشن
                 if (response.searching) {
                     if (response.count > 12) {
                         $('#nurse-tasks-pagination').html(response.pagination).show();
@@ -134,33 +135,46 @@
         }
     });
 
-    // اكتمال المهمة AJAX
+
+
+    // ================================
+    // قبول الموعد — مع تأكيد
+    // ================================
     $(document).on('click', '.complete-btn', function (e) {
         e.preventDefault();
 
         let id = $(this).data('id');
 
-        $.ajax({
-            url: "/employee/nurse/completed/nurse-task/" + id,
-            type: "POST",
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                if (response.data === 1) {
-                    fetchNurseTasks();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Task Completed',
-                        text: 'The task has been marked as completed',
-                        confirmButtonColor: '#007BFF',
-                    }).then(() => {
-                            window.location.href = '/employee/nurse/view/nurse-tasks';
-                    });
-                }
-            },
-            error: function () {
-                console.error("Failed to complete nurse task.");
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Are you sure you want to complete this task?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#007BFF',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Accept',
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    url: "/employee/nurse/completed/nurse-task/" + id,
+                    type: "POST",
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        status: 'Completed'
+                    },
+
+                    success: function () {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Task Completed',
+                            text: 'The task status has been updated',
+                            confirmButtonColor: '#007BFF',
+                        }).then(() => window.location.reload());
+                    }
+                });
             }
         });
     });

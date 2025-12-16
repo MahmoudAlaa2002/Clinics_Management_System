@@ -64,7 +64,7 @@ class PatientController extends Controller{
     public function viewInvoicesPatients($patient_id){
         $clinic_id = Auth::user()->employee->clinic_id;
         $patient = Patient::with('user')->findOrFail($patient_id);
-        $invoices = Invoice::where('patient_id' , $patient_id)->orderBy('id', 'asc')->paginate(10);
+        $invoices = Invoice::where('patient_id' , $patient_id)->where('invoice_status' , 'Issued')->orderBy('id', 'asc')->paginate(10);
         return view('Backend.employees.accountants.patients.invoices.view' , compact('invoices','patient'));
     }
 

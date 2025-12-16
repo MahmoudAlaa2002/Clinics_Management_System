@@ -66,7 +66,6 @@
                     </div>
                     <select id="search_filter" name="filter" class="form-control">
                         <option value="patient">Patient Name</option>
-                        <option value="department">Department Name</option>
                         <option value="doctor">Doctor Name</option>
                         <option value="date">Appointment Date</option>
                         <option value="status">Status</option>
@@ -82,61 +81,16 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Appointment Number</th>
+                                <th>ID</th>
                                 <th>Patient Name</th>
-                                <th>Department Name</th>
                                 <th>Doctor Name</th>
                                 <th>Appointment Date</th>
-                                <th>Appointment Time</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="appointments_table_body">
-                            @if($appointments->count() > 0)
-                                @foreach ($appointments as $appointment)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $appointment->id }}</td>
-                                        <td>{{ optional(optional($appointment->patient)->user)->name ?? '-' }}</td>
-                                        <td>{{ $appointment->clinicDepartment->department->name }}</td>
-                                        <td>{{ optional(optional(optional($appointment->doctor)->employee)->user)->name ?? '-' }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
-                                        <td>
-                                            @if($appointment->status === 'Pending')
-                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#ffc107; color:white;">
-                                                    Pending
-                                                </span>
-                                            @elseif($appointment->status === 'Accepted')
-                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#189de4; color:white;">
-                                                    Accepted
-                                                </span>
-                                            @elseif($appointment->status === 'Rejected')
-                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#f90d25; color:white;">
-                                                    Rejected
-                                                </span>
-                                            @elseif($appointment->status === 'Cancelled')
-                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#6c757d; color:white;">
-                                                    Cancelled
-                                                </span>
-                                            @elseif($appointment->status === 'Completed')
-                                                <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#14ea6d; color:white;">
-                                                    Completed
-                                                </span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="9" class="text-center">
-                                        <div  style="font-weight: bold; font-size: 18px; margin-top:15px;">
-                                            There are currently no scheduled appointments
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endif
+                            @include('Backend.employees.accountants.appointments.search', ['appointments' => $appointments])
                         </tbody>
                     </table>
                     <div id="main-pagination" class="pagination-wrapper d-flex justify-content-center">
@@ -153,6 +107,8 @@
 @section('js')
 <script>
     $(document).ready(function () {
+
+        initTooltips();
         let lastAppointmentKeyword = '';
 
         function fetchAppointments(url = "{{ route('accountant.search_appointments') }}") {
@@ -185,6 +141,7 @@
                 data: { keyword: keyword, filter: filter },
                 success: function (response) {
                     $tableBody.html(response.html);
+                    initTooltips();
 
                     if (response.searching) {
                         if (response.count > 50) {

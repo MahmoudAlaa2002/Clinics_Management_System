@@ -9,11 +9,11 @@ class ClinicDepartment extends Model{
 
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'clinic_id',
         'department_id',
+        'description',
+        'status',
     ];
 
     public function clinic(){

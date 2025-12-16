@@ -24,6 +24,17 @@
         padding-top: 80px;
         padding-bottom: 30px;
     }
+
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -76,29 +87,7 @@
                     </tr>
                 </thead>
                 <tbody id="clinics_table_body">
-                        @foreach ($clinics as $clinic)
-                            <tr>
-                                <td>{{ $clinics->firstItem() + $loop->index }}</td>
-                                <td>{{ $clinic->name }}</td>
-                                <td>{{ $clinic->location }}</td>
-                                <td>{{ $clinic->email }}</td>
-                                <td>{{ $clinic->phone }}</td>
-                                <td>
-                                    @if($clinic->status === 'active')
-                                        <span class="status-badge" style="padding: 6px 24px; font-size: 18px; border-radius: 50px; background-color: #13ee29; color: white;">Active</span>
-                                    @else
-                                        <span class="status-badge" style="padding: 6px 20px; font-size: 18px; border-radius: 50px; background-color: #f90d25; color: white;">Inactive</span>
-                                    @endif
-                                </td>
-                                <td class="action-btns">
-                                    <div class="d-flex justify-content-center">
-                                        <a href="{{ route('details_clinic', ['id' => $clinic->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('edit_clinic', ['id' => $clinic->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                        <button class="btn btn-outline-danger btn-sm delete-clinic" data-id="{{ $clinic->id }}"><i class="fa fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                    @include('Backend.admin.clinics.searchClinic', ['clinics' => $clinics])
                 </tbody>
             </table>
             <div id="clinics-pagination" class="pagination-wrapper d-flex justify-content-center">
@@ -112,6 +101,7 @@
 @section('js')
 <script>
     let lastKeyword = '';
+    initTooltips();
 
     function fetchClinics(url = "{{ route('search_clinics') }}") {
         let keyword = $('#search_input').val().trim();
@@ -138,6 +128,7 @@
             data: { keyword: keyword, filter: filter },
             success: function (response) {
                 $('#clinics_table_body').html(response.html);
+                initTooltips();
                 if (response.searching) {
                     if (response.count > 10) {
                         $('#clinics-pagination').html(response.pagination).show();

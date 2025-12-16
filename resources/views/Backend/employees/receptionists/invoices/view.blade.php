@@ -28,6 +28,16 @@
         padding-bottom: 30px;
     }
 
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
+
 </style>
 
 <div class="page-wrapper">
@@ -68,7 +78,7 @@
             <table class="table mb-0 text-center table-bordered table-striped custom-table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Appointment ID</th>
                         <th>Patient Name</th>
                         <th>Invoice Date</th>
@@ -92,6 +102,8 @@
 
 @section('js')
 <script>
+
+    initTooltips();
     let lastKeyword = '';
 
     function fetchInvoices(url = "{{ route('receptionist.search_invoices') }}") {
@@ -115,6 +127,8 @@
             data: { keyword: keyword, filter: filter },
             success: function (response) {
                 $('#invoices_table_body').html(response.html);
+                initTooltips();
+                
                 if (response.searching) {
                     if (response.count > 50) {
                         $('#invoices-pagination').html(response.pagination).show();

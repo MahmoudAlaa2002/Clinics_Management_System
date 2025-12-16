@@ -1,4 +1,4 @@
-@extends('Backend.employees.receptionists.master')
+@extends('Backend.employees.accountants.master')
 
 @section('title', 'Appointment Details')
 
@@ -227,7 +227,7 @@
                             <div class="detail-title">Appointment Invoice</div>
                             <div class="detail-value">
                                 @if($appointment->invoice)
-                                    <a href="{{ route('receptionist.details_invoice', ['id' => $appointment->invoice->id]) }}"
+                                    <a href="{{ route('accountant.details_invoice', ['id' => $appointment->invoice->id]) }}"
                                     class="invoice-link">
                                         Invoice View
                                     </a>
@@ -252,7 +252,7 @@
     </div>
 
     <div class="mb-3 d-flex justify-content-end" style="margin-right: 80px;">
-        <a href="{{ Route('receptionist.view_appointments') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
+        <a href="{{ Route('accountant.view_appointments') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
             Back
         </a>
     </div>

@@ -38,6 +38,19 @@
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function initTooltips() {
+            const tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            );
+
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                if (!tooltipTriggerEl._tooltip) {
+                    tooltipTriggerEl._tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+                }
+            });
+        }
+    </script>
 
     @yield('js')
 </body>

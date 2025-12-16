@@ -39,7 +39,7 @@
                     <ul style="{{ Request::is('department-manager/depratment-profile') || Request::is('department-manager/edit/depratment-profile') ? '' : 'display: none;' }}">
                         <li>
                             <a href="{{ route('depratment_profile') }}" class="{{ Request::is('department-manager/depratment-profile') ? 'active' : '' }}">
-                                Department Profile
+                                View Profile
                             </a>
                         </li>
                         <li>

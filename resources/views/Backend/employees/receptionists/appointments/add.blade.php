@@ -37,6 +37,7 @@
         background-image: none !important;
         pointer-events: none;
     }
+
 </style>
 
 <!-- Payment Modal -->
@@ -111,7 +112,9 @@
                                 <div class="col-sm-6">
                                     <label>Clinic</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fa fa-hospital"></i></span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                        </div>
                                         <select class="form-control no-arrow" disabled>
                                             <option selected>
                                                 {{ \App\Models\Clinic::find($clinic_id)->name }}
@@ -123,7 +126,9 @@
                                 <div class="col-sm-6">
                                     <label>Department</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        </div>
                                         <select class="form-control no-arrow" disabled>
                                             <option selected>
                                                 {{ \App\Models\Department::find($department_id)->name }}
@@ -136,7 +141,9 @@
                                 <div class="col-sm-6">
                                     <label>Patient Name <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-user-injured"></i></span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-injured"></i></span>
+                                        </div>
                                         <select class="form-control" id="patient_id" name="patient_id">
                                             <option value="" disabled selected hidden>Select Patient</option>
                                             @foreach($patients as $patient)
@@ -149,7 +156,9 @@
                                 <div class="col-sm-6">
                                     <label>Assigned to Doctor <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-user-md"></i></span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user-md"></i></span>
+                                        </div>
                                         <select class="form-control" id="doctor_id" name="doctor_id">
                                             <option value="" disabled selected hidden>Select Doctor</option>
                                             @foreach($doctors as $doctor)
@@ -162,7 +171,9 @@
                                 <div class="col-sm-6">
                                     <label>Appointment Day <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+                                        </div>
                                         <select name="appointment_day" id="appointment_day" class="form-control">
                                             <option value="" disabled selected hidden>Select Day</option>
                                         </select>
@@ -172,7 +183,9 @@
                                 <div class="col-sm-6">
                                     <label>Appointment Time<span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        </div>
                                         <select name="appointment_time" id="appointment_time" class="form-control">
                                             <option value="" disabled selected hidden>Select Appointment Time</option>
                                         </select>

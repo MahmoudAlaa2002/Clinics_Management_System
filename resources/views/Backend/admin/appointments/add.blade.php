@@ -237,7 +237,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
-                                text: 'You already have an appointment scheduled at another clinic at this time',
+                                text: 'You already have another appointment at this time',
                                 confirmButtonColor: '#007BFF'
                             });
                         }

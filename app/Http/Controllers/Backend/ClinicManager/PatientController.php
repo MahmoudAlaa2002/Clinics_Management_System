@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\ClinicManager;
 
 use App\Models\User;
+use App\Models\Invoice;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use App\Models\ClinicPatient;
@@ -202,11 +203,24 @@ class PatientController extends Controller{
 
 
 
-    // عشان قصة الفواتير بدي أتأكد من الميثود هادي
-    // public function deletePatient($id){
-    //     $clinic_id = Auth::user()->employee->clinic_id;
-    //     ClinicPatient::where('clinic_id', $clinic_id)->where('patient_id', $id)->delete();
-    //     return response()->json(['success' => true]);
-    // }
+
+    public function deletePatient($id){
+        $clinic_id = Auth::user()->employee->clinic_id;
+
+        $hasIssuedInvoice = Invoice::where('patient_id', $id)
+            ->where('invoice_status', 'Issued')
+            ->whereHas('appointment', function ($q) use ($clinic_id) {
+                $q->whereHas('clinicDepartment', function ($q2) use ($clinic_id) {
+                    $q2->where('clinic_id', $clinic_id);
+                });
+            })->exists();
+
+        if ($hasIssuedInvoice) {
+            return response()->json(['data' => 0]);
+        }
+
+        ClinicPatient::where('clinic_id', $clinic_id)->where('patient_id', $id)->delete();
+        return response()->json(['success' => true]);
+    }
 
 }

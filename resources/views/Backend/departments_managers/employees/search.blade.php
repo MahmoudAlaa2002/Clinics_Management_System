@@ -23,7 +23,7 @@
                                 <td>{{ $employee->user->phone ?? '-' }}</td>
                                 <td class="action-btns">
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('department.profile_employee', ['id' => $employee->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ route('department.profile_employee', ['id' => $employee->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Profile Employee"><i class="fa fa-eye"></i></a>
                                     </div>
                                 </td>
                             </tr>

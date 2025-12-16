@@ -12,6 +12,7 @@
 
                     {{-- استرجاع --}}
                     <button class="btn btn-outline-success btn-sm restore-appointment"
+                            data-bs-toggle="tooltip" title="Restore Appointment"
                             data-id="{{ $appointment->id }}"
                             style="margin-right: 4px;">
                         <i class="fa fa-undo"></i>
@@ -19,6 +20,7 @@
 
                     {{-- حذف نهائي --}}
                     <button class="btn btn-outline-danger btn-sm force-delete-appointment"
+                            data-bs-toggle="tooltip" title="Delete Appointment"
                             data-id="{{ $appointment->id }}">
                         <i class="fa fa-times"></i>
                     </button>

@@ -367,7 +367,7 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
     Route::get('/profile/patient/{id}',[ClinicManagerPatientController::class , 'profilePatient'])->name('clinic.profile_patient');
     Route::get('/edit/patient/{id}' ,[ClinicManagerPatientController::class , 'editPatient'])->name('clinic.edit_patient');
     Route::put('/update/patient/{id}' ,[ClinicManagerPatientController::class , 'updatePatient'])->name('clinic.update_patient');
-    // Route::delete('/delete/patient/{id}' ,[ClinicManagerPatientController::class , 'deletePatient'])->name('clinic.delete_patient');
+    Route::delete('/delete/patient/{id}' ,[ClinicManagerPatientController::class , 'deletePatient'])->name('clinic.delete_patient');
 
 
     //Appointment
@@ -684,6 +684,7 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
     //Appointment
     Route::get('/view/appointments' ,[AccountantAppointmentController::class , 'viewAppointments'])->name('accountant.view_appointments');
     Route::get('/search/appointments',[AccountantAppointmentController::class , 'searchAppointments'])->name('accountant.search_appointments');
+    Route::get('/details/appointment/{id}',[AccountantAppointmentController::class , 'detailsAppointment'])->name('accountant.details_appointment');
 
 
 

@@ -142,8 +142,18 @@
                 <div class="dash-widget">
                     <span class="dash-widget-bg2" style="background-color: #8B4513;"><i class="fas fa-file-invoice-dollar"></i></span>
                     <div class="text-right dash-widget-info">
-                        <h3>{{ $invoices_count }}</h3>
-                        <span class="widget-title2" style="background-color: #8B4513;">Invoices <i class="fa fa-check" aria-hidden="true"></i></span>
+                        <h3>{{ $issued_invoices_count }}</h3>
+                        <span class="widget-title2" style="background-color: #8B4513;">Issued Invoices <i class="fa fa-check" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <span class="dash-widget-bg2" style="background-color: #53138b;"><i class="fas fa-file-invoice-dollar"></i></span>
+                    <div class="text-right dash-widget-info">
+                        <h3>{{ $cancelled_invoices_count }}</h3>
+                        <span class="widget-title2" style="background-color: #53138b;">Cancelled Invoices <i class="fa fa-check" aria-hidden="true"></i></span>
                     </div>
                 </div>
             </div>

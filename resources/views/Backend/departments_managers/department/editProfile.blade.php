@@ -41,7 +41,7 @@
 
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <form method="POST" action="{{ route('update_depratment_profile', ['id' => $department->id]) }}">
+                <form method="POST" action="{{ route('update_depratment_profile', ['id' => $clinicDepartment->id]) }}">
                     @csrf
                     @method('PUT')
 
@@ -55,7 +55,7 @@
                                         <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
                                     <input type="text" class="form-control" id="name" name="name" readonly
-                                        value="{{ $department->name }}">
+                                        value="{{ $clinicDepartment->department->name }}">
                                 </div>
                             </div>
                         </div>
@@ -66,17 +66,17 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Department Description</label>
-                                <textarea id="description" name="description" class="form-control" rows="4" placeholder="Write a short description about the department...">{{ old('description', $department->description ?? '') }}</textarea>
+                                <textarea id="description" name="description" class="form-control" rows="4" placeholder="Write a short description about the department...">{{ old('description', $clinicDepartment->description ?? '') }}</textarea>
                             </div>
 
                             <div class="form-group" style="margin-top: 10px;">
                                 <label class="display-block">Status</label>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" id="department_active" value="active" {{ old('status', $department->status) === 'active' ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="status" id="department_active" value="active" {{ old('status', $clinicDepartment->status) === 'active' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="department_active">Active</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="status" id="department_inactive" value="inactive" {{ old('status', $department->status) === 'inactive' ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="status" id="department_inactive" value="inactive" {{ old('status', $clinicDepartment->status) === 'inactive' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="department_inactive">Inactive</label>
                                 </div>
                             </div>
@@ -109,9 +109,9 @@
 
 
                 // هذا الكود يفحص إذا صار تعديل أم لا
-                let originalName = "{{ $department->name }}";
-                let originalDescription = "{{ $department->description }}";
-                let originalStatus = "{{ $department->status }}";
+                let originalName = "{{ $clinicDepartment->department->name }}";
+                let originalDescription = "{{ $clinicDepartment->description }}";
+                let originalStatus = "{{ $clinicDepartment->status }}";
 
                 if (name === originalName &&
                     description === originalDescription &&
@@ -128,7 +128,7 @@
 
                 $.ajax({
                     method: 'POST',
-                    url: "{{ route('update_depratment_profile', ['id' => $department->id]) }}",
+                    url: "{{ route('update_depratment_profile', ['id' => $clinicDepartment->id]) }}",
                     data: {
                          _method: 'PUT',
                         name: name,
@@ -139,7 +139,15 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
-                        if (response.data == 1) {
+                        if (response.data == 0) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'This department is disabled by the system administrator',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Department has been updated successfully',

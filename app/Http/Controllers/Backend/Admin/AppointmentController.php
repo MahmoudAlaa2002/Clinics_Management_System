@@ -27,9 +27,10 @@ class AppointmentController extends Controller{
 
 
     public function storeAppointment(Request $request){
-        $selectedDay = $request->appointment_day;
+        $selectedDay  = $request->appointment_day;
         $selectedTime = $request->appointment_time;
 
+        // حساب تاريخ الموعد
         $appointmentDate = Carbon::parse("this $selectedDay");
 
         if ($appointmentDate->isToday()) {
@@ -43,7 +44,7 @@ class AppointmentController extends Controller{
 
         $appointmentDate = $appointmentDate->toDateString();
 
-        //  أولاً: نحضر رقم العلاقة من جدول الوصلة
+        // جلب clinic_department_id
         $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)
             ->where('department_id', $request->department_id)
             ->value('id');
@@ -52,42 +53,66 @@ class AppointmentController extends Controller{
             return response()->json(['error' => 'Clinic-Department relation not found'], 400);
         }
 
-        // تحقق من وجود موعد سابق لنفس المريض والدكتور والقسم
-        $exists = Appointment::where('patient_id', $request->patient_id)
+        /**
+        * 1️⃣ نفس الموعد تمامًا
+        */
+        $sameAppointment = Appointment::where('patient_id', $request->patient_id)
             ->where('doctor_id', $request->doctor_id)
             ->where('clinic_department_id', $clinicDepartmentId)
             ->where('date', $appointmentDate)
-            ->where('time', $request->appointment_time)
+            ->where('time', $selectedTime)
+            ->whereNotIn('status', ['Cancelled', 'Rejected'])
             ->exists();
 
-        if ($exists) {
-            return response()->json(['data' => 0]); // المريض عنده نفس الموعد
+        if ($sameAppointment) {
+            return response()->json(['data' => 0]);
         }
 
-        // تحقق من وجود تعارض مع مريض آخر عند نفس الدكتور
-        $conflict = Appointment::where('doctor_id', $request->doctor_id)
+        /**
+        * 2️⃣ المريض مشغول بنفس الوقت (أي دكتور)
+        */
+        $patientBusy = Appointment::where('patient_id', $request->patient_id)
             ->where('date', $appointmentDate)
-            ->where('time', $request->appointment_time)
+            ->where('time', $selectedTime)
+            ->whereNotIn('status', ['Cancelled', 'Rejected'])
             ->exists();
 
-        if ($conflict) {
-            return response()->json(['data' => 1]); // الموعد محجوز
+        if ($patientBusy) {
+            return response()->json(['data' => 3]);
         }
 
-        $anotherAppointment = Appointment::where('patient_id', $request->patient_id)
+        /**
+        * 3️⃣ تعارض عند الطبيب
+        */
+        $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
             ->where('date', $appointmentDate)
-            ->where('time', $request->appointment_time)
-            ->where('clinic_department_id', '!=', $clinicDepartmentId)
+            ->where('time', $selectedTime)
+            ->whereNotIn('status', ['Cancelled', 'Rejected'])
             ->exists();
 
-        if ($anotherAppointment) {
-            return response()->json(['data' => 3]); // لديه موعد في عيادة أخرى أو قسم آخر بنفس الوقت
+        if ($doctorConflict) {
+            return response()->json(['data' => 1]);
         }
 
-        $consultation_fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
+        /**
+        * 4️⃣ جلب رسوم الكشف
+        */
+        $consultation_fee = Doctor::where('id', $request->doctor_id)
+            ->value('consultation_fee');
 
-        $clinicId = Doctor::where('id', $request->doctor_id)->with('employee')->first()->employee->clinic_id;
-        $linked = ClinicPatient::where('clinic_id', $clinicId)->where('patient_id', $request->patient_id)->exists();
+        /**
+        * 5️⃣ ربط المريض بالعيادة إن لم يكن مرتبطًا
+        */
+        $clinicId = Doctor::where('id', $request->doctor_id)
+            ->with('employee')
+            ->first()
+            ->employee
+            ->clinic_id;
+
+        $linked = ClinicPatient::where('clinic_id', $clinicId)
+            ->where('patient_id', $request->patient_id)
+            ->exists();
+
         if (!$linked) {
             ClinicPatient::create([
                 'clinic_id'  => $clinicId,
@@ -95,29 +120,39 @@ class AppointmentController extends Controller{
             ]);
         }
 
+        /**
+        * 6️⃣ إنشاء الموعد
+        */
         $appointment = Appointment::create([
-            'patient_id'            => $request->patient_id,
-            'doctor_id'             => $request->doctor_id,
-            'clinic_department_id'  => $clinicDepartmentId,
-            'date'                  => $appointmentDate,
-            'time'                  => $request->appointment_time,
-            'consultation_fee'      => $consultation_fee,
-            'notes'                 => $request->notes,
-            'status'                => 'Accepted',
+            'patient_id'           => $request->patient_id,
+            'doctor_id'            => $request->doctor_id,
+            'clinic_department_id' => $clinicDepartmentId,
+            'date'                 => $appointmentDate,
+            'time'                 => $selectedTime,
+            'consultation_fee'     => $consultation_fee,
+            'notes'                => $request->notes,
+            'status'               => 'Accepted',
         ]);
 
-        $invoice = Invoice::create([
-            'appointment_id'  => $appointment->id,
-            'patient_id'      => $request->patient_id,
-            'total_amount'    => $consultation_fee,
-            'paid_amount'     => 0,
-            'payment_method'  => 'None',
-            'payment_status'  => 'Unpaid',
-            'invoice_date'    => now()->toDateString(),
+        /**
+        * 7️⃣ إنشاء الفاتورة (غير مدفوعة)
+        */
+        Invoice::create([
+            'appointment_id' => $appointment->id,
+            'patient_id'     => $request->patient_id,
+            'total_amount'   => $consultation_fee,
+            'paid_amount'    => 0,
+            'payment_method' => 'None',
+            'payment_status' => 'Unpaid',
+            'invoice_date'   => now()->toDateString(),
         ]);
 
-        return response()->json(['data' => 4]); // تم الحجز بنجاح
+        /**
+        * 8️⃣ نجاح
+        */
+        return response()->json(['data' => 4]);
     }
+
 
 
 
@@ -226,20 +261,90 @@ class AppointmentController extends Controller{
 
 
     public function updateAppointment(Request $request, $id){
-        $selectedDay = $request->appointment_day;
+        $appointment = Appointment::findOrFail($id);
+
+        $selectedDay  = $request->appointment_day;
         $selectedTime = $request->appointment_time;
 
+        // حساب تاريخ الموعد
         $appointmentDate = Carbon::parse("this $selectedDay");
-        if ($appointmentDate->isPast()) {
+
+        if ($appointmentDate->isToday()) {
+            $selectedDateTime = Carbon::parse($appointmentDate->toDateString() . ' ' . $selectedTime);
+            if ($selectedDateTime->lt(Carbon::now())) {
+                return response()->json(['data' => 2]); // الوقت انتهى
+            }
+        } elseif ($appointmentDate->isPast()) {
             $appointmentDate = Carbon::parse("next $selectedDay");
         }
+
         $appointmentDate = $appointmentDate->toDateString();
 
-        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)->where('department_id', $request->department_id)->value('id');
+        // جلب clinic_department_id
+        $clinicDepartmentId = ClinicDepartment::where('clinic_id', $request->clinic_id)
+            ->where('department_id', $request->department_id)
+            ->value('id');
 
-        $clinicId = Doctor::where('id', $request->doctor_id)->with('employee')->first()->employee->clinic_id;
+        if (!$clinicDepartmentId) {
+            return response()->json(['error' => 'Clinic-Department relation not found'], 400);
+        }
 
-        $linked = ClinicPatient::where('clinic_id', $clinicId)->where('patient_id', $request->patient_id)->exists();
+        /**
+         * 1️⃣ نفس الموعد تمامًا (استثناء الموعد الحالي)
+         */
+        $sameAppointment = Appointment::where('patient_id', $request->patient_id)
+            ->where('doctor_id', $request->doctor_id)
+            ->where('clinic_department_id', $clinicDepartmentId)
+            ->where('date', $appointmentDate)
+            ->where('time', $selectedTime)
+            ->whereNotIn('status', ['Cancelled', 'Rejected'])
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($sameAppointment) {
+            return response()->json(['data' => 0]);
+        }
+
+        /**
+         * 2️⃣ المريض مشغول بنفس الوقت (أي دكتور)
+         */
+        $patientBusy = Appointment::where('patient_id', $request->patient_id)
+            ->where('date', $appointmentDate)
+            ->where('time', $selectedTime)
+            ->whereNotIn('status', ['Cancelled', 'Rejected'])
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($patientBusy) {
+            return response()->json(['data' => 3]);
+        }
+
+        /**
+         * 3️⃣ تعارض عند الطبيب
+         */
+        $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
+            ->where('date', $appointmentDate)
+            ->where('time', $selectedTime)
+            ->whereNotIn('status', ['Cancelled', 'Rejected'])
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($doctorConflict) {
+            return response()->json(['data' => 1]);
+        }
+
+        /**
+         * 4️⃣ ربط المريض بالعيادة إن لم يكن مرتبطًا
+         */
+        $clinicId = Doctor::where('id', $request->doctor_id)
+            ->with('employee')
+            ->first()
+            ->employee
+            ->clinic_id;
+
+        $linked = ClinicPatient::where('clinic_id', $clinicId)
+            ->where('patient_id', $request->patient_id)
+            ->exists();
 
         if (!$linked) {
             ClinicPatient::create([
@@ -248,60 +353,25 @@ class AppointmentController extends Controller{
             ]);
         }
 
-        // 0️⃣ نفس الموعد موجود للمريض والدكتور
-        $exists = Appointment::where('patient_id', $request->patient_id)
-            ->where('doctor_id', $request->doctor_id)
-            ->where('clinic_department_id', $clinicDepartmentId)
-            ->where('date', $appointmentDate)
-            ->where('time', $selectedTime)
-            ->where('id', '!=', $id)
-            ->exists();
-
-        if ($exists) {
-            return response()->json(['data' => 0]);
-        }
-
-        // 1️⃣ تعارض مع دكتور بنفس الوقت
-        $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
-            ->where('date', $appointmentDate)
-            ->where('time', $selectedTime)
-            ->where('id', '!=', $id)
-            ->exists();
-
-        if ($doctorConflict) {
-            return response()->json(['data' => 1]);
-        }
-
-        // 2️⃣ موعد آخر في عيادة أخرى
-        $anotherClinic = Appointment::where('patient_id', $request->patient_id)
-            ->where('date', $appointmentDate)
-            ->where('time', $selectedTime)
-            ->where('clinic_department_id', '!=', $clinicDepartmentId)
-            ->where('id', '!=', $id)
-            ->exists();
-
-        if ($anotherClinic) {
-            return response()->json(['data' => 2]);
-        }
-
-        // 3️⃣ الموعد في الماضي
-        if (Carbon::parse("$appointmentDate $selectedTime")->isPast()) {
-            return response()->json(['data' => 3]);
-        }
-
-        // 4️⃣ تحديث ناجح
-        Appointment::findOrFail($id)->update([
-            'patient_id' => $request->patient_id,
-            'doctor_id' => $request->doctor_id,
+        /**
+         * 5️⃣ تحديث الموعد
+         */
+        $appointment->update([
+            'patient_id'           => $request->patient_id,
+            'doctor_id'            => $request->doctor_id,
             'clinic_department_id' => $clinicDepartmentId,
-            'date' => $appointmentDate,
-            'time' => $selectedTime,
-            'notes' => $request->notes,
-            'status'=> 'Accepted',
+            'date'                 => $appointmentDate,
+            'time'                 => $selectedTime,
+            'notes'                => $request->notes,
+            'status'               => $request->status ?? 'Accepted',
         ]);
 
+        /**
+         * 6️⃣ نجاح
+         */
         return response()->json(['data' => 4]);
     }
+
 
 
 
@@ -330,7 +400,7 @@ class AppointmentController extends Controller{
     public function trash(){
         $appointments = Appointment::whereNotNull('admin_deleted_at')
             ->with(['patient', 'doctor', 'invoice'])
-            ->orderBy('admin_deleted_at', 'desc')
+            ->orderBy('admin_deleted_at', 'asc')
             ->paginate(50);
 
         return view('Backend.admin.appointments.trash.view', compact('appointments'));

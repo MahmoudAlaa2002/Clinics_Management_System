@@ -107,25 +107,13 @@
                                     </div>
                                 </div>
 
-
-                                <div class="col-sm-6">
-                                    <label>Refund Date <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-calendar-day"></i></span>
-                                        </div>
-                                        <input type="date" class="form-control" id="refund_date" name="refund_date"
-                                               value="{{ $invoice->refund_date }}">
-                                    </div>
-                                </div>
-
                                 <div class="col-sm-6">
                                     <label>Payment Method</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" id="payment_method" name="payment_method" value="None" readonly>
+                                        <input type="text" class="form-control" id="payment_method" name="payment_method" value="{{ $invoice->payment_method }}" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -133,11 +121,33 @@
                     </div>
 
                     <div class="card">
-                        <div class="card-header">Notes</div>
+                        <div class="card-header">
+                            Refund Confirmation
+                        </div>
+
                         <div class="card-body">
-                            <textarea id="notes" name="notes" class="form-control" rows="4">{{ old('notes', $invoice->notes) }}</textarea>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label>Refund Date <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-calendar-day"></i>
+                                            </span>
+                                        </div>
+                                        <input type="date" class="form-control" id="refund_date" name="refund_date" value="{{ $invoice->refund_date }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mt-3">
+                                    <label>Notes</label>
+                                    <textarea id="notes" name="notes" class="form-control" rows="4" placeholder="Write any notes about the refund (optional)...">{{ old('notes', $invoice->notes) }}</textarea>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
+
 
 
 
@@ -197,7 +207,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: 'POST',
-            url: "{{ route('accountant.update_cancelled_invoice', ['id' => $invoice->id]) }}",
+            url: "{{ route('accountant.update_refund_confirm', ['id' => $invoice->id]) }}",
             data: formData,
             processData: false,
             contentType: false,

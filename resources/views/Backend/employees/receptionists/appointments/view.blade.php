@@ -37,6 +37,15 @@
         display: none;
     }
 
+    .custom-table tbody tr {
+        transition: filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        filter: brightness(90%);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+    }
 
 </style>
 
@@ -85,7 +94,7 @@
             </div>
         </div>
 
-        <div class="mb-4" style="margin-top: 10px;">
+        {{-- <div class="mb-4" style="margin-top: 10px;">
             <h5 style="font-weight: 500; color: #444;">
                 Clinic:
                 <span style="font-weight: 700; color: #000;">
@@ -99,7 +108,7 @@
                     {{ $departmentName }}
                 </span>
             </h5>
-        </div>
+        </div> --}}
 
 
         <!-- Table -->
@@ -109,7 +118,7 @@
                     <table class="table mb-0 text-center table-bordered table-striped custom-table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Patient Name</th>
                                 <th>Doctor Name</th>
                                 <th>Appointment Date</th>
@@ -144,6 +153,7 @@
     // ================================
     $(document).ready(function () {
 
+        initTooltips();
         let lastAppointmentKeyword = '';
 
         function fetchAppointments(url = "{{ route('receptionist.search_appointments') }}") {
@@ -171,6 +181,7 @@
 
                 success: function (response) {
                     $tableBody.html(response.html);
+                    initTooltips();
 
                     if (response.searching) {
                         if (response.count > 50) {

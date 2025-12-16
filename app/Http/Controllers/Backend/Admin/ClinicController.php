@@ -96,6 +96,8 @@ class ClinicController extends Controller{
 
 
 
+
+
     public function detailsClinic($id){
         $clinic = Clinic::findOrFail($id);
         $clinic_manager = Employee::where('clinic_id', $clinic->id)->where('job_title', 'Clinic Manager')->first();

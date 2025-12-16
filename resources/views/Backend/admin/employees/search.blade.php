@@ -23,9 +23,9 @@
                                 <td>{{ $employee->user->phone ?? '-' }}</td>
                                 <td class="action-btns">
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('profile_employee', ['id' => $employee->id]) }}" class="mr-1 btn btn-outline-success btn-sm"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('edit_employee', ['id' => $employee->id]) }}" class="mr-1 btn btn-outline-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                        <button class="btn btn-outline-danger btn-sm delete-employee" data-id="{{ $employee->id }}"><i class="fa fa-trash"></i></button>
+                                        <a href="{{ route('profile_employee', ['id' => $employee->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Profile Employee"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ route('edit_employee', ['id' => $employee->id]) }}" class="mr-1 btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Edit Employee"><i class="fa fa-edit"></i></a>
+                                        <button class="btn btn-outline-danger btn-sm delete-employee" data-id="{{ $employee->id }}"><i class="fa fa-trash" data-bs-toggle="tooltip" title="Delete Employee"></i></button>
                                     </div>
                                 </td>
                             </tr>
