@@ -95,6 +95,9 @@
                                 <th>Time</th>
                                 <th>Status</th>
                                 <th>Action</th>
+                                @if(request('date') === 'today')
+                                    <th>Vital Signs</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -146,6 +149,7 @@
                                                     class="mr-1 btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-file-medical"></i> Records
                                                 </a>
+
                                                 @if ($appointment->status === 'Pending')
                                                     <form action="{{ route('doctor_confirm_appointment', $appointment) }}"
                                                         method="POST" class="d-inline">
@@ -179,6 +183,23 @@
                                                 @endif
                                             </div>
                                         </td>
+                                        @if(request('date') === 'today')
+                                            <td>
+                                                @if(optional($appointment->vitalSign)->id)
+                                                    <a href="{{ route('doctor.vital_signs_show', $appointment->vitalSign->id) }}"
+                                                    class="btn btn-sm btn-success">
+                                                        <i class="fas fa-heartbeat"></i> View
+                                                    </a>
+                                                @else
+                                                    <span class="badge badge-secondary" style="font-size:14px;">
+                                                        Not Recorded Yet
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        @endif
+
+
+
                                     </tr>
                                 @endforeach
                             @else

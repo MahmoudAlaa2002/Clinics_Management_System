@@ -123,6 +123,7 @@
 
     .btn-back:hover {
         background: #0288d1;
+        color: white;
     }
 
     .btn-print {
@@ -131,6 +132,7 @@
 
     .btn-print:hover {
         background: #059669;
+        color: white;
     }
 
 </style>

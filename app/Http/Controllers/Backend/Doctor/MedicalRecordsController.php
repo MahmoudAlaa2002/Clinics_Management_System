@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Backend\Doctor;
 
-use App\Http\Controllers\Controller;
-use App\Models\MedicalRecord;
-use App\Models\Appointment;
 use App\Models\Patient;
+use App\Models\Employee;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Models\MedicalRecord;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\employee\nurse\AppointmentCompletedNotification;
 
 class MedicalRecordsController extends Controller
 {
@@ -96,6 +99,8 @@ class MedicalRecordsController extends Controller
             ->whereDate('date', '<=', now())
             ->firstOrFail();
 
+            
+
         if ($appointment->medicalRecord) {
             return back()->with('error', 'A medical record already exists for this appointment.');
         }
@@ -115,7 +120,17 @@ class MedicalRecordsController extends Controller
 
             $appointment->update(['status' => 'Completed']);
 
-            MedicalRecord::create($validated);
+            $medicalRecord = MedicalRecord::create($validated);
+
+            $vitalSigns = $appointment->vitalSign;
+
+            if ($vitalSigns && $vitalSigns->nurse_id) {
+                $nurseUser = Employee::where('id', $vitalSigns->nurse_id)->with('user')->first()?->user;
+
+                if ($nurseUser) {
+                    Notification::send(collect([$nurseUser]),new AppointmentCompletedNotification($appointment , $medicalRecord , $appointment->patient->user->name));
+                }
+            }
 
             DB::commit();
 

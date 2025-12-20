@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Admin;
 
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Invoice;
@@ -14,6 +15,9 @@ use Illuminate\Http\Request;
 use App\Models\ClinicPatient;
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\employee\accountant\NewInvoiceNotification;
+use App\Notifications\employee\receptionist\AppointmentBookedByAdmin;
 
 class AppointmentController extends Controller{
 
@@ -137,7 +141,7 @@ class AppointmentController extends Controller{
         /**
         * 7️⃣ إنشاء الفاتورة (غير مدفوعة)
         */
-        Invoice::create([
+        $invoice = Invoice::create([
             'appointment_id' => $appointment->id,
             'patient_id'     => $request->patient_id,
             'total_amount'   => $consultation_fee,
@@ -146,6 +150,30 @@ class AppointmentController extends Controller{
             'payment_status' => 'Unpaid',
             'invoice_date'   => now()->toDateString(),
         ]);
+
+
+        $accountant = User::where('role', 'employee')
+            ->whereHas('employee', function ($q) use ($clinicId) {
+                $q->where('clinic_id', $clinicId)
+                ->where('job_title', 'Accountant');
+            })->first();
+
+        if ($accountant) {
+            Notification::send(collect([$accountant]),new NewInvoiceNotification($invoice,$appointment->patient->user->name));
+        }
+
+
+        $receptionist = User::where('role', 'employee')
+            ->whereHas('employee', function ($q) use ($clinicId, $request) {
+                $q->where('clinic_id', $clinicId)
+                ->where('department_id', $request->department_id)
+                ->where('job_title', 'Receptionist');
+            })
+            ->first();
+
+        if ($receptionist) {
+            Notification::send(collect([$receptionist]),new AppointmentBookedByAdmin($appointment,$appointment->patient->user->name));
+        }
 
         /**
         * 8️⃣ نجاح

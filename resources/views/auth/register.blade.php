@@ -3,191 +3,302 @@
 @section('title' , 'Register')
 
 @section('content')
-    <link href="{{ asset('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f4f7fe;
-        }
-        .register-container {
-            margin-top: 60px;
-        }
-        .card {
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-        .clinic-title {
-            font-weight: bold;
-            font-size: 24px;
-            color: #007bff;
-        }
-    </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<body>
-    <div class="container mb-5 register-container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="mb-4 text-center">
-                    <h2 class="clinic-title">Create New Account <i class="fa fa-user-plus me-2"></i></h2>
-                </div>
-                <div class="p-4 card">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+<style>
+    body {
+        background-color: #f4f7fe;
+    }
+    .register-container {
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+    .card {
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    .card-title {
+        font-weight: bold;
+        font-size: 18px;
+        color: #007BFF;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-primary {
+        background-color: #007BFF;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .required {
+        color: #dc3545;
+        font-weight: bold;
+    }
 
-                        <div class="account-logo" style="text-align: center;">
-                            <img src="{{asset('assets/img/logo-dark.png')}}" width="50px" height="50px" alt="">
+    /* ===== Gender Style ===== */
+    .gender-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 6px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        height: 38px;
+    }
+    .gender-wrapper label {
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container register-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="mb-4 text-center">
+                <h2 class="fw-bold text-primary">
+                    Create New Patient Account <i class="fa fa-user-plus"></i>
+                </h2>
+            </div>
+
+            {{-- ================= BASIC INFORMATION ================= --}}
+            <div class="p-4 card">
+                <h5 class="mb-4 card-title">
+                    <i class="fa fa-user"></i> Basic Information
+                </h5>
+
+                <div class="row g-4">
+
+                    {{-- Full Name --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Full Name <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            <input type="text" id="name" class="form-control">
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="name" class="form-label fw-bold">Full Name</label>
-                            <div class="input-group">
-                              <span class="input-group-text text-muted">
-                                <i class="fa fa-user"></i>
-                              </span>
-                              <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name">
+                    {{-- Date of Birth --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Date Of Birth <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar-days"></i></span>
+                            <input type="date" id="date_of_birth" class="form-control">
+                        </div>
+                    </div>
+
+                    {{-- Phone --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Phone <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                            <input type="text" id="phone" class="form-control">
+                        </div>
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Email <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            <input type="email" id="email" class="form-control">
+                        </div>
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Password <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            <input type="password" id="password" class="form-control">
+                        </div>
+                    </div>
+
+                    {{-- Confirm Password --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Confirm Password <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
+                            <input type="password" id="password_confirmation" class="form-control">
+                        </div>
+                    </div>
+
+                    {{-- Address --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Address <span class="required">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-location-dot"></i></span>
+                            <input type="text" id="address" class="form-control">
+                        </div>
+                    </div>
+
+
+                    {{-- Gender --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Gender <span class="required">*</span></label>
+                        <div class="gender-wrapper">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="male">
+                                <label class="form-check-label">
+                                    <i class="fa fa-mars"></i> Male
+                                </label>
                             </div>
-                          </div>
-
-                          <div class="mb-4">
-                            <label for="email" class="form-label fw-bold">Email</label>
-                            <div class="input-group">
-                              <span class="input-group-text text-muted">
-                                <i class="fa fa-envelope"></i>
-                              </span>
-                              <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="female">
+                                <label class="form-check-label">
+                                    <i class="fa fa-venus"></i> Female
+                                </label>
                             </div>
-                          </div>
+                        </div>
+                    </div>
 
-
-                          <div class="mb-4">
-                            <label for="password" class="form-label fw-bold">Password</label>
-                            <div class="input-group">
-                              <span class="input-group-text text-muted">
-                                <i class="fa fa-lock"></i>
-                              </span>
-                              <input type="password" class="form-control" id="password" name="password" placeholder="Enter a password">
-                            </div>
-                          </div>
-
-
-                          <div class="mb-4">
-                            <label for="password_confirmation" class="form-label fw-bold">Confirm Password</label>
-                            <div class="input-group">
-                              <span class="input-group-text text-muted">
-                                <i class="fa fa-check-circle"></i>
-                              </span>
-                              <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password">
-                            </div>
-                          </div>
-
-
-                          <div class="mb-4">
-                            <label for="phone" class="form-label fw-bold">Phone</label>
-                            <div class="input-group">
-                              <span class="input-group-text text-muted">
-                                <i class="fa fa-phone"></i>
-                              </span>
-                              <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
-                            </div>
-                          </div>
-
-                        <button type="submit" class="btn btn-primary w-100 newAccount">Register</button>
-                    </form>
-                </div>
-                <div class="mt-3 text-center">
-                    <small>Already have an account? <a href="{{ route('login') }}">Login here</a></small>
                 </div>
             </div>
+
+            {{-- ================= MEDICAL INFORMATION ================= --}}
+            <div class="p-4 card">
+                <h5 class="mb-4 card-title">
+                    <i class="fa fa-notes-medical"></i> Medical Information
+                </h5>
+
+                <div class="row g-4">
+
+                    {{-- Blood Type --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Blood Type <span class="required">*</span></label>
+                        <select id="blood_type" class="form-control">
+                            <option value="" disabled selected hidden>Select Blood Type</option>
+                            <option>A+</option><option>A-</option>
+                            <option>B+</option><option>B-</option>
+                            <option>AB+</option><option>AB-</option>
+                            <option>O+</option><option>O-</option>
+                        </select>
+                    </div>
+
+                    {{-- Emergency Contact --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Emergency Contact <span class="required">*</span></label>
+                        <input type="text" id="emergency_contact" class="form-control">
+                    </div>
+
+                    {{-- Allergies --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Allergies</label>
+                        <textarea id="allergies" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    {{-- Chronic Diseases --}}
+                    <div class="col-md-6">
+                        <label class="fw-bold">Chronic Diseases</label>
+                        <textarea id="chronic_diseases" class="form-control" rows="2"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 registerBtn">
+                Create Account
+            </button>
+
+            <div class="mt-3 text-center">
+                <small>Already have an account?
+                    <a href="{{ route('login') }}">Login here</a>
+                </small>
+            </div>
+
         </div>
     </div>
-</body>
-
+</div>
 @endsection
-
-
 
 @section('js')
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $(document).ready(function(){
-        $('.newAccount').click(function(e){
-            e.preventDefault();
+$(document).ready(function () {
 
-            let name = $('#name').val();
-            let email = $('#email').val();
-            let password = $('#password').val();
-            let password_confirmation = $('#password_confirmation').val();
-            let phone = $('#phone').val();
+    $('.registerBtn').click(function () {
 
-            if (name == '' || email == '' || password == '' || password_confirmation == '' || phone == '') {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Please fill in all required fields',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                });
-            } else if (password !== password_confirmation) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'The Password And Confirmation Password Do Not Match',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                });
-            } else {
-                $.ajax({
-                    method: 'post',
-                    url: "{{ route('register') }}",
-                    data: {
-                        name: name,
-                        email: email,
-                        password: password,
-                        phone:phone
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
+        let gender = $('input[name="gender"]:checked').val();
 
-                        if(response.data == 0){
-                            Swal.fire({
-                            title: 'Warning!',
-                            text: 'Sorry , This Email Already Exists',
-                            icon: 'warning',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                        }else if(response.data == 1){
-                            let userId = response.user_id;
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Account Has Been Created Successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => {
-                                window.location.href = '/patient/dashboard/' + userId;
-                            });
-                        }
-                    },
-                });
+        let data = {
+            name: $('#name').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            password_confirmation: $('#password_confirmation').val(),
+            phone: $('#phone').val(),
+            address: $('#address').val(),
+            date_of_birth: $('#date_of_birth').val(),
+            gender: gender,
+            blood_type: $('#blood_type').val(),
+            emergency_contact: $('#emergency_contact').val(),
+            allergies: $('#allergies').val(),
+            chronic_diseases: $('#chronic_diseases').val(),
+            _token: "{{ csrf_token() }}"
+        };
+
+        // ===== Required Fields Validation =====
+        if (
+            !data.name ||
+            !data.email ||
+            !data.password ||
+            !data.password_confirmation ||
+            !data.phone ||
+            !data.address ||
+            !data.date_of_birth ||
+            !data.gender ||
+            !data.blood_type ||
+            !data.emergency_contact
+        ) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please fill in all required fields',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
+        if (data.password !== data.password_confirmation) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Passwords do not match',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
+        $.ajax({
+            method: 'POST',
+            url: "{{ route('register') }}",
+            data: data,
+            success: function (response) {
+
+                if (response.data == 0) {
+                    Swal.fire({
+                        title: 'Warning',
+                        text: 'Email already exists',
+                        icon: 'warning',
+                        confirmButtonColor: '#007BFF'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Patient account has been created successfully',
+                        icon: 'success',
+                        confirmButtonColor: '#007BFF'
+                    }).then(() => {
+                        window.location.href = '/patient/dashboard/' + response.user_id;
+                    });
+                }
             }
         });
+
     });
+
+});
 </script>
 @endsection
-
-
-

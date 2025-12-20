@@ -302,6 +302,10 @@
 
         let paid = $("#paid_amount").val();
         let method = $("#payment_method").val();
+        let consultationFee = parseFloat(
+            $("#consultation_fee").val().replace('$', '').trim()
+        );
+
 
         if (paid === "" || paid < 0 || method === "" || method === null) {
             Swal.fire({
@@ -313,11 +317,22 @@
             return;
         }
 
+        if (paid > consultationFee) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Payment Amount',
+                text: 'Paid amount cannot exceed the consultation fee',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
         if (paid > 0 && method === "None") {
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Payment Method',
-                text: 'You cannot choose "None" when a payment amount is entered.',
+                text: 'You cannot choose "None" when a payment amount is entered',
+                confirmButtonColor: '#007BFF'
             });
             return;
         }

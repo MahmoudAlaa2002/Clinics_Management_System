@@ -10,6 +10,9 @@ use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\Admin\PatientAddedByClinicManager;
+
 
 class PatientController extends Controller{
 
@@ -87,6 +90,12 @@ class PatientController extends Controller{
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $admin = User::where('role', 'admin')->get();
+        $clinicManagerName = Auth::user()->employee->user->name;
+        $clinicName = Auth::user()->employee->clinic->name;
+        Notification::send($admin,new PatientAddedByClinicManager($patient, $clinicManagerName, $clinicName));
+
 
         return response()->json(['data' => 2]);  // تمت الإضافة بنجاح
     }

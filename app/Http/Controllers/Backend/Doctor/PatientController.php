@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\VitalSign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,4 +35,5 @@ class PatientController extends Controller
 
         return view('Backend.doctors.patients.show', compact('patient'));
     }
+
 }

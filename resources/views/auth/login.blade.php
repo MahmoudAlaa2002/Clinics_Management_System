@@ -70,7 +70,7 @@
                                     <input type="checkbox" class="form-check-input" id="remember" name="remember">
                                     <label class="form-check-label" for="remember">Remember Me</label>
                                 </div>
-                                <a href="#" class="text-decoration-none">Forgot Password?</a>
+                                <a href="{{ route('password_request') }}" class="text-decoration-none">Forgot Password?</a>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 loginBtn">Login</button>
@@ -82,7 +82,7 @@
                         </form>
                     </div>
                     <div class="mt-3 text-center">
-                        <small>&copy; {{ date('Y') }} Clinic System</small>
+                        <small>&copy; {{ date('Y') }} Clinics Management System</small>
                     </div>
                 </div>
             </div>
@@ -97,8 +97,10 @@
     $(document).ready(function () {
         $('.loginBtn').click(function (e) {
             e.preventDefault();
+
             let email = $('#email').val();
             let password = $('#password').val();
+            let remember = $('#remember').is(':checked');
 
 
             // ميثود لإظهار شاشة الخطأ في حال لم توجد قيمة للايميل أو الباسوورد
@@ -116,7 +118,8 @@
                     url: "{{ route('user_login') }}",
                     data: {
                         email: email,
-                        password: password
+                        password: password,
+                        remember: remember
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

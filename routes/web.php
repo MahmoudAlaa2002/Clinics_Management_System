@@ -3,93 +3,120 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-use App\Http\Controllers\Backend\Shared\CommonDoctorController;
 use App\Http\Controllers\Backend\Shared\CommonClinicController;
-
-use App\Http\Controllers\Backend\Admin\ChartController as AdminChartController;
-use App\Http\Controllers\Backend\Admin\ClinicController as AdminClinicController;
-use App\Http\Controllers\Backend\Admin\DoctorController as AdminDoctorController;
-use App\Http\Controllers\Backend\Admin\InvoiceController as AdminInvoiceController;
-use App\Http\Controllers\Backend\Admin\PatientController as AdminPatientController;
-use App\Http\Controllers\Backend\Admin\EmployeeController as AdminEmployeeController;
-use App\Http\Controllers\Backend\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Backend\Admin\DepartmentController as AdminDepartmentController;
-use App\Http\Controllers\Backend\Admin\AppointmentController as AdminAppointmentController;
-use App\Http\Controllers\Backend\Admin\NotificationController as AdminNotificationController;
-use App\Http\Controllers\Backend\Admin\MedicalRecordController as AdminMedicalRecordController;
-use App\Http\Controllers\Backend\Admin\AnalyticController as AdminAnalyticController;
-use App\Http\Controllers\Backend\Admin\Report\PatientController as AdminReportPatientController;
-use App\Http\Controllers\Backend\Admin\Report\EmployeeController as AdminReportEmployeeController;
-use App\Http\Controllers\Backend\Admin\Report\DoctorController as AdminReportDoctorController;
-use App\Http\Controllers\Backend\Admin\Report\AppointmentController as AdminReportAppointmentController;
-use App\Http\Controllers\Backend\Admin\Report\InvoiceController as AdminReportInvoiceController;
+use App\Http\Controllers\Backend\Shared\CommonDoctorController;
+use App\Http\Controllers\Backend\Shared\NotificationController;
 
 
-use App\Http\Controllers\Backend\ClinicManager\ChartController as ClinicManagerChartController;
-use App\Http\Controllers\Backend\ClinicManager\ClinicController as ClinicManagerClinicController;
-use App\Http\Controllers\Backend\ClinicManager\DoctorController as ClinicManagerDoctorController;
-use App\Http\Controllers\Backend\ClinicManager\ReportController as ClinicManagerReportController;
-use App\Http\Controllers\Backend\ClinicManager\InvoiceController as ClinicManagerInvoiceController;
-use App\Http\Controllers\Backend\ClinicManager\PatientController as ClinicManagerPatientController;
-use App\Http\Controllers\Backend\ClinicManager\EmployeeController as ClinicManagerEmployeeController;
-use App\Http\Controllers\Backend\ClinicManager\DashboardController as ClinicManagerDashboardController;
-use App\Http\Controllers\Backend\ClinicManager\DepartmentController as ClinicManagerDepartmentController;
-use App\Http\Controllers\Backend\ClinicManager\AppointmentController as ClinicManagerAppointmentController;
+use App\Http\Controllers\Backend\Admin\{
+    DashboardController as AdminDashboardController,
+    ChartController as AdminChartController,
+    ClinicController as AdminClinicController,
+    DepartmentController as AdminDepartmentController,
+    DoctorController as AdminDoctorController,
+    PatientController as AdminPatientController,
+    EmployeeController as AdminEmployeeController,
+    AppointmentController as AdminAppointmentController,
+    InvoiceController as AdminInvoiceController,
+    MedicalRecordController as AdminMedicalRecordController,
+    AnalyticController as AdminAnalyticController,
+    NotificationController as AdminNotificationController
+};
+
+use App\Http\Controllers\Backend\Admin\Report\{
+    PatientController as AdminReportPatientController,
+    EmployeeController as AdminReportEmployeeController,
+    DoctorController as AdminReportDoctorController,
+    InvoiceController as AdminReportInvoiceController,
+    AppointmentController as AdminReportAppointmentController
+};
+
+use App\Http\Controllers\Backend\ClinicManager\{
+    DashboardController as ClinicManagerDashboardController,
+    ClinicController as ClinicManagerClinicController,
+    DoctorController as ClinicManagerDoctorController,
+    PatientController as ClinicManagerPatientController,
+    EmployeeController as ClinicManagerEmployeeController,
+    DepartmentController as ClinicManagerDepartmentController,
+    AppointmentController as ClinicManagerAppointmentController,
+    InvoiceController as ClinicManagerInvoiceController,
+    ReportController as ClinicManagerReportController,
+    NotificationController as ClinicNotificationController,
+    ChartController as ClinicManagerChartController
+};
+
+use App\Http\Controllers\Backend\DepartmentManager\{
+    DashboardController as DepartmentManagerDashboardController,
+    ClinicController as DepartmentManagerClinicController,
+    DepartmentController as DepartmentManagerDepartmentController,
+    DoctorController as DepartmentManagerDoctorController,
+    PatientController as DepartmentManagerPatientController,
+    EmployeeController as DepartmentManagerEmployeeController,
+    AppointmentController as DepartmentManagerAppointmentController,
+    ReportController as DepartmentManagerReportController,
+    NotificationController as DepartmentNotificationController,
+    ChartController as DepartmentManagerChartController
+};
+
+use App\Http\Controllers\Backend\Doctor\{
+    DashboardController as DoctorDashboardController,
+    ProfileController as DoctorProfileController,
+    AppointmentController as DoctorAppointmentController,
+    PatientController as DoctorPatientController,
+    InvoicesController as DoctorInvoicesController,
+    MedicalRecordsController as DoctorMedicalRecordsController,
+    ReportController as DoctorReportController,
+    NotificationController as DoctorNotificationController,
+    NurseTaskController as DoctorNurseTaskController,
+    ClinicController as DoctorClinicController
+};
 
 
-use App\Http\Controllers\Backend\DepartmentManager\DashboardController as DepartmentManagerDashboardController;
-use App\Http\Controllers\Backend\DepartmentManager\ClinicController as DepartmentManagerClinicController;
-use App\Http\Controllers\Backend\DepartmentManager\DepartmentController as DepartmentManagerDepartmentController;
-use App\Http\Controllers\Backend\DepartmentManager\EmployeeController as DepartmentManagerEmployeeController;
-use App\Http\Controllers\Backend\DepartmentManager\DoctorController as DepartmentManagerDoctorController;
-use App\Http\Controllers\Backend\DepartmentManager\PatientController as DepartmentManagerPatientController;
-use App\Http\Controllers\Backend\DepartmentManager\AppointmentController as DepartmentManagerAppointmentController;
-use App\Http\Controllers\Backend\DepartmentManager\ReportController as DepartmentManagerReportController;
-use App\Http\Controllers\Backend\DepartmentManager\ChartController as DepartmentManagerChartController;
+use App\Http\Controllers\Backend\Employee\Nurse\{
+    DashboardController as NurseDashboardController,
+    ClinicController as NurseClinicController,
+    DepartmentController as NurseDepartmentController,
+    DoctorController as NurseDoctorController,
+    PatientController as NursePatientController,
+    AppointmentController as NurseAppointmentController,
+    VitalSignsController as NurseVitalSignsController,
+    MedicalRecordController as NurseMedicalRecordController,
+    NotificationController as NurseNotificationController,
+    NurseTaskController as NurseTaskController
+};
 
+use App\Http\Controllers\Backend\Employee\Accountant\{
+    DashboardController as AccountantDashboardController,
+    ClinicController as AccountantClinicController,
+    DepartmentController as AccountantDepartmentController,
+    DoctorController as AccountantDoctorController,
+    PatientController as AccountantPatientController,
+    AppointmentController as AccountantAppointmentController,
+    NotificationController as AccountantNotificationController,
+    InvoiceController as AccountantInvoiceController
+};
 
-use App\Http\Controllers\Backend\Doctor\ClinicController as DoctorClinicController;
-use App\Http\Controllers\Backend\Doctor\ReportController as DoctorReportController;
-use App\Http\Controllers\Backend\Doctor\DashboardController as DoctorDashboardController;
-use App\Http\Controllers\Backend\Doctor\MedicalRecordsController as DoctorMedicalRecordsController;
-use App\Http\Controllers\Backend\Doctor\PatientController as DoctorPatientController;
-use App\Http\Controllers\Backend\Doctor\ProfileController as DoctorProfileController;
-use App\Http\Controllers\Backend\Doctor\AppointmentController as DoctorAppointmentController;
-use App\Http\Controllers\Backend\Doctor\InvoicesController as DoctorInvoicesController;
+use App\Http\Controllers\Backend\Employee\Receptionist\{
+    DashboardController as ReceptionistDashboardController,
+    ClinicController as ReceptionistClinicController,
+    DepartmentController as ReceptionistDepartmentController,
+    DoctorController as ReceptionistDoctorController,
+    PatientController as ReceptionistPatientController,
+    AppointmentController as ReceptionistAppointmentController,
+    NotificationController as ReceptionistNotificationController,
+    InvoiceController as ReceptionistInvoiceController
+};
 
-
-use App\Http\Controllers\Backend\Employee\Nurse\DashboardController as NurseDashboardController;
-use App\Http\Controllers\Backend\Employee\Nurse\ClinicController as NurseClinicController;
-use App\Http\Controllers\Backend\Employee\Nurse\DepartmentController as NurseDepartmentController;
-use App\Http\Controllers\Backend\Employee\Nurse\DoctorController as NurseDoctorController;
-use App\Http\Controllers\Backend\Employee\Nurse\PatientController as NursePatientController;
-use App\Http\Controllers\Backend\Employee\Nurse\VitalSignsController as NurseVitalSignsController;
-use App\Http\Controllers\Backend\Employee\Nurse\AppointmentController as NurseAppointmentController;
-use App\Http\Controllers\Backend\Employee\Nurse\MedicalRecordController as NurseMedicalRecordController;
-use App\Http\Controllers\Backend\Employee\Nurse\NurseTaskController as NurseNurseTaskController;
-
-
-use App\Http\Controllers\Backend\Employee\Receptionist\DashboardController as ReceptionistDashboardController;
-use App\Http\Controllers\Backend\Employee\Receptionist\ClinicController as ReceptionisClinicController;
-use App\Http\Controllers\Backend\Employee\Receptionist\DepartmentController as ReceptionisDepartmentController;
-use App\Http\Controllers\Backend\Employee\Receptionist\DoctorController as ReceptionisDoctorController;
-use App\Http\Controllers\Backend\Employee\Receptionist\PatientController as ReceptionisPatientController;
-use App\Http\Controllers\Backend\Employee\Receptionist\AppointmentController as ReceptionisAppointmentController;
-use App\Http\Controllers\Backend\Employee\Receptionist\InvoiceController as ReceptionisInvoiceController;
-
-
-use App\Http\Controllers\Backend\Employee\Accountant\DashboardController as AccountantDashboardController;
-use App\Http\Controllers\Backend\Employee\Accountant\ClinicController as AccountantClinicController;
-use App\Http\Controllers\Backend\Employee\Accountant\DepartmentController as AccountantDepartmentController;
-use App\Http\Controllers\Backend\Employee\Accountant\DoctorController as AccountantDoctorController;
-use App\Http\Controllers\Backend\Employee\Accountant\PatientController as AccountantPatientController;
-use App\Http\Controllers\Backend\Employee\Accountant\InvoiceController as AccountantInvoiceController;
-use App\Http\Controllers\Backend\Employee\Accountant\AppointmentController as AccountantAppointmentController;
-
-
-use App\Http\Controllers\Backend\Patient\DashboardController as PatientDashboardController;
+use App\Http\Controllers\Backend\Patient\{
+    DashboardController as PatientDashboardController,
+    ProfileController as PatientProfileController,
+    AppointmentController as PatientAppointmentController,
+    InvoiceController as PatientInvoiceController,
+    MedicalRecordController as PatientMedicalRecordController
+};
 
 
 Route::prefix('clinics-management')->group(function () {
@@ -104,14 +131,27 @@ Route::prefix('clinics-management')->group(function () {
     Route::post('/user/login', [AuthenticatedSessionController::class, 'userLogin'])->name('user_login')->middleware('guest');
     Route::post('/logout', [AuthenticatedSessionController::class, 'logout'])->name('logout')->middleware('auth');
 
+
     Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest')->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register')->middleware('guest');
+
+
+    //Forgot Password
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'showForgotForm'])->middleware('guest')->name('password_request');
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'sendResetLink'])->middleware('guest')->name('password_email');
+
+    Route::get('/reset-password/{token}', [PasswordResetLinkController::class, 'showResetForm'])->middleware('guest')->name('password.reset');
+    Route::post('/reset-password', [PasswordResetLinkController::class, 'resetPassword'])->middleware('guest')->name('password.update');
 
 
     //Shared
     Route::get('/get-doctors-by-clinic-and-department', [CommonDoctorController::class, 'getDoctorsByClinicAndDepartment'])->name('get_doctors_by_clinic_and_department');
     Route::get('/get-doctor-info/{id}', [CommonDoctorController::class, 'getDoctorInfo']);   // يرجع أوقات الدكتور للحجز معاه
     Route::get('/doctor-working-days/{id}', [CommonDoctorController::class, 'getWorkingDays']);  // يرجع أيام الدكتور للحجز معاه
+
+
+    // Notifications
+    Route::get('/notifications/read/{id}', [NotificationController::class, 'read'])->name('notifications_read');
 
 
     Route::get('/get-departments-by-clinic/{clinic_id}', [CommonClinicController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط أقسامها في فورم إضافة طبيب
@@ -289,12 +329,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/chart/revenue-per-clinic', [AdminChartController::class, 'revenuePerClinic'])->name('revenue_per_clinic');
 
 
-    // Notifications
-    Route::get('/notifications/details/medication/read/{id}', [AdminNotificationController::class, 'markExpiredAsRead'])
-    ->name('notifications_details_medication_read');   // إشعار الأدوية المنتهية
 
-    Route::get('/notifications/details/read/{id}', [AdminNotificationController::class, 'markDetailsAsRead'])
-    ->name('notifications_details_read');  // إشعار موافقة/رفض  طلب
+    //Notifications
+    Route::get('/notifications/view', [AdminNotificationController::class, 'view'])->name('notifications_view');
+
 
 
 });
@@ -409,6 +447,10 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
     Route::get('/clinic-revenue-monthly', [ClinicManagerChartController::class, 'clinicMonthlyRevenue'])->name('clinic_monthly_revenue');
     Route::get('/clinic-doctors-monthly', [ClinicManagerChartController::class, 'clinicDoctorsMonthly'])->name('clinic_doctors_monthly');
 
+
+    //Notifications
+    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('clinic.notifications_view');
+
 });
 
 
@@ -474,6 +516,11 @@ Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:depar
     Route::get('/department-patients-monthly', [DepartmentManagerChartController::class, 'departmentPatientsMonthly'])->name('department_patients_monthly');
     Route::get('/department-doctors-monthly', [DepartmentManagerChartController::class, 'departmentDoctorsMonthly'])->name('department_doctors_monthly');
 
+
+
+    //Notifications
+    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('department.notifications_view');
+
 });
 
 
@@ -491,24 +538,45 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
     Route::get('/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
     Route::post('/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
     Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');
+
+
     Route::get('/calendar', [DoctorAppointmentController::class, 'calendar'])->name('doctor.calendar');
     Route::get('/reports/monthly', [DoctorReportController::class, 'monthly'])->name('doctor.reports.monthly');
+
+
     Route::get('/appointments', [DoctorAppointmentController::class, 'allAppointments'])->name('doctor.appointments');
     Route::get('/appointments/{appointment}', [DoctorAppointmentController::class, 'show'])->name('doctor.appointment.show');
     Route::post('/appointments/confirm/{appointment}', [DoctorAppointmentController::class, 'confirmAppointment'])->name('doctor_confirm_appointment');
     Route::post('/appointments/reject/{appointment}', [DoctorAppointmentController::class, 'rejectAppointment'])->name('doctor_reject_appointment');
     Route::post('/appointments/cancel/{appointment}', [DoctorAppointmentController::class, 'cancelAppointment'])->name('doctor_cancel_appointment');
+    Route::get('vital-signs/show/{vitalSigns}', [DoctorAppointmentController::class, 'vitalSignsShow'])->name('doctor.vital_signs_show');
+
+
+    Route::get('/doctor/assign-task/{appointment}/{nurse}', [DoctorNurseTaskController::class, 'assignTask'])->name('doctor.assign_task');
+    Route::post('/doctor/assign-task/store', [DoctorNurseTaskController::class, 'assignTaskStore'])->name('doctor.assign_task.store');
+    
+
     Route::get('/clinics/{clinic}', [DoctorClinicController::class, 'show'])->name('doctor.clinic.show');
+
+
     Route::get('/patients', [DoctorPatientController::class, 'index'])->name('doctor.patients');
     Route::get('/patients/{patient}', [DoctorPatientController::class, 'show'])->name('doctor.patients.show');
     Route::get('patients/{patient}/records', [DoctorMedicalRecordsController::class, 'patientRecords'])->name('doctor.patient.records');
+
+
     Route::get('/medical-records', [DoctorMedicalRecordsController::class, 'index'])->name('doctor.medical_records');
     Route::get('/medical-records/create', [DoctorMedicalRecordsController::class, 'create'])->name('doctor.medical_records.create');
     Route::post('/medical-records/store', [DoctorMedicalRecordsController::class, 'store'])->name('doctor.medical_records.store');
     Route::get('medical-records/{medicalRecord}', [DoctorMedicalRecordsController::class, 'show'])->name('doctor.medical_records.show');
     Route::get('/medical-records/{medicalRecord}/edit', [DoctorMedicalRecordsController::class, 'edit'])->name('doctor.medical_records.edit');
     Route::put('/medical-records/{medicalRecord}/update', [DoctorMedicalRecordsController::class, 'update'])->name('doctor.medical_records.update');
+
+
     Route::get('/invoices', [DoctorInvoicesController::class, 'index'])->name('doctor.invoices');
+
+    //Notifications
+    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('doctor.notifications_view');
+
 });
 
 
@@ -571,10 +639,14 @@ Route::prefix('employee/nurse')->middleware(['auth', 'verified', 'role:employee'
 
 
     //Nurse Tasks
-    Route::get('/view/nurse-tasks' ,[NurseNurseTaskController::class , 'viewNurseTasks'])->name('nurse.view_nurse_tasks');
-    Route::get('/search/nurse-tasks',[NurseNurseTaskController::class , 'searchNurseTasks'])->name('nurse.search_nurse_tasks');
-    Route::get('/details/nurse-task/{id}' ,[NurseNurseTaskController::class , 'detailsNurseTask'])->name('nurse.details_nurse_task');
-    Route::post('/completed/nurse-task/{id}' ,[NurseNurseTaskController::class , 'completedNurseTask'])->name('nurse.completed_nurse_task');
+    Route::get('/view/nurse-tasks' ,[NurseTaskController::class , 'viewNurseTasks'])->name('nurse.view_nurse_tasks');
+    Route::get('/search/nurse-tasks',[NurseTaskController::class , 'searchNurseTasks'])->name('nurse.search_nurse_tasks');
+    Route::get('/details/nurse-task/{id}' ,[NurseTaskController::class , 'detailsNurseTask'])->name('nurse.details_nurse_task');
+    Route::post('/completed/nurse-task/{id}' ,[NurseTaskController::class , 'completedNurseTask'])->name('nurse.completed_nurse_task');
+
+
+    //Notifications
+    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('nurse.notifications_view');
 
 });
 
@@ -593,53 +665,57 @@ Route::prefix('employee/receptionist')->middleware(['auth', 'verified', 'role:em
 
 
     //Clinic
-    Route::get('/clinic-profile', [ReceptionisClinicController::class, 'clinicProfile'])->name('receptionist.clinic_profile');
+    Route::get('/clinic-profile', [ReceptionistClinicController::class, 'clinicProfile'])->name('receptionist.clinic_profile');
 
 
     //Department
-    Route::get('/depratment-profile', [ReceptionisDepartmentController::class, 'depratmentProfile'])->name('receptionist.depratment_profile');
+    Route::get('/depratment-profile', [ReceptionistDepartmentController::class, 'depratmentProfile'])->name('receptionist.depratment_profile');
 
 
     //Doctors
-    Route::get('/view/doctors' ,[ReceptionisDoctorController::class , 'viewDoctors'])->name('receptionist.view_doctors');
-    Route::get('/search/doctors',[ReceptionisDoctorController::class , 'searchDoctors'])->name('receptionist.search_doctors');
-    Route::get('/profile/doctor/{id}',[ReceptionisDoctorController::class , 'profileDoctor'])->name('receptionist.profile_doctor');
+    Route::get('/view/doctors' ,[ReceptionistDoctorController::class , 'viewDoctors'])->name('receptionist.view_doctors');
+    Route::get('/search/doctors',[ReceptionistDoctorController::class , 'searchDoctors'])->name('receptionist.search_doctors');
+    Route::get('/profile/doctor/{id}',[ReceptionistDoctorController::class , 'profileDoctor'])->name('receptionist.profile_doctor');
 
-    Route::get('/search/schedules',[ReceptionisDoctorController::class ,  'searchSchedules'])->name('receptionist.search_schedules');
-    Route::post('/search/doctor/schedule',[ReceptionisDoctorController::class , 'searchDoctchedule'])->name('receptionist.search_doctor_schedule');
+    Route::get('/search/schedules',[ReceptionistDoctorController::class ,  'searchSchedules'])->name('receptionist.search_schedules');
+    Route::post('/search/doctor/schedule',[ReceptionistDoctorController::class , 'searchDoctchedule'])->name('receptionist.search_doctor_schedule');
 
 
     //Patient
-    Route::get('/add/patient' ,[ReceptionisPatientController::class , 'addPatient'])->name('receptionist.add_patient');
-    Route::post('/store/patient' ,[ReceptionisPatientController::class , 'storePatient'])->name('receptionist.store_patient');
-    Route::get('/view/patients' ,[ReceptionisPatientController::class , 'viewPatients'])->name('receptionist.view_patients');
-    Route::get('/search/patients' ,[ReceptionisPatientController::class , 'searchPatients'])->name('receptionist.search_patients');
-    Route::get('/profile/patient/{id}',[ReceptionisPatientController::class , 'profilePatient'])->name('receptionist.profile_patient');
-    Route::get('/edit/patient/{id}' ,[ReceptionisPatientController::class , 'editPatient'])->name('receptionist.edit_patient');
-    Route::put('/update/patient/{id}' ,[ReceptionisPatientController::class , 'updatePatient'])->name('receptionist.update_patient');
-    Route::delete('/delete/patient/{id}' ,[ReceptionisPatientController::class , 'deletePatient'])->name('receptionist.delete_patient');
+    Route::get('/add/patient' ,[ReceptionistPatientController::class , 'addPatient'])->name('receptionist.add_patient');
+    Route::post('/store/patient' ,[ReceptionistPatientController::class , 'storePatient'])->name('receptionist.store_patient');
+    Route::get('/view/patients' ,[ReceptionistPatientController::class , 'viewPatients'])->name('receptionist.view_patients');
+    Route::get('/search/patients' ,[ReceptionistPatientController::class , 'searchPatients'])->name('receptionist.search_patients');
+    Route::get('/profile/patient/{id}',[ReceptionistPatientController::class , 'profilePatient'])->name('receptionist.profile_patient');
+    Route::get('/edit/patient/{id}' ,[ReceptionistPatientController::class , 'editPatient'])->name('receptionist.edit_patient');
+    Route::put('/update/patient/{id}' ,[ReceptionistPatientController::class , 'updatePatient'])->name('receptionist.update_patient');
+    Route::delete('/delete/patient/{id}' ,[ReceptionistPatientController::class , 'deletePatient'])->name('receptionist.delete_patient');
 
 
     //Appointment
-    Route::get('/add/appointment' ,[ReceptionisAppointmentController::class , 'addAppointment'])->name('receptionist.add_appointment');
-    Route::post('/store/appointment',[ReceptionisAppointmentController::class , 'storeAppointment'])->name('receptionist.store_appointment');
-    Route::get('/view/appointments' ,[ReceptionisAppointmentController::class , 'viewAppointments'])->name('receptionist.view_appointments');
-    Route::get('/search/appointments',[ReceptionisAppointmentController::class , 'searchAppointments'])->name('receptionist.search_appointments');
-    Route::get('/details/appointment/{id}',[ReceptionisAppointmentController::class , 'detailsAppointment'])->name('receptionist.details_appointment');
-    Route::get('/edit/appointment/{id}' ,[ReceptionisAppointmentController::class , 'editAppointment'])->name('receptionist.edit_appointment');
-    Route::put('/update/appointment/{id}' ,[ReceptionisAppointmentController::class , 'updateAppointment'])->name('receptionist.update_appointment');
+    Route::get('/add/appointment' ,[ReceptionistAppointmentController::class , 'addAppointment'])->name('receptionist.add_appointment');
+    Route::post('/store/appointment',[ReceptionistAppointmentController::class , 'storeAppointment'])->name('receptionist.store_appointment');
+    Route::get('/view/appointments' ,[ReceptionistAppointmentController::class , 'viewAppointments'])->name('receptionist.view_appointments');
+    Route::get('/search/appointments',[ReceptionistAppointmentController::class , 'searchAppointments'])->name('receptionist.search_appointments');
+    Route::get('/details/appointment/{id}',[ReceptionistAppointmentController::class , 'detailsAppointment'])->name('receptionist.details_appointment');
+    Route::get('/edit/appointment/{id}' ,[ReceptionistAppointmentController::class , 'editAppointment'])->name('receptionist.edit_appointment');
+    Route::put('/update/appointment/{id}' ,[ReceptionistAppointmentController::class , 'updateAppointment'])->name('receptionist.update_appointment');
 
-    Route::post('/appointments/update-status/{id}', [ReceptionisAppointmentController::class, 'updateStatus']);
-    Route::post('/check-appointment', [ReceptionisAppointmentController::class, 'checkAppointment'])->name('receptionist.check_appointment');
+    Route::post('/appointments/update-status/{id}', [ReceptionistAppointmentController::class, 'updateStatus']);
+    Route::post('/check-appointment', [ReceptionistAppointmentController::class, 'checkAppointment'])->name('receptionist.check_appointment');
 
 
     //Invoices
-    Route::get('/view/invoices' ,[ReceptionisInvoiceController::class , 'viewInvoices'])->name('receptionist.view_invoices');
-    Route::get('/search/invoices',[ReceptionisInvoiceController::class , 'searchInvoices'])->name('receptionist.search_invoices');
-    Route::get('/details/invoice/{id}',[ReceptionisInvoiceController::class , 'detailsInvoice'])->name('receptionist.details_invoice');
+    Route::get('/view/invoices' ,[ReceptionistInvoiceController::class , 'viewInvoices'])->name('receptionist.view_invoices');
+    Route::get('/search/invoices',[ReceptionistInvoiceController::class , 'searchInvoices'])->name('receptionist.search_invoices');
+    Route::get('/details/invoice/{id}',[ReceptionistInvoiceController::class , 'detailsInvoice'])->name('receptionist.details_invoice');
 
-    Route::get('/invoice-pdf/view/{id}', [ReceptionisInvoiceController::class, 'invoicePDF'])->name('receptionist.invoice_pdf');
-    Route::get('/invoice-pdf/raw/{id}', [ReceptionisInvoiceController::class, 'invoicePDFRaw'])->name('receptionist.invoice_pdf_raw');
+    Route::get('/invoice-pdf/view/{id}', [ReceptionistInvoiceController::class, 'invoicePDF'])->name('receptionist.invoice_pdf');
+    Route::get('/invoice-pdf/raw/{id}', [ReceptionistInvoiceController::class, 'invoicePDFRaw'])->name('receptionist.invoice_pdf_raw');
+
+
+    //Notifications
+    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('receptionist.notifications_view');
 
 });
 
@@ -704,6 +780,10 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
     Route::get('/invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'invoicePDFRaw'])->name('accountant.invoice_pdf_raw');
     Route::get('/cancelled-invoice-pdf/view/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDF'])->name('accountant.cancelled_invoice_pdf');
     Route::get('/cancelled-invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('accountant.cancelled_invoice_pdf_raw');
+
+
+    //Notifications
+    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('accountant.notifications_view');
 
 });
 

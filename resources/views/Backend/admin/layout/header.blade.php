@@ -1,3 +1,20 @@
+<style>
+    .header .dropdown-menu .dropdown-item:hover {
+        background-color: #007BFF;
+        color: #ffffff;
+    }
+    .notification-message.unread {
+        background-color: #f4f7fe;
+    }
+
+    .notification-message.read {
+        opacity: 0.7;
+    }
+
+</style>
+
+
+
 <div class="header">
     <div class="header-left">
         <a href="{{ Route('dashboard') }}" class="logo">
@@ -13,51 +30,8 @@
     <ul class="float-right nav user-menu">
 
         {{-- Notifications --}}
-        <li class="nav-item dropdown d-none d-sm-block">
-            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                <i class="fa fa-bell-o"></i>
-                <span class="float-right badge badge-pill bg-danger">
-                    {{ auth()->user()->unreadNotifications->count() }}
-                </span>
-            </a>
-            <div class="dropdown-menu notifications">
-                <div class="topnav-dropdown-header">
-                    <span>Notifications</span>
-                </div>
-                <div class="drop-scroll">
-                    <ul class="notification-list">
-                        @forelse(auth()->user()->notifications as $notification)
-                            <li class="notification-message {{ $notification->read_at ? 'read' : 'unread' }}">
-                                <a href="{{ $notification->data['url'] }}">
-                                    <div class="media">
-                                        <span class="avatar">
-                                            <img alt="Notification" src="{{ asset($notification->data['image']) }}" class="img-fluid">
-                                        </span>
-                                        <div class="media-body">
-                                            <p class="noti-details" style="color:black;">
-                                                {{ $notification->data['message'] }}
-                                            </p>
-                                            <p class="noti-time">
-                                                <span class="notification-time">
-                                                    {{ $notification->created_at->diffForHumans() }}
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        @empty
-                            <li class="text-center notification-message" style="margin-top:130px;">
-                                <span class="text-muted">No notifications available</span>
-                            </li>
-                        @endforelse
-                    </ul>
-                </div>
-                <div class="topnav-dropdown-footer">
-                    <a href="">View all Notifications</a>
-                </div>
-            </div>
-        </li>
+        @include('Backend.admin.partials.notifications.notifications')
+
 
         <li class="nav-item dropdown d-none d-sm-block">
             <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
@@ -90,3 +64,13 @@
 
     </ul>
 </div>
+
+
+
+<script>
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
+</script>

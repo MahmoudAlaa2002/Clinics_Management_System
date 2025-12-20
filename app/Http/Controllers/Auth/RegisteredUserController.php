@@ -11,21 +11,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\admin\PatientRegisteredNotification;
 
-class RegisteredUserController extends Controller
-{
-    /**
-     * Display the registration view.
-     */
+class RegisteredUserController extends Controller{
+
     public function create(): View{
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+
     public function store(Request $request){
         $check = User::where('email' , '=' , $request->email)->first();         // هل الايميل موجود مسبقا
         if(isset($check)){
@@ -36,14 +31,27 @@ class RegisteredUserController extends Controller
             $user->email =$request->email;
             $user->password = Hash::make($request->password);
             $user->phone = $request->phone;
+            $user->address = $request->address;
+            $user->date_of_birth =$request->date_of_birth;
+            $user->gender =$request->gender;
+            $user->role = 'patient';
             $user->created_at = Carbon::now();
             $user->save();
 
             $user->assignRole(['patient']);
 
-            Patient::create([
+            $patient = Patient::create([
                 'user_id' => $user->id,
+                'blood_type' => $request->blood_type,
+                'emergency_contact' => $request->emergency_contact,
+                'allergies' => $request->allergies,
+                'chronic_diseases' => $request->chronic_diseases,
             ]);
+
+
+            // 🔔 إنشاء إشعار للآدمن
+            $admin = User::where('role', 'admin')->get();
+            Notification::send($admin , new PatientRegisteredNotification($patient));
 
 
             event(new Registered($user));

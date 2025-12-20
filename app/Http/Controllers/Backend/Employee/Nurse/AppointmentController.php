@@ -14,7 +14,7 @@ class AppointmentController extends Controller{
         $clinicId = Auth::user()->employee->clinic_id;
         $departmentId = Auth::user()->employee->department_id;
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinicId)->where('department_id', $departmentId)->pluck('id');
-        $appointments = Appointment::with('vitalSigns')->whereIn('clinic_department_id', $clinicDepartmentIds)->whereIn('status', ['Accepted', 'Completed'])->orderBy('id', 'asc')->paginate(12);
+        $appointments = Appointment::with('vitalSign')->whereIn('clinic_department_id', $clinicDepartmentIds)->whereIn('status', ['Accepted', 'Completed'])->whereDate('date', now()->toDateString())->orderBy('id', 'asc')->paginate(12);
         return view('Backend.employees.nurses.appointments.view' , compact('appointments'));
     }
 
@@ -34,8 +34,8 @@ class AppointmentController extends Controller{
             'patient.user',
             'doctor.employee.user',
             'clinicDepartment.department',
-            'vitalSigns'
-        ])->whereIn('clinic_department_id', $clinicDepartmentIds);
+            'vitalSign'
+        ])->whereIn('clinic_department_id', $clinicDepartmentIds)->whereDate('date', now()->toDateString());
 
         if ($keyword !== '') {
             switch ($filter) {

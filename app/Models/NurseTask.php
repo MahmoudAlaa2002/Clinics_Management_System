@@ -8,6 +8,7 @@ class NurseTask extends Model{
 
     protected $fillable = [
         'appointment_id',
+        'nurse_id',
         'task',
         'status',
         'performed_at',

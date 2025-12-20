@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers\Backend\Doctor;
 
-use App\Http\Controllers\Controller;
+use App\Models\VitalSign;
 use App\Models\Appointment;
-use App\Models\Doctor;
-use App\Models\Department;
-use App\Models\Clinic;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreMedicalRecordRequest;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
     public function allAppointments(Request $request)
     {
         $doctor = Auth::user()->employee->doctor;
-        $appointments = Appointment::with(['patient.user', 'clinic', 'department'])->where('doctor_id', $doctor->id);
+        $appointments = Appointment::with(['patient.user', 'clinic', 'department', 'vitalSign'])->where('doctor_id', $doctor->id);
 
         if ($request->has('date') && !empty($request->date)) {
             if ($request->date == 'today') {
@@ -119,4 +115,17 @@ class AppointmentController extends Controller
             'appointmentsJson' => $appointments->toJson(),
         ]);
     }
+
+    public function vitalSignsShow(VitalSign $vitalSigns)
+    {
+        $vitalSigns->load([
+            'nurse.user',
+            'appointment.patient.user',
+            'appointment.doctor.employee.user',
+        ]);
+
+        return view('Backend.doctors.vital_signs.show', compact('vitalSigns'));
+    }
+
+
 }

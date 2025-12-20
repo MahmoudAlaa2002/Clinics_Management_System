@@ -6,7 +6,7 @@
             <td>{{ $nurse_task->appointment->patient->user->name }}</td>
             <td>{{ $nurse_task->appointment->doctor->employee->user->name }}</td>
             <td>{{ $nurse_task->task }}</td>
-            <td>{{ \Carbon\Carbon::parse($nurse_task->performed_at)->format('Y-m-d') }}</td>
+            <td>{{ $nurse_task->performed_at ? \Carbon\Carbon::parse($nurse_task->performed_at)->format('Y-m-d') : '—' }}</td>
             <td>
                 @if($nurse_task->status === 'Pending')
                     <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#ffc107; color:white;">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Employee\Receptionist;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\Patient;
@@ -11,6 +12,10 @@ use Illuminate\Http\Request;
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\Admin\AppointmentBookedByReceptionist;
+use App\Notifications\employee\accountant\NewInvoiceNotification;
+
 
 class AppointmentController extends Controller{
 
@@ -145,6 +150,42 @@ class AppointmentController extends Controller{
             'due_date'       => $request->due_date,
             'created_by'     => Auth::user()->employee->id,
         ]);
+
+
+
+
+        $admin = User::where('role', 'admin')->get();
+        $clinicManagers = User::where('role', 'clinic_manager')
+            ->whereHas('employee', function ($q) {
+                $q->where('clinic_id', Auth::user()->employee->clinic_id);
+            })->get();
+
+        $departmentManagers = User::where('role', 'department_manager')
+            ->whereHas('employee', function ($q) {
+                $q->where('clinic_id', Auth::user()->employee->clinic_id)
+                ->where('department_id', Auth::user()->employee->department_id);
+            })->get();
+
+        $doctor = User::where('role', 'doctor')
+            ->whereHas('employee.doctor', function ($q) use ($appointment) {
+                $q->where('id', $appointment->doctor_id);
+            })->get();
+
+        $recipients = $admin->merge($clinicManagers)->merge($departmentManagers)->merge($doctor)->unique('id');
+        $receptionistName = Auth::user()->employee->user->name;
+        Notification::send($recipients,new AppointmentBookedByReceptionist($appointment, $receptionistName));
+
+
+        $clinic_id = Auth::user()->employee->clinic_id;
+        $accountant = User::where('role', 'employee')
+            ->whereHas('employee', function ($q) use ($clinic_id) {
+                $q->where('clinic_id', $clinic_id)->where('job_title', 'Accountant');
+            })->first();
+
+        if ($accountant) {
+            Notification::send(collect([$accountant]),new NewInvoiceNotification($invoice , $appointment->patient->user->name));
+        }
+
 
         /**
         * 8️⃣ نجاح
@@ -384,6 +425,8 @@ class AppointmentController extends Controller{
             ]);
         }
 
+
+
         /**
         * 6️⃣ نجاح
         */
@@ -490,10 +533,6 @@ class AppointmentController extends Controller{
         */
         return response()->json(['data' => 4]);
     }
-
-
-
-
 
 }
 

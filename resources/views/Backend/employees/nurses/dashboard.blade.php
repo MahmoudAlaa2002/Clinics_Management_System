@@ -248,8 +248,8 @@
                                                     </td>
         
                                                     <td class="text-right">
-                                                        @if ($appointment->vitalSigns)
-                                                            <a href="{{ route('nurse.view_vital_signs', $appointment->vitalSigns->id) }}"
+                                                        @if ($appointment->vitalSign)
+                                                            <a href="{{ route('nurse.view_vital_signs', $appointment->vitalSign->id) }}"
                                                                class="btn btn-outline-primary take-btn">
                                                                 View Vital Signs
                                                             </a>

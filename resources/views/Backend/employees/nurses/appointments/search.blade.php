@@ -31,7 +31,7 @@
             </td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
-                    @if (!$appointment->vitalSigns)
+                    @if (!$appointment->vitalSign)
                         <a href="{{ route('nurse.add_vital_signs' , ['appointment_id' => $appointment->id]) }}"
                         class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Add Vital Signs">
                             <i class="fas fa-heartbeat"></i>

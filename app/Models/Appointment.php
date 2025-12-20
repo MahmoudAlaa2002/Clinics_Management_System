@@ -67,7 +67,7 @@ class Appointment extends Model{
     }
 
 
-    public function vitalSigns(){
+    public function vitalSign(){
         return $this->hasOne(VitalSign::class);
     }
 

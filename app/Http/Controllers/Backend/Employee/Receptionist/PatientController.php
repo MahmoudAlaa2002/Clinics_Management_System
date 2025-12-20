@@ -10,6 +10,8 @@ use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\admin\PatientAddByReceptionist;
 
 class PatientController extends Controller{
 
@@ -21,22 +23,16 @@ class PatientController extends Controller{
     public function storePatient(Request $request){
         $clinic_id = Auth::user()->employee->clinic_id;
 
-        //فحص هل المستخدم موجود (User + Patient)
         $user = User::whereRaw('LOWER(email) = ?', [strtolower($request->email)])->first();
         if ($user) {
 
-            // فحص هل هو مريض
             $patient = Patient::where('user_id', $user->id)->first();
-
             if ($patient) {
-                // المريض موجود → فحص الربط مع عيادة
                 $linked = ClinicPatient::where('clinic_id', $clinic_id)->where('patient_id', $patient->id)->exists();
-
                 if ($linked) {
                     return response()->json(['data' => 0]);    // المريض موجود مسبقاً
                 }
 
-                // ربطه فقط لأنه غير مربوط
                 ClinicPatient::create([
                     'clinic_id'  => $clinic_id,
                     'patient_id' => $patient->id,
@@ -88,6 +84,20 @@ class PatientController extends Controller{
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+
+        $admin = User::where('role', 'admin')->get();
+        $clinicManager = User::where('role', 'clinic_manager')
+            ->whereHas('employee', function ($q) {
+                $q->where('clinic_id', Auth::user()->employee->clinic_id);
+            })->get();
+
+        $recipients = $admin->merge($clinicManager);
+
+        $receptionistName = Auth::user()->employee->user->name;
+        $clinicName = Auth::user()->employee->clinic->name;
+        Notification::send($recipients, new PatientAddByReceptionist($patient, $receptionistName, $clinicName));
+
 
         return response()->json(['data' => 2]);  // تمت الإضافة بنجاح
     }

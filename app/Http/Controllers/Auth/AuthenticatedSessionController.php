@@ -18,8 +18,10 @@ class AuthenticatedSessionController extends Controller{
 
     public function userLogin(Request $request){
         $Check = $request->all();
+        $remember = $request->boolean('remember');
 
-        if (Auth::guard('web')->attempt(['email' => $Check['email'], 'password' => $Check['password']])) {
+
+        if (Auth::guard('web')->attempt(['email' => $Check['email'], 'password' => $Check['password']],$remember)) {
             $user = Auth::user();
 
             if ($user->role == 'admin') {
@@ -52,8 +54,7 @@ class AuthenticatedSessionController extends Controller{
 
 
 
-    public function logout()
-    {
+    public function logout(){
         Auth::logout(); // تسجيل خروج المستخدم
         request()->session()->invalidate(); // تعطيل الجلسة الحالية
         request()->session()->regenerateToken(); // إنشاء CSRF token جديد
