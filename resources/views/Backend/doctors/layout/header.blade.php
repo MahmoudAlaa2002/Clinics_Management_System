@@ -13,7 +13,7 @@
 
 
         {{-- Notifications --}}
-        @include('Backend.doctors.partials.notifications.notifications')
+        @include('partials.notifications.notifications')
 
         <li class="nav-item dropdown d-none d-sm-block">
             <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i

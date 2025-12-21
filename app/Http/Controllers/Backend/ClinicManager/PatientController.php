@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Backend\ClinicManager;
 use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Patient;
+use App\Events\PatientAdded;
 use Illuminate\Http\Request;
 use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\Admin\PatientAddedByClinicManager;
-
 
 class PatientController extends Controller{
 
@@ -91,11 +89,7 @@ class PatientController extends Controller{
             'updated_at' => now(),
         ]);
 
-        $admin = User::where('role', 'admin')->get();
-        $clinicManagerName = Auth::user()->employee->user->name;
-        $clinicName = Auth::user()->employee->clinic->name;
-        Notification::send($admin,new PatientAddedByClinicManager($patient, $clinicManagerName, $clinicName));
-
+        PatientAdded::dispatch($patient, auth()->user());
 
         return response()->json(['data' => 2]);  // تمت الإضافة بنجاح
     }

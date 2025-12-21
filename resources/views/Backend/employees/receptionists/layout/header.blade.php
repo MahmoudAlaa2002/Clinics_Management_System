@@ -31,7 +31,7 @@
     <ul class="float-right nav user-menu">
 
 
-        @include('Backend.employees.receptionists.partials.notifications.notifications')
+        @include('partials.notifications.notifications')
 
         <li class="nav-item dropdown d-none d-sm-block">
             <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="float-right badge badge-pill bg-danger">8</span></a>

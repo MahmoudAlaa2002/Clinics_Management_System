@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Employee\Nurse;
 use Carbon\Carbon;
 use App\Models\NurseTask;
 use Illuminate\Http\Request;
+use App\Events\NurseTaskCompleted;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -96,6 +97,8 @@ class NurseTaskController extends Controller{
             'performed_at' => Carbon::now(),
             'status' => 'Completed',
         ]);
+
+        NurseTaskCompleted::dispatch($nurse_task);
 
         return response()->json(['data' => 1]);
     }

@@ -77,7 +77,7 @@
             <table class="table mb-0 text-center table-bordered table-striped custom-table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Appointment ID</th>
                         <th>Patient Name</th>
                         <th>Total Amount</th>

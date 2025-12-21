@@ -554,7 +554,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
 
     Route::get('/doctor/assign-task/{appointment}/{nurse}', [DoctorNurseTaskController::class, 'assignTask'])->name('doctor.assign_task');
     Route::post('/doctor/assign-task/store', [DoctorNurseTaskController::class, 'assignTaskStore'])->name('doctor.assign_task.store');
-    
+    Route::get('/doctor/nurse-task/{nurse}', [DoctorNurseTaskController::class, 'detailsTask'])->name('doctor.nurse_task');
 
     Route::get('/clinics/{clinic}', [DoctorClinicController::class, 'show'])->name('doctor.clinic.show');
 

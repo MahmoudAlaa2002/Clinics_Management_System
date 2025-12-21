@@ -28,7 +28,7 @@
 
 
         {{-- Notifications --}}
-        @include('Backend.clinics_managers.partials.notifications.notifications')
+        @include('partials.notifications.notifications')
 
 
         <li class="nav-item dropdown d-none d-sm-block">

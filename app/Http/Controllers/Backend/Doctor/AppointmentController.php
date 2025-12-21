@@ -6,6 +6,7 @@ use App\Models\VitalSign;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,17 +76,15 @@ class AppointmentController extends Controller
 
         DB::transaction(function () use($appointment, $validated){
             $note = $validated['note'] ?? 'Appointment cancelled by doctor';
-            $appointment->medicalRecord()->create([
-                'appointment_id' => $appointment->id,
-                'doctor_id' => Auth::user()->employee->doctor->id,
-                'patient_id' => $appointment->patient_id,
-                'record_date' => now()->format('Y-m-d'),
+            $appointment->update([
                 'notes' => $note,
             ]);
 
             $appointment->status = 'Cancelled';
             $appointment->save();
         });
+
+        AppointmentCancelled::dispatch($appointment, auth()->user());
 
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
     }

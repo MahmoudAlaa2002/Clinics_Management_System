@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use Illuminate\Support\Facades\DB;
+use App\Events\AppointmentCompleted;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -60,8 +61,8 @@ class MedicalRecordsController extends Controller
         ->where(function ($query) {
             $query->whereDate('date', '<', today())
                 ->orWhere(function ($q) {
-                    $q->whereDate('date', today())
-                        ->whereTime('time', '<=', now('Asia/Gaza')->format('H:i:s'));
+                    $q->whereDate('date', today());
+                        // ->whereTime('time', '<=', now('Asia/Gaza')->format('H:i:s'));
                 });
         })
         ->whereDoesntHave('medicalRecord')
@@ -99,7 +100,7 @@ class MedicalRecordsController extends Controller
             ->whereDate('date', '<=', now())
             ->firstOrFail();
 
-            
+
 
         if ($appointment->medicalRecord) {
             return back()->with('error', 'A medical record already exists for this appointment.');
@@ -122,15 +123,8 @@ class MedicalRecordsController extends Controller
 
             $medicalRecord = MedicalRecord::create($validated);
 
-            $vitalSigns = $appointment->vitalSign;
+            AppointmentCompleted::dispatch($appointment, auth()->user());
 
-            if ($vitalSigns && $vitalSigns->nurse_id) {
-                $nurseUser = Employee::where('id', $vitalSigns->nurse_id)->with('user')->first()?->user;
-
-                if ($nurseUser) {
-                    Notification::send(collect([$nurseUser]),new AppointmentCompletedNotification($appointment , $medicalRecord , $appointment->patient->user->name));
-                }
-            }
 
             DB::commit();
 

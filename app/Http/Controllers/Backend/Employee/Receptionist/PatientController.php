@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Employee\Receptionist;
 use App\Models\User;
 use App\Models\Patient;
 use App\Models\Appointment;
+use App\Events\PatientAdded;
 use Illuminate\Http\Request;
 use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
@@ -85,19 +86,7 @@ class PatientController extends Controller{
             'updated_at' => now(),
         ]);
 
-
-        $admin = User::where('role', 'admin')->get();
-        $clinicManager = User::where('role', 'clinic_manager')
-            ->whereHas('employee', function ($q) {
-                $q->where('clinic_id', Auth::user()->employee->clinic_id);
-            })->get();
-
-        $recipients = $admin->merge($clinicManager);
-
-        $receptionistName = Auth::user()->employee->user->name;
-        $clinicName = Auth::user()->employee->clinic->name;
-        Notification::send($recipients, new PatientAddByReceptionist($patient, $receptionistName, $clinicName));
-
+        PatientAdded::dispatch($patient, auth()->user());
 
         return response()->json(['data' => 2]);  // تمت الإضافة بنجاح
     }

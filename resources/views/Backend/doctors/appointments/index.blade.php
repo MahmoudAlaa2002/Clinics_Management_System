@@ -87,7 +87,7 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light text-center">
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Patient Name</th>
                                 <th>Clinic</th>
                                 <th>Department</th>

@@ -7,21 +7,20 @@ use App\Models\User;
 use App\Models\Patient;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Events\PatientRegistered;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\admin\PatientRegisteredNotification;
 
-class RegisteredUserController extends Controller{
+class RegisteredUserController extends Controller {
 
-    public function create(): View{
+    public function create(): View {
         return view('auth.register');
     }
 
 
-    public function store(Request $request){
+    public function store(Request $request) {
         $check = User::where('email' , '=' , $request->email)->first();         // هل الايميل موجود مسبقا
         if(isset($check)){
             return response()->json(['data' => 0]);
@@ -49,9 +48,7 @@ class RegisteredUserController extends Controller{
             ]);
 
 
-            // 🔔 إنشاء إشعار للآدمن
-            $admin = User::where('role', 'admin')->get();
-            Notification::send($admin , new PatientRegisteredNotification($patient));
+            PatientRegistered::dispatch($patient);
 
 
             event(new Registered($user));

@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Clinic;
-use App\Models\Doctor;
 use App\Models\Patient;
-use App\Models\Department;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-use App\Models\ClinicPatient;
-use App\Models\ClinicDepartment;
-use App\Models\DepartmentPatient;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -61,6 +54,7 @@ class PatientController extends Controller{
             'allergies'         => $request->allergies,
             'chronic_diseases'  => $request->chronic_diseases,
         ]);
+
 
         return response()->json(['data' => 1]);
     }

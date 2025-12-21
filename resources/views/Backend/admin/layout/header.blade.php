@@ -30,7 +30,7 @@
     <ul class="float-right nav user-menu">
 
         {{-- Notifications --}}
-        @include('Backend.admin.partials.notifications.notifications')
+        @include('partials.notifications.notifications')
 
 
         <li class="nav-item dropdown d-none d-sm-block">
