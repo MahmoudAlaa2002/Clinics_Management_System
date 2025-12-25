@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Doctor;
 use App\Models\VitalSign;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Events\InvoiceCancelled;
 use Illuminate\Support\Facades\DB;
 use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
@@ -84,7 +85,15 @@ class AppointmentController extends Controller
             $appointment->save();
         });
 
+        $paidAmount = $appointment->invoice->paid_amount;
+        $appointment->invoice->update([
+            'invoice_status'  => 'Cancelled',
+            'due_date'        => null,
+            'refund_amount'   => $paidAmount,
+        ]);
+
         AppointmentCancelled::dispatch($appointment, auth()->user());
+        InvoiceCancelled::dispatch($appointment->invoice);
 
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
     }

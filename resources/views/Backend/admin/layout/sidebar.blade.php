@@ -67,9 +67,9 @@
                     </ul>
                 </li>
 
-                <li class="submenu {{ Request::is('admin/add/department') || Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/details/department/*') || Request::is('admin/view/department-managers') ? 'active' : '' }}">
+                <li class="submenu {{ Request::is('admin/add/department') || Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/details/department/*') || Request::is('admin/view/departments-managers') ? 'active' : '' }}">
                     <a href="#"><i class="fas fa-building"></i> <span> Departments </span> <span class="menu-arrow"></span></a>
-                    <ul style="{{ Request::is('admin/add/department') || Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/details/department/*') || Request::is('admin/view/department-managers') ? '' : 'display: none;' }}">
+                    <ul style="{{ Request::is('admin/add/department') || Request::is('admin/view/departments') || Request::is('admin/edit/department/*') || Request::is('admin/details/department/*') || Request::is('admin/view/departments-managers') ? '' : 'display: none;' }}">
 
                         <li>
                             <a href="{{ route('add_department') }}" class="{{ Request::is('admin/add/department') ? 'active' : '' }}">

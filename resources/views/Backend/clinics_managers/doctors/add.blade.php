@@ -408,7 +408,7 @@
             }
 
 
-        $('.addBtn').click(function (e) {
+            $('.addBtn').click(function (e) {
             e.preventDefault();
 
             let name = $('#name').val().trim();
@@ -437,7 +437,9 @@
                 workingDays.push($(this).val());
             });
 
-            // ✅ التحقق من الحقول الأساسية
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
+            // التحقق من الحقول
             if (name === '' || date_of_birth === '' || !isValidSelectValue('department_id') || email === '' || password === '' || confirm_password === '' || phone === ''
                 || address === '' || !isValidSelectValue('qualification') || speciality === '' || rating === '' || consultation_fee === ''
                 || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || gender === undefined || $('input[name="working_days[]"]:checked').length === 0) {
@@ -447,6 +449,14 @@
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',
+                });
+                return;
+            } else if (password && !passwordPattern.test(password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
                 });
                 return;
             } else if (password !== confirm_password) {
@@ -467,7 +477,7 @@
                     confirmButtonColor: '#007BFF',
                 });
                 return;
-            }else if (consultation_fee <= 0) {
+            } else if (consultation_fee <= 0) {
                 Swal.fire({
                     title: 'Error!',
                     text: 'The consultation fee is invalid',
@@ -507,43 +517,68 @@
             formData.append('speciality', speciality);
             formData.append('short_biography', short_biography);
             formData.append('status', status);
-            if (image) {
-                formData.append('image', image);
-            }
+            if (image) formData.append('image', image);
 
             workingDays.forEach(function (day) {
                 formData.append('working_days[]', day);
             });
-
+            //   فحص الإيميل (RFC + DNS)
             $.ajax({
                 method: 'POST',
-                url: "{{ route('clinic.store_doctor') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function (response) {
-                    if (response.data == 0) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'This email is already used by another user',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                    } else if (response.data == 1) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Doctor has been added successfully',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        }).then(() => {
-                            window.location.href = '/clinic-manager/view/doctors';
-                        });
+
+                success: function () {
+                    //  إذا الإيميل صحيح → أضف الدكتور
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('clinic.store_doctor') }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.data == 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This email is already used by another user',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                            } else if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Doctor has been added successfully',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => {
+                                    window.location.href = '/clinic-manager/view/doctors';
+                                });
+                            }
+                        }
+                    });
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+
+                    if (xhr.responseJSON?.errors?.email) {
+                        msg = xhr.responseJSON.errors.email[0];
                     }
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: msg,
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
                 }
             });
         });

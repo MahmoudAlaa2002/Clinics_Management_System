@@ -353,39 +353,145 @@
     }
 
     $(document).ready(function () {
-        $('.editBtn').click(function (e) {
-                    e.preventDefault();
+        $(".editBtn").click(function (e) {
+            e.preventDefault();
 
-                    let name = $('#name').val().trim();
-                    let date_of_birth = $('#date_of_birth').val().trim();
-                    let clinic_id = $('#clinic_id').val();
-                    let department_id = $('#department_id').val();
-                    let email = $('#email').val();
-                    let password = $('#password').val();
-                    let confirm_password = $('#confirm_password').val();
-                    let phone = $('#phone').val().trim();
-                    let address = $('#address').val().trim();
-                    let work_start_time = $('#work_start_time').val();
-                    let work_end_time = $('#work_end_time').val();
-                    let speciality = $('#speciality').val();
-                    let qualification = $('#qualification').val();
-                    let rating = $('#rating').val();
-                    let consultation_fee = $('#consultation_fee').val();
-                    let gender = $('input[name="gender"]:checked').val();
-                    let short_biography = $('#short_biography').val().trim();
-                    let status = $('input[name="status"]:checked').val();
-                    let image = document.querySelector('#image').files[0];
+            let name = $('#name').val().trim();
+            let date_of_birth = $('#date_of_birth').val().trim();
+            let clinic_id = $('#clinic_id').val();
+            let department_id = $('#department_id').val();
+            let email = $('#email').val();
+            let password = $('#password').val();
+            let confirm_password = $('#confirm_password').val();
+            let phone = $('#phone').val().trim();
+            let address = $('#address').val().trim();
+            let work_start_time = $('#work_start_time').val();
+            let work_end_time = $('#work_end_time').val();
+            let speciality = $('#speciality').val();
+            let qualification = $('#qualification').val();
+            let rating = $('#rating').val();
+            let consultation_fee = $('#consultation_fee').val();
+            let gender = $('input[name="gender"]:checked').val();
+            let short_biography = $('#short_biography').val().trim();
+            let status = $('input[name="status"]:checked').val();
+            let image = document.querySelector('#image').files[0];
 
-                    let jobTitles = [];
-                    $('input[name="job_title_id[]"]:checked').each(function () {
-                        jobTitles.push($(this).val());
-                    });
+            let workingDays = [];
+            $('input[name="working_days[]"]:checked').each(function () {
+                workingDays.push($(this).val());
+            });
 
-                    let workingDays = [];
-                    $('input[name="working_days[]"]:checked').each(function () {
-                        workingDays.push($(this).val());
-                    });
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
+
+            if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id')
+                || email === '' || phone === '' || address === '' || speciality === '' || !isValidSelectValue('qualification') ||
+                rating === '' || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
+                !isValidSelectValue('work_end_time') || gender === undefined || workingDays.length === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter all required fields',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            if (password && !passwordPattern.test(password)) {
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (password !== confirm_password) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Password confirmation does not match',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (rating < 1 || rating > 5) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The rating must be between 1 and 5',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (consultation_fee <= 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The consultation fee is invalid',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (work_start_time >= work_end_time) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The timing is incorrect, Please correct it',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            let origDays = $('#orig_working_days').val().split(',');
+            let noChanges =
+                name === $('#orig_name').val() &&
+                date_of_birth === $('#orig_date').val() &&
+                phone === $('#orig_phone').val() &&
+                email === $('#orig_email').val() &&
+                address === $('#orig_address').val() &&
+                clinic_id === $('#orig_clinic').val() &&
+                department_id === $('#orig_department').val() &&
+                speciality === $('#orig_speciality').val() &&
+                qualification === $('#orig_qualification').val() &&
+                rating === $('#orig_rating').val() &&
+                consultation_fee === $('#orig_fee').val() &&
+                work_start_time === $('#orig_start').val() &&
+                work_end_time === $('#orig_end').val() &&
+                short_biography === $('#orig_short_bio').val() &&
+                status === $('#orig_status').val() &&
+                gender === $('#orig_gender').val() &&
+                workingDays.sort().toString() === origDays.sort().toString();
+
+            let imageChanged = image ? true : false;
+
+            // إذا تم كتابة باسورد — اعتبر أنه في تعديل
+            if (password !== '' || confirm_password !== '') {
+                noChanges = false;
+            }
+
+            if (noChanges && !imageChanged) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this doctor',
+                    confirmButtonColor: '#007BFF',
+                });
+                return false;
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function () {
 
                     let formData = new FormData();
                     formData.append('_method', 'PUT');
@@ -407,137 +513,71 @@
                     formData.append('gender', gender);
                     formData.append('short_biography', short_biography);
                     formData.append('status', status);
+
                     if (image) {
                         formData.append('image', image);
                     }
 
-                    jobTitles.forEach(function (id) {
-                        formData.append('job_title_id[]', id);
-                    });
+                    workingDays.forEach(day => formData.append('working_days[]', day));
 
 
-                    workingDays.forEach(function (day) {
-                        formData.append('working_days[]', day);
-                    });
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('update_doctor', ['id' => $doctor->id]) }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'X-HTTP-Method-Override': 'PUT'
+                        },
 
-
-                    if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id') || email === '' || phone === '' || address === '' ||
-                        speciality === '' || !isValidSelectValue('qualification') || rating === '' || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
-                        !isValidSelectValue('work_end_time') || gender === undefined ||workingDays.length === 0) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Please enter all required fields',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                        return;
-                    } else if (password !== confirm_password){
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Password confirmation does not match',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                        return;
-                    } else if (rating < 1 || rating > 5) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'The rating must be between 1 and 5',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            });
-                            return;
-                    }else if (consultation_fee <= 0) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'The consultation fee is invalid',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                        return;
-                    } else if (work_start_time >= work_end_time){
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'The timing is incorrect, Please correct it',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                        return;
-                    } else{
-                        let origDays = $('#orig_working_days').val().split(',');
-
-                        let noChanges =
-                            name === $('#orig_name').val() &&
-                            date_of_birth === $('#orig_date').val() &&
-                            phone === $('#orig_phone').val() &&
-                            email === $('#orig_email').val() &&
-                            address === $('#orig_address').val() &&
-                            clinic_id === $('#orig_clinic').val() &&
-                            department_id === $('#orig_department').val() &&
-                            speciality === $('#orig_speciality').val() &&
-                            qualification === $('#orig_qualification').val() &&
-                            rating === $('#orig_rating').val() &&
-                            consultation_fee === $('#orig_fee').val() &&
-                            work_start_time === $('#orig_start').val() &&
-                            work_end_time === $('#orig_end').val() &&
-                            short_biography === $('#orig_short_bio').val() &&
-                            status === $('#orig_status').val() &&
-                            gender === $('#orig_gender').val() &&
-                            workingDays.sort().toString() === origDays.sort().toString();
-
-
-                            let imageChanged = image ? true : false;
-
-                            if (noChanges && !imageChanged) {
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'No Changes',
-                                    text: 'No updates were made to this doctor',
-                                    confirmButtonColor: '#007BFF',
-                                });
-                                return false;
-                            }
-
-
-                        $.ajax({
-                            method: 'POST',
-                            url: "{{ route('update_doctor', ['id' => $doctor->id]) }}",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                                'X-HTTP-Method-Override': 'PUT'
-                            },
                         success: function (response) {
                             if (response.data == 0) {
                                 Swal.fire({
                                     title: 'Error!',
                                     text: 'This email is already used by another user',
                                     icon: 'error',
-                                    confirmButtonText: 'OK',
                                     confirmButtonColor: '#007BFF',
                                 });
+
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
                                     text: 'Doctor has been updated successfully',
                                     icon: 'success',
-                                    confirmButtonText: 'OK',
                                     confirmButtonColor: '#007BFF',
                                 }).then(() => {
                                     window.location.href = '/admin/view/doctors';
                                 });
                             }
+                        },
+
+                        error: function () {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Unexpected error occurred',
+                                icon: 'error',
+                                confirmButtonColor: '#007BFF'
+                            });
                         }
+                    });
+
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+                    if (xhr.responseJSON?.errors?.email) msg = xhr.responseJSON.errors.email[0];
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: msg,
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
                     });
                 }
             });
+        });
 
 
         const currentClinicId = "{{ optional($doctor->employee)->clinic_id ?? '' }}";

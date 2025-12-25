@@ -41,16 +41,20 @@ class NurseTaskController extends Controller {
 
 
 
-    public function detailsTask(){
+    public function detailsTask($id) {
         $doctorId = Auth::user()->employee->doctor->id;
 
-        $tasks = NurseTask::whereHas('appointment', function ($q) use ($doctorId) {
+        $task = NurseTask::where('id', $id)
+            ->whereHas('appointment', function ($q) use ($doctorId) {
                 $q->where('doctor_id', $doctorId);
-            })->with([
-                'nurse.user',              // اسم الممرض
-                'appointment.patient.user' // اسم المريض
-            ])->orderBy('id', 'desc')->get();
+            })
+            ->with([
+                'nurse.user',
+                'appointment.patient.user'
+            ])
+            ->firstOrFail();
 
-        return view('Backend.doctors.nurses_tasks.index', compact('tasks'));
+        return view('Backend.doctors.nurses_tasks.details', compact('task'));
     }
+
 }

@@ -212,8 +212,6 @@ class PatientController extends Controller{
         }
 
         $user->update([
-            'name'          => $request->name,
-            'email'         => $request->email,
             'phone'         => $request->phone,
             'address'       => $request->address,
             'image'         => $imagePath,

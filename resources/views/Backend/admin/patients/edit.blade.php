@@ -239,10 +239,12 @@
 <script>
     function isValidSelectValue(selectId) {
         let val = $(`#${selectId}`).val();
-        return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
+        return val !== '' && val !== null && val !== undefined &&
+               $(`#${selectId} option[value="${val}"]`).length > 0;
     }
 
     $(document).ready(function () {
+
         $('.editBtn').click(function (e) {
             e.preventDefault();
 
@@ -254,11 +256,8 @@
             let phone = $('#phone').val()?.trim() || '';
             let address = $('#address').val()?.trim() || '';
             let gender = $('input[name="gender"]:checked').val();
-            let short_biography = $('#short_biography').val()?.trim() || '';
-            let status = $('input[name="status"]:checked').val();
             let image = document.querySelector('#image')?.files[0];
 
-            // الحقول الطبية
             let blood_type = $('#blood_type').val();
             let emergency_contact = $('#emergency_contact').val()?.trim() || '';
             let allergies = $('#allergies').val()?.trim() || '';
@@ -282,31 +281,42 @@
                 formData.append('image', image);
             }
 
-            // التحقق من الحقول المطلوبة
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
             if (!name || !date_of_birth || !email || !phone || !address || !gender ||
                 !isValidSelectValue('blood_type') || !emergency_contact) {
+
                 Swal.fire({
                     title: 'Error!',
                     text: 'Please Enter All Required Fields.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',
                 });
                 return;
             }
 
-            // التحقق من تطابق كلمة المرور
+            // 2️⃣ Password validation (optional)
+            if (password && !passwordPattern.test(password)) {
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
             if (password && password !== confirm_password) {
                 Swal.fire({
                     title: 'Error!',
                     text: 'Password confirmation does not match',
                     icon: 'error',
-                    confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',
                 });
                 return;
             }
 
+            // 3️⃣ No changes check
             let noChanges =
                 name === $('#orig_name').val() &&
                 date_of_birth === $('#orig_date_of_birth').val() &&
@@ -318,7 +328,11 @@
                 emergency_contact === $('#orig_emergency').val() &&
                 allergies === $('#orig_allergies').val() &&
                 chronic_diseases === $('#orig_chronic').val() &&
-                !image; // الصورة فقط إذا تم رفع واحدة جديدة تُعتبر تغيير
+                !image;
+
+            if (password !== '' || confirm_password !== '') {
+                noChanges = false;
+            }
 
             if (noChanges) {
                 Swal.fire({
@@ -330,34 +344,61 @@
                 return;
             }
 
-
+            // 4️⃣ Real email validation (Laravel RFC + DNS)
             $.ajax({
                 method: 'POST',
-                url: "{{ route('update_patient', ['id' => $patient->id]) }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function (response) {
-                    if (response.data == 0) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'This email is already used by another user',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                    } else if (response.data == 1) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Patient has been updated successfully',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        }).then(() => window.location.href = '/admin/view/patients');
+                success: function () {
+
+                    // 5️⃣ Update patient
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('update_patient', ['id' => $patient->id]) }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.data == 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This email is already used by another user',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                            } else if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Patient has been updated successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => {
+                                    window.location.href = '/admin/view/patients';
+                                });
+                            }
+                        }
+                    });
+
+                },
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+
+                    if (xhr.responseJSON?.errors?.email) {
+                        msg = xhr.responseJSON.errors.email[0];
                     }
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: msg,
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
                 }
             });
 
@@ -365,3 +406,4 @@
     });
 </script>
 @endsection
+

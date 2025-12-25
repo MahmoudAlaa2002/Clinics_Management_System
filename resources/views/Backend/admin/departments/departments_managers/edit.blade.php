@@ -429,6 +429,17 @@
             return;
         }
 
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+        if (password && !passwordPattern.test(password)) {
+            Swal.fire({
+                title: 'Invalid Password',
+                text: 'Password must be 6–15 characters',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
         if (password && password !== confirm_password) {
             Swal.fire({
                 title: 'Error!',
@@ -472,11 +483,12 @@
             short_biography === "{{ $origBio }}" &&
             status === "{{ $origStatus }}" &&
             JSON.stringify(workingDays.sort()) === JSON.stringify(@json($origWorkingDays).sort()) &&
-            !image &&
-            password === "" &&
-            confirm_password === "";
+            !image;
 
-        // لو ما في تعديل
+        if (password !== '' || confirm_password !== '') {
+            noChanges = false;
+        }
+
         if (noChanges) {
             Swal.fire({
                 icon: 'warning',
@@ -487,44 +499,63 @@
             return;
         }
 
+        // ===== Real Email Validation (Laravel RFC + DNS) =====
         $.ajax({
-            type: 'POST',
-            url: "{{ route('update_department_manager', ['id' => $department_manager->id]) }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'X-HTTP-Method-Override': 'PUT'
+            method: 'POST',
+            url: "{{ route('check_email') }}",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (response) {
-            if (response.data == 0) {
+            success: function () {
+
+                // ✅ الإيميل صالح → نكمل التحديث
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('update_department_manager', ['id' => $department_manager->id]) }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'X-HTTP-Method-Override': 'PUT'
+                    },
+                    success: function (response) {
+                        if (response.data == 0) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'This email is already used by another user',
+                                icon: 'error',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        } else if (response.data == 1) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Department Manager has been updated successfully',
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
+                            }).then(() => window.location.href = '/admin/view/departments-managers');
+                        }
+                    }
+                });
+
+            },
+            error: function (xhr) {
+                let msg = 'Invalid email address';
+
+                if (xhr.responseJSON?.errors?.email) {
+                    msg = xhr.responseJSON.errors.email[0];
+                }
+
                 Swal.fire({
                     title: 'Error!',
-                    text: 'This email is already used by another user',
+                    text: msg,
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                });
-            } else if (response.data == 1) {
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Department Manager has been updated successfully',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                }).then(() => window.location.href = '/admin/view/departments-managers');
-            } else {
-                Swal.fire({
-                    title: 'Notice',
-                    text: 'Unexpected response. Please try again.',
-                    icon: 'info',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#007BFF'
                 });
             }
-            },
         });
+
         });
     });
 </script>

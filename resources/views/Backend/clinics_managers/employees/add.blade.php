@@ -457,115 +457,156 @@
 
 
         $('.addBtn').click(function (e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            let name = $('#name').val().trim();
-            let date_of_birth = $('#date_of_birth').val().trim();
-            let clinic_id = $('#clinic_id').val();
-            let department_id = $('#department_id').val();
-            let email = $('#email').val();
-            let password = $('#password').val();
-            let confirm_password = $('#confirm_password').val();
-            let phone = $('#phone').val().trim();
-            let address = $('#address').val().trim();
-            let work_start_time = $('#work_start_time').val();
-            let work_end_time = $('#work_end_time').val();
-            let qualification = $('#qualification').val();
-            let consultation_fee = $('#consultation_fee').val().trim();
-            let gender = $('input[name="gender"]:checked').val();
-            let short_biography = $('#short_biography').val().trim();
-            let status = $('input[name="status"]:checked').val();
-            let image = document.querySelector('#image').files[0];
-            let job_title = $('input[name="job_title"]:checked').val();
-            let rating = $('#rating').val();
+    let name = $('#name').val().trim();
+    let date_of_birth = $('#date_of_birth').val().trim();
+    let clinic_id = $('#clinic_id').val();
+    let department_id = $('#department_id').val();
+    let email = $('#email').val();
+    let password = $('#password').val();
+    let confirm_password = $('#confirm_password').val();
+    let phone = $('#phone').val().trim();
+    let address = $('#address').val().trim();
+    let work_start_time = $('#work_start_time').val();
+    let work_end_time = $('#work_end_time').val();
+    let qualification = $('#qualification').val();
+    let consultation_fee = $('#consultation_fee').val().trim();
+    let gender = $('input[name="gender"]:checked').val();
+    let short_biography = $('#short_biography').val().trim();
+    let status = $('input[name="status"]:checked').val();
+    let image = document.querySelector('#image').files[0];
+    let job_title = $('input[name="job_title"]:checked').val();
+    let rating = $('#rating').val();
 
-            let workingDays = [];
-            $('input[name="working_days[]"]:checked').each(function () {
-                workingDays.push($(this).val());
-            });
+    let workingDays = [];
+    $('input[name="working_days[]"]:checked').each(function () {
+        workingDays.push($(this).val());
+    });
 
+    let formData = new FormData();
+    formData.append('name', name);
+    formData.append('date_of_birth', date_of_birth);
+    formData.append('clinic_id', clinic_id);
+    if (department_id) formData.append('department_id', department_id);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('confirm_password', confirm_password);
+    formData.append('phone', phone);
+    formData.append('address', address);
+    formData.append('work_start_time', work_start_time);
+    formData.append('work_end_time', work_end_time);
+    formData.append('gender', gender);
+    formData.append('short_biography', short_biography);
+    formData.append('status', status);
+    formData.append('job_title', job_title);
+    formData.append('rating', rating);
+    if (image) formData.append('image', image);
 
-            let formData = new FormData();
-            formData.append('name', name);
-            formData.append('date_of_birth', date_of_birth);
-            formData.append('clinic_id', clinic_id);
-            if (department_id) formData.append('department_id', department_id);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('confirm_password', confirm_password);
-            formData.append('phone', phone);
-            formData.append('address', address);
-            formData.append('work_start_time', work_start_time);
-            formData.append('work_end_time', work_end_time);
-            formData.append('gender', gender);
-            formData.append('short_biography', short_biography);
-            formData.append('status', status);
-            formData.append('job_title', job_title);
-            formData.append('rating', rating);
-            if (image) formData.append('image', image);
+    workingDays.forEach(day => formData.append('working_days[]', day));
 
-            workingDays.forEach(day => formData.append('working_days[]', day));
+    if ($('#doctor_info_card').is(':visible')) {
+        formData.append('qualification', qualification);
+        formData.append('consultation_fee', consultation_fee);
+    }
 
-            // أضف حقول الدكتور لو ظاهرة
-            if ($('#doctor_info_card').is(':visible')) {
-                formData.append('qualification', qualification);
-                formData.append('consultation_fee', consultation_fee);
-            }
+    let start = moment(work_start_time, "HH:mm");
+    let end = moment(work_end_time, "HH:mm");
+    let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-            let start = moment(work_start_time, "HH:mm");
-            let end = moment(work_end_time, "HH:mm");
-
-            // التحقق
-            if (name === '' || date_of_birth === '' || email === '' || phone === '' || job_title === undefined ||
-                workingDays.length === 0 || !work_start_time || !work_end_time || address === '' || gender === undefined) {
-                Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if (password !== confirm_password) {
-                Swal.fire({ title: 'Error!', text: 'Password confirmation does not match', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if (!start.isBefore(end)) {
-                Swal.fire({ title: 'Error!', text: 'The timing is incorrect, Please correct it', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#doctor_info_card').is(':visible') && (!speciality || !isValidSelectValue('qualification') || !consultation_fee || !rating)) {
-                Swal.fire({ title: 'Error!', text: 'Please fill all doctor job information fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#doctor_info_card').is(':visible') && (consultation_fee <= 0)) {
-                Swal.fire({ title: 'Error!', text: 'The consultation fee is invalid', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
-                Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            }else if ($('#department_field').is(':visible') && !department_id) {
-                Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            }else {
-                $.ajax({
-                    method: 'POST',
-                    url: "{{ route('clinic.store_employee') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    success: function (response) {
-                        if (response.data == 0) {
-                            Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                        } else if (response.data == 1) {
-                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                        } else if (response.data == 2) {
-                            Swal.fire({ title: 'Error!', text: 'This clinic already has a accountant', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                        } else if (response.data == 3) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Employee has been added successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => { window.location.href = '/clinic-manager/view/employees'; });
-                        }
-                    },
+    // التحقق العادي
+    if (name === '' || date_of_birth === '' || email === '' || phone === '' || job_title === undefined ||
+        workingDays.length === 0 || !work_start_time || !work_end_time || address === '' || gender === undefined) {
+        Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    } else if (password && !passwordPattern.test(password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
                 });
+                return;
+    } else if (password !== confirm_password) {
+        Swal.fire({ title: 'Error!', text: 'Password confirmation does not match', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    } else if (!start.isBefore(end)) {
+        Swal.fire({ title: 'Error!', text: 'The timing is incorrect, Please correct it', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    } else if ($('#doctor_info_card').is(':visible') && (!speciality || !isValidSelectValue('qualification') || !consultation_fee || !rating)) {
+        Swal.fire({ title: 'Error!', text: 'Please fill all doctor job information fields', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    } else if ($('#doctor_info_card').is(':visible') && (consultation_fee <= 0)) {
+        Swal.fire({ title: 'Error!', text: 'The consultation fee is invalid', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    } else if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
+        Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    } else if ($('#department_field').is(':visible') && !department_id) {
+        Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+        return;
+    }
+
+    // ================================
+    //  فحص الإيميل (RFC + DNS)
+    // ================================
+    $.ajax({
+        method: 'POST',
+        url: "{{ route('check_email') }}",
+        data: {
+            email: email,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+
+        success: function () {
+
+            // ======= إضافة الموظف =======
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('clinic.store_employee') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+
+                success: function (response) {
+                    if (response.data == 0) {
+                        Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+                    } else if (response.data == 1) {
+                        Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+                    } else if (response.data == 2) {
+                        Swal.fire({ title: 'Error!', text: 'This clinic already has a accountant', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF', });
+                    } else if (response.data == 3) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Employee has been added successfully',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
+                        }).then(() => { window.location.href = '/clinic-manager/view/employees'; });
+                    }
+                }
+            });
+        },
+
+        error: function (xhr) {
+            let msg = 'Invalid email address';
+
+            if (xhr.responseJSON?.errors?.email) {
+                msg = xhr.responseJSON.errors.email[0];
             }
-        });
+
+            Swal.fire({
+                title: 'Error!',
+                text: msg,
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+        }
+    });
+
+});
+
     });
 </script>
 @endsection

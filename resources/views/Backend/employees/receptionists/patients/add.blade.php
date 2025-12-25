@@ -260,73 +260,109 @@
                     formData.append('image', image);
                 }
 
+                let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
                 if (name == '' || date_of_birth == '' || email == '' || password == '' || confirm_password == '' || phone == ''
-                || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
+                    || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please enter all required fields',
                         icon: 'error',
-                        confirmButtonText: 'OK',
                         confirmButtonColor: '#007BFF',
                     });
                     return;
+                }
 
-                }else if (password !== confirm_password){
+                if (!passwordPattern.test(password)) {
+                    Swal.fire({
+                        title: 'Invalid Password',
+                        text: 'Password must be 6–15 characters',
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
+                    return;
+                }
+
+                if (password !== confirm_password) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Password confirmation does not match',
                         icon: 'error',
-                        confirmButtonText: 'OK',
                         confirmButtonColor: '#007BFF',
                     });
                     return;
-                }else{
-                    $.ajax({
+                }
+
+                $.ajax({
                     method: 'POST',
-                    url: "{{ route('receptionist.store_patient') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    url: "{{ route('check_email') }}",
+                    data: {
+                        email: email,
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function (response) {
-                        if (response.data == 0) {
-                            Swal.fire({
-                                title: 'Warning',
-                                text: 'The patient already exists',
-                                icon: 'warning',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            });
+                    success: function () {
+                        // إذا الإيميل صالح → نحفظ المريض
+                        $.ajax({
+                            method: 'POST',
+                            url: "{{ route('receptionist.store_patient') }}",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                if (response.data == 0) {
+                                    Swal.fire({
+                                        title: 'Warning',
+                                        text: 'This email is already used by another user',
+                                        icon: 'warning',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#007BFF',
+                                    });
+                                }
+                                else if (response.data == 1) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Patient has been added successfully',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#007BFF',
+                                    }).then(() => {
+                                        window.location.href = '/employee/receptionist/view/patients';
+                                    });
+                                }
+                                else if (response.data == 2) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Patient has been added successfully',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#007BFF',
+                                    }).then(() => {
+                                        window.location.href = '/employee/receptionist/view/patients';
+                                    });
+                                }
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        let msg = 'Invalid email address';
+
+                        if (xhr.responseJSON?.errors?.email) {
+                            msg = xhr.responseJSON.errors.email[0];
                         }
-                        else if (response.data == 1) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Patient has been added successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => {
-                                window.location.href = '/employee/receptionist/view/patients';
-                            });
-                        }
-                        else if (response.data == 2) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Patient has been added successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => {
-                                window.location.href = '/employee/receptionist/view/patients';
-                            });
-                        }
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: msg,
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                 });
-            }
+            });
         });
-    });
 
     </script>
 @endsection

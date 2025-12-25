@@ -283,8 +283,9 @@
         $origWorkingDays = $clinic_manager->employee->working_days ?? [];
     @endphp
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script>
-    // Helper: ensure select has a non-empty value
+
     function isValidSelectValue(id) {
         const el = document.getElementById(id);
         if (!el) return false;
@@ -393,6 +394,10 @@
             workingDays.push($(this).val());
         });
 
+        let start = moment(work_start_time, "HH:mm");
+        let end = moment(work_end_time, "HH:mm");
+
+
         if (!name || !date_of_birth || !clinic_id  || !email || !phone || !address || !gender
             || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || workingDays.length === 0) {
             Swal.fire({
@@ -405,12 +410,34 @@
             return;
         }
 
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+        if (password && !passwordPattern.test(password)) {
+            Swal.fire({
+                title: 'Invalid Password',
+                text: 'Password must be 6–15 characters',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
         if (password && password !== confirm_password) {
             Swal.fire({
                 title: 'Error!',
                 text: 'Password confirmation does not match',
                 icon: 'error',
                 confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        if (!start.isBefore(end)) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'The timing is incorrect, Please correct it',
+                icon: 'error',
+                confirmButtonText: 'OK' ,
                 confirmButtonColor: '#007BFF',
             });
             return;
@@ -462,53 +489,80 @@
             return;
         }
 
+        // ===== Real Email Validation (Laravel RFC + DNS) =====
         $.ajax({
-            type: 'POST',
-            url: "{{ route('update_clinics_managers', ['id' => $clinic_manager->id]) }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'X-HTTP-Method-Override': 'PUT'
+            method: 'POST',
+            url: "{{ route('check_email') }}",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (response) {
-            if (response.data == 0) {
+            success: function () {
+
+                // ✅ الإيميل صالح → نكمل التحديث
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('update_clinics_managers', ['id' => $clinic_manager->id]) }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'X-HTTP-Method-Override': 'PUT'
+                    },
+                    success: function (response) {
+                        if (response.data == 0) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'This email is already used by another user',
+                                icon: 'error',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        } else if (response.data == 1) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Clinic Manager has been updated successfully',
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
+                            }).then(() => window.location.href = '/admin/view/clinics-managers');
+                        } else {
+                            Swal.fire({
+                                title: 'Notice',
+                                text: 'Unexpected response. Please try again.',
+                                icon: 'info',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: (xhr.responseJSON && xhr.responseJSON.message)
+                                ? xhr.responseJSON.message
+                                : 'Request failed',
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF',
+                        });
+                    }
+                });
+
+            },
+            error: function (xhr) {
+                let msg = 'Invalid email address';
+
+                if (xhr.responseJSON?.errors?.email) {
+                    msg = xhr.responseJSON.errors.email[0];
+                }
+
                 Swal.fire({
                     title: 'Error!',
-                    text: 'This email is already used by another user',
+                    text: msg,
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#007BFF'
                 });
-            } else if (response.data == 1) {
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Clinic Manager has been updated successfully',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                }).then(() => window.location.href = '/admin/view/clinics-managers');
-            } else {
-                Swal.fire({
-                    title: 'Notice',
-                    text: 'Unexpected response. Please try again.',
-                    icon: 'info',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                });
-            }
-            },
-            error: function(xhr){
-            Swal.fire({
-                title: 'Error!',
-                text: (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Request failed',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
-            });
             }
         });
+
         });
     });
 </script>

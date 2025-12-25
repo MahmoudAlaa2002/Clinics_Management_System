@@ -483,13 +483,26 @@ $(document).ready(function () {
         let workingDays = [];
         $('input[name="working_days[]"]:checked').each(function () { workingDays.push($(this).val()); });
 
-        if (!name || !date_of_birth || !department_id || !email || !phone || !gender || !work_start_time || !work_end_time || workingDays.length === 0 || !job_title) {
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
+        if (!name || !date_of_birth || !department_id || !email || !phone || !gender || !work_start_time || !work_end_time 
+            || workingDays.length === 0 || !job_title) {
             return Swal.fire({
                 icon: 'error',
                 title: 'Error!',
                 text: 'Please enter all required fields',
                 confirmButtonColor: '#007BFF'
             });
+        }
+
+        if (password && !passwordPattern.test(password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
         }
 
         if (password !== confirm_password) {
@@ -528,7 +541,6 @@ $(document).ready(function () {
             });
         }
 
-
         let formData = new FormData();
         formData.append('_method', 'PUT');
         formData.append('name', name);
@@ -537,9 +549,7 @@ $(document).ready(function () {
         formData.append('email', email);
         formData.append('address', address);
         formData.append('clinic_id', clinic_id);
-        if (department_id) {
-            formData.append('department_id', department_id);
-        }
+        if (department_id) formData.append('department_id', department_id);
         formData.append('gender', gender);
         formData.append('status', status);
         formData.append('job_title', job_title);
@@ -555,7 +565,7 @@ $(document).ready(function () {
         formData.append('consultation_fee', consultation_fee);
         formData.append('rating', rating);
 
-        let newImageSelected = image ? true : false;
+        let newImageSelected = !!image;
 
         let noChanges = !newImageSelected &&
             name === originalName &&
@@ -571,13 +581,14 @@ $(document).ready(function () {
             work_end_time === originalWorkEnd &&
             short_biography === originalBiography &&
             JSON.stringify(workingDays.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
-
             (!$('#doctor_info_card').is(':visible') ||
                 (speciality === originalSpeciality &&
                 qualification === originalQualification &&
                 consultation_fee == originalFee &&
                 rating == originalRating)
             );
+
+        if (password !== '' || confirm_password !== '') noChanges = false;
 
         if (noChanges) {
             Swal.fire({
@@ -589,35 +600,66 @@ $(document).ready(function () {
             return;
         }
 
-
+        // ==========================
+        // فحص الإيميل (RFC + DNS)
+        // ==========================
         $.ajax({
             method: 'POST',
-            url: "{{ route('clinic.update_employee', $employee->id) }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            success: function (response) {
-                if (response.data == 0) {
-                    Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                } else if (response.data == 1) {
-                    Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                } else if (response.data == 2) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Employee updated successfully',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
-                    }).then(() => { window.location.href = '/clinic-manager/view/employees'; });
-                }
+            url: "{{ route('check_email') }}",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr('content')
             },
-            error: function() {
-                Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
+
+            success: function () {
+
+                // ====== تنفيذ التعديل ======
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('clinic.update_employee', $employee->id) }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+
+                    success: function (response) {
+                        if (response.data == 0) {
+                            Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF' });
+                        } else if (response.data == 1) {
+                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF' });
+                        } else if (response.data == 2) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Employee updated successfully',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
+                            }).then(() => { window.location.href = '/clinic-manager/view/employees'; });
+                        }
+                    },
+
+                    error: function () {
+                        Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF' });
+                    }
+                });
+            },
+
+            error: function (xhr) {
+                let msg = 'Invalid email address';
+
+                if (xhr.responseJSON?.errors?.email) {
+                    msg = xhr.responseJSON.errors.email[0];
+                }
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: msg,
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
             }
         });
     });
-
 });
 </script>
 @endsection

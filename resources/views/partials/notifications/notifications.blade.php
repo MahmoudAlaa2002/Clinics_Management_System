@@ -23,13 +23,46 @@
                         <a href="{{ route('notifications_read', $notification->id) }}">
                             <div class="media">
 
-                                <span class="avatar">
-                                    <img
-                                        src="{{ asset($notification->data['image'] ?? 'assets/img/user.jpg') }}"
-                                        class="img-fluid"
-                                        alt="Notification"
-                                    >
+                                @php
+                                    $type = $notification->data['type'] ?? 'default';
+
+                                    $icon = match ($type) {
+
+                                        // 📅 Appointments
+                                        'appointment_booked'     => 'fa-calendar-plus-o',
+                                        'appointment_accepted'   => 'fa-calendar-check-o',
+                                        'appointment_cancelled'  => 'fa-calendar-times-o',
+                                        'appointment_rejected'  => 'fa-calendar-times-o',
+                                        'appointment_completed'  => 'fa-check-circle-o',
+
+                                        // 💳 Invoices
+                                        'invoice_created'        => 'fa-file-text-o',
+                                        'invoice_cancelled'      => 'fa-ban',
+
+                                        // 👩‍⚕️ Nurse Tasks
+                                        'nurse_task_assigned'    => 'fa-tasks',
+                                        'nurse_task_completed'   => 'fa-tasks',
+
+                                        // 🧑 Patients
+                                        'patient_registered'     => 'fa-user-plus',
+                                        'patient_added'          => 'fa-user-plus',
+
+                                        // 🔔 Default
+                                        default                  => 'fa-bell-o',
+                                    };
+
+                                @endphp
+
+                                <span class="avatar d-flex align-items-center justify-content-center"
+                                    style="
+                                        background:#e7f0ff;
+                                        color:#00A8FF;
+                                        border-radius:50%;
+                                        width:50px;
+                                        height:50px;">
+                                    <i class="fa {{ $icon }}" style="font-size: 24px;"></i>
                                 </span>
+
 
                                 <div class="media-body">
 
@@ -72,7 +105,7 @@
         </div>
 
         <div class="topnav-dropdown-footer">
-            <a href="{{ route('notifications_view') }}">View all Notifications</a>
+            <a href="{{ route('notifications_index') }}">View all Notifications</a>
         </div>
     </div>
 </li>

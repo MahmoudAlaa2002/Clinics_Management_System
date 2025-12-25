@@ -244,118 +244,158 @@
 
 
 @section('js')
-    <script>
-        function isValidSelectValue(id) {
-            let value = document.getElementById(id).value;
-            return value !== '' && value !== '0';
-        }
+<script>
 
-        $(document).ready(function () {
-            $('.editBtn').click(function (e) {
-                e.preventDefault();
+    function isValidSelectValue(id) {
+        let value = document.getElementById(id).value;
+        return value !== '' && value !== '0';
+    }
 
-                let name = $('#name').val().trim();
-                let location = $('#location').val().trim();
-                let email = $('#email').val().trim();
-                let phone = $('#phone').val().trim();
-                let opening_time = $('#opening_time').val();
-                let closing_time = $('#closing_time').val();
-                let description = $('#description').val().trim();
-                let status = $('input[name="status"]:checked').val();
+    $(document).ready(function () {
 
-                let working_days = [];
-                $('input[name="working_days[]"]:checked').each(function () {
-                    working_days.push($(this).val());
+        $('.editBtn').click(function (e) {
+            e.preventDefault();
+
+            let name = $('#name').val().trim();
+            let location = $('#location').val().trim();
+            let email = $('#email').val().trim();
+            let phone = $('#phone').val().trim();
+            let opening_time = $('#opening_time').val();
+            let closing_time = $('#closing_time').val();
+            let description = $('#description').val().trim();
+            let status = $('input[name="status"]:checked').val();
+
+            let working_days = [];
+            $('input[name="working_days[]"]:checked').each(function () {
+                working_days.push($(this).val());
+            });
+
+            let departments = [];
+            $('input[name="departments[]"]:checked').each(function () {
+                departments.push(Number($(this).val()));
+            });
+
+            if (name === '' || location === '' || email === '' || phone === '' || !isValidSelectValue('opening_time') ||
+                !isValidSelectValue('closing_time') || working_days.length === 0 || departments.length === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter all required fields',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
+                return;
+            }
 
-                let departments = [];
-                $('input[name="departments[]"]:checked').each(function () {
-                    departments.push(Number($(this).val()));
+            if (opening_time >= closing_time){
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The timing is incorrect, please correct it',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
+                return;
+            }
 
+            let originalWorkingDays = @json($originalWorkingDays);
+            let originalDepartments = @json($clinicDepartmentIds).map(Number);
 
-                if (name === '' || location === '' || email === '' || phone === '' || !isValidSelectValue('opening_time')
-                    || !isValidSelectValue('closing_time') || working_days.length === 0 || departments.length === 0) {
+            let noChanges =
+                name === "{{ $originalName }}" &&
+                location === "{{ $originalLocation }}" &&
+                email === "{{ $originalEmail }}" &&
+                phone === "{{ $originalPhone }}" &&
+                opening_time === "{{ $originalOpening }}" &&
+                closing_time === "{{ $originalClosing }}" &&
+                description === "{{ $originalDescription }}" &&
+                status === "{{ $originalStatus }}" &&
+                JSON.stringify(working_days.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
+                JSON.stringify(departments.sort()) === JSON.stringify(originalDepartments.sort());
+
+            if (noChanges) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this clinic',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            // ====== فحص الإيميل الحقيقي (RFC + DNS) ======
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+
+                success: function () {
+
+                    // ====== التحديث ======
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('update_clinic', ['id' => $clinic->id]) }}",
+                        data: {
+                            _method: 'PUT',
+                            name: name,
+                            location: location,
+                            email: email,
+                            phone: phone,
+                            opening_time: opening_time,
+                            closing_time: closing_time,
+                            description: description,
+                            status: status,
+                            working_days: working_days,
+                            departments: departments,
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+
+                        success: function (response) {
+                            if (response.data === 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This clinic name already exists',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                            } else if (response.data === 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Clinic has been updated successfully',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => {
+                                    window.location.href = "{{ route('view_clinics') }}";
+                                });
+                            }
+                        }
+                    });
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+
+                    if (xhr.responseJSON?.errors?.email) {
+                        msg = xhr.responseJSON.errors.email[0];
+                    }
+
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please enter all required fields',
+                        text: msg,
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#007BFF'
                     });
-                    return;
                 }
-
-                let originalWorkingDays = @json($originalWorkingDays);
-                let originalDepartments = @json($clinicDepartmentIds).map(Number);
-
-
-                let noChanges =
-                    name === "{{ $originalName }}" &&
-                    location === "{{ $originalLocation }}" &&
-                    email === "{{ $originalEmail }}" &&
-                    phone === "{{ $originalPhone }}" &&
-                    opening_time === "{{ $originalOpening }}" &&
-                    closing_time === "{{ $originalClosing }}" &&
-                    description === "{{ $originalDescription }}" &&
-                    status === "{{ $originalStatus }}" &&
-                    JSON.stringify(working_days.sort()) === JSON.stringify(originalWorkingDays.sort())&&
-                    JSON.stringify(departments.sort()) === JSON.stringify(originalDepartments.sort());
-
-
-                if (noChanges) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'No Changes',
-                        text: 'No updates were made to this clinic',
-                        confirmButtonColor: '#007BFF',
-                    });
-                    return;
-                }
-
-
-                $.ajax({
-                    method: 'POST',
-                    url: "{{ route('update_clinic', ['id' => $clinic->id]) }}",
-                    data: {
-                        _method: 'PUT',
-                        name: name,
-                        location: location,
-                        email: email,
-                        phone: phone,
-                        opening_time: opening_time,
-                        closing_time: closing_time,
-                        description: description,
-                        status: status,
-                        working_days: working_days,
-                        departments: departments,
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        if (response.data === 0) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'This clinic name already exists',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            });
-                        } else if (response.data === 1) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Clinic has been updated successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => {
-                                window.location.href = "{{ route('view_clinics') }}";
-                            });
-                        }
-                    },
-                });
             });
+
         });
-    </script>
+    });
+</script>
 @endsection

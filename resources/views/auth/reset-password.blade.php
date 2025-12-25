@@ -137,11 +137,23 @@ $(document).ready(function () {
         let confirmPassword = $('input[name="password_confirmation"]').val();
         let token = $('input[name="token"]').val();
 
+        let passwordPattern = /^(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
         if (!password || !confirmPassword) {
             Swal.fire({
+                title: 'Error!',
+                text: 'Please fill in all required fields',
                 icon: 'error',
-                title: 'Error',
-                text: 'All fields are required',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
+        if (!passwordPattern.test(password)) {
+            Swal.fire({
+                title: 'Invalid Password',
+                text: 'Password must be 6–15 characters',
+                icon: 'error',
                 confirmButtonColor: '#007BFF'
             });
             return;

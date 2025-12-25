@@ -425,6 +425,28 @@
             return;
         }
 
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter a valid email address',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
+        let passwordPattern = /^\d{6}$/;
+        if (password && !passwordPattern.test(password)) {
+            Swal.fire({
+                title: 'Invalid Password',
+                text: 'Password must contain exactly 6 digits',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
         if (password && password !== confirm_password) {
             Swal.fire({
                 title: 'Error!',
@@ -468,11 +490,8 @@
             short_biography === "{{ $origBio }}" &&
             status === "{{ $origStatus }}" &&
             JSON.stringify(workingDays.sort()) === JSON.stringify(@json($origWorkingDays).sort()) &&
-            !image &&
-            password === "" &&
-            confirm_password === "";
+            !image;
 
-        // لو ما في تعديل
         if (noChanges) {
             Swal.fire({
                 icon: 'warning',

@@ -262,59 +262,100 @@
                     formData.append('image', image);
                 }
 
+                let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
+                // 1️⃣ فحص الحقول الأساسية
                 if (name == '' || date_of_birth == '' || email == '' || password == '' || confirm_password == '' || phone == ''
-                || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
+                    || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
+
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please enter all required fields',
                         icon: 'error',
-                        confirmButtonText: 'OK',
                         confirmButtonColor: '#007BFF',
                     });
                     return;
+                }
 
-                }else if (password !== confirm_password){
+                // 2️⃣ فحص كلمة المرور
+                if (!passwordPattern.test(password)) {
+                    Swal.fire({
+                        title: 'Invalid Password',
+                        text: 'Password must be 6–15 characters',
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
+                    return;
+                }
+
+                if (password !== confirm_password) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Password confirmation does not match',
                         icon: 'error',
-                        confirmButtonText: 'OK',
                         confirmButtonColor: '#007BFF',
                     });
                     return;
-                }else{
-                    $.ajax({
+                }
+
+                // 3️⃣ فحص الإيميل الحقيقي من Laravel
+                $.ajax({
                     method: 'POST',
-                    url: "{{ route('store_patient') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    url: "{{ route('check_email') }}",
+                    data: {
+                        email: email,
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function (response) {
-                        if (response.data == 0) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'This email is already used by another user',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            });
-                        } else if (response.data == 1) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Patient has been added successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => {
-                                window.location.href = '/admin/view/patients';
-                            });
+                    success: function () {
+
+                        // 4️⃣ إذا الإيميل صالح → نحفظ المريض
+                        $.ajax({
+                            method: 'POST',
+                            url: "{{ route('store_patient') }}",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                if (response.data == 0) {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'This email is already used by another user',
+                                        icon: 'error',
+                                        confirmButtonColor: '#007BFF',
+                                    });
+                                } else if (response.data == 1) {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Patient has been added successfully',
+                                        icon: 'success',
+                                        confirmButtonColor: '#007BFF',
+                                    }).then(() => {
+                                        window.location.href = '/admin/view/patients';
+                                    });
+                                }
+                            }
+                        });
+
+                    },
+                    error: function (xhr) {
+                        let msg = 'Invalid email address';
+
+                        if (xhr.responseJSON?.errors?.email) {
+                            msg = xhr.responseJSON.errors.email[0];
                         }
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: msg,
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                 });
-            }
+
             });
         });
 

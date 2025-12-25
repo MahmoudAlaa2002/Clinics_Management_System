@@ -1,4 +1,4 @@
-@extends('Backend.employees.nurses.master')
+@extends('Backend.doctors.master')
 
 @section('title', 'Nurse Task Details')
 
@@ -124,6 +124,7 @@
             <div class="col-lg-10 offset-lg-1">
                 <div class="nt-header-card">
                     Appointment: #<strong>{{ $task->appointment_id }}</strong><br>
+                    Nurse: <strong>{{ $task->nurse->user->name }}</strong><br>
                 </div>
             </div>
         </div>
@@ -202,7 +203,7 @@
         <!-- Back Button -->
         <div class="row">
             <div class="col-lg-10 offset-lg-1 text-right">
-                <a href="{{ Route('nurse.view_nurse_tasks') }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
+                <a href="{{ url()->previous() }}" class="btn btn-primary rounded-pill" style="font-weight: bold;">
                     Back
                 </a>
             </div>

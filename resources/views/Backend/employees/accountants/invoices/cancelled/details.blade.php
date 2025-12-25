@@ -135,83 +135,164 @@
         color: white;
     }
 
+    /* ====== NEW STYLE FOR NO REFUND (BLUE THEME) ====== */
+    .no-refund-box {
+        max-width: 800px;
+        margin: 40px auto;
+        background: linear-gradient(135deg, #e3f2fd, #f8fbff);
+        border-radius: 16px;
+        padding: 50px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        text-align: center;
+        border-left: 6px solid #03A9F4;
+    }
+
+    .no-refund-icon {
+        font-size: 72px;
+        color: #03A9F4;
+        margin-bottom: 20px;
+    }
+
+    .no-refund-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: #0288d1;
+        margin-bottom: 12px;
+    }
+
+    .no-refund-text {
+        font-size: 16px;
+        color: #374151;
+        line-height: 1.8;
+        margin-bottom: 35px;
+    }
+
+    .no-refund-info {
+        background: #ffffff;
+        border: 1px solid #dbeafe;
+        padding: 25px;
+        border-radius: 14px;
+        text-align: left;
+        margin-bottom: 40px;
+    }
+
+    .no-refund-info p {
+        font-size: 15px;
+        margin-bottom: 8px;
+        color: #111827;
+    }
+
+    .invoice-wrapper,
+    .no-refund-box {
+        margin-top: 120px;
+    }
+
+
 </style>
 
+@if($refund_invoice->refund_amount > 0)
+    <div class="content-fluid">
+    <div class="invoice-wrapper">
 
-<div class="content-fluid">
-<div class="invoice-wrapper">
+        <div class="header-flex">
+            <div class="invoice-header-text">
+                <h4>Refund Confirmation</h4>
+                <p><strong>Document ID:</strong> #REF-{{ $refund_invoice->id }}</p>
+                <p><strong>Date:</strong> {{ $refund_invoice->refund_date ?? '-' }}</p>
+            </div>
 
-    <div class="header-flex">
-        <div class="invoice-header-text">
-            <h4>Refund Confirmation</h4>
-            <p><strong>Document ID:</strong> #REF-{{ $refund_invoice->id }}</p>
-            <p><strong>Date:</strong> {{ $refund_invoice->refund_date ?? '-' }}</p>
+            <div class="invoice-logo">
+                <img src="{{ asset('assets/img/logo-dark.png') }}">
+            </div>
         </div>
 
-        <div class="invoice-logo">
-            <img src="{{ asset('assets/img/logo-dark.png') }}">
+        <hr>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="label">Clinic</div>
+                <div class="value">{{ $refund_invoice->appointment->clinicDepartment->clinic->name ?? 'N/A' }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="label">Appointment ID</div>
+                <div class="value">#{{ $refund_invoice->appointment_id }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="label">Patient</div>
+                <div class="value">{{ $refund_invoice->patient->user->name ?? 'N/A' }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="label">Refund Date</div>
+                <div class="value">{{ $refund_invoice->refund_date ?? '-' }}</div>
+            </div>
+
         </div>
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th style="text-align:right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Refunded Amount</td>
+                    <td style="text-align:right;">$ {{ number_format($refund_invoice->refund_amount, 2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="refunded-by">
+            Refunded By <span>{{ $refund_invoice->refundedBy->user->name ?? '-' }}</span>
+        </div>
+
+        @if($refund_invoice->refund_date)
+            <div style="margin-top: 60px; text-align: left;">
+                <p style="font-size: 14px; color:#6b7280;">Authorized Signature</p>
+                <img src="{{ asset('assets/img/signature/t3.png') }}" style="width: 180px; margin-bottom: 8px;">
+            </div>
+        @endif
+
+        <div class="action-buttons">
+            <a href="{{ route('accountant.view_invoices') }}" class="btn-custom btn-back">Back</a>
+            <a href="{{ route('accountant.cancelled_invoice_pdf' , ['id' =>$refund_invoice->id]) }}" class="btn-custom btn-print">Print</a>
+        </div>
+
+    </div>
+    </div>
+@else
+
+<div class="no-refund-box">
+
+    <div class="no-refund-icon">
+        <i class="fas fa-info-circle"></i>
     </div>
 
-    <hr>
-
-    <div class="info-grid">
-        <div class="info-item">
-            <div class="label">Clinic</div>
-            <div class="value">{{ $refund_invoice->appointment->clinicDepartment->clinic->name ?? 'N/A' }}</div>
-        </div>
-
-        <div class="info-item">
-            <div class="label">Appointment ID</div>
-            <div class="value">#{{ $refund_invoice->appointment_id }}</div>
-        </div>
-
-        <div class="info-item">
-            <div class="label">Patient</div>
-            <div class="value">{{ $refund_invoice->patient->user->name ?? 'N/A' }}</div>
-        </div>
-
-        <div class="info-item">
-            <div class="label">Refund Date</div>
-            <div class="value">{{ $refund_invoice->refund_date ?? '-' }}</div>
-        </div>
-
+    <div class="no-refund-title">
+        No Refund Issued
     </div>
 
-    <table class="invoice-table">
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th style="text-align:right;">Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Refunded Amount</td>
-                <td style="text-align:right;">$ {{ number_format($refund_invoice->refund_amount, 2) }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="refunded-by">
-        Refunded By <span>{{ $refund_invoice->refundedBy->user->name ?? '-' }}</span>
+    <div class="no-refund-text">
+        This appointment was cancelled before any payment was made.<br>
+        Therefore, no refund document was generated.
     </div>
 
+    <div class="no-refund-info">
+        <p><strong>Appointment ID:</strong> #{{ $refund_invoice->appointment_id }}</p>
+        <p><strong>Patient:</strong> {{ $refund_invoice->patient->user->name }}</p>
+        <p><strong>Status:</strong> Invoice Cancelled</p>
+    </div>
 
-    @if($refund_invoice->refund_date)
-        <div style="margin-top: 60px; text-align: left;">
-            <p style="font-size: 14px; color:#6b7280;">Authorized Signature</p>
-            <img src="{{ asset('assets/img/signature/t3.png') }}" style="width: 180px; margin-bottom: 8px;">
-        </div>
-    @endif
-
-
-    <div class="action-buttons">
+    <div class="action-buttons" style="justify-content:center;">
         <a href="{{ route('accountant.view_invoices') }}" class="btn-custom btn-back">Back</a>
-        <a href="{{ route('accountant.cancelled_invoice_pdf' , ['id' =>$refund_invoice->id]) }}" class="btn-custom btn-print">Print</a>
     </div>
 
 </div>
-</div>
+
+@endif
 
 @endsection

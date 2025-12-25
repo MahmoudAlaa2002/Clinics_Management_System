@@ -9,7 +9,9 @@ use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Events\InvoiceCancelled;
 use App\Models\ClinicDepartment;
+use App\Events\AppointmentAccepted;
 use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -391,6 +393,7 @@ class AppointmentController extends Controller{
             ]);
 
             AppointmentCancelled::dispatch($appointment, auth()->user());
+            InvoiceCancelled::dispatch($appointment->invoice);
         }
 
 
@@ -404,26 +407,41 @@ class AppointmentController extends Controller{
 
 
 
-
-    public function updateStatus(Request $request, $id){
-        $appointment = Appointment::findOrFail($id);
+    public function updateStatus(Request $request, $id) {
+        $appointment = Appointment::with('invoice')->findOrFail($id);
         $appointment->status = $request->status;
 
-        $paid_amount = $appointment->invoice->paid_amount;
-
+        // حالة الرفض
         if ($request->status === 'Rejected') {
-            $appointment->notes = 'Reject Reason: ' . $request->notes;
 
-            $appointment->invoice->update([
-                'invoice_status' => 'Cancelled',
-                'due_date' => Null,
-                'refund_amount' => $paid_amount,
-            ]);
+            $appointment->notes = $request->notes
+                ? 'Reject Reason: ' . $request->notes
+                : 'Appointment rejected';
+
+            if ($appointment->invoice) {
+                $paidAmount = $appointment->invoice->paid_amount ?? 0;
+                $appointment->invoice->update([
+                    'invoice_status' => 'Cancelled',
+                    'due_date'       => null,
+                    'refund_amount'  => $paidAmount,
+                ]);
+
+                // إطلاق حدث إلغاء الفاتورة
+                InvoiceCancelled::dispatch($appointment->invoice);
+            }
+        }
+
+        // حالة القبول
+        if ($request->status === 'Accepted') {
+            $appointment->notes = null;
+            AppointmentAccepted::dispatch($appointment);
         }
 
         $appointment->save();
+
         return response()->json(['success' => true]);
     }
+
 
 
 

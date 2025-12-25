@@ -371,7 +371,7 @@
                     {{-- Submit --}}
                     <div class="text-center" style="margin-top:20px;">
                         <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
-                            Edit Employee
+                            Edit Doctor
                         </button>
                     </div>
 
@@ -403,133 +403,200 @@ $(document).ready(function () {
         let originalQualification     = "{{ $doctor->qualification }}";
         let originalConsultationFee   = "{{ $doctor->consultation_fee }}";
         let originalRating            = "{{ $doctor->rating }}";
-    $('.editBtn').click(function (e) {
-        e.preventDefault();
 
-        let name = $('#name').val().trim(),
-            date_of_birth = $('#date_of_birth').val().trim(),
-            phone = $('#phone').val().trim(),
-            email = $('#email').val().trim(),
-            address = $('#address').val().trim(),
-            clinic_id = $('#clinic_id').val(),
-            department_id = $('#department_id').val(),
-            work_start_time = $('#work_start_time').val(),
-            work_end_time = $('#work_end_time').val(),
-            gender = $('input[name="gender"]:checked').val(),
-            status = $('input[name="status"]:checked').val(),
-            password = $('#password').val(),
-            confirm_password = $('#confirm_password').val(),
-            short_biography = $('#short_biography').val().trim(),
-            speciality = $('#speciality').val(),
-            qualification = $('#qualification').val(),
-            consultation_fee = $('#consultation_fee').val(),
-            rating = $('#rating').val(),
-            image = document.querySelector('#image').files[0];
+        $('.editBtn').click(function (e) {
+            e.preventDefault();
 
-        let workingDays = [];
-        $('input[name="working_days[]"]:checked').each(function () { workingDays.push($(this).val()); });
+            let name = $('#name').val().trim(),
+                date_of_birth = $('#date_of_birth').val().trim(),
+                phone = $('#phone').val().trim(),
+                email = $('#email').val().trim(),
+                address = $('#address').val().trim(),
+                clinic_id = $('#clinic_id').val(),
+                department_id = $('#department_id').val(),
+                work_start_time = $('#work_start_time').val(),
+                work_end_time = $('#work_end_time').val(),
+                gender = $('input[name="gender"]:checked').val(),
+                status = $('input[name="status"]:checked').val(),
+                password = $('#password').val(),
+                confirm_password = $('#confirm_password').val(),
+                short_biography = $('#short_biography').val().trim(),
+                speciality = $('#speciality').val(),
+                qualification = $('#qualification').val(),
+                consultation_fee = $('#consultation_fee').val(),
+                rating = $('#rating').val(),
+                image = document.querySelector('#image').files[0];
 
-        if (!name || !date_of_birth || !department_id || !email || !phone || !gender ||
-            !work_start_time || !work_end_time || workingDays.length === 0 ||
-            !speciality || !qualification || !consultation_fee || !rating) {
-                return Swal.fire('Error!', 'Please enter all required fields', 'error');
-        }
+            let workingDays = [];
+            $('input[name="working_days[]"]:checked').each(function () { workingDays.push($(this).val()); });
 
-        if (password !== confirm_password) {
-            return Swal.fire('Error!', 'Password confirmation does not match', 'error');
-        }
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-        if (work_start_time >= work_end_time) {
-            return Swal.fire('Error!', 'Invalid work time range', 'error');
-        }
-
-
-        let formData = new FormData();
-        formData.append('_method', 'PUT');
-        formData.append('name', name);
-        formData.append('date_of_birth', date_of_birth);
-        formData.append('phone', phone);
-        formData.append('email', email);
-        formData.append('address', address);
-        formData.append('clinic_id', clinic_id);
-        if (department_id) {
-            formData.append('department_id', department_id);
-        }
-        formData.append('gender', gender);
-        formData.append('status', status);
-        formData.append('short_biography', short_biography);
-        formData.append('password', password);
-        formData.append('confirm_password', confirm_password);
-        formData.append('work_start_time', work_start_time);
-        formData.append('work_end_time', work_end_time);
-        workingDays.forEach(d => formData.append('working_days[]', d));
-        if (image) formData.append('image', image);
-        formData.append('speciality', speciality);
-        formData.append('qualification', qualification);
-        formData.append('consultation_fee', consultation_fee);
-        formData.append('rating', rating);
-
-        let newImageSelected = image ? true : false;
-
-        let noChanges =
-            !newImageSelected &&
-            name === originalName &&
-            date_of_birth === originalDob &&
-            phone === originalPhone &&
-            email === originalEmail &&
-            address === originalAddress &&
-            gender === originalGender &&
-            status === originalStatus &&
-            department_id == originalDepartment &&
-            work_start_time === originalWorkStart &&
-            work_end_time === originalWorkEnd &&
-            short_biography === originalShortBio &&
-            JSON.stringify(workingDays.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
-            speciality === originalSpeciality &&
-            qualification === originalQualification &&
-            consultation_fee == originalConsultationFee &&
-            rating == originalRating;
-
-        if (noChanges) {
-            return Swal.fire({
-                icon: 'warning',
-                title: 'No Changes',
-                text: 'No updates were made to this doctor',
-                confirmButtonColor: '#007BFF',
-            });
-        }
-
-        $.ajax({
-            method: 'POST',
-            url: "{{ route('clinic.update_doctor', $doctor->id) }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            success: function (response) {
-                if (response.data == 0) {
-                    Swal.fire({ title: 'Error!',
-                    text: 'This email is already used by another user',
+            if (!name || !date_of_birth || !department_id || !email || !phone || !gender ||
+                !work_start_time || !work_end_time || workingDays.length === 0 ||
+                !speciality || !qualification || !consultation_fee || !rating) {
+                    Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter all required fields',
                     icon: 'error',
-                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (password && !passwordPattern.test(password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (password !== confirm_password) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Password confirmation does not match',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (work_start_time >= work_end_time) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Invalid work time range',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('name', name);
+            formData.append('date_of_birth', date_of_birth);
+            formData.append('phone', phone);
+            formData.append('email', email);
+            formData.append('address', address);
+            formData.append('clinic_id', clinic_id);
+            if (department_id) formData.append('department_id', department_id);
+            formData.append('gender', gender);
+            formData.append('status', status);
+            formData.append('short_biography', short_biography);
+            formData.append('password', password);
+            formData.append('confirm_password', confirm_password);
+            formData.append('work_start_time', work_start_time);
+            formData.append('work_end_time', work_end_time);
+            workingDays.forEach(d => formData.append('working_days[]', d));
+            if (image) formData.append('image', image);
+            formData.append('speciality', speciality);
+            formData.append('qualification', qualification);
+            formData.append('consultation_fee', consultation_fee);
+            formData.append('rating', rating);
+
+            let newImageSelected = !!image;
+
+            let noChanges =
+                !newImageSelected &&
+                name === originalName &&
+                date_of_birth === originalDob &&
+                phone === originalPhone &&
+                email === originalEmail &&
+                address === originalAddress &&
+                gender === originalGender &&
+                status === originalStatus &&
+                department_id == originalDepartment &&
+                work_start_time === originalWorkStart &&
+                work_end_time === originalWorkEnd &&
+                short_biography === originalShortBio &&
+                JSON.stringify(workingDays.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
+                speciality === originalSpeciality &&
+                qualification === originalQualification &&
+                consultation_fee == originalConsultationFee &&
+                rating == originalRating;
+
+            if (password !== '' || confirm_password !== '') noChanges = false;
+
+            if (noChanges) {
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this doctor',
                     confirmButtonColor: '#007BFF',
                 });
-                }else if (response.data == 1) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Doctor Updated Successfully',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
-                    }).then(() => { window.location.href = '/clinic-manager/view/doctors'; });
-                }
-            },
-            error: function() {
-                Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
             }
+            // فحص الإيميل (RFC + DNS)
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+
+                success: function () {
+
+                    // ========= تنفيذ التعديل =========
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('clinic.update_doctor', $doctor->id) }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+
+                        success: function (response) {
+                            if (response.data == 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This email is already used by another user',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                            } else if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Doctor Updated Successfully',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => { window.location.href = '/clinic-manager/view/doctors'; });
+                            }
+                        },
+
+                        error: function () {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong!',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#007BFF',
+                            });
+                        }
+                    });
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+
+                    if (xhr.responseJSON?.errors?.email) {
+                        msg = xhr.responseJSON.errors.email[0];
+                    }
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: msg,
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
+                }
+            });
+
         });
     });
-
-});
 </script>
 @endsection

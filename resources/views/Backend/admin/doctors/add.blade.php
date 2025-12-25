@@ -377,13 +377,14 @@
 @endsection
 
 @section('js')
-    <script>
-        function isValidSelectValue(selectId) {      // هذا الميثود حتى أتجنب خداع الفيكفيار
-            let val = $(`#${selectId}`).val();
-            return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
-        }
+<script>
+    function isValidSelectValue(selectId) {
+        let val = $(`#${selectId}`).val();
+        return val !== '' && val !== null && val !== undefined && $(`#${selectId} option[value="${val}"]`).length > 0;
+    }
 
-        $(document).ready(function () {
+    $(document).ready(function () {
+
         $('.addBtn').click(function (e) {
             e.preventDefault();
 
@@ -406,178 +407,205 @@
             let qualification = $('#qualification').val();
             let rating = $('#rating').val();
             let consultation_fee = $('#consultation_fee').val();
-            let job_title = $('input[name="job_title"]:checked').val();
 
             let workingDays = [];
             $('input[name="working_days[]"]:checked').each(function () {
                 workingDays.push($(this).val());
             });
 
-            // ✅ التحقق من الحقول الأساسية
-            if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || email === '' || password === '' || confirm_password === '' || phone === ''
-                || address === '' || !isValidSelectValue('qualification') || speciality === '' || rating === '' || consultation_fee === ''
-                || !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') || gender === undefined || $('input[name="working_days[]"]:checked').length === 0) {
-                Swal.fire({
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
+            if (
+                name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
+                email === '' || password === '' || confirm_password === '' ||
+                phone === '' || address === '' || !isValidSelectValue('qualification') ||
+                speciality === '' || rating === '' || consultation_fee === '' ||
+                !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') ||
+                gender === undefined || workingDays.length === 0
+            ) {
+                return Swal.fire({
                     title: 'Error!',
                     text: 'Please enter all required fields',
                     icon: 'error',
-                    confirmButtonText: 'OK',
                     confirmButtonColor: '#007BFF',
                 });
-                return;
-            } else if (password !== confirm_password) {
-                Swal.fire({
+            }
+
+            if (password && !passwordPattern.test(password)) {
+                return Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+            }
+
+            if (password !== confirm_password) {
+                return Swal.fire({
                     title: 'Error!',
                     text: 'Password confirmation does not match',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#007BFF'
                 });
-                return;
-            } else if (consultation_fee <= 0) {
-                Swal.fire({
+            }
+
+            if (consultation_fee <= 0) {
+                return Swal.fire({
                     title: 'Error!',
                     text: 'The consultation fee is invalid',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#007BFF'
                 });
-                return;
-            } else if (rating < 1 || rating > 5) {
-                Swal.fire({
+            }
+
+            if (rating < 1 || rating > 5) {
+                return Swal.fire({
                     title: 'Error!',
                     text: 'The rating must be between 1 and 5',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#007BFF'
                 });
-                return;
-            } else if (parseInt(work_start_time.split(':')[0]) >= parseInt(work_end_time.split(':')[0])) {
-                Swal.fire({
+            }
+
+            if (parseInt(work_start_time.split(':')[0]) >= parseInt(work_end_time.split(':')[0])) {
+                return Swal.fire({
                     title: 'Error!',
                     text: 'The timing is incorrect, Please correct it',
                     icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#007BFF'
                 });
-                return;
             }
 
-            let formData = new FormData();
-            formData.append('name', name);
-            formData.append('date_of_birth', date_of_birth);
-            formData.append('clinic_id', clinic_id);
-            formData.append('department_id', department_id);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('confirm_password', confirm_password);
-            formData.append('phone', phone);
-            formData.append('address', address);
-            formData.append('work_start_time', work_start_time);
-            formData.append('work_end_time', work_end_time);
-            formData.append('job_title', job_title);
-            formData.append('qualification', qualification);
-            formData.append('rating', rating);
-            formData.append('consultation_fee', consultation_fee);
-            formData.append('gender', gender);
-            formData.append('speciality', speciality);
-            formData.append('short_biography', short_biography);
-            formData.append('status', status);
-            if (image) {
-                formData.append('image', image);
-            }
-
-            workingDays.forEach(function (day) {
-                formData.append('working_days[]', day);
-            });
-
-            // ✅ طلب AJAX
+            // -------- 1️⃣ فحص الإيميل بالطريقة الجديدة --------
             $.ajax({
                 method: 'POST',
-                url: "{{ route('store_doctor') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function (response) {
-                    if (response.data == 0) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'This email is already used by another user',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                    } else if (response.data == 1) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Doctor has been added successfully',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        }).then(() => {
-                            window.location.href = '/admin/view/doctors';
-                        });
+
+                success: function () {
+
+                    // -------- 2️⃣ إذا الإيميل صحيح → نكمل عملية الإضافة --------
+
+                    let formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('date_of_birth', date_of_birth);
+                    formData.append('clinic_id', clinic_id);
+                    formData.append('department_id', department_id);
+                    formData.append('email', email);
+                    formData.append('password', password);
+                    formData.append('confirm_password', confirm_password);
+                    formData.append('phone', phone);
+                    formData.append('address', address);
+                    formData.append('work_start_time', work_start_time);
+                    formData.append('work_end_time', work_end_time);
+                    formData.append('qualification', qualification);
+                    formData.append('rating', rating);
+                    formData.append('consultation_fee', consultation_fee);
+                    formData.append('gender', gender);
+                    formData.append('speciality', speciality);
+                    formData.append('short_biography', short_biography);
+                    formData.append('status', status);
+
+                    if (image) formData.append('image', image);
+
+                    workingDays.forEach(day => formData.append('working_days[]', day));
+
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('store_doctor') }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+
+                        success: function (response) {
+                            if (response.data == 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This email is already used by another user',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+                            } else if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Doctor has been added successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => window.location.href = '/admin/view/doctors');
+                            }
+                        }
+                    });
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+
+                    if (xhr.responseJSON?.errors?.email) {
+                        msg = xhr.responseJSON.errors.email[0];
                     }
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: msg,
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
                 }
             });
+
         });
     });
 
+    // تحميل الأقسام + الأوقات + الأيام حسب العيادة
     $('#clinic_id').on('change', function () {
         const clinicId = $(this).val();
-
         if (!clinicId) return;
 
         $.get('/clinics-management/get-departments-by-clinic/' + clinicId, function (data) {
             const departmentSelect = $('#department_id');
-            departmentSelect.empty().append('<option value="" disabled selected hidden>Select Department</option>');
+            departmentSelect.empty().append('<option disabled selected hidden>Select Department</option>');
             $.each(data, function (i, department) {
                 departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
+            });
         });
-    });
 
+        $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
+            const start = parseInt(data.opening_time.split(':')[0]);
+            const end = parseInt(data.closing_time.split(':')[0]);
 
-    $.get('/clinics-management/get-clinic-info/' + clinicId, function (data) {
-        const start = parseInt(data.opening_time.split(':')[0]);
-        const end = parseInt(data.closing_time.split(':')[0]);
+            const workStartSelect = $('#work_start_time');
+            const workEndSelect = $('#work_end_time');
 
-        const workStartSelect = $('#work_start_time');
-        const workEndSelect = $('#work_end_time');
+            workStartSelect.empty().append('<option disabled selected hidden>Select Start Time</option>');
+            workEndSelect.empty().append('<option disabled selected hidden>Select End Time</option>');
 
-        workStartSelect.empty().append('<option disabled selected hidden>Select Start Time</option>');
-        workEndSelect.empty().append('<option disabled selected hidden>Select End Time</option>');
-
-        for (let h = start; h <= end; h++) {
-            let timeLabel = (h < 10 ? '0' + h : h) + ':00';
-            workStartSelect.append(`<option value="${h}:00:00">${timeLabel}</option>`);
-            workEndSelect.append(`<option value="${h}:00:00">${timeLabel}</option>`);
-        }
-    });
-
-    $.get('/clinics-management/clinic-working-days/' + clinicId, function (response) {
-        const clinicDays = response.working_days || []; // الأيام من السيرفر
-        console.log(clinicDays);
-        const allDays = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-
-        allDays.forEach(day => {
-            const checkbox = $('#day_' + day);
-            if (checkbox.length) {
-                if (clinicDays.includes(day)) {
-                    // خلي اليوم مفعّل
-                    checkbox.prop('disabled', false);
-                    checkbox.closest('.form-check').removeClass('text-muted');
-                } else {
-                    // عطّل الأيام الغير متاحة
-                    checkbox.prop('disabled', true).prop('checked', false);
-                    checkbox.closest('.form-check').addClass('text-muted');
-                }
+            for (let h = start; h <= end; h++) {
+                let timeLabel = (h < 10 ? '0' + h : h) + ':00';
+                workStartSelect.append(`<option value="${h}:00:00">${timeLabel}</option>`);
+                workEndSelect.append(`<option value="${h}:00:00">${timeLabel}</option>`);
             }
         });
-    });
-});
 
-    </script>
+        $.get('/clinics-management/clinic-working-days/' + clinicId, function (response) {
+            const clinicDays = response.working_days || [];
+            const allDays = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];
+
+            allDays.forEach(day => {
+                const checkbox = $('#day_' + day);
+                if (clinicDays.includes(day)) {
+                    checkbox.prop('disabled', false);
+                } else {
+                    checkbox.prop('disabled', true).prop('checked', false);
+                }
+            });
+        });
+    });
+</script>
 @endsection
+

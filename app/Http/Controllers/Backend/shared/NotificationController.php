@@ -28,31 +28,39 @@ class NotificationController extends Controller{
     protected function redirectByNotificationType($user, $notification, $type) {
         return match ($type) {
 
-            // 📅 حجز موعد
+            // حجز موعد
             'appointment_booked' =>
                 $this->redirectAppointment($user, $notification),
 
-            // ❌ إلغاء موعد
+            // قبول الموعد
+            'appointment_accepted' =>
+                $this->redirectAppointment($user, $notification),
+
+            // إلغاء موعد
             'appointment_cancelled' =>
                 $this->redirectAppointment($user, $notification),
 
-            // ✅ إنهاء موعد
+            //  إنهاء موعد
             'appointment_completed' =>
                 $this->redirectAppointment($user, $notification),
 
-            // 🧾 فاتورة جديدة
+            // فاتورة جديدة
             'invoice_created' =>
                 $this->redirectInvoice($user, $notification),
 
-            // 👩‍⚕️ مهمة تمريض
+            // إلغاء فاتورة
+            'invoice_cancelled' =>
+                $this->redirectInvoiceCancelled($user, $notification),
+
+            // مهمة تمريض
             'nurse_task_assigned' =>
                 $this->redirectNurseTask($user, $notification),
 
-            // 👩‍⚕️  إنشاء حساب مريض
+            //  إنشاء حساب مريض
             'patient_registered' =>
                 $this->redirectPatientRegistered($user, $notification),
 
-            // 👩‍⚕️ إضافة مريض
+            // إضافة مريض
             'patient_added' =>
                 $this->redirectPatientAdded($user, $notification),
 
@@ -112,6 +120,16 @@ class NotificationController extends Controller{
         return route('dashboard');
     }
 
+    protected function redirectInvoiceCancelled($user, $notification) {
+        $invoiceId = $notification->data['invoice_id'] ?? null;
+
+        if ($user->role === 'employee' && optional($user->employee)->job_title === 'Accountant') {
+            return route('accountant.details_refund_invoice', $invoiceId);
+        }
+
+        return route('dashboard');
+    }
+
 
     protected function redirectNurseTask($user, $notification) {
 
@@ -166,10 +184,37 @@ class NotificationController extends Controller{
         $taskId = $notification->data['nurse_task_id'] ?? null;
 
         if ($user->role === 'doctor' && $taskId) {
-            return route('doctor.nurse_task', $taskId);
+            return route('doctor.nurse_task_details', $taskId);
         }
 
         return route('dashboard');
+    }
+
+
+
+
+
+    public function index() {
+        $user = auth()->user();
+
+        $notifications = $user->notifications()->latest()->paginate(25);
+
+        $layout = match ($user->role) {
+            'admin'              => 'Backend.admin.master',
+            'doctor'             => 'Backend.doctors.master',
+            'clinic_manager'     => 'Backend.clinics_managers.master',
+            'department_manager' => 'Backend.departments_managers.master',
+            'employee'           => match (optional($user->employee)->job_title) {
+                'Receptionist' => 'Backend.employees.receptionists.master',
+                'Nurse'        => 'Backend.employees.nurses.master',
+                'Accountant'   => 'Backend.employees.accountants.master',
+                default        => 'layouts.app',
+            },
+            'patient'            => 'Backend.patients.master',
+            default              => 'layouts.app',
+        };
+
+        return view('partials.notifications.index', compact('notifications','layout'));
     }
 
 

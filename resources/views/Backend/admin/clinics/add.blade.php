@@ -224,105 +224,127 @@
 
 
 @section('js')
-    <script>
-        $('.addBtn').click(function (e) {
-            e.preventDefault();
+<script>
+    $('.addBtn').click(function (e) {
+        e.preventDefault();
 
-            let name = $('#name').val().trim();
-            let location = $('#location').val().trim();
-            let email = $('#email').val().trim();
-            let phone = $('#phone').val().trim();
-            let doctor_id = $('#doctor_id').val();
-            let opening_time = $('#opening_time').val();
-            let closing_time = $('#closing_time').val();
-            let description = $('#description').val().trim();
-            let status = $('input[name="status"]:checked').val();
+        let name          = $('#name').val().trim();
+        let location      = $('#location').val().trim();
+        let email         = $('#email').val().trim();
+        let phone         = $('#phone').val().trim();
+        let opening_time  = $('#opening_time').val();
+        let closing_time  = $('#closing_time').val();
+        let description   = $('#description').val().trim();
+        let status        = $('input[name="status"]:checked').val();
 
-            // مصفوفات
-            let workingDays = [];
-            $('input[name="working_days[]"]:checked').each(function () {
-                workingDays.push($(this).val());
+        // مصفوفات
+        let workingDays = [];
+        $('input[name="working_days[]"]:checked').each(function () {
+            workingDays.push($(this).val());
+        });
+
+        let departments = [];
+        $('input[name="departments[]"]:checked').each(function () {
+            departments.push($(this).val());
+        });
+
+        // إنشاء formData
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('location', location);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('opening_time', opening_time);
+        formData.append('closing_time', closing_time);
+        formData.append('description', description);
+        formData.append('status', status);
+
+        workingDays.forEach(day => formData.append('working_days[]', day));
+        departments.forEach(dep => formData.append('departments[]', dep));
+
+        // ===== التحقق من الحقول المطلوبة =====
+        if (name === '' || location === '' || email === '' || phone === '' || opening_time === '' || closing_time === '' ||
+            workingDays.length === 0 || departments.length === 0 ) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter all required fields',
+                icon: 'error',
+                confirmButtonColor: '#007BFF',
             });
-
-            let departments = [];
-            $('input[name="departments[]"]:checked').each(function () {
-                departments.push($(this).val());
-            });
-
-
-
-            // إنشاء formData
-            let formData = new FormData();
-            formData.append('name', name);
-            formData.append('location', location);
-            formData.append('email', email);
-            formData.append('phone', phone);
-            formData.append('doctor_id', doctor_id);
-            formData.append('opening_time', opening_time);
-            formData.append('closing_time', closing_time);
-            formData.append('description', description);
-            formData.append('status', status);
-
-            workingDays.forEach(function (day) {
-                formData.append('working_days[]', day);
-            });
-
-            departments.forEach(function (department) {
-                formData.append('departments[]', department);
-            });
-
-            if(name === '' || location === '' || email === ''  || phone === '' || opening_time === ''
-                || closing_time === '' || $('input[name="working_days[]"]:checked').length === 0 || $('input[name="departments[]"]:checked').length === 0){
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Please enter all required fields',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                });
-            } else if (opening_time >= closing_time){
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'The timing is incorrect, please correct it',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
-                });
-                return;
-            }else{
-                $.ajax({
-                method: 'POST',
-                url: "{{ route('store_clinic') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    if (response.data == 0) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'This clinic already exists',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        });
-                    } else if (response.data == 1) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Clinic has been added successfully',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
-                        }).then(() => {
-                            window.location.href = '/admin/view/clinics';
-                        });
-                    }
-                }
-            });
+            return;
         }
-    });
 
-    </script>
+        // ===== فحص الوقت =====
+        if (opening_time >= closing_time) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'The timing is incorrect, please correct it',
+                icon: 'error',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        // ===== فحص الإيميل الحقيقي (Laravel RFC + DNS) =====
+        $.ajax({
+            method: 'POST',
+            url: "{{ route('check_email') }}",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function () {
+
+                // الإيميل صحيح → نرسل الطلب لإنشاء العيادة
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('store_clinic') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+
+                        if (response.data == 0) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'This clinic already exists',
+                                icon: 'error',
+                                confirmButtonColor: '#007BFF',
+                            });
+
+                        } else if (response.data == 1) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Clinic has been added successfully',
+                                icon: 'success',
+                                confirmButtonColor: '#007BFF',
+                            }).then(() => {
+                                window.location.href = '/admin/view/clinics';
+                            });
+                        }
+                    }
+                });
+            },
+
+            error: function (xhr) {
+                let msg = 'Invalid email address';
+
+                if (xhr.responseJSON?.errors?.email) {
+                    msg = xhr.responseJSON.errors.email[0];
+                }
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: msg,
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+            }
+        });
+
+    });
+</script>
 @endsection

@@ -420,7 +420,7 @@
     }
 
     $(document).ready(function () {
-        // ✅ عند الضغط على زر الحفظ
+
         $('.addBtn').click(function (e) {
             e.preventDefault();
 
@@ -443,13 +443,13 @@
             let image = document.querySelector('#image').files[0];
             let job_title = $('input[name="job_title"]:checked').val();
             let rating = $('#rating').val();
+            let speciality = $('#speciality').val().trim();
 
             let workingDays = [];
             $('input[name="working_days[]"]:checked').each(function () {
                 workingDays.push($(this).val());
             });
 
-            // ✅ FormData
             let formData = new FormData();
             formData.append('name', name);
             formData.append('date_of_birth', date_of_birth);
@@ -467,11 +467,11 @@
             formData.append('status', status);
             formData.append('job_title', job_title);
             formData.append('rating', rating);
+            formData.append('speciality', speciality);
             if (image) formData.append('image', image);
 
             workingDays.forEach(day => formData.append('working_days[]', day));
 
-            // أضف حقول الدكتور لو ظاهرة
             if ($('#doctor_info_card').is(':visible')) {
                 formData.append('qualification', qualification);
                 formData.append('consultation_fee', consultation_fee);
@@ -480,71 +480,171 @@
             let start = moment(work_start_time, "HH:mm");
             let end = moment(work_end_time, "HH:mm");
 
-            // التحقق
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
             if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
                 email === '' || phone === '' || job_title === undefined ||
                 workingDays.length === 0 || !work_start_time || !work_end_time || address === '' || gender === undefined) {
-                Swal.fire({ title: 'Error!', text: 'Please enter all required fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if (password !== confirm_password) {
-                Swal.fire({ title: 'Error!', text: 'Password confirmation does not match', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if (!start.isBefore(end)) {
-                Swal.fire({ title: 'Error!', text: 'The timing is incorrect, Please correct it', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#department_field').is(':visible') && !department_id) {
-                Swal.fire({ title: 'Error!', text: 'Please select department', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#doctor_info_card').is(':visible') && (!speciality || !isValidSelectValue('qualification') || !consultation_fee || !rating)) {
-                Swal.fire({ title: 'Error!', text: 'Please fill all doctor job information fields', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#doctor_info_card').is(':visible') && (consultation_fee <= 0)) {
-                Swal.fire({ title: 'Error!', text: 'The consultation fee is invalid', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            } else if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
-                Swal.fire({ title: 'Error!', text: 'The rating must be between 1 and 5', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                return;
-            }else {
-                $.ajax({
-                    method: 'POST',
-                    url: "{{ route('store_employee') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    success: function (response) {
-                        if (response.data == 0) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'This email is already used by another user',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            });
-                        }else if (response.data == 1) {
-                            Swal.fire({ title: 'Error!', text: 'This clinic already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                        } else if (response.data == 2) {
-                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK' , confirmButtonColor: '#007BFF', });
-                        } else if (response.data == 3) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'This clinic already has a accountant',
-                                icon: 'error',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            });
-                        } else if (response.data == 4) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Employee has been added successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => { window.location.href = '/admin/view/employees'; });
-                        }
-                    },
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter all required fields',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
                 });
+                return;
             }
+
+            if (password && !passwordPattern.test(password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
+            if (password !== confirm_password) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Password confirmation does not match',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            if (!start.isBefore(end)) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The timing is incorrect, Please correct it',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            if ($('#department_field').is(':visible') && !department_id) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please select department',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            if ($('#doctor_info_card').is(':visible') && (!speciality || !isValidSelectValue('qualification') || !consultation_fee || !rating)) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please fill all doctor job information fields',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            if ($('#doctor_info_card').is(':visible') && (consultation_fee <= 0)) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The consultation fee is invalid',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            if ($('#doctor_info_card').is(':visible') && (rating < 1 || rating > 5)) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'The rating must be between 1 and 5',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
+
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function () {
+
+                    $.ajax({
+                        method: 'POST',
+                        url: "{{ route('store_employee') }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+
+                        success: function (response) {
+
+                            if (response.data == 0) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This email is already used by another user',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+
+                            } else if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This clinic already has a manager',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+
+                            } else if (response.data == 2) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This department already has a manager',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+
+                            } else if (response.data == 3) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This clinic already has an accountant',
+                                    icon: 'error',
+                                    confirmButtonColor: '#007BFF',
+                                });
+
+                            } else if (response.data == 4) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Employee has been added successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => window.location.href = '/admin/view/employees');
+                            }
+                        }
+                    });
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+
+                    if (xhr.responseJSON?.errors?.email) {
+                        msg = xhr.responseJSON.errors.email[0];
+                    }
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: msg,
+                        icon: 'error',
+                        confirmButtonColor: '#007BFF'
+                    });
+                }
+            });
+
         });
 
         $('#clinic_id').on('change', function () {

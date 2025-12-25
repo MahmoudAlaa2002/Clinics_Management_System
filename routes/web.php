@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
+
 use App\Http\Controllers\Backend\Shared\CommonClinicController;
 use App\Http\Controllers\Backend\Shared\CommonDoctorController;
 use App\Http\Controllers\Backend\Shared\NotificationController;
@@ -144,6 +145,14 @@ Route::prefix('clinics-management')->group(function () {
     Route::post('/reset-password', [PasswordResetLinkController::class, 'resetPassword'])->middleware('guest')->name('password.update');
 
 
+    Route::post('/check-email', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'email' => 'required|email:rfc,dns',
+        ]);
+        return response()->json(['valid' => true]);
+    })->name('check_email');
+
+
     //Shared
     Route::get('/get-doctors-by-clinic-and-department', [CommonDoctorController::class, 'getDoctorsByClinicAndDepartment'])->name('get_doctors_by_clinic_and_department');
     Route::get('/get-doctor-info/{id}', [CommonDoctorController::class, 'getDoctorInfo']);   // يرجع أوقات الدكتور للحجز معاه
@@ -152,6 +161,7 @@ Route::prefix('clinics-management')->group(function () {
 
     // Notifications
     Route::get('/notifications/read/{id}', [NotificationController::class, 'read'])->name('notifications_read');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications_index');
 
 
     Route::get('/get-departments-by-clinic/{clinic_id}', [CommonClinicController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط أقسامها في فورم إضافة طبيب
@@ -328,13 +338,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/chart/revenue-monthly', [AdminChartController::class, 'monthlyRevenue'])->name('monthly_revenue');
     Route::get('/chart/revenue-per-clinic', [AdminChartController::class, 'revenuePerClinic'])->name('revenue_per_clinic');
 
-
-
-    //Notifications
-    Route::get('/notifications/view', [AdminNotificationController::class, 'view'])->name('notifications_view');
-
-
-
 });
 
 
@@ -447,10 +450,6 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
     Route::get('/clinic-revenue-monthly', [ClinicManagerChartController::class, 'clinicMonthlyRevenue'])->name('clinic_monthly_revenue');
     Route::get('/clinic-doctors-monthly', [ClinicManagerChartController::class, 'clinicDoctorsMonthly'])->name('clinic_doctors_monthly');
 
-
-    //Notifications
-    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('clinic.notifications_view');
-
 });
 
 
@@ -516,11 +515,6 @@ Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:depar
     Route::get('/department-patients-monthly', [DepartmentManagerChartController::class, 'departmentPatientsMonthly'])->name('department_patients_monthly');
     Route::get('/department-doctors-monthly', [DepartmentManagerChartController::class, 'departmentDoctorsMonthly'])->name('department_doctors_monthly');
 
-
-
-    //Notifications
-    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('department.notifications_view');
-
 });
 
 
@@ -554,7 +548,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
 
     Route::get('/doctor/assign-task/{appointment}/{nurse}', [DoctorNurseTaskController::class, 'assignTask'])->name('doctor.assign_task');
     Route::post('/doctor/assign-task/store', [DoctorNurseTaskController::class, 'assignTaskStore'])->name('doctor.assign_task.store');
-    Route::get('/doctor/nurse-task/{nurse}', [DoctorNurseTaskController::class, 'detailsTask'])->name('doctor.nurse_task');
+    Route::get('/doctor/nurse-task/{id}', [DoctorNurseTaskController::class, 'detailsTask'])->name('doctor.nurse_task_details');
 
     Route::get('/clinics/{clinic}', [DoctorClinicController::class, 'show'])->name('doctor.clinic.show');
 
@@ -573,9 +567,6 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
 
 
     Route::get('/invoices', [DoctorInvoicesController::class, 'index'])->name('doctor.invoices');
-
-    //Notifications
-    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('doctor.notifications_view');
 
 });
 
@@ -644,10 +635,6 @@ Route::prefix('employee/nurse')->middleware(['auth', 'verified', 'role:employee'
     Route::get('/details/nurse-task/{id}' ,[NurseTaskController::class , 'detailsNurseTask'])->name('nurse.details_nurse_task');
     Route::post('/completed/nurse-task/{id}' ,[NurseTaskController::class , 'completedNurseTask'])->name('nurse.completed_nurse_task');
 
-
-    //Notifications
-    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('nurse.notifications_view');
-
 });
 
 
@@ -713,10 +700,6 @@ Route::prefix('employee/receptionist')->middleware(['auth', 'verified', 'role:em
     Route::get('/invoice-pdf/view/{id}', [ReceptionistInvoiceController::class, 'invoicePDF'])->name('receptionist.invoice_pdf');
     Route::get('/invoice-pdf/raw/{id}', [ReceptionistInvoiceController::class, 'invoicePDFRaw'])->name('receptionist.invoice_pdf_raw');
 
-
-    //Notifications
-    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('receptionist.notifications_view');
-
 });
 
 
@@ -780,10 +763,6 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
     Route::get('/invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'invoicePDFRaw'])->name('accountant.invoice_pdf_raw');
     Route::get('/cancelled-invoice-pdf/view/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDF'])->name('accountant.cancelled_invoice_pdf');
     Route::get('/cancelled-invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('accountant.cancelled_invoice_pdf_raw');
-
-
-    //Notifications
-    Route::get('/notifications/view', [ClinicNotificationController::class, 'view'])->name('accountant.notifications_view');
 
 });
 
