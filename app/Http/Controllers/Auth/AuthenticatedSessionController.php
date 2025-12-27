@@ -55,6 +55,11 @@ class AuthenticatedSessionController extends Controller{
 
 
     public function logout(){
+        if (auth()->check()) {
+            auth()->user()->update([
+                'last_seen' => now()
+            ]);
+        }
         Auth::logout(); // تسجيل خروج المستخدم
         request()->session()->invalidate(); // تعطيل الجلسة الحالية
         request()->session()->regenerateToken(); // إنشاء CSRF token جديد

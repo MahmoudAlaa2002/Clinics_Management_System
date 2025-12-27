@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             // \App\Http\Middleware\SetLocaleFromSession::class,
+            \App\Http\Middleware\LastSeen::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 

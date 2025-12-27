@@ -49,4 +49,21 @@ class Patient extends Model{
     }
 
 
+    public function vitalSigns() {
+        return $this->hasManyThrough(
+            VitalSign::class,      // الموديل النهائي
+            Appointment::class,    // الموديل الوسيط
+            'patient_id',          // المفتاح في appointments الذي يشير للمريض
+            'appointment_id',      // المفتاح في vital_signs الذي يشير للموعد
+            'id',                  // مفتاح المريض
+            'id'                   // مفتاح الموعد
+        );
+    }
+
+
+    public function invoices(){
+        return $this->hasMany(Invoice::class, 'patient_id');
+    }
+
+    
 }

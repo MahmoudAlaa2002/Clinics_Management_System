@@ -28,7 +28,13 @@ class User extends Authenticatable{
         'date_of_birth',
         'role',
         'gender',
+        'last_seen',
     ];
+
+    protected $casts = [
+        'last_seen' => 'datetime',
+    ];
+
 
     protected static function booted(){
         static::deleting(function ($user) {
@@ -43,6 +49,21 @@ class User extends Authenticatable{
     public function patient(){
         return $this->hasOne(Patient::class);
     }
+
+
+    // علاقات خاصة بالمحادثات
+    public function conversations() {
+        return $this->belongsToMany(Conversation::class, 'conversation_user')->withTimestamps();
+    }
+
+    public function sentMessages() {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function getIsOnlineAttribute() {
+        return $this->last_seen && $this->last_seen->gt(now()->subMinutes(2));
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

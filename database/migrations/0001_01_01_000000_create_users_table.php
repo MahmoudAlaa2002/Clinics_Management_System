@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('role');
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->rememberToken();
+            $table->timestamp('last_seen')->nullable();  // أونلاين وأوفلاين
             $table->timestamps();
         });
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Backend\Shared\CommonClinicController;
 use App\Http\Controllers\Backend\Shared\CommonDoctorController;
 use App\Http\Controllers\Backend\Shared\NotificationController;
+use App\Http\Controllers\Backend\Shared\ChatController;
 
 
 use App\Http\Controllers\Backend\Admin\{
@@ -24,7 +25,6 @@ use App\Http\Controllers\Backend\Admin\{
     InvoiceController as AdminInvoiceController,
     MedicalRecordController as AdminMedicalRecordController,
     AnalyticController as AdminAnalyticController,
-    NotificationController as AdminNotificationController
 };
 
 use App\Http\Controllers\Backend\Admin\Report\{
@@ -45,7 +45,6 @@ use App\Http\Controllers\Backend\ClinicManager\{
     AppointmentController as ClinicManagerAppointmentController,
     InvoiceController as ClinicManagerInvoiceController,
     ReportController as ClinicManagerReportController,
-    NotificationController as ClinicNotificationController,
     ChartController as ClinicManagerChartController
 };
 
@@ -58,7 +57,6 @@ use App\Http\Controllers\Backend\DepartmentManager\{
     EmployeeController as DepartmentManagerEmployeeController,
     AppointmentController as DepartmentManagerAppointmentController,
     ReportController as DepartmentManagerReportController,
-    NotificationController as DepartmentNotificationController,
     ChartController as DepartmentManagerChartController
 };
 
@@ -70,7 +68,6 @@ use App\Http\Controllers\Backend\Doctor\{
     InvoicesController as DoctorInvoicesController,
     MedicalRecordsController as DoctorMedicalRecordsController,
     ReportController as DoctorReportController,
-    NotificationController as DoctorNotificationController,
     NurseTaskController as DoctorNurseTaskController,
     ClinicController as DoctorClinicController
 };
@@ -85,7 +82,6 @@ use App\Http\Controllers\Backend\Employee\Nurse\{
     AppointmentController as NurseAppointmentController,
     VitalSignsController as NurseVitalSignsController,
     MedicalRecordController as NurseMedicalRecordController,
-    NotificationController as NurseNotificationController,
     NurseTaskController as NurseTaskController
 };
 
@@ -107,7 +103,6 @@ use App\Http\Controllers\Backend\Employee\Receptionist\{
     DoctorController as ReceptionistDoctorController,
     PatientController as ReceptionistPatientController,
     AppointmentController as ReceptionistAppointmentController,
-    NotificationController as ReceptionistNotificationController,
     InvoiceController as ReceptionistInvoiceController
 };
 
@@ -162,6 +157,19 @@ Route::prefix('clinics-management')->group(function () {
     // Notifications
     Route::get('/notifications/read/{id}', [NotificationController::class, 'read'])->name('notifications_read');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications_index');
+
+
+    // Chat
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat_index');    // قائمة المحادثات
+    Route::get('/chat/open/{id}', [ChatController::class, 'open'])->name('chat_open');   // فتح محادثة
+    Route::post('/chat/{conversation}/send', [ChatController::class, 'send'])->name('chat_send');  // إرسال رسالة Ajax
+
+    Route::get('/chat/contacts', [ChatController::class, 'contacts'])->name('chat_contacts');
+
+    // Route::get('/users/status', function () {
+    //     return User::select('id','is_online','last_seen')->get();
+    // });
+
 
 
     Route::get('/get-departments-by-clinic/{clinic_id}', [CommonClinicController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط أقسامها في فورم إضافة طبيب

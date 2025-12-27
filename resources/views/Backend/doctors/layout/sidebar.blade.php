@@ -129,7 +129,18 @@
 
 
             {{-- 🔔 Notifications & Communication --}}
+
             <ul>
+                <li class="menu-title">Contacts</li>
+                <li class="{{ Request::routeIs('chat_contacts') ? 'active' : '' }}">
+                    <a href="{{ route('chat_contacts') }}">
+                        <i class="fa fa-comments"></i>
+                        <span>Chats</span>
+                    </a>
+                </li>
+            </ul>
+            
+            {{-- <ul>
                 <li class="menu-title">Notifications & Communication</li>
 
                 <li class="{{ Request::is('doctor/notifications') ? 'active' : '' }}">
@@ -149,7 +160,7 @@
                         <i class="fa fa-paper-plane"></i> <span>Submit Report</span>
                     </a>
                 </li>
-            </ul>
+            </ul> --}}
 
         </div>
     </div>

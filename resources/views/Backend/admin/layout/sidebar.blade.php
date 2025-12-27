@@ -292,6 +292,17 @@
             </ul>
 
 
+            <ul>
+                <li class="menu-title">Contacts</li>
+                <li class="submenu {{ Request::is('clinics-management/chat/contacts') ? 'active' : '' }}">
+                    <a href="#"><i class="fa fa-comments"></i> <span> Chats </span> <span class="menu-arrow"></span></a>
+                    <ul style="{{ Request::is('clinics-management/chat/contacts')  ? '' : 'display: none;' }}">
+                        <li>
+                            <a href="{{ route('chat_contacts') }}" class="{{ Request::is('clinics-management/chat/contacts') ? 'active' : '' }}">View Chats</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
 
 
             <ul>
@@ -310,9 +321,3 @@
 </div>
 
 
-
-{{-- System
-- Settings
-- Notifications
-- Audit Logs
-- Support Tickets --}}
