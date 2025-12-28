@@ -53,7 +53,7 @@
         }
     </script>
 
-    @include('Backend.chat.echo')
+    @include('Backend.chat.echo-core')
 
     @yield('js')
 </body>

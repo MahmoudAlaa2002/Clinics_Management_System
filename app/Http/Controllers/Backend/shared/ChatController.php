@@ -46,6 +46,11 @@ class ChatController extends Controller {
             'messages' => fn($q) => $q->orderBy('created_at', 'asc')
         ]);
 
+        $conversation->messages()->where('sender_id', '!=', Auth::id())->where('is_read', false)
+            ->update([
+                'is_read' => true
+            ]);
+
         return view('Backend.chat.conversation', compact('conversation', 'target'));
     }
 
@@ -79,6 +84,20 @@ class ChatController extends Controller {
     }
 
 
+    // جعل الرسالة مقروءة طالما فاتح المحادثة
+    public function markRead($conversationId){
+        $conversation = Conversation::findOrFail($conversationId);
+
+        $conversation->messages()
+            ->where('sender_id', '!=', Auth::id())
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json(['status' => 'ok']);
+    }
+
+
+
 
     //  قواعد السماح بالتواصل
     private function canChat($current, $target) {
@@ -107,15 +126,37 @@ class ChatController extends Controller {
 
 
 
-    // public function index() {
-    //     $conversations = Conversation::whereHas('participants', function ($q) {
-    //             $q->where('user_id', Auth::id());
-    //         })->with(['participants', 'messages' => function ($q) {
-    //             $q->latest();
-    //         }])->latest()->get();
+    public function index()
+{
+    $userId = Auth::id();
 
-    //     return view('Backend.chat.conversation', compact('conversations'));
-    // }
+    $conversations = Conversation::whereHas('participants', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })
+
+        // فقط المحادثات اللي فيها رسائل فعلًا
+        ->whereHas('messages')
+
+        ->with([
+            'participants' => function ($q) use ($userId) {
+                $q->where('users.id', '!=', $userId);
+            },
+            'messages' => function ($q) {
+                $q->latest();
+            }
+        ])
+
+        ->get()
+
+        // ترتيب حسب أحدث رسالة
+        ->sortByDesc(fn ($c) => $c->messages->first()->created_at)
+        ->values();
+
+
+    return view('Backend.chat.index', compact('conversations'));
+}
+
+
 
 
 

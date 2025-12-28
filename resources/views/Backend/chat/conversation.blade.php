@@ -19,6 +19,11 @@
 
 <style>
 
+    #chat-box{
+        visibility: hidden;
+    }
+
+
     /* ================= CHAT WRAPPER ================= */
 
     .chat-card{
@@ -213,12 +218,9 @@
 
 <div class="page-wrapper">
     <div class="content">
-
         <div class="row">
             <div class="col-lg-12">
-
                 <div class="chat-card">
-
                     {{-- HEADER --}}
                     <div class="chat-header">
 
@@ -234,27 +236,17 @@
                                     @endif
                                 </div>
 
-                                <span
-                                    id="status-dot"
-                                    class="status-dot {{ $target->is_online ? 'online' : 'offline' }}">
-                                </span>
+                                <span id="status-dot" class="status-dot" style="visibility:hidden"></span>
 
                             </div>
 
                             <div class="user-info">
                                 <strong>{{ $target->name }}</strong>
 
-                                <small id="last-seen-text">
-                                    @if($target->is_online)
-                                        Online now
-                                    @else
-                                        Last seen: {{ optional($target->last_seen)->diffForHumans() ?? '—' }}
-                                    @endif
-                                </small>
+                                <small id="last-seen-text" style="visibility:hidden">—</small>
                             </div>
 
                         </div>
-
 
                     </div>
 
@@ -293,10 +285,7 @@
 
                             <div class="chat-input">
 
-                                <input
-                                    type="text"
-                                    id="message"
-                                    placeholder="Type your message…">
+                                <input type="text" id="message" placeholder="Type your message…">
 
                                 <button type="submit" class="send-btn">
                                     <i class="fa fa-paper-plane"></i>
@@ -327,20 +316,23 @@
 
     const conversationId = {{ $conversation->id }};
     const userId         = {{ auth()->id() }};
+    const targetId       = {{ $target->id }};
 
-    function scrollBottom(){
+    function scrollBottom() {
         const box = document.getElementById('chat-box');
         box.scrollTop = box.scrollHeight;
+        box.style.visibility = 'visible';
     }
 
+    document.addEventListener('DOMContentLoaded', () => setTimeout(scrollBottom, 10));
+
     // ===============================
-    //   استقبال الرسائل (Real-Time)
+    // استقبال الرسائل
     // ===============================
 
-    window.Echo.private(`chat.${conversationId}`)
+    Echo.private(`chat.${conversationId}`)
         .listen('NewChatMessage', (e) => {
 
-            // اذا الرسالة ليست مني — اعرضها
             if (e.sender_id !== userId) {
 
                 $('#chat-box').append(`
@@ -353,15 +345,20 @@
                 `);
 
                 scrollBottom();
+                // 🔥 علّمها كمقروءة مباشرة
+                $.post(`{{ route('chat_mark_read', $conversation->id) }}`, {
+                    _token: '{{ csrf_token() }}'
+                });
             }
         });
 
 
     // ===============================
-    //   إرسال الرسائل عبر AJAX
+    // إرسال الرسائل
     // ===============================
 
-    $('#chat-form').on('submit', function(e){
+    $('#chat-form').on('submit', function (e) {
+
         e.preventDefault();
 
         let msg  = $('#message').val();
@@ -372,7 +369,7 @@
         $.post(`/clinics-management/chat/${conv}/send`, {
             _token: '{{ csrf_token() }}',
             message: msg
-        }, function(res){
+        }, function (res) {
 
             $('#message').val('');
 
@@ -389,6 +386,64 @@
         });
     });
 
+
+    // ===============================
+    // Presence — حالة الأونلاين
+    // ===============================
+
+    function setOnline() {
+        let dot  = document.getElementById('status-dot');
+        let text = document.getElementById('last-seen-text');
+
+        dot.classList.remove('offline');
+        dot.classList.add('online');
+
+        dot.style.visibility  = "visible";
+        text.style.visibility = "visible";
+
+        text.innerText = "Online now";
+    }
+
+    function setOffline() {
+        let dot  = document.getElementById('status-dot');
+        let text = document.getElementById('last-seen-text');
+
+        dot.classList.remove('online');
+        dot.classList.add('offline');
+
+        dot.style.visibility  = "visible";
+        text.style.visibility = "visible";
+
+        text.innerText = "Offline";
+    }
+
+    let offlineTimer = null;
+
+    Echo.join('online-users')
+        .here((users) => {
+            users.forEach(u => {
+                if (u.id === targetId) {
+                    if (offlineTimer) clearTimeout(offlineTimer);
+                    setOnline();
+                }
+            });
+        })
+
+        .joining((user) => {
+            if (user.id === targetId) {
+                if (offlineTimer) clearTimeout(offlineTimer);
+                setOnline();
+            }
+        })
+
+        .leaving((user) => {
+            if (user.id === targetId) {
+                offlineTimer = setTimeout(() => setOffline(), 5000);
+            }
+    });
+
 </script>
+
+@include('Backend.chat.echo-chat')
 
 @endsection

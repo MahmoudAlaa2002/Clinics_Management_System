@@ -29,6 +29,7 @@ class User extends Authenticatable{
         'role',
         'gender',
         'last_seen',
+        'is_online',
     ];
 
     protected $casts = [
@@ -60,9 +61,6 @@ class User extends Authenticatable{
         return $this->hasMany(Message::class, 'sender_id');
     }
 
-    public function getIsOnlineAttribute() {
-        return $this->last_seen && $this->last_seen->gt(now()->subMinutes(2));
-    }
 
 
     /**

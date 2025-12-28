@@ -44,9 +44,6 @@
         transition:.25s;
     }
 
-    .contact-row:hover{
-        background:#f8fcff;
-    }
 
     .avatar-wrapper{
         position:relative;
@@ -64,7 +61,7 @@
         align-items:center;
         justify-content:center;
         font-weight:700;
-        color:#0b4e7a;
+        color:#0b4e7a !important;
         font-size:13px;
         overflow:hidden;
     }
@@ -78,8 +75,8 @@
 
     .status-dot{
         position:absolute;
-        right:-2px;
-        bottom:-2px;
+        right:0px;
+        bottom:0px;
         width:12px;
         height:12px;
         border-radius:50%;
@@ -97,7 +94,7 @@
         border:none;
         padding:6px 14px;
         border-radius:8px;
-        color:#fff;
+        color:#fff !important;
         font-size:12px;
         font-weight:600;
     }
@@ -109,22 +106,16 @@
 
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-
                 <div class="card">
                     <div class="card-header">
                         Available Contacts
                     </div>
 
                     <div class="card-body">
-
                         @forelse($contacts as $user)
-
                             <div class="contact-row">
-
                                 <div class="d-flex align-items-center">
-
                                     <div class="avatar-wrapper">
-
                                         <div class="avatar">
                                             @if($user->image)
                                                 <img src="{{ asset($user->image) }}">
@@ -164,17 +155,16 @@
                             </div>
 
                         @empty
-
                             <div class="text-center text-muted p-3">
                                 No contacts available.
                             </div>
-
                         @endforelse
-
                     </div>
                 </div>
 
-                {{ $contacts->links('pagination::bootstrap-4') }}
+                <div id="clinics-pagination" class="pagination-wrapper d-flex justify-content-center">
+                    {{ $contacts->links('pagination::bootstrap-4') }}
+                </div>
 
             </div>
         </div>
@@ -184,3 +174,71 @@
 
 @endsection
 
+
+@section('js')
+<script>
+
+    let offlineTimers = {};
+
+    Echo.join('online-users')
+
+        // الموجودون داخل القناة الآن
+        .here((users) => {
+
+            users.forEach(u => {
+                let dot  = document.getElementById(`status-dot-${u.id}`);
+                let text = document.getElementById(`last-seen-${u.id}`);
+
+                if (!dot || !text) return;
+
+                if (offlineTimers[u.id]) {
+                    clearTimeout(offlineTimers[u.id]);
+                    delete offlineTimers[u.id];
+                }
+
+                dot.classList.remove('offline');
+                dot.classList.add('online');
+                text.innerText = "Online now";
+            });
+        })
+
+        // دخل
+        .joining((user) => {
+
+            let dot  = document.getElementById(`status-dot-${user.id}`);
+            let text = document.getElementById(`last-seen-${user.id}`);
+
+            if (!dot || !text) return;
+
+            if (offlineTimers[user.id]) {
+                clearTimeout(offlineTimers[user.id]);
+                delete offlineTimers[user.id];
+            }
+
+            dot.classList.remove('offline');
+            dot.classList.add('online');
+            text.innerText = "Online now";
+        })
+
+        // خرج / أغلق المتصفح
+        .leaving((user) => {
+
+            let dot  = document.getElementById(`status-dot-${user.id}`);
+            let text = document.getElementById(`last-seen-${user.id}`);
+
+            if (!dot || !text) return;
+
+            offlineTimers[user.id] = setTimeout(() => {
+
+                dot.classList.remove('online');
+                dot.classList.add('offline');
+                text.innerText = "Offline";
+
+                delete offlineTimers[user.id];
+
+            }, 5000);   // 5 ثواني — تقدر تغيّرها
+        });
+
+    </script>
+
+@endsection

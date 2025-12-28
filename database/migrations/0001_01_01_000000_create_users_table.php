@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->rememberToken();
             $table->timestamp('last_seen')->nullable();  // أونلاين وأوفلاين
+            $table->boolean('is_online')->default(false);
             $table->timestamps();
         });
 

@@ -40,7 +40,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    @include('Backend.chat.echo')
+    @include('Backend.chat.echo-core')
 
 
     @yield('js')

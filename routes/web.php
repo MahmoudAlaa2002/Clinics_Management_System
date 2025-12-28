@@ -166,9 +166,8 @@ Route::prefix('clinics-management')->group(function () {
 
     Route::get('/chat/contacts', [ChatController::class, 'contacts'])->name('chat_contacts');
 
-    // Route::get('/users/status', function () {
-    //     return User::select('id','is_online','last_seen')->get();
-    // });
+    Route::post('/chat/{conversation}/mark-read', [ChatController::class, 'markRead'])->name('chat_mark_read');
+
 
 
 

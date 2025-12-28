@@ -31,9 +31,9 @@
         @include('partials.notifications.notifications')
 
 
-        <li class="nav-item dropdown d-none d-sm-block">
-            <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="float-right badge badge-pill bg-danger">8</span></a>
-        </li>
+        @include('Backend.chat.index')
+
+
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
