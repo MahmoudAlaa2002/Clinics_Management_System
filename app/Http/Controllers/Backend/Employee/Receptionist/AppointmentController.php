@@ -9,12 +9,15 @@ use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Events\InvoiceCreated;
 use App\Events\InvoiceCancelled;
 use App\Models\ClinicDepartment;
+use App\Events\AppointmentBooked;
 use App\Events\AppointmentAccepted;
 use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Events\AppointmentStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\Admin\AppointmentBookedByReceptionist;
 use App\Notifications\employee\accountant\NewInvoiceNotification;
@@ -125,6 +128,8 @@ class AppointmentController extends Controller{
             'status'               => 'Accepted',
         ]);
 
+        AppointmentBooked::dispatch($appointment, auth()->user());
+        
         /**
         * 6️⃣ تحديد حالة الدفع
         */
@@ -154,7 +159,7 @@ class AppointmentController extends Controller{
             'created_by'     => Auth::user()->employee->id,
         ]);
 
-
+        InvoiceCreated::dispatch($invoice);
 
         /**
         * 8️⃣ نجاح
@@ -394,9 +399,8 @@ class AppointmentController extends Controller{
 
             AppointmentCancelled::dispatch($appointment, auth()->user());
             InvoiceCancelled::dispatch($appointment->invoice);
+            event(new AppointmentStatusUpdated($appointment));
         }
-
-
 
         /**
         * 6️⃣ نجاح
@@ -409,15 +413,13 @@ class AppointmentController extends Controller{
 
     public function updateStatus(Request $request, $id) {
         $appointment = Appointment::with('invoice')->findOrFail($id);
+    
         $appointment->status = $request->status;
-
+    
         // حالة الرفض
         if ($request->status === 'Rejected') {
-
-            $appointment->notes = $request->notes
-                ? 'Reject Reason: ' . $request->notes
-                : 'Appointment rejected';
-
+            $appointment->notes = $request->notes ? 'Reject Reason: ' . $request->notes : 'Appointment rejected';
+    
             if ($appointment->invoice) {
                 $paidAmount = $appointment->invoice->paid_amount ?? 0;
                 $appointment->invoice->update([
@@ -425,22 +427,24 @@ class AppointmentController extends Controller{
                     'due_date'       => null,
                     'refund_amount'  => $paidAmount,
                 ]);
-
-                // إطلاق حدث إلغاء الفاتورة
+    
                 InvoiceCancelled::dispatch($appointment->invoice);
             }
         }
-
+    
         // حالة القبول
         if ($request->status === 'Accepted') {
             $appointment->notes = null;
             AppointmentAccepted::dispatch($appointment);
         }
-
+    
         $appointment->save();
-
+    
+        event(new AppointmentStatusUpdated($appointment));
+    
         return response()->json(['success' => true]);
     }
+    
 
 
 

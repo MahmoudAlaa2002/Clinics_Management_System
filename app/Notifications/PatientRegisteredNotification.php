@@ -14,7 +14,7 @@ class PatientRegisteredNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable) {
@@ -24,8 +24,17 @@ class PatientRegisteredNotification extends Notification {
 
             'patient_id'   => $this->patient->id,
             'patient_name' => $this->patient->user->name ?? 'Patient',
-
-            'url' => route('profile_patient', $this->patient->id),
         ];
     }
+
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'patient_registered',
+            'patient_id'   => $this->patient->id,
+            'patient_name' => $this->patient->user->name ?? 'Patient',
+            'url' => route('profile_patient', $this->patient->id),
+        ]);
+    }
+
 }

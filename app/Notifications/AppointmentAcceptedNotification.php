@@ -14,7 +14,7 @@ class AppointmentAcceptedNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable) {
@@ -27,4 +27,15 @@ class AppointmentAcceptedNotification extends Notification {
             'clinic_name' => $this->appointment->clinic->name,
         ];
     }
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'appointment_accepted',
+
+            'appointment_id' => $this->appointment->id,
+            'doctor_name'    => $this->appointment->doctor->employee->user->name ?? 'Doctor',
+            'clinic_name'    => $this->appointment->clinic->name,
+        ]);
+    }
+
 }

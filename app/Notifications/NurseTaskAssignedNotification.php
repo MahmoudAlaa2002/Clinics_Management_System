@@ -14,7 +14,7 @@ class NurseTaskAssignedNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable) {
@@ -25,7 +25,18 @@ class NurseTaskAssignedNotification extends Notification {
             'appointment_id' => $this->task->appointment_id,
             'doctor_name' => $this->task->appointment->doctor->employee->user->name,
             'status' => $this->task->status,
-            'image' => 'assets/img/nurse-task.png',
         ];
     }
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'nurse_task_assigned',
+
+            'nurse_task_id'  => $this->task->id,
+            'appointment_id' => $this->task->appointment_id,
+            'doctor_name'    => $this->task->appointment->doctor->employee->user->name,
+            'status'         => $this->task->status,
+        ]);
+    }
+
 }

@@ -12,6 +12,7 @@ use App\Events\AppointmentCompleted;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Events\AppointmentStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\employee\nurse\AppointmentCompletedNotification;
 
@@ -124,7 +125,7 @@ class MedicalRecordsController extends Controller
             $medicalRecord = MedicalRecord::create($validated);
 
             AppointmentCompleted::dispatch($appointment, auth()->user());
-
+            event(new AppointmentStatusUpdated($appointment));
 
             DB::commit();
 

@@ -16,7 +16,7 @@ class InvoiceCreatedNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable) {
@@ -27,7 +27,19 @@ class InvoiceCreatedNotification extends Notification {
             'patient_name' => $this->patientName,
             'amount'       => $this->invoice->amount,
             'payment_status'       => $this->invoice->payment_status,
-            'image' => 'assets/img/invoice.png',
         ];
     }
+
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'invoice_created',
+
+            'invoice_id'   => $this->invoice->id,
+            'patient_name' => $this->patientName,
+            'amount'       => $this->invoice->amount,
+            'payment_status' => $this->invoice->payment_status,
+        ]);
+    }
+
 }

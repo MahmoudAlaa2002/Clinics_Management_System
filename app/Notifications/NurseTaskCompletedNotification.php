@@ -13,7 +13,7 @@ class NurseTaskCompletedNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable){
@@ -27,4 +27,16 @@ class NurseTaskCompletedNotification extends Notification {
 
         ];
     }
+
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'nurse_task_completed',
+
+            'nurse_task_id' => $this->task->id,
+            'nurse_name'    => $this->task->nurse->user->name ?? 'Nurse',
+            'patient_name'  => $this->task->appointment->patient->user->name ?? 'Patient',
+        ]);
+    }
+
 }

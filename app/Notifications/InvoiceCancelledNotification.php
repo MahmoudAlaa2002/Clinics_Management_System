@@ -13,7 +13,7 @@ class InvoiceCancelledNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable) {
@@ -26,5 +26,16 @@ class InvoiceCancelledNotification extends Notification {
             'amount'      => $this->invoice->total_amount,
             'status'      => 'Cancelled',
         ];
+    }
+
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'invoice_cancelled',
+            'invoice_id'   => $this->invoice->id,
+            'patient_name' => $this->invoice->patient->user->name ?? 'Patient',
+            'amount'       => $this->invoice->total_amount,
+            'status'       => 'Cancelled',
+        ]);
     }
 }

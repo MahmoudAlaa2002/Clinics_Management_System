@@ -1,7 +1,7 @@
 <li class="nav-item dropdown d-none d-sm-block">
     <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
         <i class="fa fa-bell-o"></i>
-        <span class="float-right badge badge-pill bg-danger">
+        <span id="notification-count" class="float-right badge badge-pill bg-danger">
             @php
                 $count = auth()->user()->unreadNotifications->count();
             @endphp
@@ -15,7 +15,7 @@
         </div>
 
         <div class="drop-scroll">
-            <ul class="notification-list">
+            <ul id="notifications-list" class="notification-list">
 
                 @forelse(auth()->user()->notifications as $notification)
                     <li class="notification-message {{ $notification->read_at ? 'read' : 'unread' }}">

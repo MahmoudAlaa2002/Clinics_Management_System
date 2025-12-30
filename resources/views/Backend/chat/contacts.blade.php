@@ -83,6 +83,7 @@
         border:2px solid #fff;
     }
 
+
     .status-dot.online{ background:#2ecc71; }
     .status-dot.offline{ background:#e74c3c; }
 
@@ -120,7 +121,25 @@
                                             @if($user->image)
                                                 <img src="{{ asset($user->image) }}">
                                             @else
-                                                {{ strtoupper(substr($user->name,0,2)) }}
+                                                @php
+                                                    $abbr = match ($user->role) {
+                                                        'admin'              => 'A',
+                                                        'clinic_manager'     => 'CM',
+                                                        'department_manager' => 'DM',
+                                                        'doctor'             => 'DR',
+                                                        'receptionist'       => 'RE',
+                                                        'nurse'              => 'NU',
+                                                        'accountant'         => 'AC',
+                                                        'patient'            => 'PA',
+                                                        default              => strtoupper(substr($user->name, 0, 2)),
+                                                    };
+                                                @endphp
+
+                                                @if($user->image)
+                                                    <img src="{{ asset($user->image) }}">
+                                                @else
+                                                    {{ $abbr }}
+                                                @endif
                                             @endif
                                         </div>
 

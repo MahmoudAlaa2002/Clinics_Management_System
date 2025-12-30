@@ -16,7 +16,7 @@ class AppointmentCancelledNotification extends Notification {
 
 
     public function via($notifiable): array {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
 
@@ -35,8 +35,24 @@ class AppointmentCancelledNotification extends Notification {
             'cancelled_by' => $this->actorRole,
 
             'icon'  => 'fa-solid fa-calendar-xmark',
-            'image' => asset('assets/img/user.jpg'),
 
         ];
     }
+
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'appointment_cancelled',
+
+            'appointment_id' => $this->appointment->id,
+            'patient_id'     => $this->appointment->patient_id,
+            'doctor_id'      => $this->appointment->doctor_id,
+
+            'patient_name' => optional($this->appointment->patient->user)->name,
+            'doctor_name'  => optional(optional($this->appointment->doctor)->employee?->user)->name,
+
+            'cancelled_by' => $this->actorRole,
+        ]);
+    }
+
 }

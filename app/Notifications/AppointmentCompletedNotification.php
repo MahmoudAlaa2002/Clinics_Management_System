@@ -15,7 +15,7 @@ class AppointmentCompletedNotification extends Notification
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable): array
@@ -33,7 +33,23 @@ class AppointmentCompletedNotification extends Notification
             )->name,
 
             'icon'  => 'fa-solid fa-circle-check',
-            'image' => asset('assets/img/user.jpg'),
         ];
     }
+
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'appointment_completed',
+
+            'appointment_id' => $this->appointment->id,
+            'patient_id'     => $this->appointment->patient_id,
+            'doctor_id'      => $this->appointment->doctor_id,
+
+            'patient_name' => optional($this->appointment->patient->user)->name,
+            'doctor_name'  => optional(
+                optional($this->appointment->doctor)->employee?->user
+            )->name,
+        ]);
+    }
+
 }

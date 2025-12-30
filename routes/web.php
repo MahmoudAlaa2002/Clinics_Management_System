@@ -158,6 +158,12 @@ Route::prefix('clinics-management')->group(function () {
     Route::get('/notifications/read/{id}', [NotificationController::class, 'read'])->name('notifications_read');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications_index');
 
+    Route::get('/notifications/render/{id}', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        return view('partials.notifications.item', compact('notification'))->render();
+    })->name('notifications.render');
+
+
 
     // Chat
     Route::get('/chat', [ChatController::class, 'index'])->name('chat_index');    // قائمة المحادثات
@@ -166,11 +172,17 @@ Route::prefix('clinics-management')->group(function () {
 
     Route::get('/chat/contacts', [ChatController::class, 'contacts'])->name('chat_contacts');
 
+    Route::post('/set-offline', function () {
+        if (auth()->check()) {
+            auth()->user()->update(['is_online' => false]);
+        }
+    });
+
     Route::post('/chat/{conversation}/mark-read', [ChatController::class, 'markRead'])->name('chat_mark_read');
 
 
 
-
+    //Shared
     Route::get('/get-departments-by-clinic/{clinic_id}', [CommonClinicController::class, 'getDepartmentsByClinic']);    // حتى عندما أختار العيادة المحددة يحضر لي فقط أقسامها في فورم إضافة طبيب
     Route::get('/get-clinic-info/{id}', [CommonClinicController::class, 'getClinicInfo']);  // بحضر لي أوقات العيادة في فورم الطبيب عشان أختار أوقات الطبيب بناء ع وقت العيادة
     Route::get('/clinic-working-days/{id}', [CommonClinicController::class, 'getWorkingDays']);    // برجع الأيام المحددة

@@ -17,8 +17,9 @@ class PatientAddedNotification extends Notification {
     }
 
     public function via($notifiable) {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
+
 
     public function toDatabase($notifiable) {
         return [
@@ -33,4 +34,18 @@ class PatientAddedNotification extends Notification {
             'actor_name' => $this->actor->name,
         ];
     }
+
+    public function toBroadcast($notifiable) {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'patient_added',
+
+            'patient_id'   => $this->patient->id,
+            'patient_name' => $this->patient->user->name ?? 'Patient',
+
+            'actor_id'   => $this->actor->id,
+            'actor_role' => $this->actor->role,
+            'actor_name' => $this->actor->name,
+        ]);
+    }
+
 }

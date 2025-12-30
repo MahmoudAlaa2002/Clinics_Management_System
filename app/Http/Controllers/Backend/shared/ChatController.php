@@ -99,6 +99,7 @@ class ChatController extends Controller {
 
 
 
+
     //  قواعد السماح بالتواصل
     private function canChat($current, $target) {
 
@@ -126,35 +127,39 @@ class ChatController extends Controller {
 
 
 
-    public function index()
-{
-    $userId = Auth::id();
+    public function index(){
+        $userId = auth()->id();
 
-    $conversations = Conversation::whereHas('participants', function ($q) use ($userId) {
-            $q->where('user_id', $userId);
-        })
+        $conversations = Conversation::whereHas('participants', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            })->whereHas('messages')
 
-        // فقط المحادثات اللي فيها رسائل فعلًا
-        ->whereHas('messages')
+            ->with([
+                'participants' => function ($q) use ($userId) {
+                    $q->where('users.id', '!=', $userId);
+                },
+                'messages' => function ($q) {
+                    $q->latest();
+                }
+            ])
 
-        ->with([
-            'participants' => function ($q) use ($userId) {
-                $q->where('users.id', '!=', $userId);
-            },
-            'messages' => function ($q) {
-                $q->latest();
-            }
-        ])
+            ->withCount([
+                'messages as unread_count' => function ($q) use ($userId) {
+                    $q->where('receiver_id', $userId)
+                    ->where('is_read', false);
+                }
+            ])
 
-        ->get()
+            ->orderByDesc(
+                Message::select('created_at')
+                    ->whereColumn('conversation_id', 'conversations.id')
+                    ->latest()
+                    ->take(1)
+            )->get();
 
-        // ترتيب حسب أحدث رسالة
-        ->sortByDesc(fn ($c) => $c->messages->first()->created_at)
-        ->values();
+        return view('Backend.chat.index', compact('conversations'));
+    }
 
-
-    return view('Backend.chat.index', compact('conversations'));
-}
 
 
 

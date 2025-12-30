@@ -417,13 +417,13 @@
         text.innerText = "Offline";
     }
 
-    let offlineTimer = null;
+    let navbarOfflineTimer = null;
 
     Echo.join('online-users')
         .here((users) => {
             users.forEach(u => {
                 if (u.id === targetId) {
-                    if (offlineTimer) clearTimeout(offlineTimer);
+                    if (navbarOfflineTimer) clearTimeout(navbarOfflineTimer);
                     setOnline();
                 }
             });
@@ -431,14 +431,14 @@
 
         .joining((user) => {
             if (user.id === targetId) {
-                if (offlineTimer) clearTimeout(offlineTimer);
+                if (navbarOfflineTimer) clearTimeout(navbarOfflineTimer);
                 setOnline();
             }
         })
 
         .leaving((user) => {
             if (user.id === targetId) {
-                offlineTimer = setTimeout(() => setOffline(), 5000);
+                navbarOfflineTimer = setTimeout(() => setOffline(), 5000);
             }
     });
 

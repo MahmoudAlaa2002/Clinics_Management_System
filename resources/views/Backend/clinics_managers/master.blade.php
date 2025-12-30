@@ -55,7 +55,6 @@
 
 @include('Backend.chat.echo-core')
 
-
     @yield('js')
 </body>
 </html>

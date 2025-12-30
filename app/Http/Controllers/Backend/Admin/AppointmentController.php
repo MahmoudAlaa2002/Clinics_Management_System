@@ -16,6 +16,7 @@ use App\Models\ClinicPatient;
 use App\Events\InvoiceCreated;
 use App\Models\ClinicDepartment;
 use App\Events\AppointmentBooked;
+use App\Events\AppointmentUpdated;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Notification;
@@ -388,6 +389,8 @@ class AppointmentController extends Controller{
             'notes'                => $request->notes,
             'status'               => $request->status ?? 'Accepted',
         ]);
+
+        event(new AppointmentUpdated($appointment));
 
         /**
          * 6️⃣ نجاح

@@ -7,9 +7,12 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Events\InvoiceCancelled;
 use Illuminate\Support\Facades\DB;
+use App\Events\AppointmentAccepted;
+use App\Events\AppointmentRejected;
 use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Events\AppointmentStatusUpdated;
 
 class AppointmentController extends Controller
 {
@@ -58,6 +61,9 @@ class AppointmentController extends Controller
         $appointment->status = 'Accepted';
         $appointment->save();
 
+        AppointmentAccepted::dispatch($appointment, auth()->user());
+        event(new AppointmentStatusUpdated($appointment));
+        
         return redirect()->back()->with('success', 'Appointment confirmed successfully.');
     }
 
@@ -65,6 +71,9 @@ class AppointmentController extends Controller
     {
         $appointment->status = 'Rejected';
         $appointment->save();
+
+        AppointmentRejected::dispatch($appointment, auth()->user());
+        event(new AppointmentStatusUpdated($appointment));
 
         return redirect()->back()->with('success', 'Appointment rejected successfully.');
     }
@@ -94,6 +103,7 @@ class AppointmentController extends Controller
 
         AppointmentCancelled::dispatch($appointment, auth()->user());
         InvoiceCancelled::dispatch($appointment->invoice);
+        event(new AppointmentStatusUpdated($appointment));
 
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
     }

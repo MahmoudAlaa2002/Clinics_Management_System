@@ -39,14 +39,14 @@
 
     <div class="page-wrapper">
         <div class="content">
-            <div class="row mb-3 align-items-center">
+            <div class="mb-3 row align-items-center">
                 <div class="col-md-6 col-12">
-                    <h4 class="page-title mb-0">View Appointments</h4>
+                    <h4 class="mb-0 page-title">View Appointments</h4>
                 </div>
             </div>
 
             {{-- Filters & Search --}}
-            <div class="card-box p-3 mb-4 shadow-sm">
+            <div class="p-3 mb-4 shadow-sm card-box">
                 <form method="GET" action="{{ route('doctor.appointments') }}">
                     @if (request('date') === 'today')
                         <input type="hidden" name="date" value="today">
@@ -72,8 +72,8 @@
                             </div>
                         @endif
 
-                        <div class="col-md-2 text-end mt-3 mt-md-0">
-                            <button type="submit" class="btn btn-primary rounded-pill fw-bold px-4">
+                        <div class="mt-3 col-md-2 text-end mt-md-0">
+                            <button type="submit" class="px-4 btn btn-primary rounded-pill fw-bold">
                                 <i class="fa fa-search me-1"></i> Filter
                             </button>
                         </div>
@@ -82,10 +82,10 @@
             </div>
 
             {{-- 📋 Table --}}
-            <div class="card-box shadow-sm p-3">
+            <div class="p-3 shadow-sm card-box">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light text-center">
+                    <table class="table align-middle table-hover">
+                        <thead class="text-center table-light">
                             <tr>
                                 <th>#</th>
                                 <th>Patient Name</th>
@@ -103,7 +103,7 @@
                         <tbody class="text-center">
                             @if ($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
-                                    <tr>
+                                    <tr data-appointment="{{ $appointment->id }}">
                                         <td>{{ ($appointments->currentPage() - 1) * $appointments->perPage() + $loop->iteration }}
                                         </td>
                                         <td>
@@ -128,7 +128,7 @@
                                             - {{ $formattedDate }}
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
-                                        <td>
+                                        <td class="status-cell">
                                             <span
                                                 class="status-badge
                                                 @if ($appointment->status === 'Pending') status-pending
@@ -218,7 +218,7 @@
                         </tbody>
                     </table>
 
-                    <div class="d-flex justify-content-end mt-3">
+                    <div class="mt-3 d-flex justify-content-end">
                         {{ $appointments->appends(request()->query())->links('pagination::bootstrap-4') }}
                     </div>
                 </div>
@@ -251,7 +251,7 @@
                                 confirmTitle = 'Accept Appointment';
                                 confirmMessage =
                                     'Are you sure you want to accept this appointment?';
-                                iconType = 'success';
+                                iconType = 'question';
                                 break;
                             case 'reject':
                                 confirmTitle = 'Reject Appointment';

@@ -17,7 +17,7 @@ class AppointmentBookedNotification extends Notification
 
     public function via($notifiable): array
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable): array
@@ -36,10 +36,27 @@ class AppointmentBookedNotification extends Notification
 
             // UI
             'icon'  => 'fa-solid fa-calendar-check',
-            'image' => asset('assets/img/user.jpg'),
 
             // ✅ CORRECT ACTOR
             'created_by_role' => $this->actorRole,
         ];
     }
+
+
+    public function toBroadcast($notifiable)
+    {
+        return new \Illuminate\Notifications\Messages\BroadcastMessage([
+            'type' => 'appointment_booked',
+
+            'appointment_id' => $this->appointment->id,
+            'patient_id'     => $this->appointment->patient_id,
+            'doctor_id'      => $this->appointment->doctor_id,
+
+            'patient_name' => $this->appointment->patient->user->name ?? null,
+            'doctor_name'  => $this->appointment->doctor->employee->user->name ?? null,
+
+            'created_by_role' => $this->actorRole,
+        ]);
+    }
+
 }
