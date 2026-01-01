@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('role');
-            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->enum('gender', ['Male', 'Female'])->nullable();
             $table->rememberToken();
             $table->timestamp('last_seen')->nullable();  // أونلاين وأوفلاين
             $table->boolean('is_online')->default(false);

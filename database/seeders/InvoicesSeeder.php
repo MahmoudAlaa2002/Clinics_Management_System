@@ -225,7 +225,7 @@ class InvoicesSeeder extends Seeder{
                 'total_amount' => 50,
                 'paid_amount' => 50,
                 'payment_method' => 'Bank',
-                'payment_status' => 'paid',
+                'payment_status' => 'Paid',
                 'invoice_date' => '2025-12-01',
                 'due_date' => '2025-12-05',
                 'created_by' => 31,
