@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'address' => 'Gaza',
             'date_of_birth' => '2002-03-13',
             'image' => 'assets/img/admin/admin.jpg',
-            'gender' => 'male',
+            'gender' => 'Male',
             'role' => 'admin',
         ]);
 

@@ -224,7 +224,6 @@ class EmployeesSeeder extends Seeder{
         ['user_id'=>43,'clinic_id'=>2,'department_id'=>6,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'18:00:00','working_days'=>$Clinic_B_Days,'hire_date'=>'2026-10-01','status'=>'active','short_biography'=>'Doctor 3','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>44,'clinic_id'=>2,'department_id'=>13,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'18:00:00','working_days'=>$Clinic_B_Days,'hire_date'=>'2026-06-01','status'=>'active','short_biography'=>'Doctor 4','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>45,'clinic_id'=>2,'department_id'=>3,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'18:00:00','working_days'=>$Clinic_B_Days,'hire_date'=>'2026-09-01','status'=>'active','short_biography'=>'Doctor 5','created_at'=>now(),'updated_at'=>now()],
-
         ['user_id'=>46,'clinic_id'=>2,'department_id'=>3,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'18:00:00','working_days'=>$Clinic_B_Days,'hire_date'=>'2026-08-01','status'=>'active','short_biography'=>'Doctor 6','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>47,'clinic_id'=>2,'department_id'=>5,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'18:00:00','working_days'=>$Clinic_B_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 7','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>48,'clinic_id'=>2,'department_id'=>6,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'18:00:00','working_days'=>$Clinic_B_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 8','created_at'=>now(),'updated_at'=>now()],
@@ -273,17 +272,18 @@ class EmployeesSeeder extends Seeder{
 
 
         //  عشرة دكاترة (ضمن وقت العيادة)
-        ['user_id'=>51,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-011-01','status'=>'active','short_biography'=>'Doctor 1','created_at'=>now(),'updated_at'=>now()],
-        ['user_id'=>52,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-012-01','status'=>'active','short_biography'=>'Doctor 2','created_at'=>now(),'updated_at'=>now()],
+        ['user_id'=>51,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-11-01','status'=>'active','short_biography'=>'Doctor 1','created_at'=>now(),'updated_at'=>now()],
+        ['user_id'=>52,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-12-01','status'=>'active','short_biography'=>'Doctor 2','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>53,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 3','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>54,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 4','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>55,'clinic_id'=>3,'department_id'=>1,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 5','created_at'=>now(),'updated_at'=>now()],
 
-        ['user_id'=>56,'clinic_id'=>3,'department_id'=>15,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-010-01','status'=>'active','short_biography'=>'Doctor 6','created_at'=>now(),'updated_at'=>now()],
+        ['user_id'=>56,'clinic_id'=>3,'department_id'=>15,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-10-01','status'=>'active','short_biography'=>'Doctor 6','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>57,'clinic_id'=>3,'department_id'=>15,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-02-01','status'=>'active','short_biography'=>'Doctor 7','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>58,'clinic_id'=>3,'department_id'=>15,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 8','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>59,'clinic_id'=>3,'department_id'=>15,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-01-01','status'=>'active','short_biography'=>'Doctor 9','created_at'=>now(),'updated_at'=>now()],
         ['user_id'=>60,'clinic_id'=>3,'department_id'=>15,'job_title'=>'Doctor','work_start_time'=>'10:00:00','work_end_time'=>'15:00:00','working_days'=>$Clinic_C_Days,'hire_date'=>'2026-09-01','status'=>'active','short_biography'=>'Doctor 10','created_at'=>now(),'updated_at'=>now()],
+
 
 
         // ممرض
