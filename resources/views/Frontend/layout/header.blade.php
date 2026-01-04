@@ -57,6 +57,11 @@
         font-weight: 500;
     }
 
+    .auth-links a{
+        min-width: 120px;
+        text-align: center;
+    }
+
     .auth-links a:hover {
         background-color: white !important;
         color: #007BFF !important;

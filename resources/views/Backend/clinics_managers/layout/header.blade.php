@@ -1,14 +1,67 @@
 <style>
-    .header .dropdown-menu .dropdown-item:hover {
-        background-color: #007BFF;
-        color: #ffffff;
-    }
     .notification-message.unread {
         background-color: #f4f7fe;
     }
 
     .notification-message.read {
         opacity: 0.7;
+    }
+
+    .header .dropdown-menu{
+        width: 240px;
+        border-radius: 14px;
+        border: 1px solid #e6ecf3;
+        box-shadow: 0 14px 28px rgba(0,0,0,.08);
+        padding: 10px 0;
+        overflow: hidden;
+    }
+
+    .dropdown-user-header{
+        padding: 14px 16px;
+        background:#f7f9fc;
+        border-bottom: 1px solid #eef2f8;
+    }
+
+    .dropdown-user-header .user-name{
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .dropdown-user-header .user-role{
+        color:#6c757d;
+        font-size: 13px;
+    }
+
+    /* each item */
+    .header .dropdown-item{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        font-size: 14px;
+        transition: .25s ease;
+    }
+
+    /* icons */
+    .header .dropdown-item i{
+        width: 18px;
+        text-align: center;
+        color:#6c757d;
+    }
+
+    /* hover */
+    .header .dropdown-item:hover{
+        background:#007bff;
+        color:#fff;
+    }
+
+    .header .dropdown-item:hover i{
+        color:#fff;
+    }
+
+    /* divider line */
+    .dropdown-divider{
+        margin: 6px 0;
     }
 
 </style>
@@ -44,14 +97,22 @@
                 </span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{ route('home') }}">Home</a>
-                <a class="dropdown-item" href="{{ route('clinic_manager_profile') }}">My Profile</a>
-                <a class="dropdown-item" href="{{ route('clinic_manager_edit_profile') }}">Edit Profile</a>
-                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    Logout
-                </a>
+                <div class="dropdown-user-header">
+                    <div class="user-name">{{ auth()->user()->name ?? 'User' }}</div>
+                    <div class="user-role">Clinic Manager</div>
+                </div>
+            
+                <a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-home"></i> Home</a>
+                <a class="dropdown-item" href="{{ route('clinic_manager_profile') }}"><i class="fa fa-user"></i> My Profile</a>
+                <a class="dropdown-item" href="{{ route('clinic_manager_edit_profile') }}"><i class="fa fa-edit"></i> Edit Profile</a>
+            
+                <div class="dropdown-divider"></div>
 
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                <a class="dropdown-item" href="#"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
                     @csrf
                 </form>
             </div>

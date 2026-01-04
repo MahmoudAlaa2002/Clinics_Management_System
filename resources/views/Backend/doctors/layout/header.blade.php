@@ -1,3 +1,68 @@
+<style>
+    .notification-message.unread {
+        background-color: #f4f7fe;
+    }
+
+    .notification-message.read {
+        opacity: 0.7;
+    }
+    .header .dropdown-menu{
+        width: 240px;
+        border-radius: 14px;
+        border: 1px solid #e6ecf3;
+        box-shadow: 0 14px 28px rgba(0,0,0,.08);
+        padding: 10px 0;
+        overflow: hidden;
+    }
+
+    .dropdown-user-header{
+        padding: 14px 16px;
+        background:#f7f9fc;
+        border-bottom: 1px solid #eef2f8;
+    }
+
+    .dropdown-user-header .user-name{
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .dropdown-user-header .user-role{
+        color:#6c757d;
+        font-size: 13px;
+    }
+
+    /* each item */
+    .header .dropdown-item{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        font-size: 14px;
+        transition: .25s ease;
+    }
+
+    /* icons */
+    .header .dropdown-item i{
+        width: 18px;
+        text-align: center;
+        color:#6c757d;
+    }
+
+    /* hover */
+    .header .dropdown-item:hover{
+        background:#007bff;
+        color:#fff;
+    }
+
+    .header .dropdown-item:hover i{
+        color:#fff;
+    }
+
+    /* divider line */
+    .dropdown-divider{
+        margin: 6px 0;
+    }
+</style>
 <div class="header">
     <div class="header-left">
         <a href="{{ Route('doctor_dashboard') }}" class="logo">
@@ -28,39 +93,25 @@
                     Doctor
                 </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-end border-0 shadow rounded-4 p-3" style="min-width: 230px;">
-                <div class="px-3 pb-2 border-bottom">
-                    <h6 class="mb-0 fw-semibold text-secondary">Doctor Menu</h6>
+
+            <div class="dropdown-menu">
+                <div class="dropdown-user-header">
+                    <div class="user-name">{{ auth()->user()->name ?? 'User' }}</div>
+                    <div class="user-role">Department Manager</div>
                 </div>
-
-                <a href="{{ route('doctor_dashboard') }}"
-                    class="dropdown-item py-2 d-flex align-items-center {{ request()->routeIs('doctor_dashboard') ? 'text-primary fw-semibold' : 'text-dark' }}">
-                    <i class="fa fa-chart-line me-2 text-primary"></i> Dashboard
-                </a>
-
-                <a href="{{ route('doctor_profile') }}"
-                    class="dropdown-item py-2 d-flex align-items-center {{ request()->routeIs('doctor_profile') ? 'text-primary fw-semibold' : 'text-dark' }}">
-                    <i class="fa fa-user-md me-2 text-primary"></i> My Profile
-                </a>
-
-                <a href="{{ route('doctor.profile.edit') }}"
-                    class="dropdown-item py-2 d-flex align-items-center {{ request()->routeIs('doctor.profile.edit') ? 'text-primary fw-semibold' : 'text-dark' }}">
-                    <i class="fa fa-pen me-2 text-primary"></i> Edit Profile
-                </a>
-
-                <a href="{{ route('doctor.profile.settings') }}"
-                    class="dropdown-item py-2 d-flex align-items-center {{ request()->routeIs('doctor.profile.settings') ? 'text-primary fw-semibold' : 'text-dark' }}">
-                    <i class="fa fa-lock me-2 text-primary"></i> Account Settings
-                </a>
-
+            
+                <a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-home"></i> Home</a>
+                <a class="dropdown-item" href="{{ route('doctor_profile') }}"><i class="fa fa-user"></i> My Profile</a>
+                <a class="dropdown-item" href="{{ route('doctor.profile.edit') }}"><i class="fa fa-edit"></i> Edit Profile</a>
+            
                 <div class="dropdown-divider"></div>
 
-                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                <a class="dropdown-item" href="#"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
                     @csrf
-                    <button type="submit"
-                        class="dropdown-item py-2 d-flex align-items-center text-danger fw-semibold">
-                        <i class="fa fa-sign-out-alt me-2"></i> Logout
-                    </button>
                 </form>
             </div>
 
