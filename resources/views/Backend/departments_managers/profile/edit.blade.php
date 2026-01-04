@@ -117,12 +117,12 @@
                                         <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $department_manager->gender == 'male' ? 'checked' : '' }}>Male
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Male" {{ $department_manager->gender == 'Male' ? 'checked' : '' }}>Male
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $department_manager->gender == 'female' ? 'checked' : '' }}>Female
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Female" {{ $department_manager->gender == 'Female' ? 'checked' : '' }}>Female
                                             </label>
                                         </div>
                                     </div>
@@ -145,74 +145,112 @@
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function () {
-            let originalName         = "{{ $department_manager->name }}";
-            let originalDob          = "{{ $department_manager->date_of_birth }}";
-            let originalEmail        = "{{ $department_manager->email }}";
-            let originalPhone        = "{{ $department_manager->phone }}";
-            let originalAddress      = "{{ $department_manager->address }}";
-            let originalGender       = "{{ $department_manager->gender }}";
-            let originalImage        = "{{ $department_manager->image }}";
+<script>
+$(document).ready(function () {
 
-            $('.editBtn').click(function (e) {
-                e.preventDefault();
+    // معاينة الصورة فورًا
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', url);
+        }
+    });
 
-                let name = $('#name').val().trim();
-                let date_of_birth = $('#date_of_birth').val().trim();
-                let email = $('#email').val();
-                let password = $('#password').val();
-                let confirm_password = $('#confirm_password').val();
-                let phone = $('#phone').val().trim();
-                let address = $('#address').val().trim();
-                let gender = $('input[name="gender"]:checked').val();
-                let image = document.querySelector('#image').files[0];
+    let originalName         = "{{ $department_manager->name }}";
+    let originalDob          = "{{ $department_manager->date_of_birth }}";
+    let originalEmail        = "{{ $department_manager->email }}";
+    let originalPhone        = "{{ $department_manager->phone }}";
+    let originalAddress      = "{{ $department_manager->address }}";
+    let originalGender       = "{{ $department_manager->gender }}";
 
+    $('.editBtn').click(function (e) {
+        e.preventDefault();
 
-                if (name == '' || date_of_birth == '' || email == '' || phone == '' || address == '' || gender == undefined) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Please Enter All Required Fields',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
-                    });
-                    return;
-                }
+        let name = $('#name').val().trim();
+        let date_of_birth = $('#date_of_birth').val().trim();
+        let email = $('#email').val();
+        let password = $('#password').val();
+        let confirm_password = $('#confirm_password').val();
+        let phone = $('#phone').val().trim();
+        let address = $('#address').val().trim();
+        let gender = $('input[name="gender"]:checked').val();
+        let image = document.querySelector('#image').files[0];
 
-                let formData = new FormData();
-                formData.append('_method', 'PUT');
-                formData.append('name', name);
-                formData.append('date_of_birth', date_of_birth);
-                formData.append('email', email);
-                formData.append('password', password);
-                formData.append('confirm_password', confirm_password);
-                formData.append('phone', phone);
-                formData.append('address', address);
-                formData.append('gender', gender);
-                if (image) {
-                    formData.append('image', image);
-                }
+        // ================== Required fields ==================
+        if (!name || !date_of_birth || !email || !phone || !address || !gender) {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'Please Enter All Required Fields',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+        }
 
-                let newImageSelected = image ? true : false;
-                let noChanges =
-                    !newImageSelected &&
-                    name === originalName &&
-                    date_of_birth === originalDob &&
-                    email === originalEmail &&
-                    phone === originalPhone &&
-                    address === originalAddress &&
-                    gender === originalGender &&
-                    password === "";
+        // ================== Password validation ==================
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-                if (noChanges) {
-                    return Swal.fire({
-                        icon: 'warning',
-                        title: 'No Changes',
-                        text: 'No updates were made to this profile',
-                        confirmButtonColor: '#007BFF',
-                    });
-                }
+        if (password && !passwordPattern.test(password)) {
+            return Swal.fire({
+                title: 'Invalid Password',
+                text: 'Password must be 6–15 characters',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+        }
+
+        if (password && password !== confirm_password) {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'Password confirmation does not match',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+        }
+
+        // ================== FormData ==================
+        let formData = new FormData();
+        formData.append('_method', 'PUT');
+        formData.append('name', name);
+        formData.append('date_of_birth', date_of_birth);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('confirm_password', confirm_password);
+        formData.append('phone', phone);
+        formData.append('address', address);
+        formData.append('gender', gender);
+        if (image) formData.append('image', image);
+
+        // ================== Detect no changes ==================
+        let noChanges =
+            !image &&
+            name === originalName &&
+            date_of_birth === originalDob &&
+            email === originalEmail &&
+            phone === originalPhone &&
+            address === originalAddress &&
+            gender === originalGender &&
+            password === "";
+
+        if (noChanges) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'No Changes',
+                text: 'No updates were made to this profile',
+                confirmButtonColor: '#007BFF',
+            });
+        }
+
+        // ================== Email validation THEN update ==================
+        $.ajax({
+            method: 'POST',
+            url: "{{ route('check_email') }}",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+
+            success: function () {
 
                 $.ajax({
                     type: 'POST',
@@ -224,21 +262,56 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         'X-HTTP-Method-Override': 'PUT'
                     },
+
                     success: function (response) {
+
+                        if (response.data == 0) {
+                            return Swal.fire({
+                                title:'Error!',
+                                text:'This email is already used by another user',
+                                icon:'error',
+                                confirmButtonColor:'#007BFF'
+                            });
+                        }
+
                         if (response.data == 1) {
                             Swal.fire({
-                                title: 'Success',
-                                text: 'Department Manager profile has been updated successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
+                                title:'Success',
+                                text:'Department Manager profile has been updated successfully',
+                                icon:'success',
+                                confirmButtonColor:'#007BFF'
                             }).then(() => {
                                 window.location.href = '/department-manager/profile';
                             });
                         }
+                    },
+
+                    error: function () {
+                        Swal.fire({
+                            title:'Error!',
+                            text:'Unexpected error occurred',
+                            icon:'error',
+                            confirmButtonColor:'#007BFF'
+                        });
                     }
                 });
-            });
+            },
+
+            error: function (xhr) {
+                let msg = 'Invalid email address';
+                if (xhr.responseJSON?.errors?.email) msg = xhr.responseJSON.errors.email[0];
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: msg,
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+            }
         });
-    </script>
+
+    });
+});
+</script>
 @endsection
+

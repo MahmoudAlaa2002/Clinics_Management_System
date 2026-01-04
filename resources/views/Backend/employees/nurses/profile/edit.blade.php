@@ -118,12 +118,12 @@
                                             <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label">
-                                                    <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $nurse->gender == 'male' ? 'checked' : '' }}>Male
+                                                    <input type="radio" id="gender" name="gender" class="form-check-input" value="Male" {{ $nurse->gender == 'Male' ? 'checked' : '' }}>Male
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label">
-                                                    <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $nurse->gender == 'female' ? 'checked' : '' }}>Female
+                                                    <input type="radio" id="gender" name="gender" class="form-check-input" value="Female" {{ $nurse->gender == 'Female' ? 'checked' : '' }}>Female
                                                 </label>
                                             </div>
                                         </div>
@@ -146,100 +146,155 @@
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function () {
-            let originalName         = "{{ $nurse->name }}";
-            let originalDob          = "{{ $nurse->date_of_birth }}";
-            let originalEmail        = "{{ $nurse->email }}";
-            let originalPhone        = "{{ $nurse->phone }}";
-            let originalAddress      = "{{ $nurse->address }}";
-            let originalGender       = "{{ $nurse->gender }}";
-            let originalImage        = "{{ $nurse->image }}";
+<script>
+    $(document).ready(function () {
 
-            $('.editBtn').click(function (e) {
-                e.preventDefault();
+        $('.editBtn').click(function (e) {
+            e.preventDefault();
 
-                let name = $('#name').val().trim();
-                let date_of_birth = $('#date_of_birth').val().trim();
-                let email = $('#email').val();
-                let password = $('#password').val();
-                let confirm_password = $('#confirm_password').val();
-                let phone = $('#phone').val().trim();
-                let address = $('#address').val().trim();
-                let gender = $('input[name="gender"]:checked').val();
-                let image = document.querySelector('#image').files[0];
+            let name = $('#name').val().trim();
+            let date_of_birth = $('#date_of_birth').val().trim();
+            let email = $('#email').val();
+            let password = $('#password').val();
+            let confirm_password = $('#confirm_password').val();
+            let phone = $('#phone').val().trim();
+            let address = $('#address').val().trim();
+            let gender = $('input[name="gender"]:checked').val();
+            let image = document.querySelector('#image').files[0];
 
+            if (!name || !date_of_birth || !email || !phone || !address || !gender) {
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter all required fields',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF',
+                });
+            }
 
-                if (name == '' || date_of_birth == '' || email == '' || phone == '' || address == '' || gender == undefined) {
+            // فحص الباسوورد
+            let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+
+            if (password && !passwordPattern.test(password)) {
+                return Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+            }
+
+            if (password !== confirm_password) {
+                return Swal.fire({
+                    title: 'Error!',
+                    text: 'Password confirmation does not match',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+            }
+
+            let formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('name', name);
+            formData.append('date_of_birth', date_of_birth);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('confirm_password', confirm_password);
+            formData.append('phone', phone);
+            formData.append('address', address);
+            formData.append('gender', gender);
+            if (image) formData.append('image', image);
+
+            let noChanges =
+                name === "{{ $nurse->name }}" &&
+                date_of_birth === "{{ $nurse->date_of_birth }}" &&
+                email === "{{ $nurse->email }}" &&
+                phone === "{{ $nurse->phone }}" &&
+                address === "{{ $nurse->address }}" &&
+                gender === "{{ $nurse->gender }}" &&
+                !image;
+
+            if (password || confirm_password) noChanges = false;
+
+            if (noChanges) {
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this profile',
+                    confirmButtonColor: '#007BFF',
+                });
+            }
+
+            // فحص الإيميل (نفس أسلوب الآدمن)
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('check_email') }}",
+                data: {
+                    email: email,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+
+                success: function () {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('nurse_update_profile') }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'X-HTTP-Method-Override': 'PUT'
+                        },
+
+                        success: function (response) {
+
+                            if (response.data == 0) {
+                                return Swal.fire({
+                                    title: 'Error',
+                                    text: 'This email is already registered',
+                                    icon: 'error'
+                                });
+                            }
+
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Nurse profile has been updated successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#007BFF',
+                                }).then(() => {
+                                    window.location.href = '/employee/nurse/profile';
+                                });
+                            }
+                        }
+                    });
+                },
+
+                error: function (xhr) {
+                    let msg = 'Invalid email address';
+                    if (xhr.responseJSON?.errors?.email)
+                        msg = xhr.responseJSON.errors.email[0];
+
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please Enter All Required Fields',
+                        text: msg,
                         icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
-                    });
-                    return;
-                }
-
-                let formData = new FormData();
-                formData.append('_method', 'PUT');
-                formData.append('name', name);
-                formData.append('date_of_birth', date_of_birth);
-                formData.append('email', email);
-                formData.append('password', password);
-                formData.append('confirm_password', confirm_password);
-                formData.append('phone', phone);
-                formData.append('address', address);
-                formData.append('gender', gender);
-                if (image) {
-                    formData.append('image', image);
-                }
-
-                let newImageSelected = image ? true : false;
-                let noChanges =
-                    !newImageSelected &&
-                    name === originalName &&
-                    date_of_birth === originalDob &&
-                    email === originalEmail &&
-                    phone === originalPhone &&
-                    address === originalAddress &&
-                    gender === originalGender &&
-                    password === "";
-
-                if (noChanges) {
-                    return Swal.fire({
-                        icon: 'warning',
-                        title: 'No Changes',
-                        text: 'No updates were made to this profile',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#007BFF'
                     });
                 }
-
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('nurse_update_profile') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'X-HTTP-Method-Override': 'PUT'
-                    },
-                    success: function (response) {
-                        if (response.data == 1) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Nurse Profile has been updated successfully',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
-                            }).then(() => {
-                                window.location.href = '/employee/nurse/profile';
-                            });
-                        }
-                    }
-                });
             });
+
         });
-    </script>
+
+    });
+
+    // Preview image سريع
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', previewUrl);
+        }
+    });
+</script>
 @endsection

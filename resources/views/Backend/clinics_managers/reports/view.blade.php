@@ -20,6 +20,21 @@
         font-size: 13px;
         font-weight: 500;
     }
+
+    .btn-outline-warning:hover {
+        color: #fff !important;
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+
+    .report-card .btn-outline-danger:hover {
+        background-color: #E83E8C !important;
+        border-color: #E83E8C !important;
+        color: #fff !important;
+    }
+
+
 </style>
 
 <div class="page-wrapper">
@@ -32,6 +47,18 @@
         </div>
 
         <div class="row">
+
+            <!-- Doctors Report -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card report-card text-center shadow-sm" style="border-top: 5px solid #28A745;">
+                    <div class="card-body">
+                        <i class="fas fa-user-md fa-3x mb-3" style="color:#28A745;"></i>
+                        <h5 class="card-title">Doctors Performance</h5>
+                        <p class="card-text text-muted">Monitor doctor activities, patient feedback, and appointment counts.</p>
+                        <a href="{{ route('clinic.details_doctors_reports') }}" class="btn btn-outline-success">View Details</a>
+                    </div>
+                </div>
+            </div>
 
             <!-- Patients Report -->
             <div class="col-md-6 col-lg-4 mb-4">
@@ -47,36 +74,24 @@
 
             <!-- Appointments Report -->
             <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card report-card text-center shadow-sm" style="border-top: 5px solid #28A745;">
+                <div class="card report-card text-center shadow-sm" style="border-top: 5px solid #E83E8C;">
                     <div class="card-body">
-                        <i class="fas fa-calendar-alt fa-3x mb-3" style="color:#28A745;"></i>
+                        <i class="fas fa-calendar-alt fa-3x mb-3" style="color:#E83E8C;"></i>
                         <h5 class="card-title">Appointments Reports</h5>
                         <p class="card-text text-muted">Analyze appointments by clinic, doctor, and completion status.</p>
-                        <a href="{{ route('clinic.details_appointments_reports') }}" class="btn btn-outline-success">View Details</a>
+                        <a href="{{ route('clinic.details_appointments_reports') }}" class="btn btn-outline-danger">View Details</a>
                     </div>
                 </div>
             </div>
 
             <!-- Financial Report -->
             <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card report-card text-center shadow-sm" style="border-top: 5px solid #E83E8C;">
-                    <div class="card-body">
-                        <i class="fas fa-file-invoice-dollar fa-3x mb-3" style="color:#E83E8C;"></i>
-                        <h5 class="card-title">Financial Reports</h5>
-                        <p class="card-text text-muted">Review invoices, payments, and monthly revenue trends.</p>
-                        <a href="{{ route('clinic.details_invoices_reports') }}" class="btn btn-outline-danger">View Details</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Doctors Report -->
-            <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card report-card text-center shadow-sm" style="border-top: 5px solid #ffc107;">
                     <div class="card-body">
-                        <i class="fas fa-user-md fa-3x mb-3" style="color:#ffc107;"></i>
-                        <h5 class="card-title">Doctors Performance</h5>
-                        <p class="card-text text-muted">Monitor doctor activities, patient feedback, and appointment counts.</p>
-                        <a href="{{ route('clinic.details_doctors_reports') }}" class="btn btn-outline-warning">View Details</a>
+                        <i class="fas fa-file-invoice-dollar fa-3x mb-3" style="color:#ffc107;"></i>
+                        <h5 class="card-title">Financial Reports</h5>
+                        <p class="card-text text-muted">Review invoices, payments, and monthly revenue trends.</p>
+                        <a href="{{ route('clinic.details_invoices_reports') }}" class="btn btn-outline-warning">View Details</a>
                     </div>
                 </div>
             </div>

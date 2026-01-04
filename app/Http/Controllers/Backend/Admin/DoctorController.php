@@ -7,11 +7,9 @@ use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Employee;
-use App\Models\JobTitle;
 use App\Models\Department;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-use App\Models\EmployeeJobTitle;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -83,7 +81,11 @@ class DoctorController extends Controller{
 
 
     public function viewDoctors(){
-        $doctors = Doctor::orderBy('id', 'asc')->paginate(12);
+        $doctors = Doctor::with([
+            'employee.user',
+            'employee.clinic',
+            'employee.department'
+        ])->orderBy('id', 'asc')->paginate(12);
         return view('Backend.admin.doctors.view' , compact('doctors'));
     }
 
@@ -216,15 +218,14 @@ class DoctorController extends Controller{
 
         $imagePath = $user->image;
         if ($request->hasFile('image')) {
+            // حذف الصورة القديمةإن وجدت
+            if ($user->image && file_exists(public_path($user->image))) {
+                @unlink(public_path($user->image));
+            }
             $file = $request->file('image');
             $imageName = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('assets/img/doctors'), $imageName);
             $newPath = 'assets/img/doctors/' . $imageName;
-
-            // حذف الصورة القديمة إذا وجدت
-            if ($user->image && file_exists(public_path($user->image))) {
-                @unlink(public_path($user->image));
-            }
             $imagePath = $newPath;
         }
 

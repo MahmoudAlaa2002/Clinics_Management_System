@@ -45,8 +45,8 @@ class AnalyticController extends Controller{
         $currentMonthPatients = User::where('role', 'patient')->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->count();
         $completedVisits = Appointment::where('status', 'completed')->count();
 
-        $malePatients = User::where('role', 'patient')->where('gender', 'male')->count();
-        $femalePatients = User::where('role', 'patient')->where('gender', 'female')->count();
+        $malePatients = User::where('role', 'patient')->where('gender', 'Male')->count();
+        $femalePatients = User::where('role', 'patient')->where('gender', 'Female')->count();
         $totalPatients = $malePatients + $femalePatients;
 
         // لتفادي القسمة على صفر

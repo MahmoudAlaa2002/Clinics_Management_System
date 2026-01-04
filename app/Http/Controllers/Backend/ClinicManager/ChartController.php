@@ -9,45 +9,24 @@ use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class ChartController extends Controller{
+class ChartController extends Controller {
 
-    public function clinicPatientsMonthly(){
+    // عدد المرضى شهريًا
+    public function clinicPatientsMonthly() {
         $clinicId = Auth::user()->employee->clinic_id;
 
-        $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        $counts = [];
-
-        for ($month = 1; $month <= 12; $month++) {
-            $monthlyPatients = ClinicPatient::where('clinic_id', $clinicId)
-            ->whereMonth('created_at', $month)
+        $patients = ClinicPatient::selectRaw('MONTH(created_at) as month, COUNT(DISTINCT patient_id) as total')
+            ->where('clinic_id', $clinicId)
             ->whereYear('created_at', now()->year)
-            ->distinct('patient_id')
-            ->count('patient_id');
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
-            $counts[] = $monthlyPatients;
-        }
-
-        return response()->json([
-            'months' => $months,
-            'counts' => $counts
-        ]);
-    }
-
-    public function clinicAppointmentsPerMonth(){
-        $clinicId = Auth::user()->employee->clinic_id;
-        $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
+        $months = [];
         $counts = [];
 
-        for ($m = 1; $m <= 12; $m++) {
-            $count = Appointment::whereMonth('created_at', $m)
-                ->whereYear('created_at', now()->year)
-                ->whereHas('clinicDepartment', function ($q) use ($clinicId) {
-                    $q->where('clinic_id', $clinicId);
-                })
-                ->count();
-
-            $counts[] = $count;
+        foreach (range(1, 12) as $m) {
+            $months[] = date("M", mktime(0, 0, 0, $m, 1));
+            $counts[] = $patients[$m] ?? 0;
         }
 
         return response()->json([
@@ -57,21 +36,49 @@ class ChartController extends Controller{
     }
 
 
+    // عدد المواعيد شهريًا
+    public function clinicAppointmentsPerMonth() {
+        $clinicId = Auth::user()->employee->clinic_id;
+
+        $appointments = Appointment::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', now()->year)
+            ->whereHas('clinicDepartment', function ($q) use ($clinicId) {
+                $q->where('clinic_id', $clinicId);
+            })
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        $months = [];
+        $counts = [];
+
+        foreach (range(1, 12) as $m) {
+            $months[] = date("M", mktime(0, 0, 0, $m, 1));
+            $counts[] = $appointments[$m] ?? 0;
+        }
+
+        return response()->json([
+            'months' => $months,
+            'counts' => $counts
+        ]);
+    }
+
+    // عدد الأطباء شهريًا
     public function clinicDoctorsMonthly(){
         $clinic_id = Auth::user()->employee->clinic_id;
 
-        $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        $doctors = Doctor::join('employees', 'doctors.employee_id', '=', 'employees.id')
+            ->where('employees.clinic_id', $clinic_id)
+            ->whereYear('employees.hire_date', now()->year)
+            ->selectRaw('MONTH(employees.hire_date) as month, COUNT(doctors.id) as total')
+            ->groupBy('month')
+            ->pluck('total', 'month');
+
+        $months = [];
         $counts = [];
 
-        foreach (range(1, 12) as $month) {
-
-            $count = Doctor::whereHas('employee', function ($q) use ($clinic_id, $month) {
-                    $q->where('clinic_id', $clinic_id)
-                    ->whereMonth('hire_date', $month)
-                    ->whereYear('hire_date', now()->year);
-                })->count();
-
-            $counts[] = $count;
+        foreach (range(1, 12) as $m) {
+            $months[] = date("M", mktime(0, 0, 0, $m, 1));
+            $counts[] = $doctors[$m] ?? 0;
         }
 
         return response()->json([
@@ -82,7 +89,9 @@ class ChartController extends Controller{
 
 
 
-    public function clinicMonthlyRevenue(){
+
+    // أرباح العيادة شهريًا
+    public function clinicMonthlyRevenue() {
         $clinic = Auth::user()->employee->clinic;
 
         $monthlyTotals = Invoice::selectRaw('MONTH(invoice_date) as month, SUM(invoices.paid_amount) as total')
@@ -94,12 +103,10 @@ class ChartController extends Controller{
             ->orderBy('month')
             ->get();
 
-        $allMonths = collect(range(1, 12));
-
         $months = [];
         $totals = [];
 
-        foreach ($allMonths as $m) {
+        foreach (range(1, 12) as $m) {
             $months[] = date("M", mktime(0, 0, 0, $m, 1));
             $totals[] = optional($monthlyTotals->firstWhere('month', $m))->total ?? 0;
         }
@@ -109,7 +116,4 @@ class ChartController extends Controller{
             'totals' => $totals
         ]);
     }
-
-
-
 }

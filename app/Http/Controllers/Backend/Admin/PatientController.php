@@ -133,6 +133,10 @@ class PatientController extends Controller{
         }else{
             $imagePath = $user->image;
             if ($request->hasFile('image')) {
+                //  حذف الصورة القديمة إن وجدت
+                if ($user->image && file_exists(public_path($user->image))) {
+                    @unlink(public_path($user->image));
+                }
                 $file = $request->file('image');
                 $imageName = time() . '_' . $file->getClientOriginalName();
                 $file->move(public_path('assets/img/patients'), $imageName);

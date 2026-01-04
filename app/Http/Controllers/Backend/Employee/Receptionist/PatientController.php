@@ -100,9 +100,10 @@ class PatientController extends Controller{
 
     public function viewPatients(){
         $clinic_id = Auth::user()->employee->clinic_id;
-        $patients = Patient::whereHas('clinicPatients', function ($q) use ($clinic_id) {
-            $q->where('clinic_id', $clinic_id);
-        })->orderBy('id', 'asc')->paginate(50);
+        $patients = Patient::with('user')
+            ->whereHas('clinicPatients', function ($q) use ($clinic_id) {
+                $q->where('clinic_id', $clinic_id);
+            })->orderBy('id', 'asc')->paginate(50);
 
         return view('Backend.employees.receptionists.patients.view', compact('patients'));
     }
@@ -162,7 +163,7 @@ class PatientController extends Controller{
 
 
     public function profilePatient($id){
-        $patient = Patient::findOrFail($id);
+        $patient = Patient::with('user')->findOrFail($id);
         return view('Backend.employees.receptionists.patients.profile', compact('patient'));
     }
 

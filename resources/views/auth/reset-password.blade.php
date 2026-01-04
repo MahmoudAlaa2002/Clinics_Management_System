@@ -137,7 +137,7 @@ $(document).ready(function () {
         let confirmPassword = $('input[name="password_confirmation"]').val();
         let token = $('input[name="token"]').val();
 
-        let passwordPattern = /^(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
         if (!password || !confirmPassword) {
             Swal.fire({
@@ -149,15 +149,15 @@ $(document).ready(function () {
             return;
         }
 
-        if (!passwordPattern.test(password)) {
-            Swal.fire({
-                title: 'Invalid Password',
-                text: 'Password must be 6–15 characters',
-                icon: 'error',
-                confirmButtonColor: '#007BFF'
-            });
-            return;
-        }
+        if (password && !passwordPattern.test(password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
 
         if (password !== confirmPassword) {
             Swal.fire({

@@ -15,6 +15,10 @@
         .fw-bold {
             font-weight: bold;
         }
+
+        .pointer-cursor {
+            cursor: pointer;
+        }
     </style>
 
     <div class="page-wrapper">
@@ -117,7 +121,7 @@
 
                         <div class="card-body p-3">
 
-                            {{-- ✅ أزرار التنقل والتاريخ (خارج الجدول والـ scroll) --}}
+                            {{-- أزرار التنقل والتاريخ (خارج الجدول والـ scroll) --}}
                             <div class="d-flex justify-content-between align-items-center bg-light p-3 border rounded mb-3 shadow-sm">
                                 <button type="button" onclick="changeWeek(-1)" class="btn btn-outline-primary btn-sm">
                                     <i class="fas fa-chevron-left"></i> Previous Week
@@ -183,7 +187,15 @@
                                                     @endphp
                                                     <td>
                                                         @if(isset($appointmentsGrouped[$key]))
-                                                            <span class="text-success" style="font-size: 22px;">&#10004;</span>
+                                                            <a href="{{ route('details_appointment', $appointmentsGrouped[$key]->first()->id) }}"
+                                                                style="text-decoration:none;">
+                                                                <span class="text-success pointer-cursor"
+                                                                    data-bs-toggle="tooltip"
+                                                                    style="font-size: 22px;"
+                                                                    title="Patient: {{ $appointmentsGrouped[$key]->first()->patient->user->name }}">
+                                                                    &#10004;
+                                                                </span>
+                                                            </a>
                                                         @else
                                                             <span class="text-muted" style="font-size: 16px;">–</span>
                                                         @endif
@@ -207,6 +219,8 @@
 
 @section('js')
     <script>
+
+        initTooltips();
         // عند تغيير العيادة: نفرّغ ونُعطّل التابعين، ثم نحمّل الأقسام
         $('#clinic_id').on('change', function () {
             var clinicId = $(this).val();

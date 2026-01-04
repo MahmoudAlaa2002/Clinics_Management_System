@@ -106,7 +106,7 @@
                                     <label>Avatar</label>
                                     <div class="profile-upload">
                                         <div class="upload-img">
-                                            <img alt="" src="{{ $employee->user->image ? asset('storage/' . $employee->user->image) : asset('assets/img/user.jpg') }}">
+                                            <img alt="" src="{{ $employee->user->image ? asset($employee->user->image) : asset('assets/img/user.jpg') }}">
                                         </div>
                                         <div class="upload-input">
                                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
@@ -119,12 +119,12 @@
                                         <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" value="male" {{ $employee->user->gender == 'male' ? 'checked' : '' }}> Male
+                                                <input type="radio" name="gender" value="Male" {{ $employee->user->gender == 'Male' ? 'checked' : '' }}> Male
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" value="female" {{ $employee->user->gender == 'female' ? 'checked' : '' }}> Female
+                                                <input type="radio" name="gender" value="Female" {{ $employee->user->gender == 'Female' ? 'checked' : '' }}> Female
                                             </label>
                                         </div>
                                     </div>
@@ -237,9 +237,16 @@
                                     <label>Rating <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-star"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-star"></i></span>
                                         </div>
-                                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="{{ optional($employee->doctor)->rating }}">
+                                        <select class="form-control" id="rating" name="rating" required>
+                                            <option value="" hidden>Choose rating</option>
+                                            <option value="1" {{ old('rating', $employee->doctor->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
+                                            <option value="2" {{ old('rating', $employee->doctor->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
+                                            <option value="3" {{ old('rating', $employee->doctor->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
+                                            <option value="4" {{ old('rating', $employee->doctor->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
+                                            <option value="5" {{ old('rating', $employee->doctor->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -485,7 +492,7 @@ $(document).ready(function () {
 
         let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-        if (!name || !date_of_birth || !department_id || !email || !phone || !gender || !work_start_time || !work_end_time 
+        if (!name || !date_of_birth || !department_id || !email || !phone || !gender || !work_start_time || !work_end_time
             || workingDays.length === 0 || !job_title) {
             return Swal.fire({
                 icon: 'error',
@@ -585,7 +592,7 @@ $(document).ready(function () {
                 (speciality === originalSpeciality &&
                 qualification === originalQualification &&
                 consultation_fee == originalFee &&
-                rating == originalRating)
+                Number(rating) === Number(originalRating))
             );
 
         if (password !== '' || confirm_password !== '') noChanges = false;
@@ -660,6 +667,16 @@ $(document).ready(function () {
             }
         });
     });
+});
+
+
+
+$('#image').on('change', function (e) {
+    const file = e.target.files[0];
+    if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        $('.profile-upload .upload-img img').attr('src', previewUrl);
+    }
 });
 </script>
 @endsection

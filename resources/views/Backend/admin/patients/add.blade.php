@@ -139,12 +139,12 @@
                                         <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="male">Male
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Male">Male
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="female">Female
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Female">Female
                                             </label>
                                         </div>
                                     </div>
@@ -357,6 +357,17 @@
                 });
 
             });
+        });
+
+
+
+        $('#image').on('change', function (e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                const previewUrl = URL.createObjectURL(file);
+                $('.profile-upload .upload-img img').attr('src', previewUrl);
+            }
         });
 
     </script>

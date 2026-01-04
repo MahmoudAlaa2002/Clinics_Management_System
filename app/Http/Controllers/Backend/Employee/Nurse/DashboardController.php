@@ -17,7 +17,7 @@ class DashboardController extends Controller{
     public function nurseDashboard(){
         $clinic = Auth::user()->employee->clinic;
         $department = Auth::user()->employee->department;
-        
+
         $doctor_count = Doctor::whereHas('employee', function ($q) use ($clinic , $department) {
             $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
         })->count();
@@ -45,21 +45,25 @@ class DashboardController extends Controller{
         $completed_tasks_count = NurseTask::where('nurse_id' , Auth::user()->employee->id)->where('status' , 'Completed')->count();
 
 
-        $doctors = Doctor::whereHas('employee', function ($q) use ($clinic , $department) {
-            $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
+        $doctors = Doctor::with('employee.user')->whereHas('employee', function ($q) use ($clinic , $department) {
+            $q->where('clinic_id', $clinic->id)
+            ->where('department_id' , $department->id);
         })->latest('id')->take(5)->get();
 
+        $patients = Patient::with('user')->whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
+            $q->where('clinic_id', $clinic->id)
+            ->where('department_id', $department->id);
+        })->latest('id')->take(5)->get();
 
-        $patients = Patient::whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
+        $appointments = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department'
+        ])->whereHas('clinicDepartment', function($q) use ($clinic, $department) {
             $q->where('clinic_id', $clinic->id)
               ->where('department_id', $department->id);
         })->latest('id')->take(5)->get();
 
-
-        $appointments = Appointment::whereHas('clinicDepartment', function($q) use ($clinic, $department) {
-            $q->where('clinic_id', $clinic->id)
-              ->where('department_id', $department->id);
-        })->latest('id')->take(5)->get();
 
 
         return view ('Backend.employees.nurses.dashboard' , compact(

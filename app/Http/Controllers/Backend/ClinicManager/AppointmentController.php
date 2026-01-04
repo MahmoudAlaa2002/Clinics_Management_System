@@ -14,10 +14,13 @@ class AppointmentController extends Controller{
     public function viewAppointments(){
         $clinicId = Auth::user()->employee->clinic_id;
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinicId)->pluck('id');
-        $appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)
-            ->whereNull('clinic_manager_deleted_at') // لم يُحذف من مدير العيادة
-            ->orderBy('id', 'asc')
-            ->paginate(50);
+        $appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)->whereNull('clinic_manager_deleted_at')
+            ->with([
+                'patient.user',
+                'doctor.employee.user',
+                'clinicDepartment.department',
+                'invoice'
+            ])->orderBy('id', 'asc')->paginate(50);
         return view('Backend.clinics_managers.appointments.view' , compact('appointments'));
     }
 
@@ -87,7 +90,12 @@ class AppointmentController extends Controller{
 
 
     public function detailsAppointment($id){
-        $appointment = Appointment::findOrFail($id);
+        $appointment = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department',
+            'invoice'
+        ])->findOrFail($id);
         return view('Backend.clinics_managers.appointments.details', compact('appointment' ));
     }
 
@@ -118,9 +126,11 @@ class AppointmentController extends Controller{
     // تعرض المواعيد الموجودة في سلة المحذوفات
     public function trash(){
         $appointments = Appointment::whereNotNull('clinic_manager_deleted_at')
-            ->with(['patient', 'doctor', 'invoice'])
-            ->orderBy('clinic_manager_deleted_at', 'asc')
-            ->paginate(50);
+        ->with([
+            'patient.user',
+            'doctor.employee.user',
+            'invoice'
+        ])->orderBy('clinic_manager_deleted_at', 'asc')->paginate(50);
 
         return view('Backend.clinics_managers.appointments.trash.view', compact('appointments'));
     }

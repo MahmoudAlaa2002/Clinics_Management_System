@@ -48,7 +48,6 @@
                         <div class="card-body">
                             <div class="row">
 
-
                                 <div class="col-sm-6">
                                     <label>Appointment ID </label>
                                     <div class="input-group">
@@ -60,7 +59,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="col-sm-6">
                                     <label>Patient Name</label>
                                     <div class="input-group">
@@ -70,7 +68,6 @@
                                         <input type="text" class="form-control" value="{{ $invoice->patient->user->name ?? 'Unknown' }}" readonly>
                                     </div>
                                 </div>
-
 
                                 <div class="col-sm-6">
                                     <label>Total Amount <span class="text-danger">*</span></label>
@@ -82,7 +79,6 @@
                                                value="{{ $invoice->total_amount }}" min="0" step="0.01">
                                     </div>
                                 </div>
-
 
                                 <div class="col-sm-6">
                                     <label>Paid Amount <span class="text-danger">*</span></label>
@@ -106,9 +102,8 @@
                                     </div>
                                 </div>
 
-
                                 <div class="col-sm-6">
-                                    <label>Due Date <span class="text-danger">*</span></label>
+                                    <label>Due Date</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-calendar-day"></i></span>
@@ -119,23 +114,24 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Payment Method <span class="text-danger">*</span></label>
+                                    <label>Payment Method</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                            <span class="input-group-text">
+                                                <i class="fas fa-credit-card"></i>
+                                            </span>
                                         </div>
 
                                         <select class="form-control" id="payment_method" name="payment_method">
-                                            <option value="" disabled hidden>-- Select Method --</option>
-
+                                            <option value="" disabled hidden {{ is_null($invoice->payment_method) ? 'selected' : '' }}>
+                                                Select Method
+                                            </option>
                                             <option value="Cash"   {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>Cash</option>
                                             <option value="Bank"   {{ $invoice->payment_method == 'Bank' ? 'selected' : '' }}>Bank</option>
                                             <option value="PayPal" {{ $invoice->payment_method == 'PayPal' ? 'selected' : '' }}>PayPal</option>
-                                            <option value="None"   {{ $invoice->payment_method == 'None' ? 'selected' : '' }}>None</option>
                                         </select>
                                     </div>
                                 </div>
-
 
                             </div>
                         </div>
@@ -147,8 +143,6 @@
                             <textarea id="notes" name="notes" class="form-control" rows="4">{{ old('notes', $invoice->notes) }}</textarea>
                         </div>
                     </div>
-
-
 
                     <div class="text-center" style="margin-top:20px;">
                         <button type="submit" class="btn btn-primary submit-btn editBtn"
@@ -176,14 +170,13 @@ $(document).ready(function () {
         const formData = new FormData(form);
         formData.append('_method', 'PUT');
 
+        let invoice_date     = $('#invoice_date').val().trim();
+        let due_date         = $('#due_date').val().trim();
+        let total_amount_str = $('#total_amount').val().trim();
+        let paid_amount_str  = $('#paid_amount').val().trim();
+        let payment_method   = $('#payment_method').val() || "";
 
-        let invoice_date = $('#invoice_date').val().trim();
-        let due_date = $('#due_date').val().trim();
-        let total_amount = $('#total_amount').val().trim();
-        let paid_amount = $('#paid_amount').val();
-        let payment_method = $('#payment_method').val();
-
-        if (invoice_date === '' || total_amount === '' || paid_amount === '') {
+        if (invoice_date === '' || total_amount_str === '' || paid_amount_str === '') {
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter all required fields',
@@ -194,7 +187,10 @@ $(document).ready(function () {
             return;
         }
 
-        if(total_amount < 0){
+        let total_amount = parseFloat(total_amount_str);
+        let paid_amount  = parseFloat(paid_amount_str);
+
+        if (isNaN(total_amount) || total_amount < 0) {
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter a valid amount',
@@ -205,7 +201,7 @@ $(document).ready(function () {
             return;
         }
 
-        if(paid_amount < 0){
+        if (isNaN(paid_amount) || paid_amount < 0) {
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter a valid amount',
@@ -216,23 +212,50 @@ $(document).ready(function () {
             return;
         }
 
-        if (paid_amount > 0 && payment_method === 'None') {
+        if (paid_amount > 0 && (payment_method === "" || payment_method === "None")) {
             Swal.fire({
                 title: 'Error!',
-                text: `Payment method cannot be None when paid amount is $${paid_amount}`,
+                text: `Please choose a valid payment method when paid amount is $${paid_amount}`,
                 icon: 'error',
                 confirmButtonText: 'OK',
                 confirmButtonColor: '#007BFF',
             });
             return;
+        }
+
+        if (paid_amount === 0 && payment_method !== "" && payment_method !== "None") {
+            Swal.fire({
+                title: 'Error!',
+                text: 'You cannot select a payment method when paid amount is $0',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#007BFF',
+            });
+            return;
+        }
+
+        if (due_date !== '' && invoice_date !== '') {
+            let invoiceDateObj = new Date(invoice_date);
+            let dueDateObj     = new Date(due_date);
+
+            if (dueDateObj < invoiceDateObj) {
+                Swal.fire({
+                    title: 'Invalid Date',
+                    text: 'Due date must be after the invoice date',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#007BFF',
+                });
+                return;
+            }
         }
 
         let noChanges =
-            invoice_date === "{{ $invoice->invoice_date }}" &&
-            due_date === "{{ $invoice->due_date }}" &&
-            total_amount === "{{ $invoice->total_amount }}" &&
-            paid_amount === "{{ $invoice->paid_amount }}"&&
-            payment_method === "{{ $invoice->payment_method }}";
+            invoice_date     === "{{ $invoice->invoice_date }}" &&
+            due_date         === "{{ $invoice->due_date }}" &&
+            total_amount_str === "{{ $invoice->total_amount }}" &&
+            paid_amount_str  === "{{ $invoice->paid_amount }}" &&
+            payment_method   === "{{ $invoice->payment_method }}";
 
         if (noChanges) {
             Swal.fire({
@@ -278,6 +301,5 @@ $(document).ready(function () {
         });
     });
 });
-
 </script>
 @endsection

@@ -1,10 +1,10 @@
 @if($appointments->count() > 0)
     @foreach ($appointments as $appointment)
         <tr data-appointment="{{ $appointment->id }}">
-            <td>{{ $appointment->id }}</td>
-            <td>{{ $appointment->patient->user->name }}</td>
-            <td>{{ $appointment->doctor->employee->user->name }}</td>
-            <td>{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
+            <td data-field="id">{{ $appointment->id }}</td>
+            <td data-field="patient">{{ $appointment->patient->user->name }}</td>
+            <td data-field="doctor">{{ $appointment->doctor->employee->user->name }}</td>
+            <td data-field="date">{{ \Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}</td>
             <td class="status-cell">
                 @if($appointment->status === 'Pending')
                     <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#ffc107; color:white;">

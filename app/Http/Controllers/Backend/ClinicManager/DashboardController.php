@@ -23,18 +23,16 @@ class DashboardController extends Controller{
 
         $doctors = Doctor::whereHas('employee', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id);
-        })->take(5)->get();
+        })->with('employee.user')->take(5)->get();
 
         $patient_count = $clinic->patients()->count();
-        $patients = $clinic->patients()
-            ->orderBy('clinic_patients.created_at', 'desc')
-            ->take(5)
-            ->get();
-
-
+        $patients = $clinic->patients()->with('user')->orderBy('clinic_patients.created_at', 'desc')->take(5)->get();
 
         $all_appointments = $clinic->appointments()->count();
-        $appointments = $clinic->appointments()->take(5)->get();
+        $appointments = $clinic->appointments()->with([
+                'patient.user',
+                'doctor.employee.user'
+            ])->take(5)->get();
         $today_appointments = $clinic->appointments()->whereDate('date', today())->count();
 
         $invoice_count = Invoice::whereHas('appointment', function ($q) use ($clinic) {

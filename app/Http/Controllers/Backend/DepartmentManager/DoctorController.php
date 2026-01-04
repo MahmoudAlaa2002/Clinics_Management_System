@@ -80,7 +80,12 @@ class DoctorController extends Controller{
 
 
     public function profileDoctor($id){
-        $doctor = Doctor::findOrFail($id);
+        $doctor = Doctor::with([
+            'employee.user',
+            'employee.clinic',
+            'employee.department',
+            'appointments.patient.user'
+        ])->findOrFail($id);
         return view('Backend.departments_managers.doctors.profile', compact('doctor'));
     }
 
@@ -128,7 +133,7 @@ class DoctorController extends Controller{
             'department'     => $department,
             'doctors'        => $doctors,
             'appointments'   => $appointments,
-            'selectedDoctor' => Doctor::find($doctor_id),
+            'selectedDoctor' => Doctor::with('employee.user')->find($doctor_id),
             'doctor_id'      => $doctor_id,
             'offset'         => $offset,
             'startOfWeek'    => $startOfWeek,

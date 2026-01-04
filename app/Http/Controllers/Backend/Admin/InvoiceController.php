@@ -124,7 +124,7 @@ class InvoiceController extends Controller{
 
 
     public function detailsInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with(['patient.user','appointment'])->findOrFail($id);
         return view ('Backend.admin.invoices.details' , compact('invoice'));
     }
 
@@ -133,7 +133,7 @@ class InvoiceController extends Controller{
 
 
     public function editInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with(['patient.user','appointment'])->findOrFail($id);
         return view ('Backend.admin.invoices.edit' , compact('invoice'));
     }
 

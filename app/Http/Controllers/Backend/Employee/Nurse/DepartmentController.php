@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend\Employee\Nurse;
 
-
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

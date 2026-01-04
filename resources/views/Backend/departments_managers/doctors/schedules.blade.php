@@ -15,6 +15,10 @@
         .fw-bold {
             font-weight: bold;
         }
+
+        .pointer-cursor {
+            cursor: pointer;
+        }
     </style>
 
 <div class="page-wrapper">
@@ -158,7 +162,15 @@
                                                 @endphp
                                                 <td>
                                                     @if(isset($appointmentsGrouped[$key]))
-                                                        <span class="text-success" style="font-size: 22px;">&#10004;</span>
+                                                        <a href="{{ route('department.details_appointment', $appointmentsGrouped[$key]->first()->id) }}"
+                                                            style="text-decoration:none;">
+                                                            <span class="text-success pointer-cursor"
+                                                                data-bs-toggle="tooltip"
+                                                                style="font-size: 22px;"
+                                                                title="Patient: {{ $appointmentsGrouped[$key]->first()->patient->user->name }}">
+                                                                &#10004;
+                                                            </span>
+                                                        </a>
                                                     @else
                                                         <span class="text-muted" style="font-size: 16px;">–</span>
                                                     @endif
@@ -182,6 +194,9 @@
 
 @section('js')
 <script>
+
+    initTooltips();
+
     function changeWeek(direction) {
         const form = document.getElementById('doctor-schedule-form');
         let offsetField = document.getElementById('week_offset');

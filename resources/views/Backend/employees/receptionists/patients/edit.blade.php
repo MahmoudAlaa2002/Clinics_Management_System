@@ -128,12 +128,12 @@
                                             <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label">
-                                                    <input type="radio" name="gender" value="male" class="form-check-input" {{ $patient->user->gender == 'male' ? 'checked' : '' }}>Male
+                                                    <input type="radio" name="gender" value="Male" class="form-check-input" {{ $patient->user->gender == 'Male' ? 'checked' : '' }}>Male
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label">
-                                                    <input type="radio" name="gender" value="female" class="form-check-input" {{ $patient->user->gender == 'female' ? 'checked' : '' }}>Female
+                                                    <input type="radio" name="gender" value="Female" class="form-check-input" {{ $patient->user->gender == 'Female' ? 'checked' : '' }}>Female
                                                 </label>
                                             </div>
                                         </div>
@@ -149,7 +149,7 @@
                                 <div class="row">
                                     {{-- Blood Type --}}
                                     <div class="col-sm-6">
-                                        <label>Blood Type <span class="text-danger">*</span></label>
+                                        <label>Blood Type</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-tint"></i></span>
@@ -165,7 +165,7 @@
 
                                     {{-- Emergency Contact --}}
                                     <div class="col-sm-6">
-                                        <label>Emergency Contact <span class="text-danger">*</span></label>
+                                        <label>Emergency Contact</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
@@ -259,8 +259,7 @@
             }
 
             // التحقق من الحقول المطلوبة
-            if (!date_of_birth || !phone || !address || !gender ||
-                !isValidSelectValue('blood_type') || !emergency_contact) {
+            if (!date_of_birth || !phone || !address || !gender) {
                 Swal.fire({
                     title: 'Error!',
                     text: 'Please Enter All Required Fields',
@@ -315,8 +314,18 @@
                     }
                 }
             });
-
         });
+    });
+
+
+
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', previewUrl);
+        }
     });
 </script>
 @endsection

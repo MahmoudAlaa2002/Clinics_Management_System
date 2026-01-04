@@ -81,7 +81,7 @@ class DoctorController extends Controller{
 
 
     public function profileDoctor($id){
-        $doctor = Doctor::findOrFail($id);
+        $doctor = Doctor::with('employee.user')->findOrFail($id);
         return view('Backend.employees.nurses.doctors.profile', compact('doctor'));
     }
 
@@ -122,7 +122,11 @@ class DoctorController extends Controller{
         $startOfWeek = Carbon::now()->startOfWeek(Carbon::SATURDAY)->addWeeks($offset);
         $endOfWeek   = Carbon::now()->endOfWeek(Carbon::FRIDAY)->addWeeks($offset);
 
-        $appointments = Appointment::where('doctor_id', $doctor_id)->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])->get();
+        $appointments = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department'
+        ])->where('doctor_id', $doctor_id)->whereBetween('date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])->get();
 
         return view('Backend.employees.nurses.doctors.schedules', [
             'clinic'         => $clinic,

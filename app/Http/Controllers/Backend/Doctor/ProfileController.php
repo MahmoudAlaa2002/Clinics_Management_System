@@ -12,50 +12,55 @@ use App\Models\User;
 class ProfileController extends Controller
 {
 
-    public function profile()
-    {
-        $doctor = Auth::user()->employee->doctor;
-
+    public function profile(){
+        $doctor = Auth::user();
         return view('Backend.doctors.profile.view', compact('doctor'));
     }
 
 
-    public function edit()
-    {
-        $doctor = Auth::user()->employee->doctor;
+    public function edit() {
+        $doctor = Auth::user();
         return view('Backend.doctors.profile.edit', compact('doctor'));
     }
 
-    public function update(Request $request)
-    {
-        $doctor = Auth::user()->employee->doctor;
-        $user = $doctor->employee->user;
+    public function update(Request $request){
+        $doctor = Auth::user();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048',
-            'speciality' => 'nullable|string|max:255',
-            'qualification' => 'nullable|string|max:255',
-            'consultation_fee' => 'nullable|numeric|min:0',
-        ]);
+        $password = $doctor->password;
+        if ($request->filled('password')) {
+            $password = Hash::make($request->password);
+        }
 
-        $user->update($request->only('name', 'email', 'phone', 'address'));
-
+        $imagePath = $doctor->image; // الصورة القديمة
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/doctors'), $imageName);
-            $user->update(['image' => 'assets/img/doctors/' . $imageName]);
+            $newPath = 'assets/img/doctor/' . $imageName;
+
+
+            $file->move(public_path('assets/img/doctor'), $imageName);
+
+            if (!empty($imagePath) && file_exists(public_path($imagePath))) {
+                @unlink(public_path($imagePath));
+            }
+
+            $imagePath = $newPath;
         }
 
-        // Update doctor-specific fields
-        $doctor->update($request->only('speciality', 'qualification', 'consultation_fee'));
+        $doctor->update([
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'password'     => $password,
+            'phone'        => $request->phone,
+            'address'      => $request->address,
+            'image'        => $imagePath,
+            'date_of_birth'=> $request->date_of_birth,
+            'gender'       => $request->gender,
+        ]);
 
-        return redirect()->route('doctor.profile.edit')->with('success', 'Profile updated successfully.');
+        return response()->json(['data' => 1]);
     }
+
 
     public function settings()
     {

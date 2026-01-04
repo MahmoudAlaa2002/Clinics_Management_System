@@ -142,13 +142,13 @@
                         <label class="fw-bold">Gender <span class="required">*</span></label>
                         <div class="gender-wrapper">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gender" value="male">
+                                <input class="form-check-input" type="radio" name="gender" value="Male">
                                 <label class="form-check-label">
                                     <i class="fa fa-mars"></i> Male
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gender" value="female">
+                                <input class="form-check-input" type="radio" name="gender" value="Female">
                                 <label class="form-check-label">
                                     <i class="fa fa-venus"></i> Female
                                 </label>
@@ -169,7 +169,7 @@
 
                     {{-- Blood Type --}}
                     <div class="col-md-6">
-                        <label class="fw-bold">Blood Type <span class="required">*</span></label>
+                        <label class="fw-bold">Blood Type</label>
                         <select id="blood_type" class="form-control">
                             <option value="" disabled selected hidden>Select Blood Type</option>
                             <option>A+</option><option>A-</option>
@@ -181,7 +181,7 @@
 
                     {{-- Emergency Contact --}}
                     <div class="col-md-6">
-                        <label class="fw-bold">Emergency Contact <span class="required">*</span></label>
+                        <label class="fw-bold">Emergency Contact</label>
                         <input type="text" id="emergency_contact" class="form-control">
                     </div>
 
@@ -241,8 +241,7 @@ $(document).ready(function () {
 
         // ===== Required Fields Validation =====
         if (!data.name || !data.email || !data.password || !data.password_confirmation ||
-            !data.phone || !data.address || !data.date_of_birth ||
-            !data.gender || !data.blood_type || !data.emergency_contact) {
+            !data.phone || !data.address || !data.date_of_birth || !data.gender) {
 
             Swal.fire({
                 title: 'Error!',
@@ -254,17 +253,18 @@ $(document).ready(function () {
         }
 
         // ===== Password Validation (6–15, numbers + symbols) =====
-        let passwordPattern = /^(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-        if (!passwordPattern.test(data.password)) {
-            Swal.fire({
-                title: 'Invalid Password',
-                text: 'Password must be 6–15 characters',
-                icon: 'error',
-                confirmButtonColor: '#007BFF'
-            });
-            return;
-        }
+        if (data.password && !passwordPattern.test(data.password)){
+                Swal.fire({
+                    title: 'Invalid Password',
+                    text: 'Password must be 6–15 characters',
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+                return;
+            }
+
 
         if (data.password !== data.password_confirmation) {
             Swal.fire({

@@ -60,7 +60,7 @@
     <div class="content">
         <div class="row">
             <div class="col-sm-4 col-3">
-                <h4 class="page-title">View Appointments</h4>
+                <h4 class="page-title">View Appointments (Today)</h4>
             </div>
         </div>
 

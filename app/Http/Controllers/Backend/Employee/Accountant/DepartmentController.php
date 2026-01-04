@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Backend\Employee\Accountant;
 
 use App\Models\Invoice;
-use Illuminate\Http\Request;
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

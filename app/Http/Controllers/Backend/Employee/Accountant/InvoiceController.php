@@ -16,11 +16,14 @@ class InvoiceController extends Controller{
         $clinic_id = Auth::user()->employee->clinic_id;
         $statusFilter = $request->input('invoiceFilter', 'Issued');
 
-        $invoices = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic_id) {
-                $q->where('clinic_id', $clinic_id);
-            })->when($statusFilter, function ($query) use ($statusFilter) {
-                return $query->where('invoice_status', $statusFilter);
-            })->orderBy('id', 'asc') ->paginate(50);
+        $invoices = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment'
+        ])->whereHas('appointment.clinicDepartment', function ($q) use ($clinic_id) {
+            $q->where('clinic_id', $clinic_id);
+        })->when($statusFilter, function ($query) use ($statusFilter) {
+            return $query->where('invoice_status', $statusFilter);
+        })->orderBy('id','asc')->paginate(50);
 
         return view('Backend.employees.accountants.invoices.view', compact('invoices' , 'statusFilter'));
     }
@@ -129,7 +132,10 @@ class InvoiceController extends Controller{
 
 
     public function detailsInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.invoices.details', compact('invoice'));
     }
 
@@ -138,7 +144,10 @@ class InvoiceController extends Controller{
 
 
     public function editInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.invoices.edit', compact('invoice'));
     }
 
@@ -178,7 +187,10 @@ class InvoiceController extends Controller{
 
 
     public function invoicePDF($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.invoices.invoice_pdf' , compact('invoice'));
     }
 
@@ -198,7 +210,10 @@ class InvoiceController extends Controller{
 
 
     public function detailsRefundInvoice($id){
-        $refund_invoice = Invoice::findOrFail($id);
+        $refund_invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.invoices.cancelled.details', compact('refund_invoice'));
     }
 
@@ -207,7 +222,9 @@ class InvoiceController extends Controller{
 
 
     public function refundConfirmation($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.invoices.cancelled.confirmation', compact('invoice'));
     }
 
@@ -228,7 +245,10 @@ class InvoiceController extends Controller{
 
 
     public function cancelledinvoicePDF($id){
-        $refund_invoice  = Invoice::findOrFail($id);
+        $refund_invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.invoices.Cancelled.invoice_pdf' , compact('refund_invoice'));
     }
 

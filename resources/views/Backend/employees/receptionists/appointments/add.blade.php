@@ -61,14 +61,19 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Payment Method <span class="text-danger">*</span></label>
+                    <label class="form-label">
+                        Payment Method <span class="text-danger">*</span>
+                    </label>
+
                     <select class="form-control" id="payment_method">
+                        <option value="" disabled selected hidden>Select</option>
+
                         <option value="Cash">Cash</option>
-                        <option value="Bank">Bank Transfer</option>
+                        <option value="Bank">Bank</option>
                         <option value="PayPal">PayPal</option>
-                        <option value="None">None</option>
                     </select>
                 </div>
+
 
                 <div class="mb-3">
                     <label class="form-label">Due Date</label>
@@ -307,7 +312,7 @@
         );
 
 
-        if (paid === "" || paid < 0 || method === "" || method === null) {
+        if (paid === "" || paid < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Missing Payment Info',
@@ -327,17 +332,28 @@
             return;
         }
 
-        if (paid > 0 && method === "None") {
+        if (paid > 0 && !method) {
             Swal.fire({
                 icon: 'error',
                 title: 'Invalid Payment Method',
-                text: 'You cannot choose "None" when a payment amount is entered',
+                text: 'You must select a payment method when a payment amount is entered',
                 confirmButtonColor: '#007BFF'
             });
             return;
         }
+
+        if (paid == 0 && method) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Payment Method',
+                text: 'You cannot select a payment method when payment amount is $0',
+                confirmButtonColor: '#007BFF'
+            });
+            return;
+        }
+
         formData.append('paid_amount', $("#paid_amount").val());
-        formData.append('payment_method', $("#payment_method").val());
+        formData.append('payment_method', method === "" ? null : method);
         formData.append('due_date', $("#due_date").val());
 
         $.ajax({

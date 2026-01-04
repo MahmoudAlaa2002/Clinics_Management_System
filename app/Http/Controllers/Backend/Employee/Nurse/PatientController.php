@@ -13,9 +13,9 @@ class PatientController extends Controller{
         $clinicId = Auth::user()->employee->clinic_id;
         $departmentId = Auth::user()->employee->department_id;
 
-        $patients = Patient::whereHas('appointments.clinicDepartment', function ($q) use ($clinicId , $departmentId) {
+        $patients = Patient::with('user')->whereHas('appointments.clinicDepartment', function ($q) use ($clinicId , $departmentId) {
             $q->where('clinic_id', $clinicId)
-              ->where('department_id', $departmentId);
+            ->where('department_id', $departmentId);
         })->orderBy('id', 'asc')->paginate(12);
         return view('Backend.employees.nurses.patients.view' , compact('patients'));
     }
@@ -65,7 +65,7 @@ class PatientController extends Controller{
 
 
     public function profilePatient($id){
-        $patient = Patient::findOrFail($id);
+        $patient = Patient::with('user')->findOrFail($id);
         return view('Backend.employees.nurses.patients.profile', compact('patient'));
     }
 }

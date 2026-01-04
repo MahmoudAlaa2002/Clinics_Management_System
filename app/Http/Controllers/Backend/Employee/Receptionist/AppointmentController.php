@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Backend\Employee\Receptionist;
 
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\Patient;
@@ -13,14 +12,13 @@ use App\Events\InvoiceCreated;
 use App\Events\InvoiceCancelled;
 use App\Models\ClinicDepartment;
 use App\Events\AppointmentBooked;
+use App\Events\AppointmentCreated;
+use App\Events\AppointmentUpdated;
 use App\Events\AppointmentAccepted;
 use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Events\AppointmentStatusUpdated;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\Admin\AppointmentBookedByReceptionist;
-use App\Notifications\employee\accountant\NewInvoiceNotification;
 
 
 class AppointmentController extends Controller{
@@ -129,7 +127,8 @@ class AppointmentController extends Controller{
         ]);
 
         AppointmentBooked::dispatch($appointment, auth()->user());
-        
+        event(new AppointmentCreated($appointment));
+
         /**
         * 6️⃣ تحديد حالة الدفع
         */
@@ -147,12 +146,13 @@ class AppointmentController extends Controller{
         /**
         * 7️⃣ إنشاء الفاتورة
         */
+
         $invoice = Invoice::create([
             'appointment_id' => $appointment->id,
             'patient_id'     => $request->patient_id,
             'total_amount'   => $total,
             'paid_amount'    => $paidAmount,
-            'payment_method' => $request->payment_method,
+            'payment_method' => $request->payment_method === "null" ? null : $request->payment_method,
             'payment_status' => $paymentStatus,
             'invoice_date'   => now()->toDateString(),
             'due_date'       => $request->due_date,
@@ -178,7 +178,12 @@ class AppointmentController extends Controller{
         $clinic_id = Auth::user()->employee->clinic_id;
         $department_id = Auth::user()->employee->department_id;
         $clinicDepartmentId = ClinicDepartment::where('clinic_id', $clinic_id)->where('department_id', $department_id)->value('id');
-        $appointments = Appointment::where('clinic_department_id', $clinicDepartmentId)->orderBy('id', 'asc')->paginate(50);
+        $appointments = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.clinic',
+            'clinicDepartment.department'
+        ])->where('clinic_department_id', $clinicDepartmentId)->orderBy('id', 'asc')->paginate(50);
         return view('Backend.employees.receptionists.appointments.view', compact('appointments'));
     }
 
@@ -267,7 +272,13 @@ class AppointmentController extends Controller{
 
 
     public function detailsAppointment($id){
-        $appointment = Appointment::findOrFail($id);
+        $appointment = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.clinic',
+            'clinicDepartment.department',
+            'invoice'
+        ])->findOrFail($id);
         return view('Backend.employees.receptionists.appointments.details', compact('appointment' ));
     }
 
@@ -276,7 +287,13 @@ class AppointmentController extends Controller{
 
 
     public function editAppointment($id){
-        $appointment = Appointment::findOrFail($id);
+        $appointment = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.clinic',
+            'clinicDepartment.department',
+            'invoice'
+        ])->findOrFail($id);
         $clinic_id = Auth::user()->employee->clinic_id;
         $department_id = Auth::user()->employee->department_id;
 
@@ -373,6 +390,11 @@ class AppointmentController extends Controller{
         */
         $consultation_fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
 
+        $oldDoctorUserId = optional(
+            \App\Models\Doctor::find($appointment->doctor_id)
+        )->employee?->user_id;
+
+
         $appointment->update([
             'patient_id'           => $request->patient_id,
             'doctor_id'            => $request->doctor_id,
@@ -402,6 +424,9 @@ class AppointmentController extends Controller{
             event(new AppointmentStatusUpdated($appointment));
         }
 
+        event(new AppointmentUpdated($appointment, $oldDoctorUserId));
+
+
         /**
         * 6️⃣ نجاح
         */
@@ -413,13 +438,13 @@ class AppointmentController extends Controller{
 
     public function updateStatus(Request $request, $id) {
         $appointment = Appointment::with('invoice')->findOrFail($id);
-    
+
         $appointment->status = $request->status;
-    
+
         // حالة الرفض
         if ($request->status === 'Rejected') {
             $appointment->notes = $request->notes ? 'Reject Reason: ' . $request->notes : 'Appointment rejected';
-    
+
             if ($appointment->invoice) {
                 $paidAmount = $appointment->invoice->paid_amount ?? 0;
                 $appointment->invoice->update([
@@ -427,24 +452,24 @@ class AppointmentController extends Controller{
                     'due_date'       => null,
                     'refund_amount'  => $paidAmount,
                 ]);
-    
+
                 InvoiceCancelled::dispatch($appointment->invoice);
             }
         }
-    
+
         // حالة القبول
         if ($request->status === 'Accepted') {
             $appointment->notes = null;
             AppointmentAccepted::dispatch($appointment);
         }
-    
+
         $appointment->save();
-    
+
         event(new AppointmentStatusUpdated($appointment));
-    
+
         return response()->json(['success' => true]);
     }
-    
+
 
 
 

@@ -15,6 +15,10 @@
         .fw-bold {
             font-weight: bold;
         }
+
+        .pointer-cursor {
+            cursor: pointer;
+        }
     </style>
 
 <div class="page-wrapper">
@@ -168,7 +172,15 @@
                                                 @endphp
                                                 <td>
                                                     @if(isset($appointmentsGrouped[$key]))
-                                                        <span class="text-success" style="font-size: 22px;">&#10004;</span>
+                                                        <a href="{{ route('clinic.details_appointment', $appointmentsGrouped[$key]->first()->id) }}"
+                                                            style="text-decoration:none;">
+                                                            <span class="text-success pointer-cursor"
+                                                                data-bs-toggle="tooltip"
+                                                                style="font-size: 22px;"
+                                                                title="Patient: {{ $appointmentsGrouped[$key]->first()->patient->user->name }}">
+                                                                &#10004;
+                                                            </span>
+                                                        </a>
                                                     @else
                                                         <span class="text-muted" style="font-size: 16px;">–</span>
                                                     @endif
@@ -194,9 +206,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+
+        initTooltips();
+
         var selectedDepartmentId = '{{ isset($department_id) ? $department_id : '' }}';
         var selectedDoctorId = '{{ isset($doctor_id) ? $doctor_id : '' }}';
-
 
         $('#clinic_id').on('change', function () {
             var clinicId = $(this).val();

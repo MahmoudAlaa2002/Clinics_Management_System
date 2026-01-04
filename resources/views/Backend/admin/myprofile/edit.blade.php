@@ -118,12 +118,12 @@
                                         <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="male" {{ $user->gender == 'male' ? 'checked' : '' }}>Male
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Male" {{ $user->gender == 'Male' ? 'checked' : '' }}>Male
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="female" {{ $user->gender == 'female' ? 'checked' : '' }}>Female
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Female" {{ $user->gender == 'Female' ? 'checked' : '' }}>Female
                                             </label>
                                         </div>
                                     </div>
@@ -141,7 +141,6 @@
                     <input type="hidden" id="orig_gender" value="{{ $user->gender }}">
                     <input type="hidden" id="orig_image" value="{{ $user->image }}">
 
-
                     <div class="text-center" style="margin-top:20px;">
                         <button type="submit" class="btn btn-primary submit-btn editBtn" style="text-transform:none !important;">
                             Edit Profile
@@ -155,74 +154,94 @@
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function () {
-            $('.editBtn').click(function (e) {
-                e.preventDefault();
+<script>
+$(document).ready(function () {
 
-                let name = $('#name').val().trim();
-                let date_of_birth = $('#date_of_birth').val().trim();
-                let email = $('#email').val();
-                let password = $('#password').val();
-                let confirm_password = $('#confirm_password').val();
-                let phone = $('#phone').val().trim();
-                let address = $('#address').val().trim();
-                let gender = $('input[name="gender"]:checked').val();
-                let image = document.querySelector('#image').files[0];
+    $('.editBtn').click(function (e) {
+        e.preventDefault();
 
+        let name = $('#name').val().trim();
+        let date_of_birth = $('#date_of_birth').val().trim();
+        let email = $('#email').val();
+        let password = $('#password').val();
+        let confirm_password = $('#confirm_password').val();
+        let phone = $('#phone').val().trim();
+        let address = $('#address').val().trim();
+        let gender = $('input[name="gender"]:checked').val();
+        let image = document.querySelector('#image').files[0];
 
-                if (name == '' || date_of_birth == '' || email == '' || phone == '' || address == '' || gender == undefined) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Please enter all required fields',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
-                    });
-                    return;
-                }
+        if (!name || !date_of_birth || !email || !phone || !address || !gender) {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'Please enter all required fields',
+                icon: 'error',
+                confirmButtonColor: '#007BFF',
+            });
+        }
 
-                let formData = new FormData();
-                formData.append('_method', 'PUT');
-                formData.append('name', name);
-                formData.append('date_of_birth', date_of_birth);
-                formData.append('email', email);
-                formData.append('password', password);
-                formData.append('confirm_password', confirm_password);
-                formData.append('phone', phone);
-                formData.append('address', address);
-                formData.append('gender', gender);
-                if (image) {
-                    formData.append('image', image);
-                }
+        // 🔐 فحص الباسوورد
+        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-                let orig_name = $('#orig_name').val();
-                let orig_date = $('#orig_date').val();
-                let orig_email = $('#orig_email').val();
-                let orig_phone = $('#orig_phone').val();
-                let orig_address = $('#orig_address').val();
-                let orig_gender = $('#orig_gender').val();
-                let orig_image = $('#orig_image').val();
+        if (password && !passwordPattern.test(password)) {
+            return Swal.fire({
+                title: 'Invalid Password',
+                text: 'Password must be 6–15 characters',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+        }
 
-                let noChanges =
-                    name === orig_name &&
-                    date_of_birth === orig_date &&
-                    email === orig_email &&
-                    phone === orig_phone &&
-                    address === orig_address &&
-                    gender === orig_gender &&
-                    !image;
+        if (password !== confirm_password) {
+            return Swal.fire({
+                title: 'Error!',
+                text: 'Password confirmation does not match',
+                icon: 'error',
+                confirmButtonColor: '#007BFF'
+            });
+        }
 
-                if (noChanges) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'No Changes',
-                        text: 'No updates were made to this profile',
-                        confirmButtonColor: '#007BFF',
-                    });
-                    return false;
-                }
+        let formData = new FormData();
+        formData.append('_method', 'PUT');
+        formData.append('name', name);
+        formData.append('date_of_birth', date_of_birth);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('confirm_password', confirm_password);
+        formData.append('phone', phone);
+        formData.append('address', address);
+        formData.append('gender', gender);
+        if (image) formData.append('image', image);
 
+        let noChanges =
+            name === $('#orig_name').val() &&
+            date_of_birth === $('#orig_date').val() &&
+            email === $('#orig_email').val() &&
+            phone === $('#orig_phone').val() &&
+            address === $('#orig_address').val() &&
+            gender === $('#orig_gender').val() &&
+            !image;
+
+        if (password || confirm_password) noChanges = false;
+
+        if (noChanges) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'No Changes',
+                text: 'No updates were made to this profile',
+                confirmButtonColor: '#007BFF',
+            });
+        }
+
+        // ================== فحص الإيميل (RFC + DNS) ==================
+        $.ajax({
+            method: 'POST',
+            url: "{{ route('check_email') }}",
+            data: {
+                email: email,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+
+            success: function () {
 
                 $.ajax({
                     type: 'POST',
@@ -234,21 +253,56 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         'X-HTTP-Method-Override': 'PUT'
                     },
+
                     success: function (response) {
                         if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Admin profile has been updated successfully',
                                 icon: 'success',
-                                confirmButtonText: 'OK',
                                 confirmButtonColor: '#007BFF',
                             }).then(() => {
                                 window.location.href = '/admin/my_profile';
                             });
                         }
+                    },
+
+                    error: function () {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Unexpected error occurred',
+                            icon: 'error',
+                            confirmButtonColor: '#007BFF'
+                        });
                     }
                 });
-            });
+            },
+
+            error: function (xhr) {
+                let msg = 'Invalid email address';
+                if (xhr.responseJSON?.errors?.email) msg = xhr.responseJSON.errors.email[0];
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: msg,
+                    icon: 'error',
+                    confirmButtonColor: '#007BFF'
+                });
+            }
         });
-    </script>
+
+    });
+
+});
+
+
+$('#image').on('change', function (e) {
+    const file = e.target.files[0];
+
+    if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        $('.profile-upload .upload-img img').attr('src', previewUrl);
+    }
+});
+</script>
 @endsection

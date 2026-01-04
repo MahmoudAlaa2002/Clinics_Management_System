@@ -14,7 +14,11 @@ class AppointmentController extends Controller{
         $clinicId = Auth::user()->employee->clinic_id;
         $departmentId = Auth::user()->employee->department_id;
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinicId)->where('department_id', $departmentId)->pluck('id');
-        $appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)->orderBy('id', 'asc')->paginate(50);
+        $appointments = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department'
+        ])->whereIn('clinic_department_id', $clinicDepartmentIds)->orderBy('id', 'asc')->paginate(50);
         return view('Backend.departments_managers.appointments.view' , compact('appointments'));
     }
 
@@ -86,11 +90,9 @@ class AppointmentController extends Controller{
 
 
 
-
-
     public function detailsAppointment($id){
         $appointment = Appointment::findOrFail($id);
-        return view('Backend.departments_managers.appointments.details', compact('appointment' ));
+        return view('Backend.departments_managers.appointments.details', compact('appointment'));
     }
 
 

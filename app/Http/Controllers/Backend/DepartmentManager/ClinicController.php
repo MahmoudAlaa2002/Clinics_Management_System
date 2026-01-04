@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend\DepartmentManager;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 

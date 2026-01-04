@@ -545,9 +545,9 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
 
     // Dashboard
     Route::get('/dashboard', [DoctorDashboardController::class, 'doctorDashboard'])->name('doctor_dashboard');
-    Route::get('/my_profile' , [DoctorProfileController::class , 'profile'])->name('doctor_profile');
+    Route::get('/profile' , [DoctorProfileController::class , 'profile'])->name('doctor_profile');
     Route::get('/profile/edit', [DoctorProfileController::class, 'edit'])->name('doctor.profile.edit');
-    Route::put('/profile/update', [DoctorProfileController::class, 'update'])->name('doctor.profile.update');
+    Route::put('/profile/update', [DoctorProfileController::class, 'update'])->name('doctor_update_profile');
     Route::get('/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
     Route::post('/profile/settings/update-password', [DoctorProfileController::class, 'updatePassword'])->name('doctor.profile.updatePassword');
     Route::post('logout-other-devices', [DoctorProfileController::class, 'logoutAll'])->name('doctor.profile.logoutOtherDevices');

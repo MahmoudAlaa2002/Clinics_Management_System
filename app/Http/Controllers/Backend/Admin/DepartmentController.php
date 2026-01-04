@@ -83,9 +83,6 @@ class DepartmentController extends Controller{
         ]);
 
 
-        /**
-        * إذا الآدمن عطّل القسم → عطّله في كل العيادات
-        */
         if ($request->status === 'inactive') {
             ClinicDepartment::where('department_id', $department->id)->update(['status' => 'inactive']);
         }
@@ -121,7 +118,7 @@ class DepartmentController extends Controller{
 
 
     public function viewDepartmentsManagers(){
-        $departments_managers = User::role('department_manager')->paginate(12);
+        $departments_managers = User::role('department_manager')->with('employee.clinic')->paginate(12);
         return view('Backend.admin.departments.departments_managers.view' , compact('departments_managers'));
     }
 
@@ -198,47 +195,53 @@ class DepartmentController extends Controller{
         $department_manager = User::findOrFail($id);
         $employee = Employee::where('user_id', $department_manager->id)->first();
 
-        if (User::where('email', $request->email)->where('id', '!=', $id)->exists()) {
+        $normalizedEmail = strtolower(trim($request->email));
+        if (User::whereRaw('LOWER(email) = ?', [$normalizedEmail])
+                ->where('id', '!=', $id)
+                ->exists()) {
             return response()->json(['data' => 0]);
-        }else{
-            $imagePath = $department_manager->image;
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('assets/img/department_manager'), $imageName);
-                $imagePath = 'assets/img/department_manager/' . $imageName;
-            }
-
-
-            $password = $department_manager->password;
-            if ($request->filled('password')) {
-                $password = Hash::make($request->password);
-            }
-
-            $department_manager->update([
-                'name' => $request->name ,
-                'email' => $request->email ,
-                'phone' => $request->phone,
-                'password' => $password,
-                'image' => $imagePath,
-                'address' => $request->address,
-                'date_of_birth' => $request->date_of_birth,
-                'gender' => $request->gender,
-            ]);
-
-            $employee->update([
-                'user_id' => $department_manager->id ,
-                'clinic_id' => $request->clinic_id ,
-                'department_id' => $request->department_id ,
-                'status' => $request->status,
-                'work_start_time' => $request->work_start_time,
-                'work_end_time' => $request->work_end_time,
-                'working_days' => $request->working_days,
-                'short_biography' => $request->short_biography,
-            ]);
-
-            return response()->json(['data' => 1]);
         }
+
+        $imagePath = $department_manager->image;
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمةإن وجدت
+            if ($department_manager->image && file_exists(public_path($department_manager->image))) {
+                @unlink(public_path($department_manager->image));
+            }
+            $file = $request->file('image');
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/department_manager'), $imageName);
+            $imagePath = 'assets/img/department_manager/' . $imageName;
+        }
+
+
+        $password = $department_manager->password;
+        if ($request->filled('password')) {
+            $password = Hash::make($request->password);
+        }
+
+        $department_manager->update([
+            'name' => $request->name ,
+            'email' => $request->email ,
+            'phone' => $request->phone,
+            'password' => $password,
+            'image' => $imagePath,
+            'address' => $request->address,
+            'date_of_birth' => $request->date_of_birth,
+            'gender' => $request->gender,
+        ]);
+
+        $employee->update([
+            'clinic_id' => $request->clinic_id ,
+            'department_id' => $request->department_id ,
+            'status' => $request->status,
+            'work_start_time' => $request->work_start_time,
+            'work_end_time' => $request->work_end_time,
+            'working_days' => $request->working_days,
+            'short_biography' => $request->short_biography,
+        ]);
+
+        return response()->json(['data' => 1]);
     }
 
 

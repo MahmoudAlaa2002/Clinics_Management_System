@@ -173,6 +173,9 @@
         let list = document.getElementById('chat-header-list');
         if (!list) return;
 
+        let emptyMsg = document.querySelector('.no-msg-item');
+        if (emptyMsg) emptyMsg.remove();
+
         // موجودة من قبل؟
         let wrapper = list.querySelector(
             `[data-conv-wrapper="${e.conversation_id}"]`
@@ -189,10 +192,23 @@
 
         // 👇👇 جديد — إنشاء محادثة في الهيدر فوراً 👇👇
 
-        let avatar = e.sender_image
-            ? `<img src="${e.sender_image}"
-                    style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
-            : e.sender_name.substring(0,2).toUpperCase();
+        let avatar = `
+            <div style="
+                width:44px;height:44px;border-radius:50%;
+                background:#e8f2ff;color:#0b4e7a;font-weight:700;
+                display:flex;align-items:center;justify-content:center;">
+
+                ${
+                    e.sender_image
+                        ? `<img src="${e.sender_image}"
+                                onerror="this.parentNode.innerHTML='${e.sender_name.substring(0,2).toUpperCase()}'"
+                                style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
+                        : e.sender_name.substring(0,2).toUpperCase()
+                }
+            </div>`;
+
+
+
 
 
             let html = `

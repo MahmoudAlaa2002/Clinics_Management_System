@@ -118,12 +118,12 @@
                     <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" name="gender" value="male" class="form-check-input" {{ $department_manager->gender === 'male' ? 'checked' : '' }}> Male
+                        <input type="radio" name="gender" value="Male" class="form-check-input" {{ $department_manager->gender === 'Male' ? 'checked' : '' }}> Male
                       </label>
                     </div>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" name="gender" value="female" class="form-check-input" {{ $department_manager->gender === 'female' ? 'checked' : '' }}> Female
+                        <input type="radio" name="gender" value="Female" class="form-check-input" {{ $department_manager->gender === 'Female' ? 'checked' : '' }}> Female
                       </label>
                     </div>
                   </div>
@@ -555,8 +555,19 @@
                 });
             }
         });
+    });
+});
 
-        });
+
+
+
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', previewUrl);
+        }
     });
 </script>
 @endsection

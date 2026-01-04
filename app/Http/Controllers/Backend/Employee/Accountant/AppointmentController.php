@@ -13,7 +13,11 @@ class AppointmentController extends Controller{
     public function viewAppointments(){
         $clinic = Auth::user()->employee->clinic;
         $clinicDepartmentIds = ClinicDepartment::where('clinic_id', $clinic->id)->pluck('id');
-        $appointments = Appointment::whereIn('clinic_department_id', $clinicDepartmentIds)->orderBy('id', 'asc')->paginate(50);
+        $appointments = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department'
+        ])->whereIn('clinic_department_id', $clinicDepartmentIds)->orderBy('id', 'asc')->paginate(50);
         return view('Backend.employees.accountants.appointments.view' , compact('appointments' , 'clinic'));
     }
 
@@ -79,7 +83,11 @@ class AppointmentController extends Controller{
 
 
     public function detailsAppointment($id){
-        $appointment = Appointment::findOrFail($id);
+        $appointment = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department'
+        ])->findOrFail($id);
         return view('Backend.employees.accountants.appointments.details', compact('appointment' ));
     }
 }

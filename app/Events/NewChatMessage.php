@@ -61,7 +61,8 @@ class NewChatMessage implements ShouldBroadcastNow
 
             // 👇 جديد
             'sender_name'     => $sender->name,
-            'sender_image'    => $sender->image,
+            'sender_image' => $sender->image ? asset($sender->image) : null,
+
         ];
     }
 

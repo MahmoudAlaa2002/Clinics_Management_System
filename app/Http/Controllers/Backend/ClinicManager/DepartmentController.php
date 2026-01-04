@@ -84,7 +84,9 @@ class DepartmentController extends Controller{
 
     public function viewDepartmentsManagers(){
         $clinic_id = Auth::user()->employee->clinic_id;
-        $departments_managers = Employee::where('clinic_id' , $clinic_id)->where('job_title' , 'Department Manager')->paginate(12);
+        $departments_managers = Employee::where('clinic_id', $clinic_id)->where('job_title', 'Department Manager')
+            ->with(['user', 'department'])
+            ->paginate(12);
         return view ('Backend.clinics_managers.departments.departments_managers.view' , compact('departments_managers'));
     }
 

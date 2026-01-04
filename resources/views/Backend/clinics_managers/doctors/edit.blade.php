@@ -105,7 +105,7 @@
                                     <label>Avatar</label>
                                     <div class="profile-upload">
                                         <div class="upload-img">
-                                            <img alt="" src="{{ $doctor->employee->user->image ? asset('storage/' . $doctor->employee->user->image) : asset('assets/img/user.jpg') }}">
+                                            <img alt="" src="{{ $doctor->employee->user->image ? asset($doctor->employee->user->image) : asset('assets/img/user.jpg') }}">
                                         </div>
                                         <div class="upload-input">
                                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
@@ -118,12 +118,12 @@
                                         <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" value="male" {{ $doctor->employee->user->gender == 'male' ? 'checked' : '' }}> Male
+                                                <input type="radio" name="gender" value="Male" {{ $doctor->employee->user->gender == 'Male' ? 'checked' : '' }}> Male
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" value="female" {{ $doctor->employee->user->gender == 'female' ? 'checked' : '' }}> Female
+                                                <input type="radio" name="gender" value="Female" {{ $doctor->employee->user->gender == 'Female' ? 'checked' : '' }}> Female
                                             </label>
                                         </div>
                                     </div>
@@ -221,9 +221,17 @@
                                     <label>Rating <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-star"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-star"></i></span>
                                         </div>
-                                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="{{ $doctor->rating }}">
+                                        <select class="form-control" id="rating" name="rating" required>
+                                            <option value="" hidden>Choose rating</option>
+
+                                            <option value="1" {{ old('rating', $doctor->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
+                                            <option value="2" {{ old('rating', $doctor->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
+                                            <option value="3" {{ old('rating', $doctor->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
+                                            <option value="4" {{ old('rating', $doctor->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
+                                            <option value="5" {{ old('rating', $doctor->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -516,7 +524,7 @@ $(document).ready(function () {
                 speciality === originalSpeciality &&
                 qualification === originalQualification &&
                 consultation_fee == originalConsultationFee &&
-                rating == originalRating;
+                Number(rating) === Number(originalRating)
 
             if (password !== '' || confirm_password !== '') noChanges = false;
 
@@ -597,6 +605,17 @@ $(document).ready(function () {
             });
 
         });
+    });
+
+
+
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', previewUrl);
+        }
     });
 </script>
 @endsection

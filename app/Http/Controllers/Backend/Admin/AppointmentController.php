@@ -16,6 +16,7 @@ use App\Models\ClinicPatient;
 use App\Events\InvoiceCreated;
 use App\Models\ClinicDepartment;
 use App\Events\AppointmentBooked;
+use App\Events\AppointmentCreated;
 use App\Events\AppointmentUpdated;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -146,6 +147,7 @@ class AppointmentController extends Controller{
                 ]);
 
                 AppointmentBooked::dispatch($appointment, auth()->user());
+                event(new AppointmentCreated($appointment));
 
                 /**
                  * 7️⃣ إنشاء الفاتورة (غير مدفوعة)
@@ -380,6 +382,10 @@ class AppointmentController extends Controller{
         /**
          * 5️⃣ تحديث الموعد
          */
+        $oldDoctorUserId = optional(
+            \App\Models\Doctor::find($appointment->doctor_id)
+        )->employee?->user_id;
+
         $appointment->update([
             'patient_id'           => $request->patient_id,
             'doctor_id'            => $request->doctor_id,
@@ -390,7 +396,7 @@ class AppointmentController extends Controller{
             'status'               => $request->status ?? 'Accepted',
         ]);
 
-        event(new AppointmentUpdated($appointment));
+        event(new AppointmentUpdated($appointment, $oldDoctorUserId));
 
         /**
          * 6️⃣ نجاح

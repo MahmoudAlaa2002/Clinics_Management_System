@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Conversation;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
@@ -176,6 +178,17 @@ class AppServiceProvider extends ServiceProvider {
                 ->values();
 
             $view->with('conversations', $conversations);
+        });
+
+
+
+        // 👇 اسمع كل الاستعلامات وسجلها في اللوج
+        DB::listen(function ($query) {
+            Log::info('SQL QUERY', [
+                'sql'      => $query->sql,
+                'bindings' => $query->bindings,
+                'time_ms'  => $query->time,
+            ]);
         });
 
     }

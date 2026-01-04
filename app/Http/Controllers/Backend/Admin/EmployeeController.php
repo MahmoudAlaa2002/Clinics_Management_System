@@ -6,11 +6,8 @@ use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Employee;
-use App\Models\JobTitle;
 use App\Models\Department;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
-use App\Models\EmployeeJobTitle;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -129,7 +126,7 @@ class EmployeeController extends Controller{
 
 
     public function viewEmployees(){
-        $employees = Employee::orderBy('id', 'asc')->paginate(20);
+        $employees = Employee::with(['user','clinic','department'])->orderBy('id','asc')->paginate(20);
         return view('Backend.admin.employees.view' , compact('employees'));
     }
 
@@ -141,7 +138,7 @@ class EmployeeController extends Controller{
         $keyword = trim((string) $request->input('keyword', ''));
         $filter  = $request->input('filter', '');
 
-        $query = Employee::with('user');
+        $query = Employee::with(['user','clinic','department']);
 
         if ($keyword !== '') {
             if ($filter === 'name') {
@@ -206,16 +203,14 @@ class EmployeeController extends Controller{
         // معالجة الصورة (إن وجدت)
         $imagePath = $user->image;
         if ($request->hasFile('image')) {
+            // حذف الصورة القديمةإن وجدت
+            if ($user->image && file_exists(public_path($user->image))) {
+                @unlink(public_path($user->image));
+            }
             $file = $request->file('image');
             $imageName = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('assets/img/employees'), $imageName);
             $newPath = 'assets/img/employees/' . $imageName;
-
-            // حذف القديمة إذا كانت موجودة
-            if ($user->image && file_exists(public_path($user->image))) {
-                @unlink(public_path($user->image));
-            }
-
             $imagePath = $newPath;
         }
 

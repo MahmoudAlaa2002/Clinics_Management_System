@@ -13,7 +13,10 @@ class InvoiceController extends Controller{
     public function viewInvoices(Request $request){
         $clinic = Auth::user()->employee->clinic;
         $statusFilter = $request->invoiceFilter ?? 'Issued';
-        $invoices = Invoice::whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
+        $invoices = Invoice::with([
+            'patient.user',
+            'appointment'
+        ])->whereHas('appointment.clinicDepartment', function ($q) use ($clinic) {
                 $q->where('clinic_id', $clinic->id);
             })->where('invoice_status', $statusFilter) ->orderBy('id', 'asc')->paginate(50);
 
@@ -126,13 +129,19 @@ class InvoiceController extends Controller{
 
 
     public function detailsInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view ('Backend.clinics_managers.invoices.details' , compact('invoice'));
     }
 
 
     public function detailsRefundInvoice($id){
-        $refund_invoice = Invoice::findOrFail($id);
+        $refund_invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view ('Backend.clinics_managers.invoices.cancelled.details' , compact('refund_invoice'));
     }
 
@@ -141,7 +150,10 @@ class InvoiceController extends Controller{
 
 
     public function editInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view ('Backend.clinics_managers.invoices.edit' , compact('invoice'));
     }
 
@@ -166,7 +178,10 @@ class InvoiceController extends Controller{
 
 
     public function invoicePDF($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.clinics_managers.invoices.invoice_pdf' , compact('invoice'));
     }
 
@@ -184,7 +199,10 @@ class InvoiceController extends Controller{
 
 
     public function cancelledinvoicePDF($id){
-        $refund_invoice = Invoice::findOrFail($id);
+        $refund_invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.clinics_managers.invoices.cancelled.invoice_pdf' , compact('refund_invoice'));
     }
 

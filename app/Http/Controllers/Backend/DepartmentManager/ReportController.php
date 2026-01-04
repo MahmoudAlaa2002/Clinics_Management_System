@@ -46,7 +46,7 @@ class ReportController extends Controller{
 
 
         $male_patients_count = Patient::whereHas('user', function ($u) {
-            $u->where('gender', 'male');
+            $u->where('gender', 'Male');
         })
         ->whereHas('appointments', function ($q) use ($clinicId , $departmentId) {
             $q->whereHas('clinicDepartment', function ($d) use ($clinicId , $departmentId) {
@@ -57,7 +57,7 @@ class ReportController extends Controller{
 
 
         $female_patients_count = Patient::whereHas('user', function ($u) {
-            $u->where('gender', 'female');
+            $u->where('gender', 'Female');
         })
         ->whereHas('appointments', function ($q) use ($clinicId , $departmentId) {
             $q->whereHas('clinicDepartment', function ($d) use ($clinicId , $departmentId) {

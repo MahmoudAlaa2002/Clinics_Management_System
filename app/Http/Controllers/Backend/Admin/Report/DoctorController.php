@@ -41,11 +41,11 @@ class DoctorController extends Controller{
         })->count() / 12;
 
         $male_doctors = Doctor::whereHas('employee.user', function ($q) {
-            $q->where('gender', 'male');
+            $q->where('gender', 'Male');
         })->count();
 
         $female_doctors = Doctor::whereHas('employee.user', function ($q) {
-            $q->where('gender', 'female');
+            $q->where('gender', 'Female');
         })->count();
 
         $clinicDistribution = Doctor::selectRaw('clinics.name as clinic_name, COUNT(doctors.id) as total')

@@ -13,7 +13,10 @@ class NurseTaskController extends Controller{
 
     public function viewNurseTasks(){
         $nurse_id = Auth::user()->employee->id;
-        $nurse_tasks = NurseTask::where('nurse_id' , $nurse_id)->orderBy('id', 'asc')->paginate(12);
+        $nurse_tasks = NurseTask::with([
+            'appointment.doctor.employee.user',
+            'appointment.patient.user'
+        ])->where('nurse_id', $nurse_id)->orderBy('id', 'asc')->paginate(12);
         return view('Backend.employees.nurses.nurse_tasks.view' , compact('nurse_tasks'));
     }
 
@@ -84,7 +87,10 @@ class NurseTaskController extends Controller{
 
 
     public function detailsNurseTask($id){
-        $task = NurseTask::findOrFail($id);
+        $task = NurseTask::with([
+            'appointment.doctor.employee.user',
+            'appointment.patient.user'
+        ])->findOrFail($id);
         return view('Backend.employees.nurses.nurse_tasks.details' , compact('task'));
     }
 
@@ -97,9 +103,7 @@ class NurseTaskController extends Controller{
             'performed_at' => Carbon::now(),
             'status' => 'Completed',
         ]);
-
         NurseTaskCompleted::dispatch($nurse_task);
-
         return response()->json(['data' => 1]);
     }
 }

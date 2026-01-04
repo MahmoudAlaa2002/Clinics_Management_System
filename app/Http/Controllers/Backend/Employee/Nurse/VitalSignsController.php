@@ -38,7 +38,11 @@ class VitalSignsController extends Controller{
 
 
     public function viewVitalSigns($id){
-        $vitalSigns = VitalSign::where('appointment_id', $id)->first();
+        $vitalSigns = VitalSign::with([
+            'appointment.patient.user',
+            'appointment.doctor.employee.user',
+            'nurse.user'
+        ])->where('appointment_id', $id)->firstOrFail();
         return view('Backend.employees.nurses.vital_signs.view' , compact('vitalSigns'));
     }
 
@@ -47,7 +51,10 @@ class VitalSignsController extends Controller{
 
 
     public function editVitalSigns($id){
-        $vitalSigns = VitalSign::find($id);
+        $vitalSigns = VitalSign::with([
+            'appointment.patient.user',
+            'nurse.user'
+        ])->find($id);
         return view('Backend.employees.nurses.vital_signs.edit', compact('vitalSigns'));
     }
 
@@ -82,8 +89,5 @@ class VitalSignsController extends Controller{
 
         return response()->json(['data' => 1]);
     }
-
-
-
 
 }

@@ -13,7 +13,7 @@ class PatientController extends Controller{
 
     public function viewPatients(){
         $clinic_id = Auth::user()->employee->clinic_id;
-        $patients = Patient::whereHas('clinicPatients', function ($q) use ($clinic_id) {
+        $patients = Patient::with('user')->whereHas('clinicPatients', function ($q) use ($clinic_id) {
             $q->where('clinic_id', $clinic_id);
         })->orderBy('id', 'asc')->paginate(50);
 
@@ -54,7 +54,7 @@ class PatientController extends Controller{
 
 
     public function profilePatient($id){
-        $patient = Patient::findOrFail($id);
+        $patient = Patient::with('user')->findOrFail($id);
         return view('Backend.employees.accountants.patients.profile' , compact('patient'));
     }
 
@@ -64,7 +64,11 @@ class PatientController extends Controller{
     public function viewInvoicesPatients($patient_id){
         $clinic_id = Auth::user()->employee->clinic_id;
         $patient = Patient::with('user')->findOrFail($patient_id);
-        $invoices = Invoice::where('patient_id' , $patient_id)->where('invoice_status' , 'Issued')->orderBy('id', 'asc')->paginate(10);
+        $invoices = Invoice::with([
+            'appointment',
+            'patient.user'
+        ])->where('patient_id', $patient_id)->where('invoice_status', 'Issued')
+        ->orderBy('id', 'asc')->paginate(10);
         return view('Backend.employees.accountants.patients.invoices.view' , compact('invoices','patient'));
     }
 

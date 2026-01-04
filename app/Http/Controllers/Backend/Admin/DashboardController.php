@@ -58,24 +58,29 @@ class DashboardController extends Controller{
 
 
     public function editProfile(){
-        $user = User::role('admin')->first();
+        $user = auth()->user();
         return view('Backend.admin.myprofile.edit' , compact('user'));
     }
 
 
     public function updateProfile(Request $request){
-        $user = User::role('admin')->first();
+        $user = auth()->user();
 
         $password = $user->password;
         if ($request->filled('password')) {
             $password = Hash::make($request->password);
         }
 
-        $imageName = $user->image;
+        $imagePath = $user->image;
         if ($request->hasFile('image')) {
+            // حذف الصورة القديمةإن وجدت
+            if ($user->image && file_exists(public_path($user->image))) {
+                @unlink(public_path($user->image));
+            }
             $file = $request->file('image');
-            $imageName = 'admin/' . time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('admin'), $imageName);
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/admin'), $imageName);
+            $imagePath = 'assets/img/admin/' . $imageName;
         }
 
         $user->update([
@@ -84,7 +89,7 @@ class DashboardController extends Controller{
             'password' => $password ,
             'phone' => $request->phone,
             'address' => $request->address,
-            'image' => $imageName,
+            'image' => $imagePath,
             'date_of_birth' => $request->date_of_birth,
             'gender' => $request->gender,
         ]);

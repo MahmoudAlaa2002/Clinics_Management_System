@@ -23,7 +23,7 @@ class DashboardController extends Controller{
             $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
         })->count();
 
-        $doctors = Doctor::whereHas('employee', function ($q) use ($clinic , $department) {
+        $doctors = Doctor::with('employee.user')->whereHas('employee', function ($q) use ($clinic , $department) {
             $q->where('clinic_id', $clinic->id)->where('department_id' , $department->id);
         })->take(5)->get();
 
@@ -34,7 +34,7 @@ class DashboardController extends Controller{
         })->count();
 
 
-        $patients = Patient::whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
+        $patients = Patient::with('user')->whereHas('appointments.clinicDepartment', function($q) use ($clinic, $department) {
             $q->where('clinic_id', $clinic->id)
               ->where('department_id', $department->id);
         })->orderBy('created_at', 'desc')->take(5)->get();
@@ -57,14 +57,14 @@ class DashboardController extends Controller{
         })->whereDate('date', Carbon::today())->count();
 
 
-        return view ('Backend.departments_managers.dashboard' , compact('employee_count',
+        return view ('Backend.departments_managers.dashboard' , compact(
+            'employee_count',
             'doctor_count',
             'doctors',
             'patient_count',
             'patients',
             'all_appointments',
             'appointments',
-            'today_appointments',
             'today_appointments',
         ));
     }

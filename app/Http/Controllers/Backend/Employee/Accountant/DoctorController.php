@@ -89,7 +89,11 @@ class DoctorController extends Controller{
 
 
     public function profileDoctor($id){
-        $doctor = Doctor::findOrFail($id);
+        $doctor = Doctor::with([
+            'employee.user',
+            'employee.department',
+            'employee.clinic'
+        ])->findOrFail($id);
         $invoicesCount = Invoice::whereHas('appointment', function ($q) use ($doctor) {
             $q->where('doctor_id', $doctor->id);
         })->count();

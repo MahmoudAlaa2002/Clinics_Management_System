@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Backend\DepartmentManager;
 
-use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;

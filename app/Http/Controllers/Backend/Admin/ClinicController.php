@@ -187,9 +187,10 @@ class ClinicController extends Controller{
 
 
     public function viewClinicsManagers(){
-        $clinics_managers = User::role('clinic_manager')->paginate(12);
+        $clinics_managers = User::role('clinic_manager')->with('employee.clinic')->paginate(12);
         return view('Backend.admin.clinics.clinics_managers.view' , compact('clinics_managers'));
     }
+
 
 
 
@@ -237,7 +238,7 @@ class ClinicController extends Controller{
 
 
     public function profileClinicsManagers($id){
-        $clinic_manager = User::findOrFail($id);
+        $clinic_manager = User::with('employee.clinic')->findOrFail($id);
         return view('Backend.admin.clinics.clinics_managers.profile', compact('clinic_manager'));
     }
 
@@ -245,27 +246,38 @@ class ClinicController extends Controller{
 
 
 
+
     public function editClinicsManagers($id){
-        $clinic_manager = User::findOrFail($id);
+        $clinic_manager = User::with('employee.clinic')->findOrFail($id);
         $clinics = Clinic::all();
         $working_days = $clinic_manager->employee->working_days ?? [];
         return view('Backend.admin.clinics.clinics_managers.edit', compact('clinic_manager', 'clinics', 'working_days'));
     }
 
 
+
     public function updateClinicsManagers(Request $request, $id){
         $clinic_manager = User::findOrFail($id);
         $employee = Employee::where('user_id', $clinic_manager->id)->first();
 
-        if (User::where('email', $request->email)->where('id', '!=', $id)->exists()) {
+        $normalizedEmail = strtolower(trim($request->email));
+        if (User::whereRaw('LOWER(email) = ?', [$normalizedEmail])
+                ->where('id', '!=', $id)
+                ->exists()) {
             return response()->json(['data' => 0]);
         }
 
-        $imageName = $clinic_manager->image;
+        $imagePath = $clinic_manager->image;
         if ($request->hasFile('image')) {
+            // حذف القديمة
+            if ($clinic_manager->image && file_exists(public_path($clinic_manager->image))) {
+                @unlink(public_path($clinic_manager->image));
+            }
             $file = $request->file('image');
-            $imageName = 'employees/' . time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('employees'), $imageName);
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/employees'), $imageName);
+
+            $imagePath = 'assets/img/employees/' . $imageName;
         }
 
         $password = $clinic_manager->password;
@@ -278,14 +290,13 @@ class ClinicController extends Controller{
             'email'         => $request->email,
             'phone'         => $request->phone,
             'password'      => $password,
-            'image'         => $imageName,
+            'image'         => $imagePath,
             'address'       => $request->address,
             'date_of_birth' => $request->date_of_birth,
             'gender'        => $request->gender,
         ]);
 
         $employee->update([
-            'user_id'         => $clinic_manager->id,
             'clinic_id'       => $request->clinic_id,
             'status'          => $request->status,
             'work_start_time' => $request->work_start_time,

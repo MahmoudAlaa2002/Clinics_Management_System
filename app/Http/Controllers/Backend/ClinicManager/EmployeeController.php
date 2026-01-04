@@ -32,7 +32,6 @@ class EmployeeController extends Controller{
 
 
     public function storeEmployee(Request $request){
-        $normalizedName = strtolower(trim($request->name));
         $normalizedEmail = strtolower(trim($request->email));
         $existingEmail = User::whereRaw('LOWER(email) = ?', [$normalizedEmail])->first();
 
@@ -125,7 +124,8 @@ class EmployeeController extends Controller{
 
     public function viewEmployees(){
         $clinic_id =  Auth::user()->employee->clinic->id;
-        $employees = Employee::where('user_id', '!=', Auth::id())->where('clinic_id' , $clinic_id)->orderBy('id', 'asc')->paginate(30);
+        $employees = Employee::with('user')->where('user_id', '!=', Auth::id())
+            ->where('clinic_id' , $clinic_id)->orderBy('id', 'asc')->paginate(30);
         return view('Backend.clinics_managers.employees.view' , compact('employees'));
     }
 
@@ -179,7 +179,7 @@ class EmployeeController extends Controller{
 
 
     public function profileEmployee($id){
-        $employee = Employee::findOrFail($id);
+        $employee = Employee::with(['user', 'doctor'])->findOrFail($id);
         return view('Backend.clinics_managers.employees.profile', compact('employee'));
     }
 
@@ -188,7 +188,7 @@ class EmployeeController extends Controller{
 
 
     public function editEmployee($id){
-        $employee = Employee::findOrFail($id);
+        $employee = Employee::with(['user', 'doctor'])->findOrFail($id);
         $clinic = Auth::user()->employee->clinic;
         $departments = $clinic->departments;
         $opening_time = $clinic->opening_time;
@@ -205,7 +205,7 @@ class EmployeeController extends Controller{
     }
 
     public function updateEmployee(Request $request, $id){
-        $employee = Employee::findOrFail($id);
+        $employee = Employee::with(['user', 'doctor'])->findOrFail($id);
         $user = $employee->user;
 
         $normalizedEmail = strtolower(trim($request->email));

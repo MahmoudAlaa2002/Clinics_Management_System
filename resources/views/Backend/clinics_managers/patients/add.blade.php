@@ -138,12 +138,12 @@
                                         <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="male">Male
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Male">Male
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="female">Female
+                                                <input type="radio" id="gender" name="gender" class="form-check-input" value="Female">Female
                                             </label>
                                         </div>
                                     </div>
@@ -157,7 +157,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Blood Type <span class="text-danger">*</span></label>
+                                    <label>Blood Type</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-tint"></i></span>
@@ -173,7 +173,7 @@
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <label>Emergency Contact <span class="text-danger">*</span></label>
+                                    <label>Emergency Contact</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
@@ -262,9 +262,8 @@
 
                 let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-                if (name == '' || date_of_birth == '' || email == '' || password == '' || confirm_password == '' || phone == ''
-                    || address == '' || gender === undefined || !isValidSelectValue('blood_type') || emergency_contact == '' ) {
-
+                if (name == '' || date_of_birth == '' || email == '' || password == '' || confirm_password == ''
+                    || phone == '' || address == '' || gender === undefined) {
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please enter all required fields',
@@ -364,6 +363,18 @@
                     }
                 });
             });
+        });
+
+
+
+
+        $('#image').on('change', function (e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                const previewUrl = URL.createObjectURL(file);
+                $('.profile-upload .upload-img img').attr('src', previewUrl);
+            }
         });
 
     </script>

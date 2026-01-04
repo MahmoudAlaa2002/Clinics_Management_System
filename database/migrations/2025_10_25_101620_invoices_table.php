@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
             $table->decimal('total_amount', 10, 2)->nullable()->default(0);
             $table->decimal('paid_amount', 10, 2)->default(0);
-            $table->enum('payment_method', ['Cash', 'Bank', 'PayPal', 'None'])->nullable();
+            $table->enum('payment_method', ['Cash', 'Bank', 'PayPal'])->nullable();
             $table->enum('payment_status', ['Unpaid', 'Partially Paid', 'Paid'])->default('Unpaid');
             $table->date('invoice_date');
             $table->date('due_date')->nullable();

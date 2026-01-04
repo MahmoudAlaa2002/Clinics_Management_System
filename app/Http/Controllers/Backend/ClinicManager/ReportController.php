@@ -7,7 +7,6 @@ use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Appointment;
-use Illuminate\Http\Request;
 use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
 
@@ -41,7 +40,7 @@ class ReportController extends Controller{
         $male_patients_count = ClinicPatient::join('patients', 'clinic_patients.patient_id', '=', 'patients.id')
             ->join('users', 'patients.user_id', '=', 'users.id')
             ->where('clinic_patients.clinic_id', $clinic->id)
-            ->where('users.gender', 'male')
+            ->where('users.gender', 'Male')
             ->distinct('patients.id')
             ->count('patients.id');
 
@@ -49,7 +48,7 @@ class ReportController extends Controller{
         $female_patients_count = ClinicPatient::join('patients', 'clinic_patients.patient_id', '=', 'patients.id')
             ->join('users', 'patients.user_id', '=', 'users.id')
             ->where('clinic_patients.clinic_id', $clinic->id)
-            ->where('users.gender', 'female')
+            ->where('users.gender', 'Female')
             ->distinct('patients.id')
             ->count('patients.id');
 

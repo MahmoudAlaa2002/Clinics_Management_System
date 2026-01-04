@@ -104,22 +104,21 @@
                             @if ($appointments->count() > 0)
                                 @foreach ($appointments as $appointment)
                                     <tr data-appointment="{{ $appointment->id }}">
-                                        <td>{{ ($appointments->currentPage() - 1) * $appointments->perPage() + $loop->iteration }}
-                                        </td>
-                                        <td>
+                                        <td data-field="id">{{ ($appointments->currentPage() - 1) * $appointments->perPage() + $loop->iteration }}</td>
+                                        <td data-field="patient">
                                             <a href="{{ route('doctor.patients.show', $appointment->patient) }}">
                                                 {{ $appointment->patient->user->name }}
                                             </a>
                                         </td>
-                                        <td>{{ $appointment->clinic->name }}</td>
-                                        <td>{{ $appointment->department->name }}</td>
+                                        <td data-field="clinic">{{ $appointment->clinic->name }}</td>
+                                        <td data-field="department">{{ $appointment->department->name }}</td>
                                         @php
                                             $date = \Carbon\Carbon::parse($appointment->date);
                                             $formattedDate = $date->format('Y-m-d');
                                             $dayName = $date->format('l'); // Monday, Tuesday...
                                         @endphp
 
-                                        <td>
+                                        <td data-field="date">
                                             @if ($date->isToday())
                                                 Today
                                             @else
@@ -127,7 +126,7 @@
                                             @endif
                                             - {{ $formattedDate }}
                                         </td>
-                                        <td>{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
+                                        <td data-field="time">{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
                                         <td class="status-cell">
                                             <span
                                                 class="status-badge
@@ -203,7 +202,7 @@
                                     </tr>
                                 @endforeach
                             @else
-                                <tr>
+                                <tr id="no-appointments-row">
                                     <td colspan="8" class="text-center">
                                         <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
                                             @if (request('date') === 'today')

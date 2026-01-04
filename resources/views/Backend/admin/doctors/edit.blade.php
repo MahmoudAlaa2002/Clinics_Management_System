@@ -130,12 +130,12 @@
                     <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" name="gender" value="male" class="form-check-input" {{ old('gender', $user->gender ?? '') === 'male' ? 'checked' : '' }}> Male
+                        <input type="radio" name="gender" value="Male" class="form-check-input" {{ old('gender', $user->gender ?? '') === 'Male' ? 'checked' : '' }}> Male
                       </label>
                     </div>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" name="gender" value="female" class="form-check-input" {{ old('gender', $user->gender ?? '') === 'female' ? 'checked' : '' }}> Female
+                        <input type="radio" name="gender" value="Female" class="form-check-input" {{ old('gender', $user->gender ?? '') === 'Female' ? 'checked' : '' }}> Female
                       </label>
                     </div>
                   </div>
@@ -218,7 +218,15 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-star"></i></span>
                         </div>
-                        <input type="number" min="0" class="form-control" id="rating" name="rating" value="{{ $doctor->rating }}">
+                        <select class="form-control" id="rating" name="rating" required>
+                            <option value="" hidden>Choose rating</option>
+
+                            <option value="1" {{ old('rating', $doctor->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
+                            <option value="2" {{ old('rating', $doctor->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
+                            <option value="3" {{ old('rating', $doctor->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
+                            <option value="4" {{ old('rating', $doctor->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
+                            <option value="5" {{ old('rating', $doctor->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
+                        </select>
                     </div>
                 </div>
 
@@ -386,7 +394,7 @@
 
             if (name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') || !isValidSelectValue('department_id')
                 || email === '' || phone === '' || address === '' || speciality === '' || !isValidSelectValue('qualification') ||
-                rating === '' || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
+                !isValidSelectValue('rating') || consultation_fee === '' || !isValidSelectValue('work_start_time') ||
                 !isValidSelectValue('work_end_time') || gender === undefined || workingDays.length === 0) {
                 Swal.fire({
                     title: 'Error!',
@@ -411,16 +419,6 @@
                 Swal.fire({
                     title: 'Error!',
                     text: 'Password confirmation does not match',
-                    icon: 'error',
-                    confirmButtonColor: '#007BFF'
-                });
-                return;
-            }
-
-            if (rating < 1 || rating > 5) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'The rating must be between 1 and 5',
                     icon: 'error',
                     confirmButtonColor: '#007BFF'
                 });
@@ -458,7 +456,7 @@
                 department_id === $('#orig_department').val() &&
                 speciality === $('#orig_speciality').val() &&
                 qualification === $('#orig_qualification').val() &&
-                rating === $('#orig_rating').val() &&
+                Number(rating) === Number($('#orig_rating').val()) &&
                 consultation_fee === $('#orig_fee').val() &&
                 work_start_time === $('#orig_start').val() &&
                 work_end_time === $('#orig_end').val() &&
@@ -468,6 +466,7 @@
                 workingDays.sort().toString() === origDays.sort().toString();
 
             let imageChanged = image ? true : false;
+
 
             // إذا تم كتابة باسورد — اعتبر أنه في تعديل
             if (password !== '' || confirm_password !== '') {
@@ -481,7 +480,7 @@
                     text: 'No updates were made to this doctor',
                     confirmButtonColor: '#007BFF',
                 });
-                return false;
+                return;
             }
 
             $.ajax({
@@ -654,6 +653,17 @@
                 }
                 });
             });
+        }
+    });
+
+
+
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', previewUrl);
         }
     });
 </script>

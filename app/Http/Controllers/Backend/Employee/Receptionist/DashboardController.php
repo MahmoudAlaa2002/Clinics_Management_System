@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller {
 
-    public function receptionistDashboard(){
+    public function receptionistDashboard() {
         $clinic_id     = Auth::user()->employee->clinic->id;
         $department_id = Auth::user()->employee->department->id;
 
@@ -39,18 +39,21 @@ class DashboardController extends Controller {
         }) ->count();
 
 
-        $doctors = Doctor::whereHas('employee', function ($query) use ($clinic_id, $department_id) {
+        $doctors = Doctor::with('employee.user')->whereHas('employee', function ($query) use ($clinic_id, $department_id) {
             $query->where('clinic_id', $clinic_id)
                   ->where('department_id', $department_id);
         })->latest('id')->take(5)->get();
 
 
-        $patients = Patient::whereHas('clinicPatients', function ($q) use ($clinic_id) {
+        $patients = Patient::with('user')->whereHas('clinicPatients', function ($q) use ($clinic_id) {
             $q->where('clinic_id', $clinic_id);
         })->latest('id')->take(5)->get();
 
-        $appointments = Appointment::where('clinic_department_id', $clinicDepartmentId)->latest('id')->take(5)->get();
-
+        $appointments = Appointment::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment.department'
+        ])->where('clinic_department_id', $clinicDepartmentId)->latest('id')->take(5)->get();
 
         return view ('Backend.employees.receptionists.dashboard' , compact(
             'doctors_count',

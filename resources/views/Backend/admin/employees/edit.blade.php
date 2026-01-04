@@ -104,11 +104,11 @@
                                 <div class="col-sm-6">
                                     <label>Gender <span class="text-danger">*</span></label><br>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" name="gender" value="male" class="form-check-input" {{ $employee->user->gender == 'male' ? 'checked' : '' }}>
+                                        <input type="radio" name="gender" value="Male" class="form-check-input" {{ $employee->user->gender == 'Male' ? 'checked' : '' }}>
                                         <label class="form-check-label">Male</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" name="gender" value="female" class="form-check-input" {{ $employee->user->gender == 'female' ? 'checked' : '' }}>
+                                        <input type="radio" name="gender" value="Female" class="form-check-input" {{ $employee->user->gender == 'Female' ? 'checked' : '' }}>
                                         <label class="form-check-label">Female</label>
                                     </div>
                                 </div>
@@ -225,9 +225,16 @@
                                     <label>Rating <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-star"></i></span>
+                                            <span class="input-group-text"><i class="fa fa-star"></i></span>
                                         </div>
-                                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="{{ optional($employee->doctor)->rating }}">
+                                        <select class="form-control" id="rating" name="rating" required>
+                                            <option value="" hidden>Choose rating</option>
+                                            <option value="1" {{ old('rating', $employee->doctor->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
+                                            <option value="2" {{ old('rating', $employee->doctor->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
+                                            <option value="3" {{ old('rating', $employee->doctor->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
+                                            <option value="4" {{ old('rating', $employee->doctor->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
+                                            <option value="5" {{ old('rating', $employee->doctor->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -568,7 +575,7 @@ $(document).ready(function () {
                 speciality === $('#orig_speciality').val() &&
                 qualification === $('#orig_qualification').val() &&
                 consultation_fee === $('#orig_consultation_fee').val() &&
-                rating === $('#orig_rating').val();
+                Number(rating) === Number($('#orig_rating').val());
         }
 
         if ($('#department_field').is(':visible')) {
@@ -577,7 +584,9 @@ $(document).ready(function () {
 
         if (password !== '' || confirm_password !== '') noChanges = false;
 
-        if (noChanges) {
+        let imageChanged = image ? true : false;
+
+        if (noChanges && !imageChanged) {
             return Swal.fire({
                 icon: 'warning',
                 title: 'No Changes',
@@ -642,6 +651,17 @@ $(document).ready(function () {
         });
 
     });
+});
+
+
+
+$('#image').on('change', function (e) {
+    const file = e.target.files[0];
+
+    if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        $('.profile-upload .upload-img img').attr('src', previewUrl);
+    }
 });
 </script>
 @endsection

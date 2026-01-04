@@ -127,38 +127,44 @@ class ChatController extends Controller {
 
 
 
-    public function index(){
+    public function index() {
         $userId = auth()->id();
 
         $conversations = Conversation::whereHas('participants', function ($q) use ($userId) {
                 $q->where('user_id', $userId);
-            })->whereHas('messages')
-
+            })
+            ->whereHas('messages')
             ->with([
                 'participants' => function ($q) use ($userId) {
                     $q->where('users.id', '!=', $userId);
                 },
+
+                'participants.patient',
+                'participants.employee',
+                'participants.doctor',
+
                 'messages' => function ($q) {
-                    $q->latest();
+                    $q->latest()->limit(1);
                 }
             ])
-
             ->withCount([
                 'messages as unread_count' => function ($q) use ($userId) {
-                    $q->where('receiver_id', $userId)
-                    ->where('is_read', false);
+                    $q->where('sender_id', '!=', $userId)
+                      ->where('is_read', false);
                 }
             ])
-
             ->orderByDesc(
                 Message::select('created_at')
                     ->whereColumn('conversation_id', 'conversations.id')
                     ->latest()
                     ->take(1)
-            )->get();
+            )
+            ->get();
 
         return view('Backend.chat.index', compact('conversations'));
     }
+
+
 
 
 
@@ -222,6 +228,8 @@ class ChatController extends Controller {
         $clinic = $dm->employee->clinic_id;
         $dept   = $dm->employee->department_id;
 
+        if ($target->role === 'admin') return true;
+
         if ($target->role === 'clinic_manager' && $target->employee->clinic_id == $clinic) return true;
 
         if ($target->role === 'doctor' && $target->employee->clinic_id == $clinic
@@ -238,6 +246,8 @@ class ChatController extends Controller {
     private function doctorRules($doctor , $target) {
         $clinic = $doctor->employee->clinic_id;
         $dept   = $doctor->employee->department_id;
+
+        if ($target->role === 'admin') return true;
 
         if ($target->role === 'clinic_manager'
             && $target->employee->clinic_id == $clinic) return true;
@@ -282,6 +292,8 @@ class ChatController extends Controller {
         $clinic = $nurse->employee->clinic_id;
         $dept = $nurse->employee->department_id;
 
+        if ($target->role === 'admin') return true;
+
         if ($target->role === 'doctor' && $target->employee->clinic_id == $clinic
             && $target->employee->department_id == $dept) return true;
 
@@ -295,6 +307,9 @@ class ChatController extends Controller {
 
     private function accountantRules($acc , $target) {
         $clinic_id = $acc->employee->clinic_id;
+
+        if ($target->role === 'admin') return true;
+
         if ($target->role === 'clinic_manager' && $target->employee->clinic_id == $clinic_id)
             return true;
 
@@ -310,6 +325,8 @@ class ChatController extends Controller {
     private function receptionistRules($rec , $target) {
         $clinic = $rec->employee->clinic_id;
         $dept = $rec->employee->department_id;
+
+        if ($target->role === 'admin') return true;
 
         if ($target->role === 'clinic_manager' && $target->employee->clinic_id == $clinic) return true;
 
@@ -332,6 +349,8 @@ class ChatController extends Controller {
 
 
     private function patientRules($patient , $target) {
+        if ($target->role === 'admin') return true;
+
         if ($target->role === 'doctor'
             && $patient->appointments()
                 ->where('doctor_id', $target->employee->id)

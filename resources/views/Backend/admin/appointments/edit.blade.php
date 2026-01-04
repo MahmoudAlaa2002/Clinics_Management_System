@@ -67,30 +67,29 @@
                                     <label>Clinic <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                            <span class="input-group-text">
+                                                <i class="fas fa-hospital"></i>
+                                            </span>
                                         </div>
-                                        <select class="form-control" id="clinic_id" name="clinic_id">
-                                            <option value="" disabled hidden>Select Clinic</option>
-                                            @foreach($clinics as $clinic)
-                                                <option value="{{ $clinic->id }}" {{ $clinic->id == $appointment->clinicDepartment->clinic_id ? 'selected' : '' }}>
-                                                    {{ $clinic->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" class="form-control" value="{{ $appointment->clinicDepartment->clinic->name ?? '—' }}" disabled>
+                                        <input type="hidden" name="clinic_id" id="clinic_id" value="{{ $appointment->clinicDepartment->clinic_id }}">
                                     </div>
                                 </div>
+
 
                                 <div class="col-sm-6">
                                     <label>Department <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                                            <span class="input-group-text">
+                                                <i class="fas fa-stethoscope"></i>
+                                            </span>
                                         </div>
-                                        <select class="form-control" id="department_id" name="department_id">
-                                            <option value="" disabled selected hidden>Select Department</option>
-                                        </select>
+                                        <input type="text" class="form-control" value="{{ $appointment->clinicDepartment->department->name ?? '—' }}" disabled>
+                                        <input type="hidden" name="department_id" id="department_id" value="{{ $appointment->clinicDepartment->department_id }}">
                                     </div>
                                 </div>
+
 
                                 <div class="col-sm-6">
                                     <label>Assigned to Doctor <span class="text-danger">*</span></label>

@@ -3,14 +3,9 @@
 namespace App\Http\Controllers\Backend\Admin\Report;
 
 use PDF;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\Patient;
-use App\Models\Department;
 use App\Models\Appointment;
-use Illuminate\Http\Request;
 use App\Models\MedicalRecord;
 use App\Http\Controllers\Controller;
 
@@ -28,10 +23,10 @@ class PatientController extends Controller{
         $average_monthly_registrations = $monthly->avg('total');
 
         $total_patients_male = Patient::whereHas('user', function ($q) {
-            $q->where('gender', 'male');
+            $q->where('gender', 'Male');
         })->count();
         $total_patients_female = Patient::whereHas('user', function ($q) {
-            $q->where('gender', 'female');
+            $q->where('gender', 'Female');
         })->count();
 
 

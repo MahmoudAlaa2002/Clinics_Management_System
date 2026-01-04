@@ -16,7 +16,10 @@ class InvoiceController extends Controller {
         $department_id = Auth::user()->employee->department_id;
 
         $clinicDepartmentId = ClinicDepartment::where('clinic_id', $clinic_id)->where('department_id', $department_id)->value('id');
-        $invoices = Invoice::whereHas('appointment', function($q) use ($clinicDepartmentId) {
+        $invoices = Invoice::with([
+            'patient.user',
+            'appointment'
+        ])->whereHas('appointment', function($q) use ($clinicDepartmentId) {
             $q->where('clinic_department_id', $clinicDepartmentId);
         })->where('invoice_status', 'Issued')->orderBy('id', 'asc')->paginate(50);
 
@@ -97,7 +100,10 @@ class InvoiceController extends Controller {
 
 
     public function detailsInvoice($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.employees.receptionists.invoices.details', compact('invoice'));
     }
 
@@ -105,16 +111,17 @@ class InvoiceController extends Controller {
 
 
     public function invoicePDF($id){
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view('Backend.employees.receptionists.invoices.invoice_pdf' , compact('invoice'));
     }
 
 
     public function invoicePDFRaw($id){
         $invoice = Invoice::with(['appointment.clinicDepartment.clinic', 'patient.user'])->findOrFail($id);
-
         $pdf = PDF::loadView('Backend.employees.receptionists.invoices.invoice_pdf_raw', compact('invoice'))->setPaper('A4', 'portrait');
-
         return response()->json([
             'pdf' => base64_encode($pdf->output())
         ]);

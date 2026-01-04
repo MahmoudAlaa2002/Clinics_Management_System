@@ -3,15 +3,7 @@
 namespace App\Http\Controllers\Backend\Admin\Report;
 
 use PDF;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Doctor;
-use App\Models\Invoice;
-use App\Models\Patient;
-use App\Models\Department;
 use App\Models\Appointment;
-use Illuminate\Http\Request;
-use App\Models\MedicalRecord;
 use App\Http\Controllers\Controller;
 
 class AppointmentController extends Controller{

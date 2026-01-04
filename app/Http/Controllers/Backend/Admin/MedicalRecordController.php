@@ -92,7 +92,11 @@ class MedicalRecordController extends Controller{
 
 
     public function detailsMedicalRecord($id){
-        $medical_record = MedicalRecord::findOrFail($id);
+        $medical_record = MedicalRecord::with([
+            'patient.user',
+            'doctor.employee.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
         return view ('Backend.admin.medical_records.details' , compact('medical_record'));
     }
 

@@ -146,12 +146,12 @@
                     <label class="gen-label">Gender: <span class="text-danger">*</span></label>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" id="gender" name="gender" class="form-check-input" value="male">Male
+                        <input type="radio" id="gender" name="gender" class="form-check-input" value="Male">Male
                       </label>
                     </div>
                     <div class="form-check-inline">
                       <label class="form-check-label">
-                        <input type="radio" id="gender" name="gender" class="form-check-input" value="female">Female
+                        <input type="radio" id="gender" name="gender" class="form-check-input" value="Female">Female
                       </label>
                     </div>
                   </div>
@@ -255,7 +255,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-star"></i></span>
                         </div>
-                        <input type="number" min="0" class="form-control" id="rating" name="rating">
+                        <select class="form-control" id="rating" name="rating" required>
+                            <option value="" hidden selected>Choose rating</option>
+                            <option value="1">1 ⭐</option>
+                            <option value="2">2 ⭐⭐</option>
+                            <option value="3">3 ⭐⭐⭐</option>
+                            <option value="4">4 ⭐⭐⭐⭐</option>
+                            <option value="5">5 ⭐⭐⭐⭐⭐</option>
+                        </select>
                     </div>
                 </div>
 
@@ -419,7 +426,7 @@
                 name === '' || date_of_birth === '' || !isValidSelectValue('clinic_id') ||
                 email === '' || password === '' || confirm_password === '' ||
                 phone === '' || address === '' || !isValidSelectValue('qualification') ||
-                speciality === '' || rating === '' || consultation_fee === '' ||
+                speciality === '' || !isValidSelectValue('rating') || consultation_fee === '' ||
                 !isValidSelectValue('work_start_time') || !isValidSelectValue('work_end_time') ||
                 gender === undefined || workingDays.length === 0
             ) {
@@ -453,15 +460,6 @@
                 return Swal.fire({
                     title: 'Error!',
                     text: 'The consultation fee is invalid',
-                    icon: 'error',
-                    confirmButtonColor: '#007BFF'
-                });
-            }
-
-            if (rating < 1 || rating > 5) {
-                return Swal.fire({
-                    title: 'Error!',
-                    text: 'The rating must be between 1 and 5',
                     icon: 'error',
                     confirmButtonColor: '#007BFF'
                 });
@@ -605,6 +603,16 @@
                 }
             });
         });
+    });
+
+
+    $('#image').on('change', function (e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('.profile-upload .upload-img img').attr('src', previewUrl);
+        }
     });
 </script>
 @endsection

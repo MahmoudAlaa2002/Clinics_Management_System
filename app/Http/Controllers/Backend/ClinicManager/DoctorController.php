@@ -93,7 +93,10 @@ class DoctorController extends Controller{
         $clinicId = Auth::user()->employee->clinic_id;
         $doctors = Doctor::whereHas('employee', function ($query) use ($clinicId) {
             $query->where('clinic_id', $clinicId);
-        })->orderBy('id', 'asc')->paginate(12);
+        })->with([
+            'employee.user',
+            'employee.department'
+        ])->orderBy('id', 'asc')->paginate(12);
         return view('Backend.clinics_managers.doctors.view' , compact('doctors'));
     }
 
@@ -190,7 +193,7 @@ class DoctorController extends Controller{
 
 
     public function profileDoctor($id){
-        $doctor = Doctor::findOrFail($id);
+        $doctor = Doctor::with('employee.user')->findOrFail($id);
         return view('Backend.clinics_managers.doctors.profile', compact('doctor'));
     }
 
@@ -199,9 +202,9 @@ class DoctorController extends Controller{
 
 
     public function editDoctor($id){
-        $doctor = Doctor::findOrFail($id);
-        $employee = Employee::where('id', $doctor->employee_id)->first();
-        $user = $employee ? User::where('id', $employee->user_id)->first() : null;
+        $doctor = Doctor::with('employee.user')->findOrFail($id);
+        $employee = $doctor->employee;
+        $user = $doctor->employee->user;
         $clinic = Auth::user()->employee->clinic;
         $departments = $clinic->departments;
         $opening_time = $clinic->opening_time;
@@ -218,7 +221,7 @@ class DoctorController extends Controller{
 
 
     public function updateDoctor(Request $request, $id){
-        $doctor = Doctor::findOrFail($id);
+        $doctor = Doctor::with('employee.user')->findOrFail($id);
         $employee = Employee::findOrFail($doctor->employee_id);
         $user = User::findOrFail($employee->user_id);
 
