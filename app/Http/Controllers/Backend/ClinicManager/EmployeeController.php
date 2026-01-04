@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Backend\ClinicManager;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Employee;
-use App\Models\Department;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

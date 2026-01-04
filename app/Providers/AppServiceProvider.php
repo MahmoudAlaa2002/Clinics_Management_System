@@ -183,13 +183,13 @@ class AppServiceProvider extends ServiceProvider {
 
 
         // 👇 اسمع كل الاستعلامات وسجلها في اللوج
-        DB::listen(function ($query) {
-            Log::info('SQL QUERY', [
-                'sql'      => $query->sql,
-                'bindings' => $query->bindings,
-                'time_ms'  => $query->time,
-            ]);
-        });
+        // DB::listen(function ($query) {
+        //     Log::info('SQL QUERY', [
+        //         'sql'      => $query->sql,
+        //         'bindings' => $query->bindings,
+        //         'time_ms'  => $query->time,
+        //     ]);
+        // });
 
     }
 }

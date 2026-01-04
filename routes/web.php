@@ -107,7 +107,7 @@ use App\Http\Controllers\Backend\Employee\Receptionist\{
 };
 
 use App\Http\Controllers\Backend\Patient\{
-    DashboardController as PatientDashboardController,
+    MyAccountController as MyAccountController,
     ProfileController as PatientProfileController,
     AppointmentController as PatientAppointmentController,
     InvoiceController as PatientInvoiceController,
@@ -794,11 +794,12 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
 //Patient
 Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [PatientDashboardController::class, 'patientDashboard'])->name('patient_dashboard');
-    Route::get('/my_profile' , [PatientDashboardController::class , 'patientProfile'])->name('patient_profile');
-    Route::get('/edit/profile' , [PatientDashboardController::class , 'patientEditProfile'])->name('patient_edit_profile');
-    Route::put('/update/profile' , [PatientDashboardController::class , 'patientUpdateProfile'])->name('patient_update_profile');
+    // My Account
+    Route::get('/index', [MyAccountController::class, 'index'])->name('index');
+
+    Route::get('/clinics/view', [MyAccountController::class, 'clinicsView'])->name('clinics_view');
+
+    Route::get('/doctors/view', [MyAccountController::class, 'doctorsView'])->name('doctors_view');
 
 });
 

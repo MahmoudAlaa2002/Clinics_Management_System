@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Clinics Mnagement - My Account</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link href="{{ asset('patients/img/favicon.jpg') }}" rel="shortcut icon" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{{ asset('patients/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('patients/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('patients/vendor/aos/aos.css') }}" rel="stylesheet">
+    <link href="{{ asset('patients/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('patients/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('patients/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Main CSS File -->
+    <link href="{{ asset('patients/css/main.css') }}" rel="stylesheet">
+
+</head>
+
+<body class="index-page">
+
+    <style>
+        /* لو أردت أن تضمن أن النص يبقى واضح */
+        .header a,
+        .header h1,
+        .header span,
+        .header i {
+            color: white !important;
+        }
+
+        .header a {
+            color: white !important;
+            text-decoration: none !important;
+            border-bottom: none !important;
+        }
+
+        /* العنصر النشط: يظهر تحته خط أبيض */
+        .header a.active {
+            border-bottom: 2px solid white;
+        }
+        /* تأثير التحويم: يظهر خط أبيض عند التحويم */
+        .navmenu a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* عند التحويم أو الصفحة النشطة */
+        .navmenu a:hover::after,
+        .navmenu a.active::after {
+            transform: scaleX(1);
+        }
+
+        .auth-links {
+          margin-right: 100px;
+          transition: margin-right 0.3s ease-in-out;
+        }
+
+        .auth-links i.fa-circle-user {
+          padding: 6px 17px;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #fff !important;
+          border-radius: 50%;
+          color: white;
+          text-decoration: none;
+          transition: all 0.5s ease-in-out;
+          background-color: transparent;
+          font-weight: 500;
+          cursor: pointer;
+        }
+        .auth-links i.fa-circle-user:hover, .auth-links.active i.fa-circle-user{
+          color: #007BFF !important;
+          background-color: white !important;
+        }
+
+    </style>
+
+    <header id="header" class="header sticky-top">
+        <div class="branding d-flex align-items-center justify-content-between">
+            <div class="container position-relative d-flex align-items-center justify-content-between">
+                <a href="{{ route('index') }}" class="logo d-flex align-items-center me-auto" style="margin-left: 30px;">
+                    <img src="{{ asset('patients/img/logo.png') }}" width="40" height="40" alt="">
+                    <span style="font-size: 24px;"><strong>Clinics Management</strong></span>
+                </a>
+
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="{{ route('clinics_view') }}">Clinics<br></a></li>
+                        <li><a href="{{ route('doctors_view') }}">Doctors</a></li>
+                        <li><a href="makeAnAppointment.html">Make-An-Appointment</a></li>
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+            </div>
+
+            <div class="auth-links">
+                <i class="fa-solid fa-circle-user"></i>
+                <div class="informationAboutuser">
+                  <div class="name">
+                    <span>Abdullah Badwan</span>
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div class="myAppointment">
+                    <span><a href="myAppointment.html">My Appointments</a></span>
+                    <i class="fa-solid fa-calendar-check"></i>
+                  </div>
+                  <div class="settings">
+                    <span>Settings</span>
+                    <i class="fa-solid fa-gear"></i>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </header>
+
+
+
+
+    <main class="main">
+        <section id="hero" class="hero section light-background">
+          <img src="{{ asset('patients/img/hero-bg.jpg') }}" alt="" data-aos="fade-in">
+          <div class="container position-relative">
+            <div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
+              <h2 style="color: #00A8FF;">WELCOME TO Clinics Management</h2>
+              <p>A modern website for managing medical clinics<br>and organizing appointments</p>
+            </div>
+            <div class="content row gy-4">
+              <div class="col-lg-4 d-flex align-items-stretch">
+                <div class="why-box" data-aos="zoom-out" data-aos-delay="200" style="background-color:#00A8FF; ">
+                  <h3>Why Choose Clinics Management System?</h3>
+                  <p>
+                    Our platform makes it easy for patients to book appointments with top clinics and the most skilled doctors.
+                    It ensures fast access to quality healthcare, saving time and effort for every patient.
+                  </p>
+                  <div class="text-center">
+                    <a href="#about" class="more-btn"><span>Learn More</span> <i class="bi bi-chevron-right"></i></a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-8 d-flex align-items-stretch">
+                <div class="d-flex flex-column justify-content-center">
+                  <div class="row gy-4">
+                    <div class="col-xl-4 d-flex align-items-stretch">
+                      <div class="icon-box" data-aos="zoom-out" data-aos-delay="300">
+                        <i class="bi bi-clipboard-data" style="color: #00A8FF"></i>
+                        <h4 style="color: #00A8FF">Corporis voluptates officia eiusmod</h4>
+                        <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
+                      </div>
+                    </div>
+
+                    <div class="col-xl-4 d-flex align-items-stretch">
+                      <div class="icon-box" data-aos="zoom-out" data-aos-delay="400">
+                        <i class="bi bi-gem" style="color: #00A8FF"></i>
+                        <h4 style="color: #00A8FF">Ullamco laboris ladore pan</h4>
+                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</p>
+                      </div>
+                    </div>
+
+                    <div class="col-xl-4 d-flex align-items-stretch">
+                      <div class="icon-box" data-aos="zoom-out" data-aos-delay="500">
+                        <i class="bi bi-inboxes" style="color: #00A8FF"></i>
+                        <h4 style="color: #00A8FF">Labore consequatur incidid dolore</h4>
+                        <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about section">
+          <div class="container">
+              <div class="col-lg-12 content" data-aos="fade-up" data-aos-delay="100">
+                <h3 style="text-align: center;">About Us</h3>
+                <p style="text-align: center;">
+                  Dolor iure expedita id fuga asperiores qui sunt consequatur minima. Quidem voluptas deleniti. Sit quia molestiae quia quas qui magnam itaque veritatis dolores. Corrupti totam ut eius incidunt reiciendis veritatis asperiores placeat.
+                </p>
+                <ul>
+                  <li>
+                    <i class="fa-solid fa-vial-circle-check"></i>
+                    <div>
+                      <h5>Ullamco laboris nisi ut aliquip consequat</h5>
+                      <p>Magni facilis facilis repellendus cum excepturi quaerat praesentium libre trade</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fa-solid fa-pump-medical"></i>
+                    <div>
+                      <h5>Magnam soluta odio exercitationem reprehenderi</h5>
+                      <p>Quo totam dolorum at pariatur aut distinctio dolorum laudantium illo direna pasata redi</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="fa-solid fa-heart-circle-xmark"></i>
+                    <div>
+                      <h5>Voluptatem et qui exercitationem</h5>
+                      <p>Et velit et eos maiores est tempora et quos dolorem autem tempora incidunt maxime veniam</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section id="stats" class="stats section light-background">
+          <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-4">
+
+              <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
+                <i class="fa-regular fa-hospital"></i>
+                <div class="stats-item">
+                  <span>10</span>
+                  <p>Clinics</p>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
+                <i class="fas fa-stethoscope"></i>
+                <div class="stats-item">
+                  <span>20</span>
+                  <p>Departments</p>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
+                <i class="fa-solid fa-user-doctor"></i>
+                <div class="stats-item">
+                  <span>50</span>
+                  <p>Doctors</p>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
+                <i class="fas fa-user-injured"></i>
+                <div class="stats-item">
+                  <span>100</span>
+                  <p>Patients</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- Services Section -->
+        <section id="services" class="services section">
+          <div class="container section-title" data-aos="fade-up">
+            <h2 style="color: #00A8FF">Services</h2>
+            <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+          </div>
+
+          <div class="container">
+
+            <div class="row gy-4">
+
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-item  position-relative">
+                  <div class="icon" style="background-color: #00A8FF">
+                    <i class="fas fa-heartbeat"></i>
+                  </div>
+                  <a href="#" class="stretched-link">
+                    <h3 style="color: #00A8FF">Nesciunt Mete</h3>
+                  </a>
+                  <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+                </div>
+              </div><!-- End Service Item -->
+
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-item position-relative">
+                  <div class="icon" style="background-color: #00A8FF">
+                    <i class="fas fa-pills"></i>
+                  </div>
+                  <a href="#" class="stretched-link">
+                    <h3 style="color: #00A8FF">Eosle Commodi</h3>
+                  </a>
+                  <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
+                </div>
+              </div><!-- End Service Item -->
+
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-item position-relative">
+                  <div class="icon" style="background-color: #00A8FF">
+                    <i class="fas fa-hospital-user"></i>
+                  </div>
+                  <a href="#" class="stretched-link">
+                    <h3 style="color: #00A8FF">Ledo Markt</h3>
+                  </a>
+                  <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
+                </div>
+              </div><!-- End Service Item -->
+
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-item position-relative">
+                  <div class="icon" style="background-color: #00A8FF">
+                    <i class="fas fa-dna"></i>
+                  </div>
+                  <a href="#" class="stretched-link">
+                    <h3 style="color: #00A8FF">Asperiores Commodit</h3>
+                  </a>
+                  <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
+                  <a href="#" class="stretched-link"></a>
+                </div>
+              </div><!-- End Service Item -->
+
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-item position-relative">
+                  <div class="icon" style="background-color: #00A8FF">
+                    <i class="fas fa-wheelchair"></i>
+                  </div>
+                  <a href="#" class="stretched-link">
+                    <h3 style="color: #00A8FF">Velit Doloremque</h3>
+                  </a>
+                  <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
+                  <a href="#" class="stretched-link"></a>
+                </div>
+              </div><!-- End Service Item -->
+
+              <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="service-item position-relative">
+                  <div class="icon" style="background-color: #00A8FF">
+                    <i class="fas fa-notes-medical"></i>
+                  </div>
+                  <a href="#" class="stretched-link">
+                    <h3 style="color: #00A8FF">Dolori Architecto</h3>
+                  </a>
+                  <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti recusandae ducimus enim.</p>
+                  <a href="#" class="stretched-link"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- Departments Section -->
+        <section id="departments" class="Departments section">
+          <div class="container section-title" data-aos="fade-up">
+            <h2 style="color: #00A8FF">Departments</h2>
+            <p>A Wide Range Of Medical Departments To Meet All Your Healthcare Needs</p>
+          </div>
+
+          <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row">
+                <div class="col-lg-3" style="max-height: 500px; overflow-y: auto;">
+                    <ul class="nav nav-tabs flex-column">
+                      <!-- @foreach ($departments as $index => $department)
+                        <li class="nav-item">
+                          <a class="nav-link {{ $index === 0 ? 'active show' : '' }}"
+                             data-bs-toggle="tab"
+                             href="#department-{{ $department->id }}">
+                            {{ $department->name }}
+                          </a>
+                        </li>
+                      @endforeach -->
+                      <li>
+                        Lorem ipsum dolor sit amet consectetur.
+                      </li>
+                      <li>Lorem ipsum dolor sit amet consectetur.</li>
+                      <li>Lorem ipsum dolor sit amet consectetur.</li>
+                      <li>Lorem ipsum dolor sit amet consectetur.</li>
+                    </ul>
+                  </div>
+                  <div class="col-lg-9 mt-4 mt-lg-0">
+                    <div class="tab-content">
+                      <!-- @foreach ($departments as $index => $department)
+                        <div class="tab-pane fade {{ $index === 0 ? 'active show' : '' }}" id="department-{{ $department->id }}">
+                          <div class="row">
+                            <div class="col-lg-8 details order-2 order-lg-1">
+                              <h3>{{ $department->name }}</h3>
+                              <p>{{ $department->description }}</p>
+                            </div>
+                            <div class="col-lg-4 text-center order-1 order-lg-2">
+                              {{-- <img src="{{ asset('uploads/departments/' . $department->image) }}" alt="" class="img-fluid"> --}}
+                            </div>
+                          </div>
+                        </div>
+                      @endforeach -->
+                      <div class="tab-pane fade active show" id="department-1">
+                        <div class="row">
+                          <div class="col-lg-8 details order-2 order-lg-1">
+                            <h3>General Medicine</h3>
+                            <p>Provides primary care, diagnosis, and treatment for common illnesses, preventive care, and health checkups.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade active show" id="department-1">
+                        <div class="row">
+                          <div class="col-lg-8 details order-2 order-lg-1">
+                            <h3>Pediatrics</h3>
+                            <p>Specializes in the medical care of infants, children, and adolescents.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade active show" id="department-1">
+                        <div class="row">
+                          <div class="col-lg-8 details order-2 order-lg-1">
+                            <h3>Cardiology</h3>
+                            <p>Deals with diagnosis and treatment of heart and blood vessel diseases.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Doctors Section -->
+        <section id="doctors" class="doctors section">
+          <div class="container section-title" data-aos="fade-up">
+            <h2 style="color: #00A8FF">Doctors</h2>
+            <p>Meet our expert doctors ready to care for your health</p>
+          </div><!-- End Section Title -->
+
+          <div class="container">
+            <div class="row gy-4">
+                <!-- @foreach ($doctors as $doctor)
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="team-member d-flex align-items-start">
+                        <div class="pic"><img src="{{ asset($doctor->employee->user->image) }}" class="img-fluid" alt=""></div>
+                        <div class="member-info">
+                            <h4>{{ $doctor->employee->user->name }}</h4>
+                            <span>{{ $doctor->employee->department->name }}</span>
+                            <p>{{ $doctor->employee->short_biography }}</p>
+                            <div class="social">
+                            <a href=""><i class="bi bi-twitter-x"></i></a>
+                            <a href=""><i class="bi bi-facebook"></i></a>
+                            <a href=""><i class="bi bi-instagram"></i></a>
+                            <a href=""> <i class="bi bi-linkedin"></i> </a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                @endforeach -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="team-member d-flex align-items-start">
+                  <div class="member-info">
+                      <h4>{{ $doctor->employee->user->name }}</h4>
+                      <span>{{ $doctor->employee->department->name }}</span>
+                      <p>{{ $doctor->employee->short_biography }}</p>
+                      <div class="social">
+                      <a href=""><i class="bi bi-twitter-x"></i></a>
+                      <a href=""><i class="bi bi-facebook"></i></a>
+                      <a href=""><i class="bi bi-instagram"></i></a>
+                      <a href=""> <i class="bi bi-linkedin"></i> </a>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="team-member d-flex align-items-start">
+                  <div class="member-info">
+                      <h4>{{ $doctor->employee->user->name }}</h4>
+                      <span>{{ $doctor->employee->department->name }}</span>
+                      <p>{{ $doctor->employee->short_biography }}</p>
+                      <div class="social">
+                      <a href=""><i class="bi bi-twitter-x"></i></a>
+                      <a href=""><i class="bi bi-facebook"></i></a>
+                      <a href=""><i class="bi bi-instagram"></i></a>
+                      <a href=""> <i class="bi bi-linkedin"></i> </a>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="team-member d-flex align-items-start">
+                  <div class="member-info">
+                      <h4>{{ $doctor->employee->user->name }}</h4>
+                      <span>{{ $doctor->employee->department->name }}</span>
+                      <p>{{ $doctor->employee->short_biography }}</p>
+                      <div class="social">
+                      <a href=""><i class="bi bi-twitter-x"></i></a>
+                      <a href=""><i class="bi bi-facebook"></i></a>
+                      <a href=""><i class="bi bi-instagram"></i></a>
+                      <a href=""> <i class="bi bi-linkedin"></i> </a>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                  <div class="team-member d-flex align-items-start">
+                  <div class="member-info">
+                      <h4>{{ $doctor->employee->user->name }}</h4>
+                      <span>{{ $doctor->employee->department->name }}</span>
+                      <p>{{ $doctor->employee->short_biography }}</p>
+                      <div class="social">
+                      <a href=""><i class="bi bi-twitter-x"></i></a>
+                      <a href=""><i class="bi bi-facebook"></i></a>
+                      <a href=""><i class="bi bi-instagram"></i></a>
+                      <a href=""> <i class="bi bi-linkedin"></i> </a>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- Faq Section -->
+        <section id="faq" class="faq section light-background">
+          <div class="container section-title" data-aos="fade-up">
+            <h2 style="color: #00A8FF;">Frequently Asked Questions</h2>
+            <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+          </div><!-- End Section Title -->
+
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
+                <div class="faq-container">
+                  <div class="faq-item">
+                    <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+                    <div class="faq-content">
+                      <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+                    </div>
+                    <i class="faq-toggle bi bi-chevron-right"></i>
+                  </div><!-- End Faq item-->
+
+                  <div class="faq-item">
+                    <h3>Feugiat scelerisque varius morbi enim nunc faucibus?</h3>
+                    <div class="faq-content">
+                      <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                    </div>
+                    <i class="faq-toggle bi bi-chevron-right"></i>
+                  </div><!-- End Faq item-->
+
+                  <div class="faq-item">
+                    <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+                    <div class="faq-content">
+                      <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+                    </div>
+                    <i class="faq-toggle bi bi-chevron-right"></i>
+                  </div><!-- End Faq item-->
+
+                  <div class="faq-item">
+                    <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
+                    <div class="faq-content">
+                      <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                    </div>
+                    <i class="faq-toggle bi bi-chevron-right"></i>
+                  </div><!-- End Faq item-->
+
+                  <div class="faq-item">
+                    <h3>Tempus quam pellentesque nec nam aliquam sem et tortor?</h3>
+                    <div class="faq-content">
+                      <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
+                    </div>
+                    <i class="faq-toggle bi bi-chevron-right"></i>
+                  </div><!-- End Faq item-->
+
+                  <div class="faq-item">
+                    <h3>Perspiciatis quod quo quos nulla quo illum ullam?</h3>
+                    <div class="faq-content">
+                      <p>Enim ea facilis quaerat voluptas quidem et dolorem. Quis et consequatur non sed in suscipit sequi. Distinctio ipsam dolore et.</p>
+                    </div>
+                    <i class="faq-toggle bi bi-chevron-right"></i>
+                  </div><!-- End Faq item-->
+
+                </div>
+
+              </div><!-- End Faq Column-->
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- Testimonials Section -->
+        {{-- <section id="testimonials" class="testimonials section">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-lg-5 info" data-aos="fade-up" data-aos-delay="100">
+                <h3>Patient Testimonials</h3>
+                <p>
+                  This section showcases some of the feedback and experiences shared by patients who have used our platform to book appointments with doctors and subscribe to clinics.
+                  Their words reflect the quality of service and the ease of accessing medical care through our system.
+                </p>
+              </div>
+
+              <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+
+                <div class="swiper init-swiper">
+                  <script type="application/json" class="swiper-config">
+                    {
+                      "loop": true,
+                      "speed": 600,
+                      "autoplay": {
+                        "delay": 5000
+                      },
+                      "slidesPerView": "auto",
+                      "pagination": {
+                        "el": ".swiper-pagination",
+                        "type": "bullets",
+                        "clickable": true
+                      }
+                    }
+                  </script>
+                  <div class="swiper-wrapper">
+
+                    @foreach ($patientsTestimonials as $patientsTestimonial)
+                        <div class="swiper-slide">
+                            <div class="testimonial-item">
+                            <div class="d-flex">
+                                <img src="{{ asset($patientsTestimonial->patient->user->image) }}" class="testimonial-img flex-shrink-0" alt="">
+                                <div>
+                                <h3>{{ $patientsTestimonial->patient->user->name }}</h3>
+                                <span>{{ $patientsTestimonial->patient->user->address }}</span>
+
+                                <div class="stars">
+                                    @php
+                                        $rating = $patientsTestimonial->rating;
+                                    @endphp
+
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $rating)
+                                            <i class="bi bi-star-fill"></i>
+                                        @else
+                                            <i class="bi bi-star"></i>
+                                        @endif
+                                    @endfor
+                                </div>
+                                </div>
+                            </div>
+                            <p>
+                                <i class="bi bi-quote quote-icon-left"></i>
+                                <span>{{ $patientsTestimonial->content }}</span>
+                                <i class="bi bi-quote quote-icon-right"></i>
+                            </p>
+                            </div>
+                        </div>
+                    @endforeach -->
+                    <div class="swiper-slide">
+                      <div class="testimonial-item">
+                      <div class="d-flex">
+                          <div>
+                            <h3>{{ $patientsTestimonial->patient->user->name }}</h3>
+                            <span>{{ $patientsTestimonial->patient->user->address }}</span>
+                          </div>
+                      </div>
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                          <span>{{ $patientsTestimonial->content }}</span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="swiper-pagination"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section> --}}
+
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="gallery section">
+          <div class="container section-title" data-aos="fade-up">
+            <h2>Gallery</h2>
+            <p>Explore our photo gallery to get a glimpse of our clinics, modern equipment</p>
+          </div>
+          <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
+            <div class="row g-0">
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/gallery/gallery_01.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/gallery/gallery_02.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div><!-- End Gallery Item -->
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/image Hospital in Gaza/img1.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div><!-- End Gallery Item -->
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/image Hospital in Gaza/img2.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div><!-- End Gallery Item -->
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/image Hospital in Gaza/img3.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div><!-- End Gallery Item -->
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/image Hospital in Gaza/img4.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div><!-- End Gallery Item -->
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/gallery/gallery_07.jpg.webp') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div><!-- End Gallery Item -->
+
+              <div class="col-lg-3 col-md-4">
+                <div class="gallery-item">
+                  <a href="" class="glightbox" data-gallery="images-gallery">
+                    <img src="{{ asset('patients/img/gallery/gallery-8.jpg') }}" alt="" class="img-fluid">
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact section">
+          <div class="container section-title" data-aos="fade-up">
+            <h2>Contact</h2>
+            <p>Have a question or need assistance? We’re here to help — get in touch with us anytime</p>
+          </div>
+          <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-4">
+              <div class="col-lg-4">
+                <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+                  <i class="bi bi-geo-alt flex-shrink-0"></i>
+                  <div>
+                    <h3>Address</h3>
+                    <p>{{ $admin->address }}</p>
+                  </div>
+                </div>
+
+                <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+                  <i class="bi bi-telephone flex-shrink-0"></i>
+                  <div>
+                    <h3>Call Us</h3>
+                    <p>{{ $admin->phone }}</p>
+                  </div>
+                </div>
+
+                <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
+                  <i class="bi bi-envelope flex-shrink-0"></i>
+                  <div>
+                    <h3>Email Us</h3>
+                    <p>{{ $admin->email }}</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-lg-8">
+                <form action="{{ route('contact_send') }}" method="POST">
+                  <div class="row gy-4">
+
+                    <div class="col-md-6">
+                      <input type="text" id="name" name="name" class="form-control" placeholder="Your Name">
+                    </div>
+
+                    <div class="col-md-6 ">
+                      <input type="email" id="email" class="form-control" name="email" placeholder="Your Email">
+                    </div>
+
+                    <div class="col-md-12">
+                      <input type="text" id="subject" class="form-control" name="subject" placeholder="Subject">
+                    </div>
+
+                    <div class="col-md-12">
+                      <textarea class="form-control" id="message" name="message" rows="6" placeholder="Message"></textarea>
+                    </div>
+
+                    <div class="col-md-12 text-center">
+                      <button type="submit" class="btn btn-primary submit-btn addBtn" style="background-color: #00A8FF;">Send Message</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+    </main>
+
+
+
+
+
+
+    <footer id="footer" class="footer light-background">
+
+        <div class="container footer-top">
+          <div class="row gy-4">
+            <div class="col-lg-4 col-md-6 footer-about">
+              <a href="{{ route('home') }}" class="logo d-flex align-items-center">
+                <span class="sitename">CMS</span>
+              </a>
+              <div class="footer-contact pt-3">
+                <p>A108 Adam Street</p>
+                <p>New York, NY 535022</p>
+                <p class="mt-3"><strong style="color:#00A8FF;">Phone:</strong> <span>+1 5589 55488 55</span></p>
+                <p><strong style="color:#00A8FF;">Email:</strong> <span>info@example.com</span></p>
+              </div>
+              <div class="social-links d-flex mt-4">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+              <h4>Useful Links</h4>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Terms of service</a></li>
+                <li><a href="#">Privacy policy</a></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+              <h4>Our Services</h4>
+              <ul>
+                <li><a href="#">Web Design</a></li>
+                <li><a href="#">Web Development</a></li>
+                <li><a href="#">Product Management</a></li>
+                <li><a href="#">Marketing</a></li>
+                <li><a href="#">Graphic Design</a></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+              <h4>Hic solutasetp</h4>
+              <ul>
+                <li><a href="#">Molestiae accusamus iure</a></li>
+                <li><a href="#">Excepturi dignissimos</a></li>
+                <li><a href="#">Suscipit distinctio</a></li>
+                <li><a href="#">Dilecta</a></li>
+                <li><a href="#">Sit quas consectetur</a></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-3 footer-links">
+              <h4>Nobis illum</h4>
+              <ul>
+                <li><a href="#">Ipsam</a></li>
+                <li><a href="#">Laudantium dolorum</a></li>
+                <li><a href="#">Dinera</a></li>
+                <li><a href="#">Trodelas</a></li>
+                <li><a href="#">Flexo</a></li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container copyright text-center mt-4">
+          <p>© <span>Copyright</span> <strong class="px-1 sitename">CMS</strong> <span>All Rights Reserved</span></p>
+        </div>
+
+    </footer>
+
+
+
+
+
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center" style="background-color: #00A8FF;"><i class="bi bi-arrow-up-short"></i></a>
+
+
+
+    <script src="{{ asset('patients/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('patients/vendor/php-email-form/validate.js') }}"></script>
+    <script src="{{ asset('patients/vendor/aos/aos.js') }}"></script>
+    <script src="{{ asset('patients/vendor/glightbox/js/glightbox.min.js') }}"></script>
+    <script src="{{ asset('patients/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+    <script src="{{ asset('patients/vendor/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('patients/js/main.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @yield('js')
+
+</body>
+</html>
