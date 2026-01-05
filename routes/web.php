@@ -108,6 +108,8 @@ use App\Http\Controllers\Backend\Employee\Receptionist\{
 
 use App\Http\Controllers\Backend\Patient\{
     MyAccountController as MyAccountController,
+    ClinicController as PatientClinicController,
+    DoctorController as PatientDoctorController,
     ProfileController as PatientProfileController,
     AppointmentController as PatientAppointmentController,
     InvoiceController as PatientInvoiceController,
@@ -795,11 +797,28 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
 Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->group(function () {
 
     // My Account
-    Route::get('/index', [MyAccountController::class, 'index'])->name('index');
+    Route::get('/my_account', [MyAccountController::class, 'myAccount'])->name('my_account');
 
-    Route::get('/clinics/view', [MyAccountController::class, 'clinicsView'])->name('clinics_view');
+    // Clinics
+    Route::get('/clinics/view', [PatientClinicController::class, 'clinicsView'])->name('patient.clinics_view');
 
-    Route::get('/doctors/view', [MyAccountController::class, 'doctorsView'])->name('doctors_view');
+    // Doctors
+    Route::get('/doctors/view', [PatientDoctorController::class, 'doctorsView'])->name('patient.doctors_view');
+
+    //Appointments
+    Route::get('/appointments/view', [PatientAppointmentController::class, 'appointmentsView'])->name('patient.appointments_view');
+
+
+    //Invoices
+    Route::get('/invoices/view', [PatientInvoiceController::class, 'invoicesView'])->name('patient.invoices_view');
+    Route::get('/details/invoice/{id}', [PatientInvoiceController::class, 'detailsInvoice'])->name('patient.details_invoice');
+
+    Route::get('/invoice-pdf/view/{id}', [PatientInvoiceController::class, 'invoicePDF'])->name('patient.invoice_pdf');
+    Route::get('/invoice-pdf/raw/{id}', [PatientInvoiceController::class, 'invoicePDFRaw'])->name('patient.invoice_pdf_raw');
+
+    //Cancelled Invoices
+    Route::get('/cancelled-invoice-pdf/view/{id}', [PatientInvoiceController::class, 'cancelledinvoicePDF'])->name('patient.cancelled_invoice_pdf');
+    Route::get('/cancelled-invoice-pdf/raw/{id}', [PatientInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('patient.cancelled_invoice_pdf_raw');
 
 });
 
