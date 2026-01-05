@@ -158,7 +158,7 @@
                             }
 
                         } else if (response.data === 6) {
-                            window.location.href = '/patient/index';
+                            window.location.href = '/patient/my_account';
 
                         } else {
                             Swal.fire('Error', 'Unexpected response from server', 'error');

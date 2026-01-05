@@ -808,7 +808,6 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     //Appointments
     Route::get('/appointments/view', [PatientAppointmentController::class, 'appointmentsView'])->name('patient.appointments_view');
 
-
     //Invoices
     Route::get('/invoices/view', [PatientInvoiceController::class, 'invoicesView'])->name('patient.invoices_view');
     Route::get('/details/invoice/{id}', [PatientInvoiceController::class, 'detailsInvoice'])->name('patient.details_invoice');

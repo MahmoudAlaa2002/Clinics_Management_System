@@ -13,6 +13,7 @@ class Department extends Model{
         'name',
         'description',
         'status',
+        'image_path',
     ];
 
     public function clinics(){
