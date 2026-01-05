@@ -159,7 +159,7 @@
             
                             <div class="invoice-footer">
                                 <span><i class="fa-solid fas fa-calendar-alt"></i> Appointment {{ $invoice->appointment->status }}</span>
-                                <a href="{{ route('details_invoice' , ['id' => $invoice->id]) }}" class="btn btn-primary btn-view">View Details</a>
+                                <a href="{{ route('patient.details_invoice' , ['id' => $invoice->id]) }}" class="btn btn-primary btn-view">View Details</a>
                             </div>
             
                         </div>

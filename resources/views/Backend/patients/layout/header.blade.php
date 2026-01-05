@@ -8,10 +8,36 @@
 
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="{{ route('patient.clinics_view') }}">Clinics<br></a></li>
-                    <li><a href="{{ route('patient.doctors_view') }}">Doctors</a></li>
-                    <li><a href="{{ route('patient.appointments_view') }}">Make-An-Appointment</a></li>
-                    <li><a href="{{ route('patient.invoices_view') }}">Invoices</a></li>
+                    <li>
+                        <a class="{{ request()->routeIs('my_account') ? 'active' : '' }}"
+                           href="{{ route('my_account') }}">
+                            My Account
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->routeIs('patient.clinics_view') ? 'active' : '' }}"
+                           href="{{ route('patient.clinics_view') }}">
+                            Clinics
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->routeIs('patient.doctors_view') ? 'active' : '' }}"
+                           href="{{ route('patient.doctors_view') }}">
+                            Doctors
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->routeIs('patient.appointments_view') ? 'active' : '' }}"
+                           href="{{ route('patient.appointments_view') }}">
+                            Make-An-Appointment
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->routeIs('patient.invoices_view') ? 'active' : '' }}"
+                           href="{{ route('patient.invoices_view') }}">
+                            Invoices
+                        </a>
+                    </li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>

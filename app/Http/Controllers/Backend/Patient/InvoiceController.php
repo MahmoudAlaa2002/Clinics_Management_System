@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Patient;
 
+use PDF;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,5 +30,22 @@ class InvoiceController extends Controller {
             ])->findOrFail($id);
 
         return view('Backend.patients.invoices.details', compact('invoice'));
+    }
+
+
+
+
+    public function invoicePDF($id){
+        $invoice = Invoice::findOrFail($id);
+        return view('Backend.patients.invoices.invoice_pdf' , compact('invoice'));
+    }
+
+
+    public function invoicePDFRaw($id){
+        $invoice = Invoice::with(['appointment.clinicDepartment.clinic', 'patient.user'])->findOrFail($id);
+        $pdf = PDF::loadView('Backend.patients.invoices.invoice_pdf_raw', compact('invoice'))->setPaper('A4', 'portrait');
+        return response()->json([
+            'pdf' => base64_encode($pdf->output())
+        ]);
     }
 }

@@ -95,7 +95,33 @@
           color: #007BFF !important;
           background-color: white !important;
         }
+        .navmenu a{
+    position: relative;
+}
 
+/* الخط المخفي افتراضيًا */
+.navmenu a::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s ease-in-out;
+}
+
+/* يظهر عند التحويم */
+.navmenu a:hover::after{
+    transform: scaleX(1);
+}
+
+/* يبقى ظاهر إذا الرابط Active */
+.navmenu a.active::after{
+    transform: scaleX(1);
+}
     </style>
 
     @include('Backend.patients.layout.header')
