@@ -405,7 +405,7 @@
                 text: 'Please enter all required fields',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -416,7 +416,7 @@
                 title: 'Invalid Password',
                 text: 'Password must be 6–15 characters',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -427,7 +427,7 @@
                 text: 'Password confirmation does not match',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -438,7 +438,7 @@
                 text: 'The timing is incorrect, Please correct it',
                 icon: 'error',
                 confirmButtonText: 'OK' ,
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -484,7 +484,7 @@
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'No updates were made to this clinic manager',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -516,21 +516,21 @@
                                 title: 'Error!',
                                 text: 'This email is already used by another user',
                                 icon: 'error',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             });
                         } else if (response.data == 1) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Clinic Manager has been updated successfully',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => window.location.href = '/admin/view/clinics-managers');
                         } else {
                             Swal.fire({
                                 title: 'Notice',
                                 text: 'Unexpected response. Please try again.',
                                 icon: 'info',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             });
                         }
                     },
@@ -541,7 +541,7 @@
                                 ? xhr.responseJSON.message
                                 : 'Request failed',
                             icon: 'error',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         });
                     }
                 });
@@ -558,7 +558,7 @@
                     title: 'Error!',
                     text: msg,
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
         });

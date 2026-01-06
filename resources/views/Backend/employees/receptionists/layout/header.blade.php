@@ -51,7 +51,7 @@
 
     /* hover */
     .header .dropdown-item:hover{
-        background:#007bff;
+        background:#00A8FF;
         color:#fff;
     }
 
@@ -102,11 +102,11 @@
                     <div class="user-name">{{ auth()->user()->name ?? 'User' }}</div>
                     <div class="user-role">Receptionist</div>
                 </div>
-            
+
                 <a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-home"></i> Home</a>
                 <a class="dropdown-item" href="{{ route('receptionist_profile') }}"><i class="fa fa-user"></i> My Profile</a>
                 <a class="dropdown-item" href="{{ route('receptionist_edit_profile') }}"><i class="fa fa-edit"></i> Edit Profile</a>
-            
+
                 <div class="dropdown-divider"></div>
 
                 <a class="dropdown-item" href="#"

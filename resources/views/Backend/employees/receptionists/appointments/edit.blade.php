@@ -276,7 +276,7 @@
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'You did not change anything in the appointment',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -291,7 +291,7 @@
                 icon: 'warning',
                 title: 'Cancellation Reason Required',
                 text: 'Please write a valid cancellation reason (at least 10 characters).',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -323,7 +323,7 @@
                         icon: 'success',
                         title: 'Success',
                         text: 'Appointment updated successfully',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     }).then(() => window.location.href = '/employee/receptionist/view/appointments');
                     return;
                 }
@@ -333,7 +333,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'Patient already has this appointment',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
 
@@ -342,7 +342,7 @@
                         icon: 'warning',
                         title: 'Warning!',
                         text: 'This slot is already booked',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
 
@@ -351,7 +351,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'This time has passed',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
 
@@ -360,7 +360,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'Patient has another appointment at same time',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
             }

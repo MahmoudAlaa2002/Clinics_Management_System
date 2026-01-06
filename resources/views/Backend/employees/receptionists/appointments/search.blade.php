@@ -108,7 +108,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <div class="modal-header" style="background-color:#007BFF; color:white;">
+            <div class="modal-header" style="background-color:#00A8FF; color:white;">
                 <h5 class="modal-title">Reason for Rejection</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -121,7 +121,7 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button class="btn" id="confirm-reject-btn"
-                        style="background-color:#007BFF; color:white;">
+                        style="background-color:#00A8FF; color:white;">
                     Confirm
                 </button>
             </div>

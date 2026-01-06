@@ -157,7 +157,7 @@ class AppointmentController extends Controller{
                     'patient_id'     => $request->patient_id,
                     'total_amount'   => $consultation_fee,
                     'paid_amount'    => 0,
-                    'payment_method' => 'None',
+                    'payment_method' => null,
                     'payment_status' => 'Unpaid',
                     'invoice_date'   => now()->toDateString(),
                 ]);

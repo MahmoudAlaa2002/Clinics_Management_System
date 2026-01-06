@@ -107,7 +107,7 @@ use App\Http\Controllers\Backend\Employee\Receptionist\{
 };
 
 use App\Http\Controllers\Backend\Patient\{
-    MyAccountController as MyAccountController,
+    HomeController as PatientHomeController,
     ClinicController as PatientClinicController,
     DoctorController as PatientDoctorController,
     ProfileController as PatientProfileController,
@@ -796,14 +796,24 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
 //Patient
 Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->group(function () {
 
-    // My Account
-    Route::get('/my_account', [MyAccountController::class, 'myAccount'])->name('my_account');
+    // Home
+    Route::get('/home', [PatientHomeController::class, 'home'])->name('patient.home');
+
+    //Profile
+    Route::get('/profile' , [PatientProfileController::class , 'ViewProfile'])->name('patient.view_profile');
+    Route::get('/edit/profile' , [PatientProfileController::class , 'editProfile'])->name('patient.edit_profile');
+    Route::put('/update/profile' , [PatientProfileController::class , 'updateProfile'])->name('patient.update_profile');
+    Route::get('/settings', [PatientProfileController::class, 'settings'])->name('patient.settings');
 
     // Clinics
     Route::get('/clinics/view', [PatientClinicController::class, 'clinicsView'])->name('patient.clinics_view');
+    Route::get('/search/clinics', [PatientClinicController::class, 'searchClinics'])->name('patient.search_clinics');
+
 
     // Doctors
     Route::get('/doctors/view', [PatientDoctorController::class, 'doctorsView'])->name('patient.doctors_view');
+    Route::get('/search/doctors', [PatientDoctorController::class, 'searchDoctors'])->name('patient.search_doctors');
+
 
     //Appointments
     Route::get('/appointments/view', [PatientAppointmentController::class, 'appointmentsView'])->name('patient.appointments_view');

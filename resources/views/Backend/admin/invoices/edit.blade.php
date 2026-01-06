@@ -186,7 +186,7 @@ $(document).ready(function () {
                 text: 'Please enter all required fields',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -202,7 +202,7 @@ $(document).ready(function () {
                 text: 'Please enter a valid total amount',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -213,7 +213,7 @@ $(document).ready(function () {
                 text: 'Please enter a valid paid amount',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -225,7 +225,7 @@ $(document).ready(function () {
                 text: `Please choose a payment method when paid amount is $${paid_amount}`,
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -237,7 +237,7 @@ $(document).ready(function () {
                 text: 'You cannot select a payment method when paid amount is $0',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -253,7 +253,7 @@ $(document).ready(function () {
                     text: 'Due date must be after the invoice date',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -272,7 +272,7 @@ $(document).ready(function () {
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'No updates were made to this invoice',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -290,14 +290,14 @@ $(document).ready(function () {
                         title: 'Error!',
                         text: 'Paid amount cannot be greater than total amount',
                         icon: 'error',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 } else if (res.data == 1) {
                     Swal.fire({
                         title: 'Success',
                         text: 'Invoice has been updated successfully',
                         icon: 'success',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     }).then(() => {
                         window.location.href = '/admin/view/invoices';
                     });

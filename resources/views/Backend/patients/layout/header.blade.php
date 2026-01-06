@@ -1,7 +1,7 @@
 <header id="header" class="header sticky-top">
     <div class="branding d-flex align-items-center justify-content-between">
         <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="{{ route('my_account') }}" class="logo d-flex align-items-center me-auto" style="margin-left: 30px;">
+            <a href="{{ route('patient.home') }}" class="logo d-flex align-items-center me-auto" style="margin-left: 30px;">
                 <img src="{{ asset('patients/img/logo.png') }}" width="40" height="40" alt="">
                 <span style="font-size: 24px;"><strong>Clinics Management</strong></span>
             </a>
@@ -9,9 +9,9 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li>
-                        <a class="{{ request()->routeIs('my_account') ? 'active' : '' }}"
-                           href="{{ route('my_account') }}">
-                            My Account
+                        <a class="{{ request()->routeIs('patient.home') ? 'active' : '' }}"
+                           href="{{ route('patient.home') }}">
+                            Home
                         </a>
                     </li>
                     <li>
@@ -55,9 +55,13 @@
                 <i class="fa-solid fa-calendar-check"></i>
               </div>
               <div class="settings">
-                <span>Settings</span>
-                <i class="fa-solid fa-gear"></i>
-              </div>
+                <a href="{{ route('patient.settings') }}">
+                    <span style="color: #007BFF";>
+                        Settings
+                    </span>
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+            </div>
           </div>
         </div>
     </div>

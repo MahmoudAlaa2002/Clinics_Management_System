@@ -144,7 +144,7 @@
             </form>
         </div>
     </div>
-    
+
 @endsection
 
 
@@ -163,12 +163,12 @@
                 text: 'Please enter the task description',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
 
-        let formData = new FormData(form[0]); 
+        let formData = new FormData(form[0]);
 
         $.ajax({
             method: 'POST',
@@ -183,7 +183,7 @@
                         text: 'Task assigned successfully to nurse',
                         icon: 'success',
                         confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                     }).then(() => {
                         window.history.back();
                     });

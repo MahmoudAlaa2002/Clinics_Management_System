@@ -64,7 +64,7 @@
 
     .auth-links a:hover {
         background-color: white !important;
-        color: #007BFF !important;
+        color: #00A8FF !important;
     }
 
 </style>

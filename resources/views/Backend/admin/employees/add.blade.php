@@ -498,7 +498,7 @@
                     text: 'Please enter all required fields',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -508,7 +508,7 @@
                     title: 'Invalid Password',
                     text: 'Password must be 6–15 characters',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -518,7 +518,7 @@
                     title: 'Error!',
                     text: 'Password confirmation does not match',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -528,7 +528,7 @@
                     title: 'Error!',
                     text: 'The timing is incorrect, Please correct it',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -538,7 +538,7 @@
                     title: 'Error!',
                     text: 'Please select department',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -548,7 +548,7 @@
                     title: 'Error!',
                     text: 'Please fill all doctor job information fields',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -558,7 +558,7 @@
                     title: 'Error!',
                     text: 'The consultation fee is invalid',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -587,7 +587,7 @@
                                     title: 'Error!',
                                     text: 'This email is already used by another user',
                                     icon: 'error',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
 
                             } else if (response.data == 1) {
@@ -595,7 +595,7 @@
                                     title: 'Error!',
                                     text: 'This clinic already has a manager',
                                     icon: 'error',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
 
                             } else if (response.data == 2) {
@@ -603,7 +603,7 @@
                                     title: 'Error!',
                                     text: 'This department already has a manager',
                                     icon: 'error',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
 
                             } else if (response.data == 3) {
@@ -611,7 +611,7 @@
                                     title: 'Error!',
                                     text: 'This clinic already has an accountant',
                                     icon: 'error',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
 
                             } else if (response.data == 4) {
@@ -619,7 +619,7 @@
                                     title: 'Success',
                                     text: 'Employee has been added successfully',
                                     icon: 'success',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 }).then(() => window.location.href = '/admin/view/employees');
                             }
                         }
@@ -637,7 +637,7 @@
                         title: 'Error!',
                         text: msg,
                         icon: 'error',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
             });

@@ -636,7 +636,8 @@
                             title: 'Success',
                             text: 'The Message Has Been Sent Successfully',
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#00A8FF',
                         }).then(() => {
                             window.location.href = '/clinics-management/home';
                         });

@@ -10,15 +10,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\Patient;
 
-class MyAccountController extends Controller
-{
-    public function myAccount()
-    {
+class HomeController extends Controller {
+
+    public function home() {
         $clinics = Clinic::all();
         $departments = Department::all();
-        $doctors = Doctor::all();
         $patients = Patient::all();
         $admin = User::where('role', 'admin')->first();
-        return view('Backend.patients.my_account', compact('clinics', 'departments', 'doctors', 'patients', 'admin'));
+        $doctors = Doctor::whereNotNull('rating')->orderByDesc('rating')->orderByDesc('created_at')->take(4)->get();
+        return view('Backend.patients.home', compact('clinics', 'departments', 'doctors', 'patients', 'admin'));
     }
+
 }

@@ -130,7 +130,7 @@
                                 title: 'Deleted',
                                 text: 'Department manager has been deleted successfully',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 location.reload();
                             });

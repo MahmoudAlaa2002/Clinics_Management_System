@@ -269,7 +269,7 @@
                 title: 'Error!',
                 text: 'Please enter all required fields',
                 icon: 'error',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -280,7 +280,7 @@
                 title: 'Error!',
                 text: 'The timing is incorrect, please correct it',
                 icon: 'error',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -312,7 +312,7 @@
                                 title: 'Error!',
                                 text: 'This clinic already exists',
                                 icon: 'error',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             });
 
                         } else if (response.data == 1) {
@@ -320,7 +320,7 @@
                                 title: 'Success',
                                 text: 'Clinic has been added successfully',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 window.location.href = '/admin/view/clinics';
                             });
@@ -340,7 +340,7 @@
                     title: 'Error!',
                     text: msg,
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
         });

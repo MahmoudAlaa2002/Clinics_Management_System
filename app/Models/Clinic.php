@@ -11,6 +11,7 @@ class Clinic extends Model{
 
     protected $fillable = [
         'name',
+        'image_path',
         'location',
         'email',
         'phone',
@@ -18,6 +19,7 @@ class Clinic extends Model{
         'closing_time',
         'working_days',
         'description',
+        'rating',
         'status',
     ];
 

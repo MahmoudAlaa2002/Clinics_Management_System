@@ -238,7 +238,7 @@
                                 title: 'Restored Successfully',
                                 text: 'The appointment has been restored successfully.',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 location.reload();
                             });
@@ -296,7 +296,7 @@
                                 title: 'Cannot Delete',
                                 text: 'This appointment has a paid or partially paid invoice and cannot be deleted permanently',
                                 icon: 'error',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             });
                         }
 
@@ -306,7 +306,7 @@
                                 title: 'Deleted Permanently',
                                 text: 'The appointment and its invoice have been permanently deleted',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 location.reload();
                             });

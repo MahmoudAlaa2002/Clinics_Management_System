@@ -124,7 +124,7 @@
                         text: 'Please enter all required fields',
                         icon: 'error',
                         confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                     });
                 }
 
@@ -137,7 +137,7 @@
                         icon: 'warning',
                         title: 'No Changes',
                         text: 'No updates were made to this department',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                     });
                     return;
                 }
@@ -161,7 +161,7 @@
                                 text: 'Department has been updated successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 window.location.href = "{{ route('view_departments') }}";
                             });

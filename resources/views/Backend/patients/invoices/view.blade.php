@@ -113,31 +113,54 @@
             font-weight: 700;
         }
 
+        .pagination-wrapper {
+            margin-top: auto;
+             padding-top: 80px;
+            padding-bottom: 30px;
+        }
+
+        .pagination .page-link {
+            background-color: #fff;
+            color: #007BFF;
+        }
+
+        /* الصفحة الحالية فقط */
+        .pagination .page-item.active .page-link {
+            background-color: #007BFF;
+            color: #fff;
+            border-color: #007BFF;
+        }
+
+        /* Hover عادي */
+        .pagination .page-link:hover {
+            background-color: #f1f5ff;
+            color: #007BFF;
+        }
     </style>
 
     <main class="main">
 
         <section class="ourClinics">
             <div class="container mt-5 mb-6">
-        
+
                 <div class="row">
                     <div class="col-12 text-center mb-4">
                         <h2 class="section-title" style="color:#00A8FF;">My Invoices</h2>
                         <p class="text-muted">Here you can view all invoices related to your appointments</p>
                     </div>
                 </div>
-        
+
                 <div class="invoice-wrapper">
-        
+
                     <!-- ============ INVOICE 1 ============ -->
                     @foreach ($invoices as $invoice)
                         <div class="invoice-card" data-aos="fade-up">
-            
+
                             <div class="invoice-top">
                                 <span>Invoice #{{ $invoice->id }}</span>
                                 <span>{{ $invoice->invoice_date }}</span>
                             </div>
-            
+
                             <div class="invoice-body">
                                 <p><strong>Clinic:</strong> {{ $invoice->appointment->clinic->name }}</p>
                                 <p><strong>Department:</strong> {{ $invoice->appointment->department->name }}</p>
@@ -150,21 +173,24 @@
                                     @if ($invoice->payment_status === 'Paid')
                                         <span class="status-paid">Paid</span>
                                     @elseif ($invoice->payment_status === 'Partially Paid')
-                                        <span class="status-partial">Partially Paid</span> 
+                                        <span class="status-partial">Partially Paid</span>
                                     @else
-                                        <span class="status-unpaid">Unpaid</span> 
+                                        <span class="status-unpaid">Unpaid</span>
                                     @endif
                                 </p>
                             </div>
-            
+
                             <div class="invoice-footer">
                                 <span><i class="fa-solid fas fa-calendar-alt"></i> Appointment {{ $invoice->appointment->status }}</span>
                                 <a href="{{ route('patient.details_invoice' , ['id' => $invoice->id]) }}" class="btn btn-primary btn-view">View Details</a>
                             </div>
-            
+
                         </div>
                     @endforeach
-        
+                </div>
+
+                <div id="invoices-pagination" class="pagination-wrapper d-flex justify-content-center">
+                    {{ $invoices->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </section>

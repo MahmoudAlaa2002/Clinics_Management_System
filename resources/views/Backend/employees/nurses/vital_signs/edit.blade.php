@@ -137,7 +137,7 @@
                     icon: 'warning',
                     title: 'No Changes',
                     text: 'No updates were made to vital signs',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -163,7 +163,7 @@
                             icon: 'success',
                             title: 'Updated Successfully',
                             text: 'Vital signs have been updated',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         }).then(() => {
                             window.location.href = "/employee/nurse/view/vital-signs/" + id ;
                         });

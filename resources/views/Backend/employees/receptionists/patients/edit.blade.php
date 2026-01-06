@@ -265,7 +265,7 @@
                     text: 'Please Enter All Required Fields',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -287,7 +287,7 @@
                     icon: 'warning',
                     title: 'No Changes',
                     text: 'No updates were made to this patient',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -309,7 +309,7 @@
                             text: 'Patient has been updated successfully',
                             icon: 'success',
                             confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         }).then(() => window.location.href = '/employee/receptionist/view/patients');
                     }
                 }

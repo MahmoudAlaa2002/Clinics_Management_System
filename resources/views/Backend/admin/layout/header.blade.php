@@ -51,7 +51,7 @@
 
     /* hover */
     .header .dropdown-item:hover{
-        background:#007bff;
+        background:#00A8FF;
         color:#fff;
     }
 
@@ -105,9 +105,9 @@
                 <a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-home"></i> Home</a>
                 <a class="dropdown-item" href="{{ route('my_profile') }}"><i class="fa fa-user"></i> My Profile</a>
                 <a class="dropdown-item" href="{{ route('edit_profile') }}"><i class="fa fa-edit"></i> Edit Profile</a>
-    
+
                 <div class="dropdown-divider"></div>
-            
+
                 <a class="dropdown-item" href="#"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fa fa-sign-out"></i> Logout
@@ -116,7 +116,7 @@
                     @csrf
                 </form>
             </div>
-            
+
         </li>
 
     </ul>

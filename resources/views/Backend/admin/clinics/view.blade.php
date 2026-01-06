@@ -194,7 +194,7 @@
                                 title: 'Deleted',
                                 text: 'Clinic has been deleted successfully',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => location.reload());
                         } else {
                             Swal.fire('Error!', 'Something went wrong.', 'error');

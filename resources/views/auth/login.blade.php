@@ -17,16 +17,16 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         .btn-primary {
-            background-color: #007bff;
+            background-color: #00A8FF;
             border: none;
         }
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: #00A8FF;
         }
         .clinic-title {
             font-weight: bold;
             font-size: 24px;
-            color: #007bff;
+            color: #00A8FF;
         }
     </style>
 
@@ -77,7 +77,7 @@
 
                             <div class="mt-3 text-center">
                                 <span style="color: black;">Don't have an account? </span>
-                                <a href="{{ route('register') }}" class="text-decoration-none" style="color: #007bff;">Register</a>
+                                <a href="{{ route('register') }}" class="text-decoration-none" style="color: #00A8FF;">Register</a>
                             </div>
                         </form>
                     </div>
@@ -110,7 +110,7 @@
                     text: 'Please Enter Your Email & Password',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
             } else {
                 $.ajax({
@@ -131,7 +131,7 @@
                                 icon: 'error',
                                 title: 'Error',
                                 text: 'Invalid Email or Password',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
 
                         } else if (response.data === 1) {
@@ -158,7 +158,7 @@
                             }
 
                         } else if (response.data === 6) {
-                            window.location.href = '/patient/my_account';
+                            window.location.href = '/patient/home';
 
                         } else {
                             Swal.fire('Error', 'Unexpected response from server', 'error');

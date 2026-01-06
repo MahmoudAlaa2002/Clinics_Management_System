@@ -6,7 +6,7 @@
 
 <style>
     .profile-header {
-        background: linear-gradient(135deg, #007bff, #00a8ff);
+        background: linear-gradient(135deg, #00A8FF, #00A8FF);
         padding: 40px 0;
         border-radius: 18px;
         color: white;
@@ -43,7 +43,7 @@
         justify-content: center;
         align-items: center;
         font-size: 28px;
-        color: #007bff;
+        color: #00A8FF;
         box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     }
 </style>
@@ -115,7 +115,7 @@
 
                 <div class="mb-3 d-flex align-items-center">
                     <span class="d-flex justify-content-center align-items-center me-2"
-                          style="width: 38px; height: 38px; background:#e8f3ff; color:#007bff; border-radius: 8px;">
+                          style="width: 38px; height: 38px; background:#e8f3ff; color:#00A8FF; border-radius: 8px;">
                         <i class="fa fa-info-circle" style="font-size:18px;"></i>
                     </span>
                     <h5 class="m-0 fw-bold text-dark" style="font-size: 20px;">

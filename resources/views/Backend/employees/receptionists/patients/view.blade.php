@@ -109,7 +109,7 @@
                                     title: 'Deleted',
                                     text: 'Patient Has Been Deleted Successfully',
                                     icon: 'success',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 }).then(() => {
                                     location.reload();
                                 });
@@ -148,7 +148,7 @@
                 success: function (response) {
                     $('#patients_table_body').html(response.html);
                     initTooltips();
-                    
+
                     if (response.searching) {
                         if (response.count > 50) {
                             $('#patients-pagination').html(response.pagination).show();

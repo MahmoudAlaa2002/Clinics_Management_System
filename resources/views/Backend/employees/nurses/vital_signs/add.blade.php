@@ -154,7 +154,7 @@
                             text: 'Please enter at least one vital sign',
                             icon: 'error',
                             confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         });
                         return;
                 }else{
@@ -174,7 +174,7 @@
                                 text: 'Vital signs have been successfully recorded',
                                 icon: 'success',
                                 confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 window.location.href = '/employee/nurse/view/appointments';
                             });

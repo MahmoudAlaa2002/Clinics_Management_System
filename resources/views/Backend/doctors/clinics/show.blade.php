@@ -10,7 +10,7 @@
         transition: color 0.3s ease;
     }
     li a:hover {
-        color: #007bff;
+        color: #00A8FF;
     }
     .badge-available {
         background-color: #28a745;
@@ -57,7 +57,7 @@
             <h4 class="card-title mb-3"><i class="fa fa-calendar-alt text-primary me-2"></i> Clinic Schedule</h4>
             @if($clinic->working_days)
                 <table class="table text-center table-bordered">
-                    <thead style="background-color:#007bff; color:#fff;">
+                    <thead style="background-color:#00A8FF; color:#fff;">
                         @if($clinic->opening_time && $clinic->closing_time)
                             <tr>
                                 <th colspan="2">

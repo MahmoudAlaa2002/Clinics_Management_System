@@ -195,7 +195,7 @@
                         text: 'Please Enter All Required Fields',
                         icon: 'error',
                         confirmButtonText: 'OK',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                     });
                     return;
                 }else{
@@ -214,7 +214,7 @@
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'This patient already has an appointment at this time',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
                         }
                         else if (response.data == 1) {
@@ -222,7 +222,7 @@
                                 icon: 'warning',
                                 title: 'Warning',
                                 text: 'This appointment slot is already booked. Please choose another time',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
                         }
                         else if (response.data == 2) {
@@ -230,7 +230,7 @@
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'This appointment time has already passed. please select another time',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
                         }
                         else if (response.data == 3) {
@@ -238,7 +238,7 @@
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'You already have another appointment at this time',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
                         }
                         else if (response.data == 4) {
@@ -246,7 +246,7 @@
                                 icon: 'success',
                                 title: 'Success',
                                 text: 'Appointment has been added successfully',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             }).then(() => {
                                 window.location.href = '/admin/view/appointments';
                             });

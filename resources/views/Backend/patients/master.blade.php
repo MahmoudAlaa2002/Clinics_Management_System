@@ -33,99 +33,99 @@
 <body class="index-page">
 
     <style>
-        /* لو أردت أن تضمن أن النص يبقى واضح */
-        .header a,
-        .header h1,
-        .header span,
-        .header i {
-            color: white !important;
-        }
+            /* لو أردت أن تضمن أن النص يبقى واضح */
+            .header a,
+            .header h1,
+            .header span,
+            .header i {
+                color: white !important;
+            }
 
-        .header a {
-            color: white !important;
-            text-decoration: none !important;
-            border-bottom: none !important;
-        }
+            .header a {
+                color: white !important;
+                text-decoration: none !important;
+                border-bottom: none !important;
+            }
 
-        /* العنصر النشط: يظهر تحته خط أبيض */
-        .header a.active {
-            border-bottom: 2px solid white;
-        }
-        /* تأثير التحويم: يظهر خط أبيض عند التحويم */
-        .navmenu a::after {
+            /* العنصر النشط: يظهر تحته خط أبيض */
+            .header a.active {
+                border-bottom: 2px solid white;
+            }
+            /* تأثير التحويم: يظهر خط أبيض عند التحويم */
+            .navmenu a::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: -5px;
+                width: 100%;
+                height: 2px;
+                background-color: white;
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.3s ease-in-out;
+            }
+
+            /* عند التحويم أو الصفحة النشطة */
+            .navmenu a:hover::after,
+            .navmenu a.active::after {
+                transform: scaleX(1);
+            }
+
+            .auth-links {
+                margin-right: 100px;
+                transition: margin-right 0.3s ease-in-out;
+                }
+
+            .auth-links i.fa-circle-user {
+                padding: 6px 17px;
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid #fff !important;
+                border-radius: 50%;
+                color: white;
+                text-decoration: none;
+                transition: all 0.5s ease-in-out;
+                background-color: transparent;
+                font-weight: 500;
+                cursor: pointer;
+            }
+            .auth-links i.fa-circle-user:hover, .auth-links.active i.fa-circle-user{
+                color: #00A8FF !important;
+                background-color: white !important;
+            }
+            .navmenu a{
+                position: relative;
+            }
+
+        /* الخط المخفي افتراضيًا */
+        .navmenu a::after{
             content: '';
             position: absolute;
             left: 0;
-            bottom: -5px;
+            bottom: -6px;
             width: 100%;
             height: 2px;
-            background-color: white;
+            background: white;
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.3s ease-in-out;
+            transition: transform .3s ease-in-out;
         }
 
-        /* عند التحويم أو الصفحة النشطة */
-        .navmenu a:hover::after,
-        .navmenu a.active::after {
+        /* يظهر عند التحويم */
+        .navmenu a:hover::after{
             transform: scaleX(1);
         }
 
-        .auth-links {
-          margin-right: 100px;
-          transition: margin-right 0.3s ease-in-out;
+        /* يبقى ظاهر إذا الرابط Active */
+        .navmenu a.active::after{
+            transform: scaleX(1);
         }
 
-        .auth-links i.fa-circle-user {
-          padding: 6px 17px;
-          font-size: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 2px solid #fff !important;
-          border-radius: 50%;
-          color: white;
-          text-decoration: none;
-          transition: all 0.5s ease-in-out;
-          background-color: transparent;
-          font-weight: 500;
-          cursor: pointer;
-        }
-        .auth-links i.fa-circle-user:hover, .auth-links.active i.fa-circle-user{
-          color: #007BFF !important;
-          background-color: white !important;
-        }
-        .navmenu a{
-    position: relative;
-}
-
-/* الخط المخفي افتراضيًا */
-.navmenu a::after{
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 100%;
-    height: 2px;
-    background: white;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .3s ease-in-out;
-}
-
-/* يظهر عند التحويم */
-.navmenu a:hover::after{
-    transform: scaleX(1);
-}
-
-/* يبقى ظاهر إذا الرابط Active */
-.navmenu a.active::after{
-    transform: scaleX(1);
-}
     </style>
 
     @include('Backend.patients.layout.header')
-
 
 
 

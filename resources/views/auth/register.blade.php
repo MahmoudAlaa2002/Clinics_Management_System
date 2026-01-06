@@ -22,17 +22,17 @@
     .card-title {
         font-weight: bold;
         font-size: 18px;
-        color: #007BFF;
+        color: #00A8FF;
         display: flex;
         align-items: center;
         gap: 8px;
     }
     .btn-primary {
-        background-color: #007BFF;
+        background-color: #00A8FF;
         border: none;
     }
     .btn-primary:hover {
-        background-color: #0056b3;
+        background-color: #00A8FF;
     }
     .required {
         color: #dc3545;
@@ -247,7 +247,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please fill in all required fields',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -260,7 +260,7 @@ $(document).ready(function () {
                     title: 'Invalid Password',
                     text: 'Password must be 6–15 characters',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -271,7 +271,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Passwords do not match',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -298,14 +298,14 @@ $(document).ready(function () {
                                 title: 'Warning',
                                 text: 'Email already exists',
                                 icon: 'warning',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
                         } else {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Patient account has been created successfully',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             }).then(() => {
                                 window.location.href = '/patient/dashboard/' + response.user_id;
                             });
@@ -325,7 +325,7 @@ $(document).ready(function () {
                     title: 'Error!',
                     text: msg,
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
         });

@@ -19,16 +19,16 @@
         box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     .btn-primary {
-        background-color: #007bff;
+        background-color: #00A8FF;
         border: none;
     }
     .btn-primary:hover {
-        background-color: #0056b3;
+        background-color: #00A8FF;
     }
     .clinic-title {
         font-weight: bold;
         font-size: 24px;
-        color: #007bff;
+        color: #00A8FF;
     }
     .text-muted-small {
         font-size: 14px;
@@ -144,7 +144,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please fill in all required fields',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -154,7 +154,7 @@ $(document).ready(function () {
                     title: 'Invalid Password',
                     text: 'Password must be 6–15 characters',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -164,7 +164,7 @@ $(document).ready(function () {
                 icon: 'error',
                 title: 'Error',
                 text: 'Passwords do not match',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -189,7 +189,7 @@ $(document).ready(function () {
                     icon: 'success',
                     title: 'Success',
                     text: 'Password reset successfully',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 }).then(() => {
                     window.location.href = "{{ route('login') }}";
                 });
@@ -200,7 +200,7 @@ $(document).ready(function () {
                     icon: 'error',
                     title: 'Error',
                     text: 'Invalid token or email',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             },
 

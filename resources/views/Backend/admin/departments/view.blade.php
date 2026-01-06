@@ -128,7 +128,7 @@
                                     title: 'Deleted',
                                     text: 'Department has been deleted successfully',
                                     icon: 'success',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 }).then(() => {
                                     location.reload();
                                 });

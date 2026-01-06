@@ -420,7 +420,7 @@
                 text: 'Please enter all required fields',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -431,7 +431,7 @@
                 title: 'Error!',
                 text: 'Please enter a valid email address',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -442,7 +442,7 @@
                 title: 'Invalid Password',
                 text: 'Password must contain exactly 6 digits',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -453,7 +453,7 @@
                 text: 'Password confirmation does not match',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -497,7 +497,7 @@
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'No updates were made to this department manager',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -519,7 +519,7 @@
                     text: 'This email is already used by another user',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
             } else if (response.data == 1) {
                 Swal.fire({

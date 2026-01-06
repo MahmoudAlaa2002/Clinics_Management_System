@@ -136,7 +136,7 @@
                                 title: 'Deleted',
                                 text: 'Doctor Has Been Deleted Successfully',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 location.reload();
                             });

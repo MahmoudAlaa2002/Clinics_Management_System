@@ -225,7 +225,7 @@
                 icon: 'error',
                 title: 'Error!',
                 text: 'You have not selected a doctor',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
                 confirmButtonText: 'OK'
             });
 

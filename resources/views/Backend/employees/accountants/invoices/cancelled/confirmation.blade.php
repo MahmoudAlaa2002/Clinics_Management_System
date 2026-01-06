@@ -186,7 +186,7 @@ $(document).ready(function () {
                 text: 'Please enter the refund date',
                 icon: 'error',
                 confirmButtonText: 'OK',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -200,7 +200,7 @@ $(document).ready(function () {
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'No updates were made to this invoice',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -218,7 +218,7 @@ $(document).ready(function () {
                         title: 'Success',
                         text: 'Refund has been processed successfully',
                         icon: 'success',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     }).then(() => {
                         window.location.href = '/employee/accountant/view/invoices';
                     });

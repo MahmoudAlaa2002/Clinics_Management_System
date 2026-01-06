@@ -317,93 +317,131 @@ function appendAppointmentRow(e) {
     renumberRows();
 }
 
+function renderStatusBadge(status) {
+    const colors = {
+        Pending:  '#ffc107',
+        Accepted: '#189de4',
+        Rejected: '#f90d25',
+        Cancelled:'#6c757d',
+        Completed:'#14ea6d'
+    };
+
+    return `
+        <span class="status-badge"
+            style="
+                min-width:140px;
+                display:inline-block;
+                text-align:center;
+                padding:4px 12px;
+                font-size:18px;
+                border-radius:50px;
+                color:#fff;
+                background:${colors[status] ?? '#6c757d'};
+            ">
+            ${status}
+        </span>
+    `;
+}
+
+
+function fillCell(row, field, value) {
+    const cell = row.querySelector(`[data-field="${field}"]`);
+    if (!cell) return;
+
+    cell.innerText = value ?? '—';
+}
+
+function renderActions(row, a) {
+
+const cell = row.querySelector('[data-field="action"]');
+if (!cell) return;
+
+let html = '';
+
+// ADMIN
+if (userRole === 'admin') {
+
+    html += `
+        <a href="/admin/details/appointment/${a.id}"
+           class="mr-1 btn btn-outline-success btn-sm">
+            <i class="fa fa-eye"></i>
+        </a>
+    `;
+
+    if (!['Completed','Rejected','Cancelled'].includes(a.status)) {
+        html += `
+            <a href="/admin/edit/appointment/${a.id}"
+               class="mr-1 btn btn-outline-primary btn-sm">
+                <i class="fa fa-edit"></i>
+            </a>
+        `;
+    }
+
+    html += `
+        <button class="btn btn-outline-danger btn-sm delete-appointment"
+            data-id="${a.id}">
+            <i class="fa fa-trash"></i>
+        </button>
+    `;
+}
+
+// CLINIC MANAGER
+else if (userRole === 'clinic_manager') {
+
+    html += `
+        <a href="/clinic/details/appointment/${a.id}"
+           class="mr-1 btn btn-outline-success btn-sm">
+            <i class="fa fa-eye"></i>
+        </a>
+
+        <button class="btn btn-outline-danger btn-sm delete-appointment"
+            data-id="${a.id}">
+            <i class="fa fa-trash"></i>
+        </button>
+    `;
+}
+
+cell.innerHTML = html;
+}
+
 function addAppointmentRow(e) {
 
     hideNoAppointments();
 
     const a = e.appointment;
-    const tbody = document.querySelector('#appointments_table_body') || document.querySelector('tbody');
+
+    const tbody = document.querySelector('#appointments_table_body')
+        || document.querySelector('tbody');
 
     if (!tbody) return;
 
-    let html = `
-        <tr data-appointment="${a.id}">
+    // نصنع صف فيه نفس الأعمدة الحالية
+    let row = document.createElement('tr');
+    row.setAttribute('data-appointment', a.id);
 
-            <!-- ID -->
-            <td data-field="id">${a.id}</td>
+    // ننسخ كل الخلايا الموجودة من أول صف (الهيكل فقط)
+    const firstRow = tbody.querySelector('tr');
+    if (firstRow) row.innerHTML = firstRow.innerHTML;
 
-            <!-- Patient -->
-            <td data-field="patient">
-                ${a.patient?.user?.name ?? '—'}
-            </td>
+    // نملأ القيم حسب data-field
+    fillCell(row, 'id', a.id);
+    fillCell(row, 'patient', a.patient?.user?.name);
+    fillCell(row, 'clinic', a.clinic?.name);
+    fillCell(row, 'department', a.department?.name ?? a.clinicDepartment?.department?.name);
+    fillCell(row, 'doctor', a.doctor?.employee?.user?.name);
+    fillCell(row, 'date', a.date);
+    fillCell(row, 'time', a.time?.slice(0,5));
 
-            <!-- Clinic -->
-            <td data-field="clinic">
-                ${a.clinic?.name ?? '—'}
-            </td>
+    // حالة الموعد
+    const statusCell = row.querySelector('[data-field="status"]');
+    if (statusCell) statusCell.innerHTML = renderStatusBadge(a.status);
 
-            <!-- Department -->
-            <td data-field="department">
-                ${a.department?.name ?? '—'}
-            </td>
+    // الأكشن حسب الدور
+    renderActions(row, a);
 
-            <!-- Doctor -->
-            <td data-field="doctor">
-                ${a.doctor?.employee?.user?.name ?? '—'}
-            </td>
-
-            <!-- Date -->
-            <td data-field="date">
-                ${a.date}
-            </td>
-
-            <!-- Time -->
-            <td data-field="time">
-                ${a.time?.slice(0,5) ?? '—'}
-            </td>
-
-            <!-- Status -->
-            <td class="status-cell">
-                ${renderStatusBadge(a.status)}
-            </td>
-
-            <!-- Action -->
-            <td class="action-btns">
-                <div class="d-flex justify-content-center">
-
-                    <a href="/admin/details/appointment/${a.id}"
-                        class="mr-1 btn btn-outline-success btn-sm"
-                        data-bs-toggle="tooltip"
-                        title="Details Appointment">
-                        <i class="fa fa-eye"></i>
-                    </a>
-
-                    ${(!['Completed','Rejected','Cancelled'].includes(a.status)) ? `
-                        <a href="/admin/edit/appointment/${a.id}"
-                            class="mr-1 btn btn-outline-primary btn-sm"
-                            data-bs-toggle="tooltip"
-                            title="Edit Appointment">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                    ` : ''}
-
-                    <button class="btn btn-outline-danger btn-sm delete-appointment"
-                        data-id="${a.id}"
-                        data-bs-toggle="tooltip"
-                        title="Delete Appointment">
-                        <i class="fa fa-trash"></i>
-                    </button>
-
-                </div>
-            </td>
-
-        </tr>
-    `;
-
-    tbody.insertAdjacentHTML('afterbegin', html);
-
-    initTooltips?.();
+    tbody.prepend(row);
 }
+
 
 
 function appendNurseAppointmentRow(e) {

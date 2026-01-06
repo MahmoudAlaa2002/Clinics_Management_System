@@ -120,7 +120,7 @@
                         icon: 'warning',
                         title: 'No Changes',
                         text: 'No updates were made to the department',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                     });
                     return;
                 }
@@ -145,7 +145,7 @@
                                 text: 'This department is disabled by the system administrator',
                                 icon: 'error',
                                 confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             });
                         } else if (response.data == 1) {
                             Swal.fire({
@@ -153,7 +153,7 @@
                                 text: 'Department has been updated successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 window.location.href = "{{ route('depratment_profile') }}";
                             });

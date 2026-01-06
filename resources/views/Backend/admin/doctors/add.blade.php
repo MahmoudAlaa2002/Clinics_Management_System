@@ -434,7 +434,7 @@
                     title: 'Error!',
                     text: 'Please enter all required fields',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
             }
 
@@ -443,7 +443,7 @@
                     title: 'Invalid Password',
                     text: 'Password must be 6–15 characters',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
 
@@ -452,7 +452,7 @@
                     title: 'Error!',
                     text: 'Password confirmation does not match',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
 
@@ -461,7 +461,7 @@
                     title: 'Error!',
                     text: 'The consultation fee is invalid',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
 
@@ -470,7 +470,7 @@
                     title: 'Error!',
                     text: 'The timing is incorrect, Please correct it',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
 
@@ -527,14 +527,14 @@
                                     title: 'Error!',
                                     text: 'This email is already used by another user',
                                     icon: 'error',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
                             } else if (response.data == 1) {
                                 Swal.fire({
                                     title: 'Success',
                                     text: 'Doctor has been added successfully',
                                     icon: 'success',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 }).then(() => window.location.href = '/admin/view/doctors');
                             }
                         }
@@ -552,7 +552,7 @@
                         title: 'Error!',
                         text: msg,
                         icon: 'error',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
             });

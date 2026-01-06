@@ -3,7 +3,7 @@
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
-          <a href="{{ route('home') }}" class="logo d-flex align-items-center">
+          <a href="{{ route('patient.home') }}" class="logo d-flex align-items-center">
             <span class="sitename">CMS</span>
           </a>
           <div class="footer-contact pt-3">

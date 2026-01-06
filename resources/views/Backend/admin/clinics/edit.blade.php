@@ -282,7 +282,7 @@
                     text: 'Please enter all required fields',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -293,7 +293,7 @@
                     text: 'The timing is incorrect, please correct it',
                     icon: 'error',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -318,7 +318,7 @@
                     icon: 'warning',
                     title: 'No Changes',
                     text: 'No updates were made to this clinic',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -362,7 +362,7 @@
                                     text: 'This clinic name already exists',
                                     icon: 'error',
                                     confirmButtonText: 'OK',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
                             } else if (response.data === 1) {
                                 Swal.fire({
@@ -370,7 +370,7 @@
                                     text: 'Clinic has been updated successfully',
                                     icon: 'success',
                                     confirmButtonText: 'OK',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 }).then(() => {
                                     window.location.href = "{{ route('view_clinics') }}";
                                 });
@@ -390,7 +390,7 @@
                         title: 'Error!',
                         text: msg,
                         icon: 'error',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
             });

@@ -15,7 +15,7 @@ class InvoiceController extends Controller {
         $invoices = $patient->invoices()->with([
                 'appointment.doctor.employee.user',
                 'appointment.clinic'
-            ])->orderBy('invoice_date', 'desc')->get();
+            ])->orderBy('invoice_date', 'desc')->paginate(10);
 
         return view('Backend.patients.invoices.view', compact('patient', 'invoices'));
     }

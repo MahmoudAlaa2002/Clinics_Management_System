@@ -228,12 +228,11 @@
                                             <span class="input-group-text"><i class="fa fa-star"></i></span>
                                         </div>
                                         <select class="form-control" id="rating" name="rating" required>
-                                            <option value="" hidden>Choose rating</option>
-                                            <option value="1" {{ old('rating', $employee->doctor->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
-                                            <option value="2" {{ old('rating', $employee->doctor->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
-                                            <option value="3" {{ old('rating', $employee->doctor->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
-                                            <option value="4" {{ old('rating', $employee->doctor->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
-                                            <option value="5" {{ old('rating', $employee->doctor->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
+                                            <option value="1" {{ old('rating', optional($employee->doctor)->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
+                                            <option value="2" {{ old('rating', optional($employee->doctor)->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
+                                            <option value="3" {{ old('rating', optional($employee->doctor)->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
+                                            <option value="4" {{ old('rating', optional($employee->doctor)->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
+                                            <option value="5" {{ old('rating', optional($employee->doctor)->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
                                         </select>
                                     </div>
                                 </div>
@@ -477,7 +476,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please Enter All Required Fields',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -488,7 +487,7 @@ $(document).ready(function () {
                 title: 'Invalid Password',
                 text: 'Password must be 6–15 characters',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -497,7 +496,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Password confirmation does not match',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -506,7 +505,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Invalid work time range',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -515,7 +514,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please Select Department',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -524,7 +523,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please Fill All Doctor Fields',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -591,7 +590,7 @@ $(document).ready(function () {
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'No updates were made to this employee',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
         }
 
@@ -617,23 +616,23 @@ $(document).ready(function () {
 
                     success: function (res) {
                         if (res.data == 0) {
-                            Swal.fire({ title:'Error!', text:'This email is already used by another user', icon:'error', confirmButtonColor:'#007BFF' });
+                            Swal.fire({ title:'Error!', text:'This email is already used by another user', icon:'error', confirmButtonColor:'#00A8FF' });
                         } else if (res.data == 1) {
-                            Swal.fire({ title:'Error!', text:'Clinic already has a manager', icon:'error', confirmButtonColor:'#007BFF' });
+                            Swal.fire({ title:'Error!', text:'Clinic already has a manager', icon:'error', confirmButtonColor:'#00A8FF' });
                         } else if (res.data == 2) {
-                            Swal.fire({ title:'Error!', text:'Department already has a manager', icon:'error', confirmButtonColor:'#007BFF' });
+                            Swal.fire({ title:'Error!', text:'Department already has a manager', icon:'error', confirmButtonColor:'#00A8FF' });
                         } else if (res.data == 3) {
                             Swal.fire({
                                 title:'Success',
                                 text:'Employee updated successfully',
                                 icon:'success',
-                                confirmButtonColor:'#007BFF'
+                                confirmButtonColor:'#00A8FF'
                             }).then(() => window.location.href = '/admin/view/employees');
                         }
                     },
 
                     error: function () {
-                        Swal.fire({ title:'Error!', text:'Unexpected error occurred', icon:'error', confirmButtonColor:'#007BFF' });
+                        Swal.fire({ title:'Error!', text:'Unexpected error occurred', icon:'error', confirmButtonColor:'#00A8FF' });
                     }
                 });
             },
@@ -645,7 +644,7 @@ $(document).ready(function () {
                     title: 'Error!',
                     text: msg,
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
         });

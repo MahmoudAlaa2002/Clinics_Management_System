@@ -2,7 +2,7 @@
 
     /* تأثير hover للنص فقط */
     .msg-item:hover{
-        background:#007BFF !important;
+        background:#00A8FF !important;
     }
 
     /* غيّر لون النصوص فقط */
@@ -12,7 +12,7 @@
     }
 
     .no-msg-item:hover{
-        background:#007BFF !important;
+        background:#00A8FF !important;
         color:#fff !important;
         cursor:default; /* اختياري */
     }

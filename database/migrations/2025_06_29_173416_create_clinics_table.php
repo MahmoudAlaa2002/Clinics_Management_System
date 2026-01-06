@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('clinics', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image_path')->nullable();
             $table->string('location');
             $table->string('email')->unique();
             $table->string('phone');
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->time('closing_time');
             $table->json('working_days');
             $table->text('description')->nullable();
+            $table->decimal('rating', 2, 1)->nullable()->default(1);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

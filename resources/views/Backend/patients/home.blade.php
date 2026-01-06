@@ -234,7 +234,7 @@
         <!-- Departments Section -->
         <section id="departments" class="Departments section">
             <div class="container section-title" data-aos="fade-up">
-                <h2 style="color: #00A8FF">Departments</h2>
+                <h2 style="color:#00A8FF">Departments</h2>
                 <p>A Wide Range Of Medical Departments To Meet All Your Healthcare Needs</p>
             </div>
 
@@ -259,7 +259,7 @@
                                     id="department-{{ $department->id }}">
                                     <div class="row">
                                         <div class="col-lg-8 details order-2 order-lg-1">
-                                            <h3>{{ $department->name }}</h3>
+                                            <h3 style="color:#00A8FF">{{ $department->name }}</h3>
                                             <p>{{ $department->description }}</p>
                                         </div>
                                         <div class="col-lg-4 text-center order-1 order-lg-2">
@@ -284,15 +284,13 @@
             <div class="container">
                 <div class="row gy-4">
                     @foreach ($doctors as $doctor)
-                        @if ($loop->iteration <= 4)
                             <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
                                 <div class="team-member d-flex align-items-start">
-                                    <div class="pic"><img src="{{ asset($doctor->employee->user->image) }}"
-                                            class="img-fluid" alt=""></div>
+                                    <div class="pic"><img src="{{ asset($doctor->employee?->user?->image ?? 'assets/img/user.jpg') }}" class="img-fluid" alt=""></div>
                                     <div class="member-info">
                                         <h4>{{ $doctor->employee->user->name }}</h4>
                                         <span>{{ $doctor->employee->department->name }}</span>
-                                        <p>{{ $doctor->employee->short_biography }}</p>
+                                        <p>{{ $doctor->employee->clinic->name }}</p>
                                         <div class="social">
                                             <a href=""><i class="bi bi-twitter-x"></i></a>
                                             <a href=""><i class="bi bi-facebook"></i></a>
@@ -302,7 +300,6 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
                     @endforeach
                 </div>
 
@@ -641,4 +638,62 @@
             </div>
         </section>
     </main>
+@endsection
+
+
+
+@section('js')
+
+<script>
+    $('.addBtn').click(function (e) {
+        e.preventDefault();
+
+        let name = $('#name').val().trim();
+        let email = $('#email').val().trim();
+        let subject = $('#subject').val().trim();
+        let message = $('#message').val();
+
+
+
+        // إنشاء formData
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('subject', subject);
+        formData.append('message', message);
+
+        if(name === '' || email === '' || subject === '' || message === ''){
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please Enter All Required Fields',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }else{
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('contact_send') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.data == 1) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'The Message Has Been Sent Successfully',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007BFF',
+                        }).then(() => {
+                            window.location.href = '/patient/home';
+                        });
+                    }
+                }
+            });
+        }
+    });
+</script>
 @endsection

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('speciality')->nullable();
             $table->string('qualification')->nullable();
             $table->decimal('consultation_fee', 5, 2);
-            $table->decimal('rating', 2, 1)->nullable()->default(0);
+            $table->decimal('rating', 2, 1)->nullable()->default(1);
             $table->timestamps();
         });
     }

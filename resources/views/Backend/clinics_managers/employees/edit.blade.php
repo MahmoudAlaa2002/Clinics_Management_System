@@ -239,13 +239,12 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-star"></i></span>
                                         </div>
-                                        <select class="form-control" id="rating" name="rating" required>
-                                            <option value="" hidden>Choose rating</option>
-                                            <option value="1" {{ old('rating', $employee->doctor->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
-                                            <option value="2" {{ old('rating', $employee->doctor->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
-                                            <option value="3" {{ old('rating', $employee->doctor->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
-                                            <option value="4" {{ old('rating', $employee->doctor->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
-                                            <option value="5" {{ old('rating', $employee->doctor->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
+                                        <select class="form-control" id="rating" name="rating">
+                                            <option value="1" {{ old('rating', optional($employee->doctor)->rating) == 1 ? 'selected' : '' }}>1 ⭐</option>
+                                            <option value="2" {{ old('rating', optional($employee->doctor)->rating) == 2 ? 'selected' : '' }}>2 ⭐⭐</option>
+                                            <option value="3" {{ old('rating', optional($employee->doctor)->rating) == 3 ? 'selected' : '' }}>3 ⭐⭐⭐</option>
+                                            <option value="4" {{ old('rating', optional($employee->doctor)->rating) == 4 ? 'selected' : '' }}>4 ⭐⭐⭐⭐</option>
+                                            <option value="5" {{ old('rating', optional($employee->doctor)->rating) == 5 ? 'selected' : '' }}>5 ⭐⭐⭐⭐⭐</option>
                                         </select>
                                     </div>
                                 </div>

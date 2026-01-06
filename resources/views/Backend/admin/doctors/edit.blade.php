@@ -400,7 +400,7 @@
                     title: 'Error!',
                     text: 'Please enter all required fields',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -410,7 +410,7 @@
                     title: 'Invalid Password',
                     text: 'Password must be 6–15 characters',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -420,7 +420,7 @@
                     title: 'Error!',
                     text: 'Password confirmation does not match',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -430,7 +430,7 @@
                     title: 'Error!',
                     text: 'The consultation fee is invalid',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -440,7 +440,7 @@
                     title: 'Error!',
                     text: 'The timing is incorrect, Please correct it',
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
                 return;
             }
@@ -478,7 +478,7 @@
                     icon: 'warning',
                     title: 'No Changes',
                     text: 'No updates were made to this doctor',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -537,7 +537,7 @@
                                     title: 'Error!',
                                     text: 'This email is already used by another user',
                                     icon: 'error',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 });
 
                             } else if (response.data == 1) {
@@ -545,7 +545,7 @@
                                     title: 'Success',
                                     text: 'Doctor has been updated successfully',
                                     icon: 'success',
-                                    confirmButtonColor: '#007BFF',
+                                    confirmButtonColor: '#00A8FF',
                                 }).then(() => {
                                     window.location.href = '/admin/view/doctors';
                                 });
@@ -557,7 +557,7 @@
                                 title: 'Error!',
                                 text: 'Unexpected error occurred',
                                 icon: 'error',
-                                confirmButtonColor: '#007BFF'
+                                confirmButtonColor: '#00A8FF'
                             });
                         }
                     });
@@ -572,7 +572,7 @@
                         title: 'Error!',
                         text: msg,
                         icon: 'error',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
             });

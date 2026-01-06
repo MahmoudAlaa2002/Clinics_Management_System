@@ -378,7 +378,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'You have not selected a clinic',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                         confirmButtonText: 'OK'
                     });
                     return false;
@@ -391,7 +391,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'You have not selected a department',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                         confirmButtonText: 'OK'
                     });
                     return false;
@@ -404,7 +404,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'You have not selected a doctor',
-                        confirmButtonColor: '#007BFF',
+                        confirmButtonColor: '#00A8FF',
                         confirmButtonText: 'OK'
                     });
                     return false;

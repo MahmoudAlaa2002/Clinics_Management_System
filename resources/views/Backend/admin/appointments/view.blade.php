@@ -166,14 +166,14 @@
                                 title: 'Cannot Delete',
                                 text: 'This appointment has an issued invoice, so it cannot be deleted',
                                 icon: 'error',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             });
                         } else if (response.success) {
                             Swal.fire({
                                 title: 'Deleted',
                                 text: 'The appointment has been moved to the trash',
                                 icon: 'success',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => {
                                 location.reload();
                             });

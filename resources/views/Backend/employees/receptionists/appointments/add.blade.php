@@ -244,7 +244,7 @@
                 icon: 'error',
                 title: 'Error!',
                 text: 'Please Enter All Required Fields',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
 
             return;
@@ -265,7 +265,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'This patient already has an appointment at this time',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
                 else if (response.data == 1) {
@@ -273,7 +273,7 @@
                         icon: 'warning',
                         title: 'Warning',
                         text: 'This appointment slot is already booked',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
                 else if (response.data == 2) {
@@ -281,7 +281,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'This appointment time has already passed',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
                 else if (response.data == 3) {
@@ -289,7 +289,7 @@
                         icon: 'error',
                         title: 'Error!',
                         text: 'You already have another appointment at this time',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     });
                 }
                 else if (response.data == 4) {
@@ -317,7 +317,7 @@
                 icon: 'error',
                 title: 'Missing Payment Info',
                 text: 'Please fill all required payment fields',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -327,7 +327,7 @@
                 icon: 'error',
                 title: 'Invalid Payment Amount',
                 text: 'Paid amount cannot exceed the consultation fee',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -337,7 +337,7 @@
                 icon: 'error',
                 title: 'Invalid Payment Method',
                 text: 'You must select a payment method when a payment amount is entered',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -347,7 +347,7 @@
                 icon: 'error',
                 title: 'Invalid Payment Method',
                 text: 'You cannot select a payment method when payment amount is $0',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
             return;
         }
@@ -369,7 +369,7 @@
                         icon: 'success',
                         title: 'Success',
                         text: 'Appointment and Invoice Created Successfully',
-                        confirmButtonColor: '#007BFF'
+                        confirmButtonColor: '#00A8FF'
                     })
                     .then(() => { window.location.href = `/employee/receptionist/invoice-pdf/view/${response.invoice_id}`;
                     });
@@ -382,7 +382,7 @@
                     icon:'error',
                     title:'Error!',
                     text:'Unexpected error occurred',
-                    confirmButtonColor:'#007BFF'
+                    confirmButtonColor:'#00A8FF'
                 });
             }
         });

@@ -235,7 +235,7 @@
             text: "Do you want to accept this appointment?",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#007BFF',
+            confirmButtonColor: '#00A8FF',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Yes, Accept',
         }).then((result) => {
@@ -256,7 +256,7 @@
                             icon: 'success',
                             title: 'Appointment Accepted',
                             text: 'The appointment status has been updated.',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         }).then(() => window.location.reload());
                     }
                 });
@@ -291,7 +291,7 @@
             Swal.fire({
                 icon: 'warning',
                 text: 'Please write a valid rejection reason',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
             return;
         }
@@ -313,7 +313,7 @@
                     icon: 'success',
                     title: 'Appointment Rejected',
                     text: 'Rejection reason has been saved',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 }).then(() => window.location.reload());
             }
         });

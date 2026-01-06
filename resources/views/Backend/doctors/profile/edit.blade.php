@@ -183,7 +183,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Please Enter All Required Fields',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -195,7 +195,7 @@ $(document).ready(function () {
                 title: 'Invalid Password',
                 text: 'Password must be 6–15 characters',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -204,7 +204,7 @@ $(document).ready(function () {
                 title: 'Error!',
                 text: 'Password confirmation does not match',
                 icon: 'error',
-                confirmButtonColor: '#007BFF'
+                confirmButtonColor: '#00A8FF'
             });
         }
 
@@ -237,7 +237,7 @@ $(document).ready(function () {
                 icon: 'warning',
                 title: 'No Changes',
                 text: 'No updates were made to this profile',
-                confirmButtonColor: '#007BFF',
+                confirmButtonColor: '#00A8FF',
             });
         }
 
@@ -270,7 +270,7 @@ $(document).ready(function () {
                                 title:'Error!',
                                 text:'This email is already used by another user',
                                 icon:'error',
-                                confirmButtonColor:'#007BFF'
+                                confirmButtonColor:'#00A8FF'
                             });
                         }
 
@@ -279,7 +279,7 @@ $(document).ready(function () {
                                 title:'Success',
                                 text:'Doctor profile has been updated successfully',
                                 icon:'success',
-                                confirmButtonColor:'#007BFF'
+                                confirmButtonColor:'#00A8FF'
                             }).then(() => {
                                 window.location.href = '/doctor/profile';
                             });
@@ -291,7 +291,7 @@ $(document).ready(function () {
                             title:'Error!',
                             text:'Unexpected error occurred',
                             icon:'error',
-                            confirmButtonColor:'#007BFF'
+                            confirmButtonColor:'#00A8FF'
                         });
                     }
                 });
@@ -305,7 +305,7 @@ $(document).ready(function () {
                     title: 'Error!',
                     text: msg,
                     icon: 'error',
-                    confirmButtonColor: '#007BFF'
+                    confirmButtonColor: '#00A8FF'
                 });
             }
         });

@@ -354,7 +354,7 @@
                     icon: 'warning',
                     title: 'No Changes',
                     text: 'No updates were made to this appointment',
-                    confirmButtonColor: '#007BFF',
+                    confirmButtonColor: '#00A8FF',
                 });
                 return;
             }
@@ -388,7 +388,7 @@
                             icon: 'error',
                             title: 'Error!',
                             text: 'This patient already has an appointment at this time',
-                            confirmButtonColor: '#007BFF'
+                            confirmButtonColor: '#00A8FF'
                         });
                     }
                     else if (response.data == 1) {
@@ -396,7 +396,7 @@
                             icon: 'warning',
                             title: 'Warning',
                             text: 'This appointment slot is already booked. Please choose another time',
-                            confirmButtonColor: '#007BFF'
+                            confirmButtonColor: '#00A8FF'
                         });
                     }
                     else if (response.data == 2) {
@@ -404,7 +404,7 @@
                             icon: 'error',
                             title: 'Error!',
                             text: 'This appointment time has already passed. Please select another time',
-                            confirmButtonColor: '#007BFF'
+                            confirmButtonColor: '#00A8FF'
                         });
                     }
                     else if (response.data == 3) {
@@ -412,7 +412,7 @@
                             icon: 'error',
                             title: 'Error!',
                             text: 'You already have an appointment scheduled at another clinic at this time',
-                            confirmButtonColor: '#007BFF'
+                            confirmButtonColor: '#00A8FF'
                         });
                     }
                     else if (response.data == 4) {
@@ -420,7 +420,7 @@
                             icon: 'success',
                             title: 'Success',
                             text: 'Appointment has been updated successfully',
-                            confirmButtonColor: '#007BFF'
+                            confirmButtonColor: '#00A8FF'
                         }).then(() => {
                             window.location.href = '/admin/view/appointments';
                         });

@@ -150,7 +150,7 @@
             text: "Are you sure you want to complete this task?",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#007BFF',
+            confirmButtonColor: '#00A8FF',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Yes, Accept',
         }).then((result) => {
@@ -171,7 +171,7 @@
                             icon: 'success',
                             title: 'Task Completed',
                             text: 'The task status has been updated',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         }).then(() => window.location.reload());
                     }
                 });
