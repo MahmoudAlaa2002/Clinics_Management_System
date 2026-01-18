@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AppointmentsSeeder::class);
         $this->call(InvoicesSeeder::class);
         $this->call(MedicalRecordsSeeder::class);
+        $this->call(PaypalAccountsSeeder::class);
 
 
 

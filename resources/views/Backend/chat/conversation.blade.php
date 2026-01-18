@@ -221,13 +221,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="chat-card">
-                    {{-- HEADER --}}
                     <div class="chat-header">
-
                         <div class="chat-user">
-
                             <div class="avatar-wrapper">
-
                                 <div class="avatar">
                                     @if($target->image)
                                         <img src="{{ asset($target->image) }}">
@@ -237,24 +233,18 @@
                                 </div>
 
                                 <span id="status-dot" class="status-dot" style="visibility:hidden"></span>
-
                             </div>
-
                             <div class="user-info">
                                 <strong>{{ $target->name }}</strong>
 
                                 <small id="last-seen-text" style="visibility:hidden">—</small>
                             </div>
-
                         </div>
-
                     </div>
 
-                    {{-- MESSAGES --}}
+
                     <div id="chat-box" class="chat-box">
-
                         @foreach($conversation->messages as $msg)
-
                             @if($msg->sender_id == auth()->id())
                                 <div class="msg-me">
                                     <span>
@@ -270,35 +260,23 @@
                                     </span>
                                 </div>
                             @endif
-
                         @endforeach
-
                     </div>
 
-                    {{-- FOOTER --}}
-                    <div class="chat-footer">
 
+                    <div class="chat-footer">
                         <form id="chat-form">
                             @csrf
-
                             <input type="hidden" id="conversation_id" value="{{ $conversation->id }}">
-
                             <div class="chat-input">
-
                                 <input type="text" id="message" placeholder="Type your message…">
-
                                 <button type="submit" class="send-btn">
                                     <i class="fa fa-paper-plane"></i>
                                 </button>
-
                             </div>
-
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
 

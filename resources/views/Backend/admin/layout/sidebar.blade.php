@@ -186,6 +186,33 @@
             </ul>
 
 
+            <ul>
+                <li class="menu-title">Payments</li>
+                <li class="submenu
+                    {{ Request::is('admin/view/bank-payments') || Request::is('admin/bank-payments/details/*') || Request::is('admin/view/paypal-payments') || Request::is('admin/paypal-payments/details/*') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fas fa-file-invoice"></i>
+                        <span> Payments </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+
+                    <ul style="{{ Request::is('view/bank-payments') || Request::is('admin/bank-payments/details/*') || Request::is('admin/view/paypal-payments') || Request::is('admin/paypal-payments/details/*') ? '' : 'display: none;'}}">
+                        <li>
+                            <a href="{{ route('view_bank_payments') }}" class="{{ Request::is('admin/view/bank-payments') || Request::is('admin/bank-payments/details/*')? 'active' : '' }}">
+                                Bank
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('view_paypal_payments') }}" class="{{ Request::is('admin/view/paypal-payments') || Request::is('admin/paypal-payments/details/*')  ? 'active' : '' }}">
+                                Pay Pal
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
 
             <ul>
                 <li class="menu-title">Reports & Analytics</li>

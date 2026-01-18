@@ -48,4 +48,41 @@ class InvoiceController extends Controller {
             'pdf' => base64_encode($pdf->output())
         ]);
     }
+
+
+
+
+    // الفواتير الملغية بنعرض فاتورة إرجاع مالي بدلا من الفاتورة الملغية
+
+    public function detailsRefundInvoice($id){
+        $refund_invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
+        return view('Backend.patients.invoices.cancelled.details', compact('refund_invoice'));
+    }
+
+
+
+
+    public function cancelledinvoicePDF($id){
+        $refund_invoice = Invoice::with([
+            'patient.user',
+            'appointment.clinicDepartment.clinic'
+        ])->findOrFail($id);
+        return view('Backend.patients.invoices.cancelled.invoice_pdf' , compact('refund_invoice'));
+    }
+
+
+
+
+    public function cancelledinvoicePDFRaw($id){
+        $refund_invoice  = Invoice::with(['appointment.clinicDepartment.clinic', 'patient.user'])->findOrFail($id);
+
+        $pdf = PDF::loadView('Backend.patients.invoices.cancelled.invoice_pdf_raw', compact('refund_invoice'))->setPaper('A4', 'portrait');
+
+        return response()->json([
+            'pdf' => base64_encode($pdf->output())
+        ]);
+    }
 }

@@ -158,7 +158,7 @@
 
                         </div>
 
-                        <span class="badge badge-danger ml-2"
+                        <span class="ml-2 badge badge-danger"
                             data-conv="${e.conversation_id}">
                             1
                         </span>

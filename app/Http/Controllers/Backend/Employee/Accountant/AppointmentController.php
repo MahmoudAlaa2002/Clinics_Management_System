@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Backend\Employee\Accountant;
 
+use App\Models\Invoice;
 use App\Models\Appointment;
+use App\Models\BankPayment;
 use Illuminate\Http\Request;
+use App\Models\AppointmentHold;
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -90,4 +93,5 @@ class AppointmentController extends Controller{
         ])->findOrFail($id);
         return view('Backend.employees.accountants.appointments.details', compact('appointment' ));
     }
+
 }

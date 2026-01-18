@@ -40,4 +40,5 @@ class Invoice extends Model{
     public function refundedBy(){   // يحضر اسم الموظف الذي نفّذ عملية الإرجاع
         return $this->belongsTo(Employee::class, 'refunded_by');
     }
+
 }

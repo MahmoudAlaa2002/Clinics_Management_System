@@ -79,6 +79,17 @@ class EmployeeController extends Controller{
             }
         }
 
+        //  تحقق من عدم وجود موظف استقبال للقسم في نفس العيادة والقسم
+        if ($request->job_title === 'Receptionist') {
+            $receptionist = Employee::where('clinic_id', $request->clinic_id)
+                ->where('department_id', $request->department_id)
+                ->exists();
+
+            if ($receptionist) {
+                return response()->json(['data' => 4]);
+            }
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -117,7 +128,7 @@ class EmployeeController extends Controller{
             ]);
         }
 
-        return response()->json(['data' => 4]);
+        return response()->json(['data' => 5]);
     }
 
 
@@ -147,7 +158,12 @@ class EmployeeController extends Controller{
                 });
             } elseif ($filter === 'job') {
                 $query->where('job_title', 'like', $keyword . '%');
-            } else {
+            } elseif ($filter === 'clinic') {
+                $query->whereHas('clinic', function ($q) use ($keyword) {
+                    $q->where('name', 'LIKE', $keyword . '%');
+                });
+            }
+            else {
                 $query->where(function ($q) use ($keyword) {
                     $q->whereHas('user', function ($qq) use ($keyword) {
                         $qq->where('name', 'like', '%' . $keyword . '%');
@@ -246,6 +262,30 @@ class EmployeeController extends Controller{
             }
         }
 
+        // تحقق من عدم وجود محاسب عيادة آخر
+        if ($request->job_title === 'Accountant') {
+            $accountant = Employee::where('clinic_id', $request->clinic_id)
+                ->where('id', '!=', $employee->id)
+                ->exists();
+
+            if ($accountant) {
+                return response()->json(['data' => 3]);
+            }
+        }
+
+
+        // تحقق من عدم وجود محاسب قسم آخر في نفس العيادة
+        if ($request->job_title === 'Receptionist') {
+            $receptionist = Employee::where('clinic_id', $request->clinic_id)
+                ->where('department_id', $request->department_id)
+                ->where('id', '!=', $employee->id)
+                ->exists();
+
+            if ($receptionist) {
+                return response()->json(['data' => 4]);
+            }
+        }
+
         $password = $user->password;
         if ($request->filled('password')) {
             $password = Hash::make($request->password);
@@ -302,7 +342,7 @@ class EmployeeController extends Controller{
             }
         }
 
-        return response()->json(['data' => 3]); // تم التحديث بنجاح
+        return response()->json(['data' => 5]); // تم التحديث بنجاح
     }
 
 

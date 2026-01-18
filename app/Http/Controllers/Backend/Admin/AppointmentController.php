@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Backend\Admin;
 
 
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Clinic;
 use App\Models\Doctor;
 use App\Models\Invoice;
@@ -20,9 +19,7 @@ use App\Events\AppointmentCreated;
 use App\Events\AppointmentUpdated;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\employee\accountant\NewInvoiceNotification;
-use App\Notifications\employee\receptionist\AppointmentBookedByAdmin;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller{
 
@@ -45,7 +42,7 @@ class AppointmentController extends Controller{
         if ($appointmentDate->isToday()) {
             $selectedDateTime = Carbon::parse($appointmentDate->toDateString() . ' ' . $selectedTime);
             if ($selectedDateTime->lt(Carbon::now())) {
-                return response()->json(['data' => 2]); // الوقت انتهى
+                return response()->json(['data' => -1]); // الوقت انتهى
             }
         } elseif ($appointmentDate->isPast()) {
             $appointmentDate = Carbon::parse("next $selectedDay");
@@ -87,7 +84,7 @@ class AppointmentController extends Controller{
             ->exists();
 
         if ($patientBusy) {
-            return response()->json(['data' => 3]);
+            return response()->json(['data' => 1]);
         }
 
         /**
@@ -100,7 +97,7 @@ class AppointmentController extends Controller{
             ->exists();
 
         if ($doctorConflict) {
-            return response()->json(['data' => 1]);
+            return response()->json(['data' => 2]);
         }
 
         /**
@@ -159,6 +156,7 @@ class AppointmentController extends Controller{
                     'paid_amount'    => 0,
                     'payment_method' => null,
                     'payment_status' => 'Unpaid',
+                    'created_by'     => Auth::user()->id,
                     'invoice_date'   => now()->toDateString(),
                 ]);
 
@@ -168,7 +166,7 @@ class AppointmentController extends Controller{
             /**
              * 8️⃣ نجاح
              */
-            return response()->json(['data' => 4]);
+            return response()->json(['data' => 3]);
 
         } catch (\Throwable $e) {
 

@@ -14,6 +14,7 @@
         margin-top: 15px !important;
     }
     .profile-upload .upload-img img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+
 </style>
 
 <div class="page-wrapper">
@@ -94,7 +95,7 @@
                                 <div class="col-sm-6">
                                     <label>Avatar</label>
                                     <div class="profile-upload">
-                                        <div class="upload-img mb-2">
+                                        <div class="mb-2 upload-img">
                                             <img alt="employee" src="{{ asset($employee->user->image ?? 'assets/img/user.jpg') }}">
                                         </div>
                                         <input type="file" class="form-control" id="image" accept="image/*">
@@ -154,7 +155,7 @@
                                 </div>
 
                                 {{-- Job Title --}}
-                                <div class="col-sm-12 mt-3">
+                                <div class="mt-3 col-sm-12">
                                     <label class="mb-2 fw-bold">Job Title <span class="text-danger">*</span></label>
                                     <div class="p-3 card">
                                         @php $job = $employee->job_title; @endphp
@@ -622,6 +623,10 @@ $(document).ready(function () {
                         } else if (res.data == 2) {
                             Swal.fire({ title:'Error!', text:'Department already has a manager', icon:'error', confirmButtonColor:'#00A8FF' });
                         } else if (res.data == 3) {
+                            Swal.fire({ title:'Error!', text:'Clinic already has a accountant', icon:'error', confirmButtonColor:'#00A8FF' });
+                        } else if (res.data == 4) {
+                            Swal.fire({ title:'Error!', text:'Department already has a receptionist', icon:'error', confirmButtonColor:'#00A8FF' });
+                        } else if (res.data == 5) {
                             Swal.fire({
                                 title:'Success',
                                 text:'Employee updated successfully',

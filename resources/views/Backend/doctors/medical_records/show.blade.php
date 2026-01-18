@@ -103,6 +103,14 @@
             box-shadow: 0 6px 18px rgba(2, 136, 209, 0.3);
             transform: translateY(-2px);
         }
+
+        .back-btn,
+        .back-btn:hover,
+        .back-btn:focus,
+        .back-btn:active {
+            color: #fff !important;
+        }
+
     </style>
 
     <div class="page-wrapper">
@@ -193,7 +201,7 @@
         </div>
 
         {{-- Back Button --}}
-        <div class="d-flex justify-content-start mt-4">
+        <div class="mt-4 d-flex justify-content-start">
             <a href="{{ route('doctor.medical_records') }}" class="btn back-btn">
                 <i class="fa fa-arrow-left me-1"></i> Back
             </a>

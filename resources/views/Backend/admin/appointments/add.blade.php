@@ -209,39 +209,35 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
-                        if (response.data == 0) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'This patient already has an appointment at this time',
-                                confirmButtonColor: '#00A8FF'
-                            });
-                        }
-                        else if (response.data == 1) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Warning',
-                                text: 'This appointment slot is already booked. Please choose another time',
-                                confirmButtonColor: '#00A8FF'
-                            });
-                        }
-                        else if (response.data == 2) {
+                        if (response.data == -1) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'This appointment time has already passed. please select another time',
                                 confirmButtonColor: '#00A8FF'
                             });
-                        }
-                        else if (response.data == 3) {
+                        } else if (response.data == 0) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'This patient already has an appointment at this time',
+                                confirmButtonColor: '#00A8FF'
+                            });
+                        } else if (response.data == 1) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
                                 text: 'You already have another appointment at this time',
                                 confirmButtonColor: '#00A8FF'
                             });
-                        }
-                        else if (response.data == 4) {
+                        } else if (response.data == 2) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: 'This appointment slot is already booked. Please choose another time',
+                                confirmButtonColor: '#00A8FF'
+                            });
+                        } else if (response.data == 3) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',

@@ -23,20 +23,20 @@
 
         .pagination .page-link {
             background-color: #fff;
-            color: #007BFF;
+            color: #00A8FF;
         }
 
         /* الصفحة الحالية فقط */
         .pagination .page-item.active .page-link {
-            background-color: #007BFF;
+            background-color: #00A8FF;
             color: #fff;
-            border-color: #007BFF;
+            border-color: #00A8FF;
         }
 
         /* Hover عادي */
         .pagination .page-link:hover {
             background-color: #f1f5ff;
-            color: #007BFF;
+            color: #00A8FF;
         }
 
     </style>
@@ -48,7 +48,7 @@
                 <!-- Header + Search -->
                 <div class="row">
                     <div class="col-12 text-center mb-4">
-                        <h2 class="section-title" style="color: #007BFF">Our Clinics</h2>
+                        <h2 class="section-title" style="color: #00A8FF">Our Clinics</h2>
 
                         <form class="form d-flex justify-content-center gap-3">
                             <input type="text" id="search_input" placeholder="Search clinics...">

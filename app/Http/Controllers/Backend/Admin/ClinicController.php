@@ -28,6 +28,14 @@ class ClinicController extends Controller{
             return response()->json(['data' => 0]);
         }
 
+        $imagePath = null;
+        if ($request->hasFile('qr_image')) {
+            $file = $request->file('qr_image');
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/payments'), $imageName);
+            $imagePath = 'assets/img/payments/' . $imageName;
+        }
+
         $clinic = Clinic::create([
             'name'          => $request->name,
             'location'      => $request->location,
@@ -37,6 +45,7 @@ class ClinicController extends Controller{
             'closing_time'  => $request->closing_time,
             'working_days'  => $request->working_days,
             'description'   => $request->description,
+            'qr_image'      => $imagePath,
             'status'        => $request->status,
         ]);
 
@@ -139,7 +148,22 @@ class ClinicController extends Controller{
             return response()->json(['data' => 0]);
         }
 
+
+
         $clinic = Clinic::findOrFail($id);
+
+        $imagePath = $clinic->qr_image;
+        if ($request->hasFile('qr_image')) {
+            // حذف الصورة القديمةإن وجدت
+            if ($clinic->qr_image && file_exists(public_path($clinic->qr_image))) {
+                @unlink(public_path($clinic->qr_image));
+            }
+            $file = $request->file('qr_image');
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/payments'), $imageName);
+            $newPath = 'assets/img/payments/' . $imageName;
+            $imagePath = $newPath;
+        }
         $clinic->update([
             'name'          => $request->name,
             'location'      => $request->location,
@@ -150,6 +174,7 @@ class ClinicController extends Controller{
             'description'   => $request->description,
             'status'        => $request->status,
             'working_days'  => $request->working_days,
+            'qr_image'     => $imagePath,
         ]);
 
         $clinic->departments()->sync($request->input('departments', []));

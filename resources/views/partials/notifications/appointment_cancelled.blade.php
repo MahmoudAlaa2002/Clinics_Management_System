@@ -26,12 +26,11 @@
 {{-- ================= PATIENT ================= --}}
 @elseif ($role === 'patient')
     @if ($cancelledBy === 'doctor')
-        Dr. <strong>{{ $doctorName }}</strong>
-        cancelled your appointment.
+        Dr. <strong>{{ $doctorName }}</strong> cancelled your appointment.
     @elseif ($cancelledBy === 'receptionist')
         Your appointment with
         <strong>{{ $doctorName }}</strong>
-        was cancelled by the clinic.
+        was cancelled by the receptionist.
     @else
         Your appointment has been cancelled.
     @endif

@@ -8,7 +8,7 @@
 
     .page-title{
         font-weight:700;
-        color:#007BFF;
+        color:#00A8FF;
     }
 
     .card-custom{
@@ -55,11 +55,44 @@
         display:flex;
         align-items:center;
         justify-content:center;
-        background:#007BFF;
+        background:#00A8FF;
         color:white;
     }
 
+
+    .btn-outline-primary {
+        border-color: #00A8FF !important;
+        color: #00A8FF !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #00A8FF !important;
+        color: #fff !important;
+    }
+
+    .my-appointments-link,
+    .my-invoices-link,
+    .my-notifications-link,
+    .pass-sec,
+    .support,
+    .chats{
+        color: #0f172a;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .my-appointments-link:hover,
+    .my-invoices-link:hover,
+    .my-notifications-link:hover,
+    .pass-sec:hover,
+    .support:hover,
+    .chats:hover{
+        color: #00A8FF;
+        text-decoration: none;
+    }
+
 </style>
+
 
 
 <main class="main">
@@ -73,7 +106,7 @@
         <div class="col-lg-4">
             <div class="card card-custom">
 
-                <div class="card-header">
+                <div class="card-header" style="text-align: center;">
                     My Profile
                 </div>
 
@@ -89,9 +122,7 @@
                         {{ auth()->user()->email ?? 'email@example.com' }}
                     </p>
 
-                    {{-- 🔹 الزرين جنب بعض --}}
                     <div class="d-flex justify-content-center gap-2">
-
                         <a href="{{ route('patient.view_profile') }}" class="btn btn-outline-primary px-3">
                             View Profile
                         </a>
@@ -99,7 +130,6 @@
                         <a href="{{ route('patient.edit_profile') }}" class="btn btn-outline-primary px-4">
                             Edit Profile
                         </a>
-
                     </div>
 
                 </div>
@@ -112,7 +142,7 @@
         <div class="col-lg-8">
             <div class="card card-custom">
 
-                <div class="card-header">
+                <div class="card-header" style="text-align: center;">
                     Quick Overview
                 </div>
 
@@ -125,7 +155,9 @@
                                 <div class="d-flex gap-2 align-items-center">
                                     <div class="icon"><i class="fa-solid fa-calendar-check"></i></div>
                                     <div>
-                                        <strong>My Appointments</strong>
+                                        <a href="{{ route('patient.myAppointments') }}" class="my-appointments-link">
+                                            My Appointments
+                                        </a>
                                         <p class="m-0 text-muted">View & manage</p>
                                     </div>
                                 </div>
@@ -137,7 +169,9 @@
                                 <div class="d-flex gap-2 align-items-center">
                                     <div class="icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
                                     <div>
-                                        <strong>My Invoices</strong>
+                                        <a href="{{ route('patient.invoices_view') }}" class="my-invoices-link">
+                                            My Invoices
+                                        </a>
                                         <p class="m-0 text-muted">History & payments</p>
                                     </div>
                                 </div>
@@ -149,7 +183,9 @@
                                 <div class="d-flex gap-2 align-items-center">
                                     <div class="icon"><i class="fa-solid fa-bell"></i></div>
                                     <div>
-                                        <strong>Notifications</strong>
+                                        <a href="{{ route('notifications_index') }}" class="my-notifications-link">
+                                            Notifications
+                                        </a>
                                         <p class="m-0 text-muted">Reminders & updates</p>
                                     </div>
                                 </div>
@@ -165,7 +201,7 @@
             {{-- SECURITY & SETTINGS --}}
             <div class="card card-custom mt-4">
 
-                <div class="card-header">
+                <div class="card-header" style="text-align: center;">
                     Account Settings
                 </div>
 
@@ -175,22 +211,22 @@
 
                         <div class="col-md-4">
                             <div class="setting-item">
-                                <strong>Password & Security</strong>
+                                <a href="{{ route('patient.edit_password') }}" class="pass-sec">Password & Security</a>
                                 <p class="text-muted m-0">Change password & login protection</p>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="setting-item">
-                                <strong>Privacy Control</strong>
-                                <p class="text-muted m-0">Manage your data visibility</p>
+                                <a href="{{ route('chat_contacts') }}" class="chats">Chats</a>
+                                <p class="text-muted m-0">Contact support</p>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="setting-item">
-                                <strong>Support</strong>
-                                <p class="text-muted m-0">Contact clinic support</p>
+                                <a href="{{ route('patient.support') }}" class="support">Support</a>
+                                <p class="text-muted m-0">Contact support</p>
                             </div>
                         </div>
 

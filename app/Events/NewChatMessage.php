@@ -6,8 +6,7 @@ use App\Models\Message;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class NewChatMessage implements ShouldBroadcastNow
-{
+class NewChatMessage implements ShouldBroadcastNow {
     public $message;
 
     public function __construct(Message $message)
@@ -21,9 +20,7 @@ class NewChatMessage implements ShouldBroadcastNow
         $conversation = $this->message->conversation()->with('participants')->first();
 
         // تحديد المستلم
-        $receiverId = $conversation->participants()
-            ->where('user_id', '!=', $this->message->sender_id)
-            ->value('user_id');
+        $receiverId = $conversation->participants()->where('user_id', '!=', $this->message->sender_id)->value('user_id');
 
         return [
             new PrivateChannel('chat.' . $this->message->conversation_id),  // قناة للشات

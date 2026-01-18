@@ -307,7 +307,7 @@ $(document).ready(function () {
                                 icon: 'success',
                                 confirmButtonColor: '#00A8FF'
                             }).then(() => {
-                                window.location.href = '/patient/dashboard/' + response.user_id;
+                                window.location.href = '/patient/home';
                             });
                         }
                     }

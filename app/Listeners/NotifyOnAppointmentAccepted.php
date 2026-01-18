@@ -9,20 +9,17 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifyOnAppointmentAccepted {
     public function handle(AppointmentAccepted $event): void {
+
         $appointment = $event->appointment;
+        $actor       = $event->actor;
 
-        if ($appointment->booked_by !== 'patient') {
-            return;
-        }
 
-        $patient = User::whereHas('patient', function ($q) use ($appointment) {
-            $q->where('id', $appointment->patient_id);
-        })->first();
+        $patient = $appointment->patient->user;
+        if (!$patient) return;
 
-        if (!$patient) {
-            return;
-        }
-
-        Notification::send($patient,new AppointmentAcceptedNotification($appointment));
+        Notification::send(
+            $patient,
+            new AppointmentAcceptedNotification($appointment, $actor)
+        );
     }
 }

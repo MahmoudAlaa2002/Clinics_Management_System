@@ -616,9 +616,10 @@
         if(name === '' || email === '' || subject === '' || message === ''){
             Swal.fire({
                 title: 'Error!',
-                text: 'Please Enter All Required Fields',
+                text: 'Please enter all required fields',
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#00A8FF',
             });
         }else{
             $.ajax({
@@ -634,7 +635,7 @@
                     if (response.data == 1) {
                         Swal.fire({
                             title: 'Success',
-                            text: 'The Message Has Been Sent Successfully',
+                            text: 'The message has been sent successfully',
                             icon: 'success',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#00A8FF',

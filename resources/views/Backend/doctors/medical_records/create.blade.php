@@ -46,7 +46,7 @@
 
     <div class="page-wrapper">
         <div class="content">
-            <div class="row mb-3">
+            <div class="mb-3 row">
                 <div class="col-sm-12">
                     <h4 class="page-title">
                         <i class="fa fa-notes-medical text-primary me-2"></i> Add Medical Record
@@ -59,7 +59,7 @@
                     @csrf
 
                     {{-- Select Appointment --}}
-                    <div class="form-group mb-3">
+                    <div class="mb-3 form-group">
                         <label class="form-label"><i class="fa fa-calendar-check text-primary me-2"></i> Select
                             Appointment</label>
                         <select name="appointment_id" id="appointment_id" class="form-control" required>
@@ -77,7 +77,7 @@
                     <input type="hidden" name="patient_id" id="patient_id" value="">
 
                     {{-- Diagnosis --}}
-                    <div class="form-group mb-3">
+                    <div class="mb-3 form-group">
                         <label><i class="fas fa-stethoscope text-primary me-2"></i> Diagnosis</label>
                         <select name="diagnosis" id="diagnosis" class="form-control" required>
                             <option value="" disabled selected hidden>-- Select Diagnosis --</option>
@@ -126,44 +126,44 @@
 
 
                     <!-- حقل إضافي يظهر فقط إذا اختار Other -->
-                    <div class="form-group mb-3" id="other_diagnosis_group" style="display:none;">
+                    <div class="mb-3 form-group" id="other_diagnosis_group" style="display:none;">
                         <label><i class="fas fa-stethoscope text-primary me-2"></i> Specify Other Diagnosis</label>
                         <input type="text" name="other_diagnosis" class="form-control" placeholder="Enter diagnosis...">
                     </div>
 
                     {{-- Treatment --}}
-                    <div class="form-group mb-3">
+                    <div class="mb-3 form-group">
                         <label class="form-label"><i class="fa fa-pills text-primary me-2"></i> Treatment</label>
                         <input type="text" name="treatment" class="form-control" value="{{ old('treatment') }}" required>
                     </div>
 
                     {{-- Prescriptions --}}
-                    <div class="form-group mb-3">
+                    <div class="mb-3 form-group">
                         <label class="form-label"><i class="fa fa-prescription-bottle-alt text-primary me-2"></i>
                             Prescriptions</label>
                         <textarea name="prescriptions" class="form-control" rows="3" placeholder="Enter prescription details..." required>{{ old('prescriptions') }}</textarea>
                     </div>
 
                     {{-- Attachments --}}
-                    <div class="form-group mb-3">
+                    <div class="mb-3 form-group">
                         <label class="form-label"><i class="fa fa-paperclip text-primary me-2"></i> Attachments
                             (optional)</label>
                         <input type="file" name="attachmentss[]" class="form-control" multiple>
                     </div>
 
                     {{-- Notes --}}
-                    <div class="form-group mb-4">
+                    <div class="mb-4 form-group">
                         <label class="form-label"><i class="fa fa-file-alt text-primary me-2"></i> Notes (optional)</label>
                         <textarea name="notes" class="form-control" rows="4" placeholder="Additional notes...">{{ old('notes') }}</textarea>
                     </div>
 
                     {{-- Buttons --}}
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <a href="{{ url()->previous() }}" class="btn back-btn">
+                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                        <a href="{{ url()->previous() }}" class="btn back-btn" style="color:white;">
                             <i class="fa fa-arrow-left me-1"></i> Back
                         </a>
                         <button type="submit" class="btn back-btn"
-                            style="background-color: #03A9F4; border-color: #03A9F4;">
+                            style="background-color: #03A9F4; border-color: #03A9F4; color:white;">
                             <i class="fa fa-save me-1"></i> Save Record
                         </button>
                     </div>

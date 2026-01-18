@@ -71,6 +71,7 @@
                     <select id="search_filter" name="filter" class="form-control">
                         <option value="name">Employee Name</option>
                         <option value="job">Job Title</option>
+                        <option value="clinic">Clinic Name</option>
                     </select>
                 </div>
             </div>

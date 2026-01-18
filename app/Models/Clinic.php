@@ -20,6 +20,7 @@ class Clinic extends Model{
         'working_days',
         'description',
         'rating',
+        'qr_image',
         'status',
     ];
 
@@ -67,6 +68,12 @@ class Clinic extends Model{
     public function patients(){
         return $this->belongsToMany(Patient::class, 'clinic_patients');
     }
+
+
+    public function paypalAccount() {
+        return $this->hasOne(PaypalAccount::class);
+    }
+
 
 
 }

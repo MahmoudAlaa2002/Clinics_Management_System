@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Shared;
 
 
+use App\Models\BankPayment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -36,6 +37,10 @@ class NotificationController extends Controller{
             'appointment_accepted' =>
                 $this->redirectAppointment($user, $notification),
 
+            // رفض الموعد
+            'appointment_rejected' =>
+                $this->redirectAppointment($user, $notification),
+
             // إلغاء موعد
             'appointment_cancelled' =>
                 $this->redirectAppointment($user, $notification),
@@ -67,6 +72,10 @@ class NotificationController extends Controller{
             // اكتمال مهمة المريض
             'nurse_task_completed' =>
                 $this->redirectNurseTaskCompleted($user, $notification),
+
+            'bank_payment_reviewed' => 
+                $this->redirectBankPayment($user, $notification),
+            
 
 
             default => route('dashboard'),
@@ -103,7 +112,7 @@ class NotificationController extends Controller{
         }
 
         if ($user->role === 'patient') {
-            // return route('patient.details_appointment', $appointmentId);
+            return route('patient.details_appointment', $appointmentId);
         }
 
         return route('dashboard');
@@ -189,6 +198,13 @@ class NotificationController extends Controller{
 
         return route('dashboard');
     }
+
+    protected function redirectBankPayment($user, $notification) {
+        return null;
+    }
+
+
+    
 
 
 

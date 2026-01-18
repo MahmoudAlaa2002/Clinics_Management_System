@@ -72,7 +72,7 @@
         box-shadow: 0 30px 60px rgba(0,0,0,.18);
     }
 
-    /* ✅ الدائرة الزرقاء + الأيقونة البيضاء */
+    /* الدائرة الزرقاء + الأيقونة البيضاء */
     .notify-icon {
         width: 56px;
         height: 56px;
@@ -83,7 +83,7 @@
         font-size: 22px;
         flex-shrink: 0;
         background: #00A8FF;   /* أزرق الموقع */
-        color: #ffffff;       /* الأيقونة أبيض */
+        color: #ffffff !important;       /* الأيقونة أبيض */
     }
 
     .notify-content {

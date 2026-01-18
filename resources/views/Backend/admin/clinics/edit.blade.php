@@ -35,6 +35,16 @@
         background-color: #fff;
         padding: 20px;
     }
+
+    .qr-upload .upload-img img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background: #fff;
+        padding: 6px;
+    }
 </style>
 
 <div class="page-wrapper">
@@ -47,7 +57,7 @@
 
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <form method="POST" action="{{ Route('update_clinic', ['id' => $clinic->id]) }}">
+                <form method="POST" action="{{ Route('update_clinic', ['id' => $clinic->id]) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -177,7 +187,7 @@
                                 @foreach($chunks as $chunk)
                                     <div class="col-6">
                                         @foreach($chunk as $department)
-                                            <div class="form-check mb-2">
+                                            <div class="mb-2 form-check">
                                                 <input type="checkbox"
                                                        class="form-check-input"
                                                        id="spec_{{ $department->id }}"
@@ -193,7 +203,35 @@
                         </div>
                     </div>
 
-                    {{-- 4) Description & Status --}}
+                    {{-- 4) Payment Information --}}
+                    <div class="card">
+                        <div class="card-header">Payment Information</div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <label>Payment QR Code</label>
+
+                                    <div class="qr-upload">
+                                        <div class="mb-2 upload-img">
+                                            <img id="qrPreview" src="{{ $clinic->qr_image ? asset($clinic->qr_image) : asset('assets/img/qr-placeholder.png') }}" alt="QR Preview">
+                                        </div>
+
+                                        <input type="file" name="qr_image" id="qr_image" class="form-control" accept="image/*">
+                                    </div>
+
+                                    <small class="text-muted">
+                                        Optional – uploading a QR code helps patients pay faster
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    {{-- 5) Description & Status --}}
                     <div class="card">
                         <div class="card-header">Description & Status</div>
                         <div class="card-body">
@@ -238,6 +276,7 @@
     $originalClosing = $clinic->closing_time;
     $originalDescription = $clinic->description ?? '';
     $originalStatus = $clinic->status;
+    $originalQRImage = $clinic->qr_image;
     $originalWorkingDays = $working_days ?? [];
     $clinicDepartmentIds = $clinic->departments->pluck('id')->toArray();
 @endphp
@@ -253,6 +292,17 @@
 
     $(document).ready(function () {
 
+        $('#qr_image').on('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    $('#qrPreview').attr('src', event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         $('.editBtn').click(function (e) {
             e.preventDefault();
 
@@ -264,6 +314,7 @@
             let closing_time = $('#closing_time').val();
             let description = $('#description').val().trim();
             let status = $('input[name="status"]:checked').val();
+            let qrImage = document.getElementById('qr_image')?.files[0];
 
             let working_days = [];
             $('input[name="working_days[]"]:checked').each(function () {
@@ -274,6 +325,24 @@
             $('input[name="departments[]"]:checked').each(function () {
                 departments.push(Number($(this).val()));
             });
+
+            let formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('name', name);
+            formData.append('location', location);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('opening_time', opening_time);
+            formData.append('closing_time', closing_time);
+            formData.append('description', description);
+            formData.append('status', status);
+
+            working_days.forEach(day => formData.append('working_days[]', day));
+            departments.forEach(dep => formData.append('departments[]', dep));
+
+            if (qrImage) {
+                formData.append('qr_image', qrImage);
+            }
 
             if (name === '' || location === '' || email === '' || phone === '' || !isValidSelectValue('opening_time') ||
                 !isValidSelectValue('closing_time') || working_days.length === 0 || departments.length === 0) {
@@ -313,15 +382,17 @@
                 JSON.stringify(working_days.sort()) === JSON.stringify(originalWorkingDays.sort()) &&
                 JSON.stringify(departments.sort()) === JSON.stringify(originalDepartments.sort());
 
-            if (noChanges) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'No Changes',
-                    text: 'No updates were made to this clinic',
-                    confirmButtonColor: '#00A8FF',
-                });
-                return;
-            }
+                let qrChanged = qrImage ? true : false;
+
+                if (noChanges && !qrChanged) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Changes',
+                        text: 'No updates were made to this clinic',
+                        confirmButtonColor: '#00A8FF',
+                    });
+                    return;
+                }
 
             // ====== فحص الإيميل الحقيقي (RFC + DNS) ======
             $.ajax({
@@ -338,19 +409,9 @@
                     $.ajax({
                         method: 'POST',
                         url: "{{ route('update_clinic', ['id' => $clinic->id]) }}",
-                        data: {
-                            _method: 'PUT',
-                            name: name,
-                            location: location,
-                            email: email,
-                            phone: phone,
-                            opening_time: opening_time,
-                            closing_time: closing_time,
-                            description: description,
-                            status: status,
-                            working_days: working_days,
-                            departments: departments,
-                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -397,5 +458,7 @@
 
         });
     });
+
+
 </script>
 @endsection

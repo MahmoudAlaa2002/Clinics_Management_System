@@ -17,90 +17,101 @@
 
 @section('content')
 
-<style>
+    <style>
 
-    .card{
-        border:1px solid #ddd;
-        border-radius:10px;
-        box-shadow:0 6px 16px rgba(0,0,0,.06);
-        overflow:hidden;
-        margin-bottom:20px;
-    }
+        .card{
+            border:1px solid #ddd;
+            border-radius:10px;
+            box-shadow:0 6px 16px rgba(0,0,0,.06);
+            overflow:hidden;
+            margin-bottom:20px;
+        }
 
-    .card-header{
-        background:#00A8FF;
-        color:#fff;
-        font-weight:600;
-        padding:12px 15px;
-        font-size:16px;
-    }
+        .card-header{
+            background:#00A8FF;
+            color:#fff;
+            font-weight:600;
+            padding:12px 15px;
+            font-size:16px;
+        }
 
-    .contact-row{
-        padding:14px 10px;
-        border-bottom:1px solid #eef2f6;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        transition:.25s;
-    }
-
-
-    .avatar-wrapper{
-        position:relative;
-        width:42px;
-        height:42px;
-        margin-right:10px;
-    }
-
-    .avatar{
-        width:42px;
-        height:42px;
-        border-radius:50%;
-        background:#e8f4ff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:700;
-        color:#0b4e7a !important;
-        font-size:13px;
-        overflow:hidden;
-    }
-
-    .avatar img{
-        width:100%;
-        height:100%;
-        object-fit:cover;
-        border-radius:50%;
-    }
-
-    .status-dot{
-        position:absolute;
-        right:0px;
-        bottom:0px;
-        width:12px;
-        height:12px;
-        border-radius:50%;
-        border:2px solid #fff;
-    }
+        .contact-row{
+            padding:14px 10px;
+            border-bottom:1px solid #eef2f6;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            transition:.25s;
+        }
 
 
-    .status-dot.online{ background:#2ecc71; }
-    .status-dot.offline{ background:#e74c3c; }
+        .avatar-wrapper{
+            position:relative;
+            width:42px;
+            height:42px;
+            margin-right:10px;
+        }
 
-    .info strong{ font-size:15px; color:#062f4d; }
-    .info small{ color:#6b7d92; display:block; margin-top:2px; font-size:11px; }
+        .avatar{
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            background:#e8f4ff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+            color:#0b4e7a !important;
+            font-size:13px;
+            overflow:hidden;
+        }
 
-    .btn-chat{
-        background:#00A8FF;
-        border:none;
-        padding:6px 14px;
-        border-radius:8px;
-        color:#fff !important;
-        font-size:12px;
-        font-weight:600;
-    }
+        .avatar img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            border-radius:50%;
+        }
 
-</style>
+        .status-dot{
+            position:absolute;
+            right:0px;
+            bottom:0px;
+            width:12px;
+            height:12px;
+            border-radius:50%;
+            border:2px solid #fff;
+        }
+
+
+        .status-dot.online{ background:#2ecc71; }
+        .status-dot.offline{ background:#e74c3c; }
+
+        .info strong{ font-size:15px; color:#062f4d; }
+        .info small{ color:#6b7d92; display:block; margin-top:2px; font-size:11px; }
+
+        .btn-chat{
+            background:#00A8FF;
+            border:none;
+            padding:6px 14px;
+            border-radius:8px;
+            color:#fff !important;
+            font-size:12px;
+            font-weight:600;
+        }
+
+    </style>
+
+    @if ($role == 'patient')
+        <style>
+            .card{
+                margin-top:50px;
+                margin-bottom:50px;
+            }
+        </style>
+    @endif
+
+
 
 <div class="page-wrapper">
     <div class="content">

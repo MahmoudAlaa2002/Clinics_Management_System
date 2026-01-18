@@ -3,6 +3,7 @@
 @section('title', 'Edit Medical Record')
 
 @section('content')
+
 <style>
     body { background: #f6f9fc; }
     .page-wrapper { padding: 30px 15px; }
@@ -43,7 +44,7 @@
 </style>
 
 <div class="page-wrapper">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
         <h2 class="page-title" style="color:#03A9F4;">Edit Medical Record</h2>
     </div>
 
@@ -177,14 +178,14 @@
                     <input type="file" name="attachmentss[]" class="form-control" multiple>
 
                     @if ($medicalRecord->attachmentss)
-                        <small class="text-muted d-block mt-2">Existing files:</small>
+                        <small class="mt-2 text-muted d-block">Existing files:</small>
                         <ul>
                             @foreach (json_decode($medicalRecord->attachmentss, true) as $file)
                                 <li class="d-flex align-items-center">
                                     <a href="{{ Storage::url($file) }}" target="_blank" class="me-2">
                                         {{ basename($file) }}
                                     </a>
-                                    <label class="text-danger small mb-0">
+                                    <label class="mb-0 text-danger small">
                                         <input type="checkbox" name="remove_files[]" value="{{ $file }}"> Remove
                                     </label>
                                 </li>
@@ -196,8 +197,8 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <a href="{{ url()->previous() }}" class="btn back-btn"><i class="fa fa-arrow-left me-1"></i> Back</a>
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+            <a href="{{ url()->previous() }}" class="btn back-btn" style="color: white;"><i class="fa fa-arrow-left me-1"></i> Back</a>
             <button type="submit" class="btn back-btn" style="background-color: #03A9F4; border-color: #03A9F4;">
                 <i class="fa fa-save me-1"></i> Save Changes
             </button>

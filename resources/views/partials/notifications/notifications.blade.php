@@ -1,114 +1,164 @@
-<li class="nav-item dropdown d-none d-sm-block">
-    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-        <i class="fa fa-bell-o"></i>
-        <span id="notification-count" class="float-right badge badge-pill bg-danger">
-            @php
-                $count = auth()->user()->unreadNotifications->count();
-            @endphp
-            {{ $count < 100 ? $count : '99+' }}
+<style>
+    .cms-notifications .dropdown-toggle {
+        position: relative;
+    }
+
+    .cms-notification-dropdown {
+        width: 450px !important;
+        padding: 0;
+        border-radius: 14px;
+        border: 1px solid #e6ecf3;
+        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+        overflow: hidden;
+    }
+
+    .cms-notification-header {
+        padding: 16px 18px;
+        font-weight: 800;
+        background: #f7f9fc;
+        border-bottom: 1px solid #eaeef6;
+        text-align: center;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+    }
+
+    .cms-notification-list {
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .cms-notification-item {
+        display: flex;
+        gap: 14px;
+        padding: 14px 18px;
+        text-decoration: none;
+        color: inherit;
+        transition: .25s ease;
+    }
+
+    .cms-notification-item:hover {
+        background: #f1f6ff;
+    }
+
+    .cms-notification-item.unread {
+        background: #f4f8ff;
+    }
+
+    .cms-notification-icon {
+        width: 44px;
+        height: 44px;
+        background: #e7f0ff;
+        color: #007bff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .cms-notification-content {
+        flex: 1;
+    }
+
+    .cms-notification-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .cms-notification-time {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .cms-notification-empty {
+        padding: 50px;
+        text-align: center;
+        color: #9ca3af;
+    }
+
+    .cms-notification-footer {
+        display: block;
+        padding: 14px;
+        text-align: center;
+        background: #f7f9fc;
+        border-top: 1px solid #eaeef6;
+        font-weight: 700;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+</style>
+<li class="nav-item dropdown cms-notifications">
+
+    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-bell"></i>
+        <span id="notification-count" class="badge badge-danger badge-pill">
+            {{ auth()->user()->unreadNotifications->count() }}
         </span>
     </a>
 
-    <div class="dropdown-menu notifications">
-        <div class="topnav-dropdown-header">
-            <span>Notifications</span>
+    <div class="dropdown-menu cms-notification-dropdown">
+
+        <div class="cms-notification-header">
+            Notifications
         </div>
 
-        <div class="drop-scroll">
-            <ul id="notifications-list" class="notification-list">
+        <div class="cms-notification-list">
 
-                @forelse(auth()->user()->notifications as $notification)
-                    <li class="notification-message {{ $notification->read_at ? 'read' : 'unread' }}">
+            @forelse(auth()->user()->notifications->take(10) as $notification)
 
-                        <a href="{{ route('notifications_read', $notification->id) }}">
-                            <div class="media">
+                @php
+                    $type = $notification->data['type'] ?? 'default';
 
-                                @php
-                                    $type = $notification->data['type'] ?? 'default';
+                    $icon = match ($type) {
+                        'appointment_booked'     => 'fa-calendar-plus',
+                        'appointment_accepted'   => 'fa-calendar-check',
+                        'appointment_cancelled'  => 'fa-calendar-xmark',
+                        'appointment_completed' => 'fa-check-circle',
+                        'invoice_created'        => 'fa-file-invoice',
+                        'invoice_cancelled'      => 'fa-ban',
+                        'patient_registered',
+                        'patient_added'          => 'fa-user-plus',
+                        default                  => 'fa-bell',
+                    };
+                @endphp
 
-                                    $icon = match ($type) {
+                <a href="{{ route('notifications_read', $notification->id) }}"
+                   class="cms-notification-item {{ $notification->read_at ? 'read' : 'unread' }}">
 
-                                        // 📅 Appointments
-                                        'appointment_booked'     => 'fa-calendar-plus-o',
-                                        'appointment_accepted'   => 'fa-calendar-check-o',
-                                        'appointment_cancelled'  => 'fa-calendar-times-o',
-                                        'appointment_rejected'  => 'fa-calendar-times-o',
-                                        'appointment_completed'  => 'fa-check-circle-o',
+                    <div class="cms-notification-icon">
+                        <i class="fa {{ $icon }}"></i>
+                    </div>
 
-                                        // 💳 Invoices
-                                        'invoice_created'        => 'fa-file-text-o',
-                                        'invoice_cancelled'      => 'fa-ban',
+                    <div class="cms-notification-content">
+                        <div class="cms-notification-text">
+                            @includeIf('partials.notifications.' . $type, ['notification' => $notification])
+                        </div>
+                        <div class="cms-notification-time">
+                            {{ $notification->created_at->diffForHumans() }}
+                        </div>
+                    </div>
 
-                                        // 👩‍⚕️ Nurse Tasks
-                                        'nurse_task_assigned'    => 'fa-tasks',
-                                        'nurse_task_completed'   => 'fa-tasks',
+                </a>
 
-                                        // 🧑 Patients
-                                        'patient_registered'     => 'fa-user-plus',
-                                        'patient_added'          => 'fa-user-plus',
+            @empty
+                <div class="cms-notification-empty">
+                    No notifications
+                </div>
+            @endforelse
 
-                                        // 🔔 Default
-                                        default                  => 'fa-bell-o',
-                                    };
-
-                                @endphp
-
-                                <span class="avatar d-flex align-items-center justify-content-center"
-                                    style="
-                                        background:#e7f0ff;
-                                        color:#00A8FF;
-                                        border-radius:50%;
-                                        width:50px;
-                                        height:50px;">
-                                    <i class="fa {{ $icon }}" style="font-size: 24px;"></i>
-                                </span>
-
-
-                                <div class="media-body">
-
-                                    {{-- 🔔 Notification text --}}
-                                    <p class="noti-details" style="color:black;">
-                                        @php
-                                            $type = $notification->data['type']
-                                                ?? $notification->data['message_key']
-                                                ?? null;
-                                        @endphp
-
-                                        @if ($type)
-                                            @includeIf('partials.notifications.' . $type, [
-                                                'notification' => $notification
-                                            ])
-
-                                        @else
-                                            {{ $notification->data['message'] ?? 'New notification' }}
-                                        @endif
-                                    </p>
-
-                                    <p class="noti-time">
-                                        <span class="notification-time">
-                                            {{ $notification->created_at->diffForHumans() }}
-                                        </span>
-                                    </p>
-
-                                </div>
-                            </div>
-                        </a>
-
-                    </li>
-                @empty
-                    <li class="text-center notification-message" style="margin-top:130px;">
-                        <span class="text-muted">No notifications available</span>
-                    </li>
-                @endforelse
-
-            </ul>
         </div>
 
-        <div class="topnav-dropdown-footer">
-            <a href="{{ route('notifications_index') }}">View all Notifications</a>
-        </div>
+        <a href="{{ route('notifications_index') }}" class="cms-notification-footer">
+            View all notifications
+        </a>
+
     </div>
 </li>
+
 
 
 <script>

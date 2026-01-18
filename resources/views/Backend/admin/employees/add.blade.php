@@ -616,6 +616,14 @@
 
                             } else if (response.data == 4) {
                                 Swal.fire({
+                                    title: 'Error!',
+                                    text: 'This department already has an receptionist',
+                                    icon: 'error',
+                                    confirmButtonColor: '#00A8FF',
+                                });
+
+                            } else if (response.data == 5) {
+                                Swal.fire({
                                     title: 'Success',
                                     text: 'Employee has been added successfully',
                                     icon: 'success',

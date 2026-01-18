@@ -98,6 +98,38 @@
                 </li>
             </ul>
 
+
+            <ul>
+                <li class="menu-title">Payments</li>
+                <li class="submenu
+                    {{ Request::is('employee/accountant/bank-payments/pending') || Request::is('employee/accountant/view/bank-payments') || Request::is('employee/accountant/bank-payments/details/*') || Request::is('employee/accountant/view/paypal-payments') || Request::is('employee/accountant/paypal-payments/details/*') ? 'active' : '' }}">
+                    <a href="#">
+                        <i class="fas fa-file-invoice"></i>
+                        <span> Payments </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+
+                    <ul style="{{ Request::is('employee/accountant/bank-payments/pending') || Request::is('employee/accountant/view/bank-payments') || Request::is('employee/accountant/bank-payments/details/*') || Request::is('employee/accountant/view/paypal-payments') || Request::is('employee/accountant/paypal-payments/details/*') ? '' : 'display: none;'}}">
+                        <li>
+                            <a href="{{ route('accountant.bank_payments.pending') }}"
+                            class="{{ Request::is('employee/accountant/bank-payments/pending') ? 'active' : '' }}">Pending Payment Approvals</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('accountant.view_bank_payments') }}" class="{{ Request::is('employee/accountant/view/bank-payments') || Request::is('employee/accountant/bank-payments/details/*')? 'active' : '' }}">
+                                Bank
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('accountant.view_paypal_payments') }}" class="{{ Request::is('employee/accountant/view/paypal-payments') || Request::is('employee/accountant/paypal-payments/details/*')  ? 'active' : '' }}">
+                                Pay Pal
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
             <ul>
                 <li class="menu-title">Contacts</li>
                 <li class="submenu {{ Request::is('clinics-management/chat/contacts') ? 'active' : '' }}">

@@ -48,25 +48,30 @@
                             data-bs-target="#detailDoctor{{ $doctor->id }}">
                             Details
                         </button>
-                        <button>Book Now</button>
+
+
+                        <form action="{{ route('patient.appointment_book_doctor', $doctor->id) }}" method="GET">
+                            <button type="submit" class="book-now-btn" style="background-color: #00A8FF; color:#eee">
+                                Book Now
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
 
+
+
         <!-- Modal -->
         <div class="modal fade modal-doctor" id="detailDoctor{{ $doctor->id }}" tabindex="-1" aria-hidden="true">
-
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Doctor Details</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-
                     <div class="modal-body">
-
                         {{-- Doctor Header --}}
                         <div class="doctor-info d-flex gap-3 align-items-center">
 
@@ -171,9 +176,11 @@
                             </div>
 
                             <div class="text-center mt-4">
-                                <button type="button" class="btn btn-primary px-4">
-                                    Book Appointment
-                                </button>
+                                <form action="{{ route('patient.appointment_book_doctor', $doctor->id) }}" method="GET">
+                                    <button type="submit" class="book-now-btn" style="background-color: #00A8FF; color:#eee">
+                                        Book Now
+                                    </button>
+                                </form>
                             </div>
 
                         </div>

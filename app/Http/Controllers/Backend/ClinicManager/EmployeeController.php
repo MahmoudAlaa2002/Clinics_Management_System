@@ -74,6 +74,17 @@ class EmployeeController extends Controller{
             }
         }
 
+        //  تحقق من عدم وجود موظف استقبال للقسم في نفس العيادة والقسم
+        if ($request->job_title === 'Receptionist') {
+            $receptionist = Employee::where('clinic_id', $request->clinic_id)
+                ->where('department_id', $request->department_id)
+                ->exists();
+
+            if ($receptionist) {
+                return response()->json(['data' => 3]);
+            }
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -112,7 +123,7 @@ class EmployeeController extends Controller{
             ]);
         }
 
-        return response()->json(['data' => 3]);
+        return response()->json(['data' => 4]);
     }
 
 
@@ -245,6 +256,31 @@ class EmployeeController extends Controller{
             }
         }
 
+
+        // تحقق من عدم وجود محاسب عيادة آخر
+        if ($request->job_title === 'Accountant') {
+            $accountant = Employee::where('clinic_id', $request->clinic_id)
+                ->where('id', '!=', $employee->id)
+                ->exists();
+
+            if ($accountant) {
+                return response()->json(['data' => 2]);
+            }
+        }
+
+
+        // تحقق من عدم وجود محاسب قسم آخر في نفس العيادة
+        if ($request->job_title === 'Receptionist') {
+            $receptionist = Employee::where('clinic_id', $request->clinic_id)
+                ->where('department_id', $request->department_id)
+                ->where('id', '!=', $employee->id)
+                ->exists();
+
+            if ($receptionist) {
+                return response()->json(['data' => 3]);
+            }
+        }
+
         $password = $user->password;
         if ($request->filled('password')) {
             $password = Hash::make($request->password);
@@ -300,7 +336,7 @@ class EmployeeController extends Controller{
             }
         }
 
-        return response()->json(['data' => 2]); // تم التحديث بنجاح
+        return response()->json(['data' => 4]); // تم التحديث بنجاح
     }
 
 

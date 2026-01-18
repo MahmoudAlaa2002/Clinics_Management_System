@@ -1,6 +1,6 @@
 @extends('Backend.patients.master')
 
-@section('title', 'My Account')
+@section('title', 'Home')
 
 @section('content')
     <main class="main">
@@ -686,7 +686,7 @@
                             text: 'The Message Has Been Sent Successfully',
                             icon: 'success',
                             confirmButtonText: 'OK',
-                            confirmButtonColor: '#007BFF',
+                            confirmButtonColor: '#00A8FF',
                         }).then(() => {
                             window.location.href = '/patient/home';
                         });

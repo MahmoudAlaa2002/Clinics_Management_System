@@ -127,7 +127,7 @@
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="mb-3 col-md-6">
                                     <label>Refund Date <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12 mt-3">
+                                <div class="mt-3 col-md-12">
                                     <label>Notes</label>
                                     <textarea id="notes" name="notes" class="form-control" rows="4" placeholder="Write any notes about the refund (optional)...">{{ old('notes', $invoice->notes) }}</textarea>
                                 </div>
@@ -168,70 +168,69 @@
 
 @section('js')
 <script>
-$(document).ready(function () {
-    $('.editBtn').on('click', function (e) {
-        e.preventDefault();
+    $(document).ready(function () {
+        $('.editBtn').on('click', function (e) {
+            e.preventDefault();
 
-        const form = $('#editInvoiceForm')[0];
-        const formData = new FormData(form);
-        formData.append('_method', 'PUT');
+            const form = $('#editInvoiceForm')[0];
+            const formData = new FormData(form);
+            formData.append('_method', 'PUT');
 
-        let refund_date = $('#refund_date').val();
-        let notes = $('#notes').val().trim();
+            let refund_date = $('#refund_date').val();
+            let notes = $('#notes').val().trim();
 
 
-        if (refund_date === '') {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please enter the refund date',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#00A8FF',
-            });
-            return;
-        }
-
-        let noChanges =
-            refund_date === "{{ $invoice->refund_date }}" &&
-            notes === "{{ $invoice->notes }}";
-
-        if (noChanges) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'No Changes',
-                text: 'No updates were made to this invoice',
-                confirmButtonColor: '#00A8FF',
-            });
-            return;
-        }
-
-        $.ajax({
-            method: 'POST',
-            url: "{{ route('accountant.update_refund_confirm', ['id' => $invoice->id]) }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            success: function (res) {
-                if (res.data == 1) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Refund has been processed successfully',
-                        icon: 'success',
-                        confirmButtonColor: '#00A8FF'
-                    }).then(() => {
-                        window.location.href = '/employee/accountant/view/invoices';
-                    });
-                } else{
-                    Swal.fire('Info', 'Unknown response received', 'info');
-                }
-            },
-            error: function () {
-                Swal.fire('Error!', 'Unexpected error occurred while updating', 'error');
+            if (refund_date === '') {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter the refund date',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#00A8FF',
+                });
+                return;
             }
+
+            let noChanges =
+                refund_date === "{{ $invoice->refund_date }}" &&
+                notes === "{{ $invoice->notes }}";
+
+            if (noChanges) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Changes',
+                    text: 'No updates were made to this invoice',
+                    confirmButtonColor: '#00A8FF',
+                });
+                return;
+            }
+
+            $.ajax({
+                method: 'POST',
+                url: "{{ route('accountant.update_refund_confirm', ['id' => $invoice->id]) }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function (res) {
+                    if (res.data == 1) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Refund has been processed successfully',
+                            icon: 'success',
+                            confirmButtonColor: '#00A8FF'
+                        }).then(() => {
+                            window.location.href = '/employee/accountant/view/invoices';
+                        });
+                    } else{
+                        Swal.fire('Info', 'Unknown response received', 'info');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error!', 'Unexpected error occurred while updating', 'error');
+                }
+            });
         });
     });
-});
-
 </script>
 @endsection

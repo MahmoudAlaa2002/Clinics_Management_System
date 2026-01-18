@@ -252,7 +252,7 @@ class ChatController extends Controller {
         if ($target->role === 'clinic_manager'
             && $target->employee->clinic_id == $clinic) return true;
 
-        if ($target->role === 'department_manager'
+        if ($target->role === 'department_manager' && $target->employee->clinic_id == $clinic
             && $target->employee->department_id == $dept) return true;
 
         if ($target->role === 'employee' && $target->employee->clinic_id == $clinic
@@ -261,11 +261,11 @@ class ChatController extends Controller {
             return true;
 
         // المرضى الذين تعالجوا عنده
-        if ($target->role === 'patient') {
+        if ($target->role === 'patient')
             return $target->patient->appointments()
-                ->where('doctor_id', $doctor->employee->id)
+                ->where('doctor_id', $doctor->employee->doctor->id)
                 ->exists();
-        }
+
 
         return false;
     }
@@ -349,11 +349,13 @@ class ChatController extends Controller {
 
 
     private function patientRules($patient , $target) {
+        $patient = $patient->patient;
+
         if ($target->role === 'admin') return true;
 
         if ($target->role === 'doctor'
             && $patient->appointments()
-                ->where('doctor_id', $target->employee->id)
+                ->where('doctor_id', $target->employee->doctor->id)
                 ->exists())
             return true;
 
@@ -364,17 +366,21 @@ class ChatController extends Controller {
                 ->exists())
             return true;
 
-        if ($target->role === 'employee'
-            && $target->employee->job_title === 'Accountant'
-            && $patient->invoices()
-                ->where('accountant_id', $target->employee->id)
-                ->exists())
-            return true;
+            if ($target->role === 'employee'
+                && $target->employee->job_title === 'Accountant'
+                && $patient->invoices()
+                    ->whereHas('appointment.clinicDepartment', function ($q) use ($target) {
+                        $q->where('clinic_id', $target->employee->clinic->id);
+                    })->exists())
+                return true;
 
         if ($target->role === 'employee'
             && $target->employee->job_title === 'Receptionist'
             && $patient->appointments()
-                ->where('receptionist_id', $target->employee->id)
+                ->whereHas('clinicDepartment', function ($q) use ($target) {
+                    $q->where('clinic_id', $target->employee->clinic_id)
+                    ->where('department_id', $target->employee->department_id);
+                })
                 ->exists())
             return true;
 

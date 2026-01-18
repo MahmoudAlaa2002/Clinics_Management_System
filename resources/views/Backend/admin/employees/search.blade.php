@@ -7,6 +7,7 @@
                         <th>#</th>
                         <th>Employee Name</th>
                         <th>Job Title</th>
+                        <th>Clinic Name</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Action</th>
@@ -19,6 +20,7 @@
                                 <td>{{ $employees->firstItem() + $loop->index }}</td>
                                 <td>{{ $employee->user->name ?? '-' }}</td>
                                 <td>{{ $employee->job_title }}</td>
+                                <td>{{ $employee->clinic->name }}</td>
                                 <td>{{ $employee->user->email ?? '-' }}</td>
                                 <td>{{ $employee->user->phone ?? '-' }}</td>
                                 <td class="action-btns">
@@ -32,7 +34,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="7" class="text-center">
                                 <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
                                     No Employees Available At The Moment
                                 </div>

@@ -630,22 +630,26 @@ $(document).ready(function () {
 
                     success: function (response) {
                         if (response.data == 0) {
-                            Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF' });
+                            Swal.fire({ title: 'Error!', text: 'This email is already used by another user', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#00A8FF' });
                         } else if (response.data == 1) {
-                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF' });
+                            Swal.fire({ title: 'Error!', text: 'This department already has a manager', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#00A8FF' });
                         } else if (response.data == 2) {
+                            Swal.fire({ title: 'Error!', text: 'This clinic already has a accountant', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#00A8FF' });
+                        } else if (response.data == 3) {
+                            Swal.fire({ title: 'Error!', text: 'This department already has a receptionist', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#00A8FF' });
+                        } else if (response.data == 4) {
                             Swal.fire({
                                 title: 'Success',
                                 text: 'Employee updated successfully',
                                 icon: 'success',
                                 confirmButtonText: 'OK',
-                                confirmButtonColor: '#007BFF',
+                                confirmButtonColor: '#00A8FF',
                             }).then(() => { window.location.href = '/clinic-manager/view/employees'; });
                         }
                     },
 
                     error: function () {
-                        Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#007BFF' });
+                        Swal.fire({ title: 'Error!', text: 'Something went wrong!', icon: 'error', confirmButtonText: 'OK', confirmButtonColor: '#00A8FF' });
                     }
                 });
             },

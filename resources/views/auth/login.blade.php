@@ -91,8 +91,6 @@
 @endsection
 
 @section('js')
-
-
 <script>
     $(document).ready(function () {
         $('.loginBtn').click(function (e) {

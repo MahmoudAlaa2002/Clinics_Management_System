@@ -23,6 +23,7 @@ return new class extends Migration
             $table->json('working_days');
             $table->text('description')->nullable();
             $table->decimal('rating', 2, 1)->nullable()->default(1);
+            $table->string('qr_image')->nullable(); // path للصورة
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

@@ -47,7 +47,7 @@
 
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <form method="POST" action="{{ Route('store_clinic') }}">
+                <form method="POST" action="{{ Route('store_clinic') }}" enctype="multipart/form-data">
                     @csrf
 
                     {{-- 1) Basic Info --}}
@@ -184,7 +184,24 @@
                         </div>
                     </div>
 
-                    {{-- 4) Description & Status --}}
+                    {{-- 4) Payment Information --}}
+                    <div class="card">
+                        <div class="card-header">Payment Information</div>
+                        <div class="card-body">
+                            <div class="row">
+                                {{-- QR Image --}}
+                                <div class="col-sm-6">
+                                    <label>Payment QR Code</label>
+                                    <input type="file" name="qr_image" id="qr_image" class="form-control" accept="image/*">
+                                    <small class="text-muted">
+                                        Upload the clinic’s official Bank / PalPay QR code
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 5) Description & Status --}}
                     <div class="card">
                         <div class="card-header">Description & Status</div>
                         <div class="card-body">
@@ -207,6 +224,7 @@
                         </div>
                     </div>
 
+
                     {{-- Submit --}}
                     <div class="text-center m-t-20" style="margin-top: 20px;">
                         <button type="submit" class="btn btn-primary submit-btn addBtn" style="text-transform: none !important;">
@@ -219,6 +237,8 @@
         </div>
     </div>
 </div>
+
+
 @endsection
 
 
@@ -236,6 +256,7 @@
         let closing_time  = $('#closing_time').val();
         let description   = $('#description').val().trim();
         let status        = $('input[name="status"]:checked').val();
+        let qrImage = document.getElementById('qr_image').files[0];
 
         // مصفوفات
         let workingDays = [];
@@ -262,9 +283,14 @@
         workingDays.forEach(day => formData.append('working_days[]', day));
         departments.forEach(dep => formData.append('departments[]', dep));
 
+        if (qrImage) {
+            formData.append('qr_image', qrImage);
+        }
+
+
         // ===== التحقق من الحقول المطلوبة =====
-        if (name === '' || location === '' || email === '' || phone === '' || opening_time === '' || closing_time === '' ||
-            workingDays.length === 0 || departments.length === 0 ) {
+        if (name === '' || location === '' || email === '' || phone === '' || opening_time === '' || closing_time === ''
+            || workingDays.length === 0 || departments.length === 0 ) {
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter all required fields',

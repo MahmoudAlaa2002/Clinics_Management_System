@@ -25,6 +25,7 @@ use App\Http\Controllers\Backend\Admin\{
     InvoiceController as AdminInvoiceController,
     MedicalRecordController as AdminMedicalRecordController,
     AnalyticController as AdminAnalyticController,
+    PaymentController as AdminPaymentController,
 };
 
 use App\Http\Controllers\Backend\Admin\Report\{
@@ -93,7 +94,8 @@ use App\Http\Controllers\Backend\Employee\Accountant\{
     PatientController as AccountantPatientController,
     AppointmentController as AccountantAppointmentController,
     NotificationController as AccountantNotificationController,
-    InvoiceController as AccountantInvoiceController
+    InvoiceController as AccountantInvoiceController,
+    PaymentController as AccountantPaymentController
 };
 
 use App\Http\Controllers\Backend\Employee\Receptionist\{
@@ -113,6 +115,8 @@ use App\Http\Controllers\Backend\Patient\{
     ProfileController as PatientProfileController,
     AppointmentController as PatientAppointmentController,
     InvoiceController as PatientInvoiceController,
+    SettingsController as PatientSettingsController,
+    PaymentController as PatientPaymentController,
     MedicalRecordController as PatientMedicalRecordController
 };
 
@@ -314,6 +318,21 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
     Route::get('/invoice-pdf/raw/{id}', [AdminInvoiceController::class, 'invoicePDFRaw'])->name('invoice_pdf_raw');
     Route::get('/cancelled-invoice-pdf/view/{id}', [AdminInvoiceController::class, 'cancelledinvoicePDF'])->name('cancelled_invoice_pdf');
     Route::get('/cancelled-invoice-pdf/raw/{id}', [AdminInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('cancelled_invoice_pdf_raw');
+
+
+    //Payments
+
+    //Bank
+    Route::get('/view/bank-payments', [AdminPaymentController::class, 'viewBankPayments'])->name('view_bank_payments');
+    Route::get('/search/bank-payments', [AdminPaymentController::class, 'searchBankPayments'])->name('search_bank_payments');
+    Route::get('/bank-payments/details/{payment}', [AdminPaymentController::class, 'detailsBankPayments'])->name('bank_payments.pending.details');
+
+
+    //PayPal
+    Route::get('/view/paypal-payments', [AdminPaymentController::class, 'viewPaypalPayments'])->name('view_paypal_payments');
+    Route::get('/search/paypal-payments', [AdminPaymentController::class, 'searchPaypalPayments'])->name('search_paypal_payments');
+    Route::get('/paypal-payments/details/{payment}', [AdminPaymentController::class, 'detailsPaypalPayments'])->name('paypal_payments.details');
+
 
 
     //Reports
@@ -767,7 +786,6 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
     Route::get('/details/appointment/{id}',[AccountantAppointmentController::class , 'detailsAppointment'])->name('accountant.details_appointment');
 
 
-
     //Invoices
     Route::get('/view/invoices' ,[AccountantInvoiceController::class , 'viewInvoices'])->name('accountant.view_invoices');
     Route::get('/search/invoices',[AccountantInvoiceController::class , 'searchInvoices'])->name('accountant.search_invoices');
@@ -785,6 +803,27 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
     Route::get('/cancelled-invoice-pdf/view/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDF'])->name('accountant.cancelled_invoice_pdf');
     Route::get('/cancelled-invoice-pdf/raw/{id}', [AccountantInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('accountant.cancelled_invoice_pdf_raw');
 
+
+    //Payments
+
+    //Pending
+    Route::get('/bank-payments/pending', [AccountantPaymentController::class, 'index'])->name('accountant.bank_payments.pending');
+    Route::get('/bank-payments/pending/search', [AccountantPaymentController::class, 'search'])->name('accountant.bank_payments.pending.search');
+    Route::post('/bank-payments/{payment}/approve', [AccountantPaymentController::class, 'approve'])->name('accountant.bank_payments.approve');
+    Route::post('/bank-payments/{payment}/reject', [AccountantPaymentController::class, 'reject'])->name('accountant.bank_payments.reject');
+
+
+    //Bank
+    Route::get('/view/bank-payments', [AccountantPaymentController::class, 'viewBankPayments'])->name('accountant.view_bank_payments');
+    Route::get('/search/bank-payments', [AccountantPaymentController::class, 'searchBankPayments'])->name('accountant.search_bank_payments');
+    Route::get('/bank-payments/details/{payment}', [AccountantPaymentController::class, 'detailsBankPayments'])->name('accountant.bank_payments.pending.details');
+
+
+    //PayPal
+    Route::get('/view/paypal-payments', [AccountantPaymentController::class, 'viewPaypalPayments'])->name('accountant.view_paypal_payments');
+    Route::get('/search/paypal-payments', [AccountantPaymentController::class, 'searchPaypalPayments'])->name('accountant.search_paypal_payments');
+    Route::get('/paypal-payments/details/{payment}', [AccountantPaymentController::class, 'detailsPaypalPayments'])->name('accountant.paypal_payments.details');
+
 });
 
 
@@ -799,11 +838,19 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     // Home
     Route::get('/home', [PatientHomeController::class, 'home'])->name('patient.home');
 
+
     //Profile
     Route::get('/profile' , [PatientProfileController::class , 'ViewProfile'])->name('patient.view_profile');
     Route::get('/edit/profile' , [PatientProfileController::class , 'editProfile'])->name('patient.edit_profile');
     Route::put('/update/profile' , [PatientProfileController::class , 'updateProfile'])->name('patient.update_profile');
-    Route::get('/settings', [PatientProfileController::class, 'settings'])->name('patient.settings');
+    Route::get('/edit/password' , [PatientProfileController::class , 'editPassword'])->name('patient.edit_password');
+    Route::put('/update-password', [PatientProfileController::class,'updatePassword'])->name('patient.update_password');
+
+
+    // Settings
+    Route::get('/settings', [PatientSettingsController::class, 'settings'])->name('patient.settings');
+    Route::get('/support', [PatientSettingsController::class, 'support'])->name('patient.support');
+
 
     // Clinics
     Route::get('/clinics/view', [PatientClinicController::class, 'clinicsView'])->name('patient.clinics_view');
@@ -815,20 +862,48 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     Route::get('/search/doctors', [PatientDoctorController::class, 'searchDoctors'])->name('patient.search_doctors');
 
 
-    //Appointments
-    Route::get('/appointments/view', [PatientAppointmentController::class, 'appointmentsView'])->name('patient.appointments_view');
+    // Appointments
+    Route::get('/my-appointments', [PatientAppointmentController::class, 'myAppointments'])->name('patient.myAppointments');
+    Route::get('/details/appointment/{id}', [PatientAppointmentController::class, 'detailsAppointment'])->name('patient.details_appointment');
+
+    Route::get('/appointment/book/clinic/{clinic}',[PatientAppointmentController::class, 'appointmentBookClinic'])->name('patient.appointment_book_clinic');
+    Route::get('/appointment/book/doctor/{doctor}',[PatientAppointmentController::class, 'appointmentBookDoctor'])->name('patient.appointment_book_doctor');
+
+    Route::post('/appointment/hold', [PatientAppointmentController::class, 'createHold'])->name('patient.appointment_hold');
+    Route::get('/payment/{hold}', [PatientPaymentController::class, 'chooseMethod'])->name('patient.choose_payment');
+
+    //Bank
+    Route::get('/bank-qr/pay/{hold}', [PatientPaymentController::class,'bankQr'])->name('patient.bank.qr');
+    Route::get('/bank-qr/upload/{hold}', [PatientPaymentController::class,'uploadReceipt'])->name('patient.bank.qr.upload');
+    Route::post('/bank-qr/store/{hold}', [PatientPaymentController::class,'storeReceipt'])->name('patient.bank.qr.store');
+
+    //PayPal
+    Route::get('/paypal/pay/{hold}', [PatientPaymentController::class, 'payHold'])->name('paypal.hold.pay');
+    Route::get('/paypal/success/{hold}', [PatientPaymentController::class, 'successHold'])->name('paypal.hold.success');
+    Route::get('/paypal/cancel/{hold}', [PatientPaymentController::class, 'cancelHold'])->name('paypal.hold.cancel');
+
 
     //Invoices
     Route::get('/invoices/view', [PatientInvoiceController::class, 'invoicesView'])->name('patient.invoices_view');
     Route::get('/details/invoice/{id}', [PatientInvoiceController::class, 'detailsInvoice'])->name('patient.details_invoice');
+    Route::get('/details/refund-invoice/{id}',[PatientInvoiceController::class , 'detailsRefundInvoice'])->name('patient.details_refund_invoice');
 
     Route::get('/invoice-pdf/view/{id}', [PatientInvoiceController::class, 'invoicePDF'])->name('patient.invoice_pdf');
     Route::get('/invoice-pdf/raw/{id}', [PatientInvoiceController::class, 'invoicePDFRaw'])->name('patient.invoice_pdf_raw');
+    Route::get('/cancelled-invoice-pdf/view/{id}', [PatientInvoiceController::class, 'cancelledinvoicePDF'])->name('patient.cancelled_invoice_pdf');
+    Route::get('/cancelled-invoice-pdf/raw/{id}', [PatientInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('patient.cancelled_invoice_pdf_raw');
+
 
     //Cancelled Invoices
     Route::get('/cancelled-invoice-pdf/view/{id}', [PatientInvoiceController::class, 'cancelledinvoicePDF'])->name('patient.cancelled_invoice_pdf');
     Route::get('/cancelled-invoice-pdf/raw/{id}', [PatientInvoiceController::class, 'cancelledinvoicePDFRaw'])->name('patient.cancelled_invoice_pdf_raw');
 
+
+    //Notifications
+    Route::get('/notifications/render/{id}', function ($id) {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        return view('partials.notifications.item_patient', compact('notification'))->render();
+    })->name('patient.notifications.render');
 });
 
 

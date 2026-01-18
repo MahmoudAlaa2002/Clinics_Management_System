@@ -15,6 +15,7 @@ use App\Events\AppointmentBooked;
 use App\Events\AppointmentCreated;
 use App\Events\AppointmentUpdated;
 use App\Events\AppointmentAccepted;
+use App\Events\AppointmentRejected;
 use App\Events\AppointmentCancelled;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -453,6 +454,7 @@ class AppointmentController extends Controller{
                     'refund_amount'  => $paidAmount,
                 ]);
 
+                AppointmentRejected::dispatch($appointment, auth()->user());
                 InvoiceCancelled::dispatch($appointment->invoice);
             }
         }
@@ -460,7 +462,7 @@ class AppointmentController extends Controller{
         // حالة القبول
         if ($request->status === 'Accepted') {
             $appointment->notes = null;
-            AppointmentAccepted::dispatch($appointment);
+            AppointmentAccepted::dispatch($appointment, auth()->user());
         }
 
         $appointment->save();

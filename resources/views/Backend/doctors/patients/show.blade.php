@@ -50,17 +50,17 @@
 
     <div class="page-wrapper">
         <div class="content">
-            <div class="row mb-3">
+            <div class="mb-3 row">
                 <div class="col-md-12">
                     <h4 class="page-title">Patient Profile</h4>
                 </div>
             </div>
 
-            <div class="card-box p-4 shadow-sm">
+            <div class="p-4 shadow-sm card-box">
                 <div class="row">
                     <div class="text-center col-md-4">
                         <img src="{{ $patient->user->image ? asset($patient->user->image) : asset('assets/img/user.jpg') }}"
-                            alt="Patient Image" class="profile-image mb-3">
+                            alt="Patient Image" class="mb-3 profile-image">
                         <h4 class="mt-2">{{ $patient->user->name }}</h4>
 
                         <a href="{{ route('doctor.patient.records', $patient) }}"
@@ -75,7 +75,7 @@
                         <h5 class="section-title text-primary">
                             <i class="fas fa-info-circle me-2 text-primary"></i> General Information
                         </h5>
-                        <table class="table table-borderless mb-4">
+                        <table class="table mb-4 table-borderless">
                             <tr>
                                 <th><i class="fas fa-envelope text-primary me-2"></i> Email:</th>
                                 <td>{{ $patient->user->email ?? '-' }}</td>
@@ -102,7 +102,7 @@
                         <h5 class="section-title text-primary">
                             <i class="fas fa-stethoscope me-2 text-primary"></i> Medical Information
                         </h5>
-                        <table class="table table-borderless mb-0">
+                        <table class="table mb-0 table-borderless">
                             <tr>
                                 <th><i class="fas fa-tint text-primary me-2"></i> Blood Type:</th>
                                 <td>{{ $patient->blood_type ?? '-' }}</td>
@@ -124,8 +124,8 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <a href="{{ route('doctor.patients') }}" class="btn back-btn">
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <a href="{{ route('doctor.patients') }}" class="btn back-btn" style="color: white;">
                     <i class="fa fa-arrow-left me-1"></i> Back
                 </a>
             </div>

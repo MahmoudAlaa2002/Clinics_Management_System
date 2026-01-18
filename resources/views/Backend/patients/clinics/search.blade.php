@@ -1,7 +1,7 @@
 @if($clinics->count() > 0)
 
     @foreach ($clinics as $clinic)
-        <div class="col-lg-4 mb-4 col-md-6">
+        <div class="mb-4 col-lg-4 col-md-6">
             <div class="card clinic-card h-100">
 
                 <div class="cardHeader">
@@ -41,11 +41,19 @@
                             Details
                         </button>
 
-                        <button>Book Now</button>
+                        <form action="{{ route('patient.appointment_book_clinic', $clinic->id) }}" method="GET">
+                            <button type="submit" class="book-now-btn" style="background-color: #00A8FF; color:#eee">
+                                Book Now
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
 
         <div class="modal fade" id="detailsClinic{{ $clinic->id }}" tabindex="-1" aria-hidden="true">
 
@@ -60,7 +68,7 @@
                     <div class="modal-body">
                         <div class="clinic-info">
                             <img src="{{ asset($clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
-                                class="img-fluid mb-3" alt="{{ $clinic->name }}">
+                                class="mb-3 img-fluid" alt="{{ $clinic->name }}">
 
                             <div>
                                 <h3>{{ $clinic->name }}</h3>
@@ -89,7 +97,12 @@
 
                                 </div>
 
-                                <button>Book Appointment</button>
+                                <form action="{{ route('patient.appointment_book_clinic', $clinic->id) }}" method="GET">
+                                    <button type="submit" class="book-now-btn" style="background-color: #00A8FF; color:#eee">
+                                        Book Now
+                                    </button>
+                                </form>
+
                             </div>
                         </div>
 
@@ -156,7 +169,7 @@
 
 @else
 
-    <div class="col-12 text-center p-4">
+    <div class="p-4 text-center col-12">
         <strong>No clinics found</strong>
     </div>
 

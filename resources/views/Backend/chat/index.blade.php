@@ -17,6 +17,26 @@
         cursor:default; /* اختياري */
     }
 
+    .no-msg-item{
+        height: 280px;                 /* نفس تقريبًا ارتفاع قائمة الرسائل */
+        display: flex;
+        align-items: center;           /* عمودي */
+        justify-content: center;       /* أفقي */
+        font-size: 14px;
+        color: #9ca3af;
+        font-weight: 600;
+        text-align: center;
+        background: #fff;
+    }
+
+    /* لما يمر الماوس لا يتغير */
+    .no-msg-item:hover{
+        background: #fff !important;
+        color: #9ca3af !important;
+        cursor: default;
+    }
+
+
 </style>
 
 
@@ -97,9 +117,10 @@
 
             @empty
 
-                <div class="dropdown-item text-center text-muted py-4 no-msg-item">
+                <div class="no-msg-item">
                     No conversations yet
                 </div>
+
 
             @endforelse
 
