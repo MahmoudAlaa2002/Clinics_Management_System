@@ -120,6 +120,9 @@ use App\Http\Controllers\Backend\Patient\{
     MedicalRecordController as PatientMedicalRecordController
 };
 
+Route::get('/', function () {
+    return redirect()->route('home');
+});
 
 Route::prefix('clinics-management')->group(function () {
 
