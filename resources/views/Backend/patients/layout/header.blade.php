@@ -500,7 +500,7 @@
                 <i class="fa-solid fa-user"></i>
               </div>
               <div class="myAppointment">
-                <span style="color: #00A8FF;"><a href="myAppointment.html">My Appointments</a></span>
+                <span style="color: #00A8FF;"><a href="{{ route('patient.myAppointments') }}">My Appointments</a></span>
                 <i class="fa-solid fa-calendar-check"></i>
               </div>
               <div class="settings">
