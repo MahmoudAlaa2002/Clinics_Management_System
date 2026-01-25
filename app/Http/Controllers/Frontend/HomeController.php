@@ -12,15 +12,16 @@ use App\Jobs\SendContactMessageJob;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
-class HomeController extends Controller{
-
-    public function home(){
+class HomeController extends Controller
+{
+    public function home()
+    {
         $admin = User::role('admin')->first();
         $clinic_count = Clinic::count();
         $department_count = Department::count();
         $departments = Department::all();
-        $doctor_count = Doctor::count();
+        $doctors_count = Doctor::count();
+        $doctors = Doctor::orderBy('rating', 'desc')->take(10)->get();
         $patient_count = Patient::count();
 
         // $featuredDoctors = Doctor::where('is_featured', true)->take(4)->get();
@@ -31,7 +32,6 @@ class HomeController extends Controller{
         //     $doctors = $featuredDoctors;
         // }
 
-
         // $patientsTestimonial = Testimonial::where('is_approved', true)->take(4)->get();
         // if ($patientsTestimonial->count() < 5) {
         //     $randomPatientsTestimonial = Testimonial::where('is_approved', true)->inRandomOrder()->take(4 - $patientsTestimonial->count())->get();
@@ -39,19 +39,11 @@ class HomeController extends Controller{
         // } else {
         //     $patientsTestimonials = $patientsTestimonial;
         // }
-        return view('Frontend.master' , compact('admin' ,
-         'clinic_count' ,
-          'department_count' ,
-           'departments' ,
-            'doctor_count' ,
-             'patient_count'));
+        return view('Frontend.master', compact('admin', 'clinic_count', 'department_count', 'departments', 'doctors', 'doctors_count', 'patient_count'));
     }
 
-
-
-
-
-    public function send(Request $request){
+    public function send(Request $request)
+    {
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',

@@ -17,8 +17,9 @@ class HomeController extends Controller {
         $departments = Department::all();
         $patients = Patient::all();
         $admin = User::where('role', 'admin')->first();
-        $doctors = Doctor::whereNotNull('rating')->orderByDesc('rating')->orderByDesc('created_at')->take(4)->get();
-        return view('Backend.patients.home', compact('clinics', 'departments', 'doctors', 'patients', 'admin'));
+        $doctors_count = Doctor::count();
+        $doctors = Doctor::orderBy('rating', 'desc')->take(10)->get();
+        return view('Backend.patients.home', compact('clinics', 'departments', 'doctors', 'patients', 'admin', 'doctors_count'));
     }
 
 }

@@ -9,7 +9,8 @@
             <div class="container position-relative">
                 <div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
                     <h2 style="color: #00A8FF;">WELCOME TO Clinics Management</h2>
-                    <p>A modern website for managing medical clinics<br>and organizing appointments</p>
+                    <p>A smart platform to manage medical clinics,<br>book appointments, and connect patients with
+                        professional doctors easily.</p>
                 </div>
                 <div class="content row gy-4">
                     <div class="col-lg-4 d-flex align-items-stretch">
@@ -22,7 +23,7 @@
                             </p>
                             <div class="text-center">
                                 <a href="#about" class="more-btn"><span>Learn More</span> <i
-                                        class="bi bi-chevron-right"></i></a>
+                                            class="bi bi-chevron-right"></i></a>
                             </div>
                         </div>
                     </div>
@@ -33,26 +34,25 @@
                                 <div class="col-xl-4 d-flex align-items-stretch">
                                     <div class="icon-box" data-aos="zoom-out" data-aos-delay="300">
                                         <i class="bi bi-clipboard-data" style="color: #00A8FF"></i>
-                                        <h4 style="color: #00A8FF">Corporis voluptates officia eiusmod</h4>
-                                        <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut
-                                            aliquip</p>
+                                        <h4 style="color: #00A8FF">Easy Appointment Booking</h4>
+                                        <p>Book your medical appointments quickly with your preferred clinic and doctor.</p>
                                     </div>
                                 </div>
 
                                 <div class="col-xl-4 d-flex align-items-stretch">
                                     <div class="icon-box" data-aos="zoom-out" data-aos-delay="400">
                                         <i class="bi bi-gem" style="color: #00A8FF"></i>
-                                        <h4 style="color: #00A8FF">Ullamco laboris ladore pan</h4>
-                                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                                            deserunt</p>
+                                        <h4 style="color: #00A8FF">Trusted Medical Services</h4>
+                                        <p>Access professional healthcare services with organized clinics and departments.
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div class="col-xl-4 d-flex align-items-stretch">
                                     <div class="icon-box" data-aos="zoom-out" data-aos-delay="500">
                                         <i class="bi bi-inboxes" style="color: #00A8FF"></i>
-                                        <h4 style="color: #00A8FF">Labore consequatur incidid dolore</h4>
-                                        <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere
+                                        <h4 style="color: #00A8FF">Patient-Friendly System</h4>
+                                        <p>A modern interface designed to make healthcare management simple and fast.
                                         </p>
                                     </div>
                                 </div>
@@ -68,38 +68,35 @@
             <div class="container">
                 <div class="row gy-4 gx-5">
                     <div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="200">
-                        <img src="{{ asset('patients/img/Medical-Clinic.jpg') }}" class="img-fluid" alt=""
+                        <img src="{{asset('homeView/img/about.jpg')}}" class="img-fluid" alt=""
                             style="width: 800px; hight:800px;">
                     </div>
                     <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
-                        <h3>About Us</h3>
+                        <h3>About Our System</h3>
                         <p>
-                            Dolor iure expedita id fuga asperiores qui sunt consequatur minima. Quidem voluptas deleniti.
-                            Sit quia molestiae quia quas qui magnam itaque veritatis dolores. Corrupti totam ut eius
-                            incidunt reiciendis veritatis asperiores placeat.
+                            Clinics Management System is a modern platform designed to help patients manage their healthcare appointments easily.
+                             Users can browse clinics, departments, doctors and book appointments online without hassle.
                         </p>
                         <ul>
                             <li>
                                 <i class="fa-solid fa-vial-circle-check"></i>
                                 <div>
-                                    <h5>Ullamco laboris nisi ut aliquip consequat</h5>
-                                    <p>Magni facilis facilis repellendus cum excepturi quaerat praesentium libre trade</p>
+                                    <h5>Online Appointment Scheduling</h5>
+                                    <p>Reserve your appointments anytime without visiting the clinic.</p>
                                 </div>
                             </li>
                             <li>
                                 <i class="fa-solid fa-pump-medical"></i>
                                 <div>
-                                    <h5>Magnam soluta odio exercitationem reprehenderi</h5>
-                                    <p>Quo totam dolorum at pariatur aut distinctio dolorum laudantium illo direna pasata
-                                        redi</p>
+                                    <h5>Organized Clinics & Departments</h5>
+                                    <p>All clinics and departments are clearly structured for easy navigation.</p>
                                 </div>
                             </li>
                             <li>
                                 <i class="fa-solid fa-heart-circle-xmark"></i>
                                 <div>
-                                    <h5>Voluptatem et qui exercitationem</h5>
-                                    <p>Et velit et eos maiores est tempora et quos dolorem autem tempora incidunt maxime
-                                        veniam</p>
+                                    <h5>Professional Doctors</h5>
+                                    <p>Choose from qualified doctors specialized in different medical fields.</p>
                                 </div>
                             </li>
                         </ul>
@@ -132,7 +129,7 @@
                     <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
                         <i class="fa-solid fa-user-doctor"></i>
                         <div class="stats-item">
-                            <span>{{ $doctors->count() }}</span>
+                            <span>{{ $doctors_count }}</span>
                             <p>Doctors</p>
                         </div>
                     </div>
@@ -284,22 +281,24 @@
             <div class="container">
                 <div class="row gy-4">
                     @foreach ($doctors as $doctor)
-                            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                                <div class="team-member d-flex align-items-start">
-                                    <div class="pic"><img src="{{ asset($doctor->employee?->user?->image ?? 'assets/img/user.jpg') }}" class="img-fluid" alt=""></div>
-                                    <div class="member-info">
-                                        <h4>{{ $doctor->employee->user->name }}</h4>
-                                        <span>{{ $doctor->employee->department->name }}</span>
-                                        <p>{{ $doctor->employee->clinic->name }}</p>
-                                        <div class="social">
-                                            <a href=""><i class="bi bi-twitter-x"></i></a>
-                                            <a href=""><i class="bi bi-facebook"></i></a>
-                                            <a href=""><i class="bi bi-instagram"></i></a>
-                                            <a href=""> <i class="bi bi-linkedin"></i> </a>
-                                        </div>
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="team-member d-flex align-items-start">
+                                <div class="pic"><img
+                                        src="{{ asset($doctor->employee?->user?->image ?? 'assets/img/user.jpg') }}"
+                                        class="img-fluid" alt=""></div>
+                                <div class="member-info">
+                                    <h4>{{ $doctor->employee->user->name }}</h4>
+                                    <span>{{ $doctor->employee->department->name }}</span>
+                                    <p>{{ $doctor->employee->clinic->name }}</p>
+                                    <div class="social">
+                                        <a href=""><i class="bi bi-twitter-x"></i></a>
+                                        <a href=""><i class="bi bi-facebook"></i></a>
+                                        <a href=""><i class="bi bi-instagram"></i></a>
+                                        <a href=""> <i class="bi bi-linkedin"></i> </a>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     @endforeach
                 </div>
 
@@ -309,86 +308,87 @@
 
         <!-- Faq Section -->
         <section id="faq" class="faq section light-background">
-            <div class="container section-title" data-aos="fade-up">
-                <h2 style="color: #00A8FF;">Frequently Asked Questions</h2>
-                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-            </div><!-- End Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2 style="color: #00A8FF;">Frequently Asked Questions</h2>
+        <p>Common questions about using Clinics Management System and booking appointments</p>
+    </div>
 
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
-                        <div class="faq-container">
-                            <div class="faq-item">
-                                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
-                                <div class="faq-content">
-                                    <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet
-                                        non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor
-                                        purus non.</p>
-                                </div>
-                                <i class="faq-toggle bi bi-chevron-right"></i>
-                            </div><!-- End Faq item-->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
+                <div class="faq-container">
 
-                            <div class="faq-item">
-                                <h3>Feugiat scelerisque varius morbi enim nunc faucibus?</h3>
-                                <div class="faq-content">
-                                    <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum
-                                        velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend
-                                        donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in
-                                        cursus turpis massa tincidunt dui.</p>
-                                </div>
-                                <i class="faq-toggle bi bi-chevron-right"></i>
-                            </div><!-- End Faq item-->
-
-                            <div class="faq-item">
-                                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
-                                <div class="faq-content">
-                                    <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus
-                                        pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit.
-                                        Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis
-                                        tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
-                                </div>
-                                <i class="faq-toggle bi bi-chevron-right"></i>
-                            </div><!-- End Faq item-->
-
-                            <div class="faq-item">
-                                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
-                                <div class="faq-content">
-                                    <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum
-                                        velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend
-                                        donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in
-                                        cursus turpis massa tincidunt dui.</p>
-                                </div>
-                                <i class="faq-toggle bi bi-chevron-right"></i>
-                            </div><!-- End Faq item-->
-
-                            <div class="faq-item">
-                                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor?</h3>
-                                <div class="faq-content">
-                                    <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in
-                                        est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl
-                                        suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
-                                </div>
-                                <i class="faq-toggle bi bi-chevron-right"></i>
-                            </div><!-- End Faq item-->
-
-                            <div class="faq-item">
-                                <h3>Perspiciatis quod quo quos nulla quo illum ullam?</h3>
-                                <div class="faq-content">
-                                    <p>Enim ea facilis quaerat voluptas quidem et dolorem. Quis et consequatur non sed in
-                                        suscipit sequi. Distinctio ipsam dolore et.</p>
-                                </div>
-                                <i class="faq-toggle bi bi-chevron-right"></i>
-                            </div><!-- End Faq item-->
-
+                    <div class="faq-item">
+                        <h3>How can I book an appointment?</h3>
+                        <div class="faq-content">
+                            <p>
+                                After logging in, you can browse clinics, choose a department and doctor,
+                                then select an available time slot and confirm your booking easily.
+                            </p>
                         </div>
+                        <i class="faq-toggle bi bi-chevron-right"></i>
+                    </div>
 
-                    </div><!-- End Faq Column-->
+                    <div class="faq-item">
+                        <h3>Do I need an account to use the system?</h3>
+                        <div class="faq-content">
+                            <p>
+                                Yes, you need to create an account to book appointments and manage your personal
+                                schedule, but you can browse clinics and doctors before registering.
+                            </p>
+                        </div>
+                        <i class="faq-toggle bi bi-chevron-right"></i>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>Can I choose my preferred doctor?</h3>
+                        <div class="faq-content">
+                            <p>
+                                Absolutely. You can explore doctors by department, view their information,
+                                and select the doctor that fits your needs.
+                            </p>
+                        </div>
+                        <i class="faq-toggle bi bi-chevron-right"></i>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>How can I cancel or update my appointment?</h3>
+                        <div class="faq-content">
+                            <p>
+                                From your profile dashboard, you can view your appointments and update or cancel
+                                them before the scheduled time.
+                            </p>
+                        </div>
+                        <i class="faq-toggle bi bi-chevron-right"></i>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>Is my personal information secure?</h3>
+                        <div class="faq-content">
+                            <p>
+                                Yes, we use secure systems to protect your personal and medical data and ensure
+                                privacy for all patients.
+                            </p>
+                        </div>
+                        <i class="faq-toggle bi bi-chevron-right"></i>
+                    </div>
+
+                    <div class="faq-item">
+                        <h3>How can I contact support?</h3>
+                        <div class="faq-content">
+                            <p>
+                                You can use the contact form on the home page to send us your questions
+                                and our team will respond as soon as possible.
+                            </p>
+                        </div>
+                        <i class="faq-toggle bi bi-chevron-right"></i>
+                    </div>
 
                 </div>
-
             </div>
-
-        </section>
+        </div>
+    </div>
+</section>
 
 
         <!-- Testimonials Section -->
@@ -644,56 +644,56 @@
 
 @section('js')
 
-<script>
-    $('.addBtn').click(function (e) {
-        e.preventDefault();
+    <script>
+        $('.addBtn').click(function(e) {
+            e.preventDefault();
 
-        let name = $('#name').val().trim();
-        let email = $('#email').val().trim();
-        let subject = $('#subject').val().trim();
-        let message = $('#message').val();
+            let name = $('#name').val().trim();
+            let email = $('#email').val().trim();
+            let subject = $('#subject').val().trim();
+            let message = $('#message').val();
 
 
 
-        // إنشاء formData
-        let formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('subject', subject);
-        formData.append('message', message);
+            // إنشاء formData
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('subject', subject);
+            formData.append('message', message);
 
-        if(name === '' || email === '' || subject === '' || message === ''){
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please Enter All Required Fields',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }else{
-            $.ajax({
-                method: 'POST',
-                url: "{{ route('contact_send') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    if (response.data == 1) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'The Message Has Been Sent Successfully',
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#00A8FF',
-                        }).then(() => {
-                            window.location.href = '/patient/home';
-                        });
+            if (name === '' || email === '' || subject === '' || message === '') {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Enter All Required Fields',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('contact_send') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'The Message Has Been Sent Successfully',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#00A8FF',
+                            }).then(() => {
+                                window.location.href = '/patient/home';
+                            });
+                        }
                     }
-                }
-            });
-        }
-    });
-</script>
+                });
+            }
+        });
+    </script>
 @endsection
