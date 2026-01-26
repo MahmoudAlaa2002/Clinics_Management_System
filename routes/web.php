@@ -120,9 +120,6 @@ use App\Http\Controllers\Backend\Patient\{
     MedicalRecordController as PatientMedicalRecordController
 };
 
-Route::get('/', function () {
-    return redirect()->route('home');
-});
 
 Route::prefix('clinics-management')->group(function () {
 
@@ -812,6 +809,7 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
     //Pending
     Route::get('/bank-payments/pending', [AccountantPaymentController::class, 'index'])->name('accountant.bank_payments.pending');
     Route::get('/bank-payments/pending/search', [AccountantPaymentController::class, 'search'])->name('accountant.bank_payments.pending.search');
+    Route::get('/hold-appointments/{hold}/details', [AccountantPaymentController::class, 'details'])->name('accountant.hold_appointments.details');
     Route::post('/bank-payments/{payment}/approve', [AccountantPaymentController::class, 'approve'])->name('accountant.bank_payments.approve');
     Route::post('/bank-payments/{payment}/reject', [AccountantPaymentController::class, 'reject'])->name('accountant.bank_payments.reject');
 
@@ -874,6 +872,7 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
 
     Route::post('/appointment/hold', [PatientAppointmentController::class, 'createHold'])->name('patient.appointment_hold');
     Route::get('/payment/{hold}', [PatientPaymentController::class, 'chooseMethod'])->name('patient.choose_payment');
+
 
     //Bank
     Route::get('/bank-qr/pay/{hold}', [PatientPaymentController::class,'bankQr'])->name('patient.bank.qr');

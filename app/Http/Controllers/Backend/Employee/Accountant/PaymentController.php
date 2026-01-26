@@ -79,9 +79,34 @@ class PaymentController extends Controller{
 
 
 
+    public function details($id) {
+        $hold_appointment = AppointmentHold::with([
+            'patient.user',
+            'doctor.employee.user',
+            'clinicDepartment'
+        ])->findOrFail($id);
+        return view('Backend.employees.accountants.payments.pending.details', compact('hold_appointment'));
+    }
+
+
+
+
     public function approve($paymentId) {
         $payment = BankPayment::findOrFail($paymentId);
         $hold = AppointmentHold::findOrFail($payment->hold_id);
+
+        // حالة نادرة 🔴 فحص هل الموعد محجوز مسبقًا؟ 🔴
+        $alreadyBooked = Appointment::where('doctor_id', $hold->doctor_id)
+            ->where('date', $hold->date)
+            ->where('time', $hold->time)
+            ->whereIn('status', ['Pending', 'Accepted', 'Completed'])->exists();
+
+        if ($alreadyBooked) {
+            return response()->json([
+                'status'  => 'conflict',
+            ], 409);
+
+        }
 
         $appointment = Appointment::create([
             'patient_id' => $hold->patient_id,
@@ -91,6 +116,7 @@ class PaymentController extends Controller{
             'time' => $hold->time,
             'notes' => $hold->notes,
             'status' => 'Pending',
+            'is_active' => 1,
             'consultation_fee' => $hold->amount
         ]);
 
@@ -115,10 +141,8 @@ class PaymentController extends Controller{
         $hold->delete();
 
         BankPaymentReviewed::dispatch($payment, auth()->user(), 'approved');
-        
 
-        return redirect()->route('accountant.bank_payments.pending')
-            ->with('success','Payment approved and appointment created');
+        return response()->json(['status' => 'success']);
     }
 
 
@@ -136,7 +160,7 @@ class PaymentController extends Controller{
         ]);
 
         BankPaymentReviewed::dispatch($payment, auth()->user(),'rejected');
-        
+
 
         return redirect()->route('accountant.bank_payments.pending')->with('error','Payment has been rejected');
     }
@@ -289,7 +313,7 @@ class PaymentController extends Controller{
     public function viewPaypalPayments() {
         $clinicId = auth()->user()->employee->clinic_id;
         $payments = PaypalPayment::where('clinic_id', $clinicId)->with([
-                'invoice.appointment.patient.user' 
+                'invoice.appointment.patient.user'
             ])->paginate(50);
 
         return view('Backend.employees.accountants.payments.paypal.view',compact('payments'));

@@ -132,6 +132,7 @@ class AppointmentController extends Controller{
                 /**
                  * 6️⃣ إنشاء الموعد
                  */
+
                 $appointment = Appointment::create([
                     'patient_id'           => $request->patient_id,
                     'doctor_id'            => $request->doctor_id,
@@ -141,6 +142,7 @@ class AppointmentController extends Controller{
                     'consultation_fee'     => $consultation_fee,
                     'notes'                => $request->notes,
                     'status'               => 'Accepted',
+                    'is_active'            => 1,
                 ]);
 
                 AppointmentBooked::dispatch($appointment, auth()->user());
@@ -391,7 +393,8 @@ class AppointmentController extends Controller{
             'date'                 => $appointmentDate,
             'time'                 => $selectedTime,
             'notes'                => $request->notes,
-            'status'               => $request->status ?? 'Accepted',
+            'status'               => 'Accepted',
+            'is_active'            => 1,
         ]);
 
         event(new AppointmentUpdated($appointment, $oldDoctorUserId));

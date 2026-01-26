@@ -145,8 +145,6 @@
         }
 
 
-        
-
         function showPaypalUnavailable() {
             alert(
                 "PayPal payment is currently unavailable for this clinic.\n\n" +
@@ -154,7 +152,8 @@
             );
         }
 
-        </script>
+
+    </script>
 
 
 @endsection

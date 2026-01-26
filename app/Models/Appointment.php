@@ -19,6 +19,7 @@ class Appointment extends Model{
         'status',
         'notes',
         'consultation_fee',
+        'is_active',
         'admin_deleted_at',
         'clinic_manager_deleted_at',
     ];

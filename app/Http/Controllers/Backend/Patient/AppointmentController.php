@@ -65,6 +65,8 @@ class AppointmentController extends Controller{
     }
 
 
+
+
     public function createHold(Request $request) {
         $patientId = auth()->user()->patient->id;
 
@@ -125,16 +127,16 @@ class AppointmentController extends Controller{
 
         if ($doctorConflict) return response()->json(['data' => 2]);
 
-        
-        // تعارض مع Holds أخرى غير منتهية
-        $holdConflict =AppointmentHold::where('doctor_id', $request->doctor_id)
-            ->where('date', $appointmentDate)
-            ->where('time', $selectedTime)
-            ->where('status', 'Pending')
-            ->where('expires_at', '>', now())
-            ->exists();
 
-        if ($holdConflict) return response()->json(['data' => 2]);
+        // تعارض مع Holds أخرى غير منتهية
+        // $holdConflict =AppointmentHold::where('doctor_id', $request->doctor_id)
+        //     ->where('date', $appointmentDate)
+        //     ->where('time', $selectedTime)
+        //     ->where('status', 'Pending')
+        //     ->where('expires_at', '>', now())
+        //     ->exists();
+
+        // if ($holdConflict) return response()->json(['data' => 2]);
 
         $fee = Doctor::where('id', $request->doctor_id)->value('consultation_fee');
 

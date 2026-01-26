@@ -64,7 +64,6 @@ class PaymentController extends Controller {
 
 
     //PayPal
-
     public function payHold($hold_id) {
         $hold = AppointmentHold::where('id', $hold_id)
             ->where('status', 'Pending')
@@ -141,9 +140,6 @@ class PaymentController extends Controller {
         return back()->with('error', 'PayPal connection failed');
     }
 
-    
-
-
     public function cancelHold(Request $request, $hold_id) {
         $hold = AppointmentHold::findOrFail($hold_id);
         $clinic = $hold->clinicDepartment->clinic;
@@ -171,9 +167,6 @@ class PaymentController extends Controller {
 
         return view('Backend.patients.payment.paypal.cancel');
     }
-
-
-
 
     public function successHold(Request $request, $hold_id) {
         $hold = AppointmentHold::where('id', $hold_id)

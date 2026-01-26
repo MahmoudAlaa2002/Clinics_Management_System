@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
 
 return new class extends Migration {
     /**
@@ -19,7 +21,10 @@ return new class extends Migration {
             $table->enum('status', ['Pending', 'Accepted', 'Rejected', 'Cancelled', 'Completed'])->default('Pending');
             $table->text('notes')->nullable();
             $table->decimal('consultation_fee', 5, 2);    //   سعر الكشفية
-            $table->unique(['doctor_id', 'date', 'time']);     // عملت قفل بحيث لو أكثر من موظف أدخل نفس الدكتور وبنفس التاريخ واليوم وفي نفس اللحظة وتجاوز الشروط في الكود ,الداتا بيز تصده
+
+            $table->boolean('is_active')->nullable()->index();
+            $table->unique(['doctor_id', 'date', 'time', 'is_active']);
+
             $table->timestamp('admin_deleted_at')->nullable();
             $table->timestamp('clinic_manager_deleted_at')->nullable();
             $table->timestamps();

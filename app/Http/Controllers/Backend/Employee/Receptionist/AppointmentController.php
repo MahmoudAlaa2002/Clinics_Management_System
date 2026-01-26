@@ -125,6 +125,7 @@ class AppointmentController extends Controller{
             'consultation_fee'     => $consultation_fee,
             'notes'                => $request->notes,
             'status'               => 'Accepted',
+            'is_active'            => 1,
         ]);
 
         AppointmentBooked::dispatch($appointment, auth()->user());
@@ -395,6 +396,8 @@ class AppointmentController extends Controller{
             \App\Models\Doctor::find($appointment->doctor_id)
         )->employee?->user_id;
 
+        $status = $request->status ?? $appointment->status;
+        $isActive = in_array($status, ['Pending', 'Accepted', 'Completed']) ? 1 : null;
 
         $appointment->update([
             'patient_id'           => $request->patient_id,
@@ -404,7 +407,8 @@ class AppointmentController extends Controller{
             'time'                 => $selectedTime,
             'consultation_fee'     => $consultation_fee,
             'notes'                => $request->notes,
-            'status'               => $request->status ?? $appointment->status,
+            'status'               => $status,
+            'is_active'            => $isActive,
         ]);
 
         /**
@@ -441,6 +445,7 @@ class AppointmentController extends Controller{
         $appointment = Appointment::with('invoice')->findOrFail($id);
 
         $appointment->status = $request->status;
+        $appointment->is_active = in_array($request->status, ['Pending', 'Accepted', 'Completed']) ? 1 : null;
 
         // حالة الرفض
         if ($request->status === 'Rejected') {

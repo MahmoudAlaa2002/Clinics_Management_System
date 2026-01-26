@@ -13,7 +13,7 @@
                      width="80" height="80"
                      style="object-fit:cover;border-radius:6px;cursor:pointer;">
             </td>
-            
+
             <td class="status-cell">
                 @if($payment->status === 'pending')
                     <span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center; padding:4px 12px; font-size:18px; border-radius:50px; background-color:#ffc107; color:white;">
@@ -29,15 +29,21 @@
                     </span>
                 @endif
             </td>
+            <td>
+                <a href="{{ route('accountant.hold_appointments.details', ['hold' => $payment->hold->id]) }}" class="mr-1 btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Details Hold Appointment">
+                <i class="fa fa-eye"></i></a>
+            </td>
             <td class="action-btns">
                 <div class="d-flex justify-content-center">
                     <form action="{{ route('accountant.bank_payments.approve', $payment->id) }}" method="POST" style="display:inline-block; margin-right:4px;">
                         @csrf
-                        <button class="btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Approve">
+                        <button type="button" class="btn btn-outline-success btn-sm approve-btn" data-id="{{ $payment->id }}"
+                            data-bs-toggle="tooltip" title="Approve">
                             <i class="fa fa-check"></i>
                         </button>
+
                     </form>
-              
+
                     <form action="{{ route('accountant.bank_payments.reject', $payment->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         <button class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" title="Reject">

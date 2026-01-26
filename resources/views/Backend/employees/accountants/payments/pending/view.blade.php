@@ -37,7 +37,11 @@
         display: none; /* لإخفاء الشريط في كروم */
     }
 
+    .swal2-container {
+        z-index: 20000 !important;
+    }
 </style>
+
 
 <div class="page-wrapper">
     <div class="content">
@@ -83,6 +87,7 @@
                                 <th>Reference Number</th>
                                 <th>Receipt</th>
                                 <th>Status</th>
+                                <th>Details</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -122,13 +127,17 @@
 
                                 <!-- Spacer pushes buttons to bottom -->
                                 <div style="flex:1;"></div>
+                                <input type="hidden" id="currentPaymentId">
+
 
                                 <!-- ACTION BUTTONS bottom-right -->
                                 <div style="display:flex; justify-content:flex-end; gap:12px; padding-top:20px; border-top:1px solid #eee;">
 
                                     <form id="approveForm" method="POST">
                                         @csrf
-                                        <button class="btn btn-success">Approve</button>
+                                        <button type="button" class="btn btn-success approve-btn" id="modalApproveBtn">
+                                            Approve
+                                        </button>
                                     </form>
 
                                     <form id="rejectForm" method="POST">
@@ -212,17 +221,9 @@
             });
         }
 
-        // 🔍 البحث أثناء الكتابة
-        $(document).on('input', '#search_input', function () {
-            fetchAppointments();
-        });
+        $(document).on('input', '#search_input', fetchAppointments);
+        $(document).on('change', '#search_filter', fetchAppointments);
 
-        // 🔄 البحث عند تغيير نوع الفلتر
-        $(document).on('change', '#search_filter', function () {
-            fetchAppointments();
-        });
-
-        // 📄 دعم الباجينيشن في حالة البحث
         $(document).on('click', '#main-pagination .page-link', function (e) {
             let keyword = $('#search_input').val().trim();
             if (keyword !== '') {
@@ -237,8 +238,11 @@
 
 
     $(document).on('click','td[data-field="receipt"] img',function(){
-
         let img = $(this);
+        const paymentId = img.data('id');
+
+        // 🔴 هنا التعبئة المهمة
+        $('#currentPaymentId').val(paymentId);
 
         $('#verifyReceiptImg').attr('src', img.attr('src'));
         $('#verifyReference').val(img.data('ref'));
@@ -252,5 +256,73 @@
         $('#verifyModal').css('display','flex');
     });
 
+
+
+
+    $(document).on('click', '.approve-btn', function () {
+
+        let paymentId;
+
+        // 🔹 زر الجدول
+        if ($(this).data('id')) {
+            paymentId = $(this).data('id');
+        }
+        // 🔹 زر المودال
+        else {
+            paymentId = $('#currentPaymentId').val();
+        }
+
+        if (!paymentId) {
+            console.error('❌ Payment ID not found');
+            return;
+        }
+
+        const btn = $(this);
+        btn.prop('disabled', true);
+
+        const url = `/employee/accountant/bank-payments/${paymentId}/approve`;
+
+        $.ajax({
+            method: 'POST',
+            url: url,
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+
+            success: function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Approved',
+                    text: 'Payment approved successfully',
+                    confirmButtonColor: '#00A8FF'
+                }).then(() => location.reload());
+            },
+
+            error: function (xhr) {
+
+                if (xhr.status === 409) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Appointment Conflict',
+                        text: 'This appointment slot is already booked. Please contact the patient to schedule another time that suits the current doctor.',
+                        confirmButtonColor: '#00A8FF'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong',
+                        confirmButtonColor: '#00A8FF'
+                    });
+                }
+
+                btn.prop('disabled', false);
+            }
+        });
+    });
+
+
+
 </script>
 @endsection
+

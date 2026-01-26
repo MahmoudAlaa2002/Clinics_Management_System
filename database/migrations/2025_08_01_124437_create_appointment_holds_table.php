@@ -18,11 +18,11 @@ return new class extends Migration
             $table->date('date');
             $table->time('time');
             $table->decimal('amount', 8, 2);
-            $table->enum('status', ['Pending', 'Paid', 'Cancelled'])->default('Pending');
+            $table->enum('status', ['Pending' , 'Cancelled'])->default('Pending');
             $table->timestamp('expires_at'); // now()->addMinutes(10)
 
             // لمنع حجزين Hold لنفس الدكتور بنفس الوقت
-            $table->unique(['doctor_id', 'date', 'time']);
+            // $table->unique(['doctor_id', 'date', 'time']);
             $table->timestamps();
         });
     }

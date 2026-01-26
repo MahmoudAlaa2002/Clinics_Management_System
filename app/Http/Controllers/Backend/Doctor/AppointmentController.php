@@ -14,10 +14,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Events\AppointmentStatusUpdated;
 
-class AppointmentController extends Controller
-{
-    public function allAppointments(Request $request)
-    {
+class AppointmentController extends Controller {
+
+    public function allAppointments(Request $request) {
         $doctor = Auth::user()->employee->doctor;
         $appointments = Appointment::with(['patient.user', 'clinic', 'department', 'vitalSign'])->where('doctor_id', $doctor->id);
 
@@ -59,17 +58,19 @@ class AppointmentController extends Controller
     public function confirmAppointment(Appointment $appointment)
     {
         $appointment->status = 'Accepted';
+        $appointment->is_active = 1;
         $appointment->save();
 
         AppointmentAccepted::dispatch($appointment, auth()->user());
         event(new AppointmentStatusUpdated($appointment));
-        
+
         return redirect()->back()->with('success', 'Appointment confirmed successfully.');
     }
 
     public function rejectAppointment(Appointment $appointment)
     {
         $appointment->status = 'Rejected';
+        $appointment->is_active = null;
         $appointment->save();
 
         AppointmentRejected::dispatch($appointment, auth()->user());
@@ -91,6 +92,7 @@ class AppointmentController extends Controller
             ]);
 
             $appointment->status = 'Cancelled';
+            $appointment->is_active = null;
             $appointment->save();
         });
 
