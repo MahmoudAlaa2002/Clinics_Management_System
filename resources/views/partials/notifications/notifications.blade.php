@@ -120,7 +120,7 @@
                         'appointment_completed' => 'fa-check-circle',
                         'invoice_created'        => 'fa-file-invoice',
                         'invoice_cancelled'      => 'fa-ban',
-                        'patient_registered',
+                        'patient_registered'     => 'fa-user-plus',
                         'patient_added'          => 'fa-user-plus',
                         default                  => 'fa-bell',
                     };

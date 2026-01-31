@@ -215,124 +215,125 @@
 </div>
 @endsection
 
+
 @section('js')
-<script>
-$(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
-    $('.registerBtn').click(function () {
+            $('.registerBtn').click(function () {
 
-        let gender = $('input[name="gender"]:checked').val();
+                let gender = $('input[name="gender"]:checked').val();
 
-        let data = {
-            name: $('#name').val(),
-            email: $('#email').val(),
-            password: $('#password').val(),
-            password_confirmation: $('#password_confirmation').val(),
-            phone: $('#phone').val(),
-            address: $('#address').val(),
-            date_of_birth: $('#date_of_birth').val(),
-            gender: gender,
-            blood_type: $('#blood_type').val(),
-            emergency_contact: $('#emergency_contact').val(),
-            allergies: $('#allergies').val(),
-            chronic_diseases: $('#chronic_diseases').val(),
-            _token: "{{ csrf_token() }}"
-        };
+                let data = {
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                    password_confirmation: $('#password_confirmation').val(),
+                    phone: $('#phone').val(),
+                    address: $('#address').val(),
+                    date_of_birth: $('#date_of_birth').val(),
+                    gender: gender,
+                    blood_type: $('#blood_type').val(),
+                    emergency_contact: $('#emergency_contact').val(),
+                    allergies: $('#allergies').val(),
+                    chronic_diseases: $('#chronic_diseases').val(),
+                    _token: "{{ csrf_token() }}"
+                };
 
-        // ===== Required Fields Validation =====
-        if (!data.name || !data.email || !data.password || !data.password_confirmation ||
-            !data.phone || !data.address || !data.date_of_birth || !data.gender) {
+                // ===== Required Fields Validation =====
+                if (!data.name || !data.email || !data.password || !data.password_confirmation ||
+                    !data.phone || !data.address || !data.date_of_birth || !data.gender) {
 
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please fill in all required fields',
-                icon: 'error',
-                confirmButtonColor: '#00A8FF'
-            });
-            return;
-        }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please fill in all required fields',
+                        icon: 'error',
+                        confirmButtonColor: '#00A8FF'
+                    });
+                    return;
+                }
 
-        // ===== Password Validation (6–15, numbers + symbols) =====
-        let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
+                // ===== Password Validation (6–15, numbers + symbols) =====
+                let passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,15}$/;
 
-        if (data.password && !passwordPattern.test(data.password)){
-                Swal.fire({
-                    title: 'Invalid Password',
-                    text: 'Password must be 6–15 characters',
-                    icon: 'error',
-                    confirmButtonColor: '#00A8FF'
-                });
-                return;
-            }
+                if (data.password && !passwordPattern.test(data.password)){
+                        Swal.fire({
+                            title: 'Invalid Password',
+                            text: 'Password must be 6–15 characters',
+                            icon: 'error',
+                            confirmButtonColor: '#00A8FF'
+                        });
+                        return;
+                    }
 
 
-        if (data.password !== data.password_confirmation) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Passwords do not match',
-                icon: 'error',
-                confirmButtonColor: '#00A8FF'
-            });
-            return;
-        }
+                if (data.password !== data.password_confirmation) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Passwords do not match',
+                        icon: 'error',
+                        confirmButtonColor: '#00A8FF'
+                    });
+                    return;
+                }
 
-        // ===== Real Email Validation (Laravel RFC + DNS) =====
-        $.ajax({
-            method: 'POST',
-            url: "{{ route('check_email') }}",
-            data: {
-                email: data.email,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function () {
-
-                // ===== Register Patient =====
+                // ===== Real Email Validation (Laravel RFC + DNS) =====
                 $.ajax({
                     method: 'POST',
-                    url: "{{ route('register') }}",
-                    data: data,
-                    success: function (response) {
+                    url: "{{ route('check_email') }}",
+                    data: {
+                        email: data.email,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function () {
 
-                        if (response.data == 0) {
-                            Swal.fire({
-                                title: 'Warning',
-                                text: 'Email already exists',
-                                icon: 'warning',
-                                confirmButtonColor: '#00A8FF'
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Patient account has been created successfully',
-                                icon: 'success',
-                                confirmButtonColor: '#00A8FF'
-                            }).then(() => {
-                                window.location.href = '/patient/home';
-                            });
+                        // ===== Register Patient =====
+                        $.ajax({
+                            method: 'POST',
+                            url: "{{ route('register') }}",
+                            data: data,
+                            success: function (response) {
+
+                                if (response.data == 0) {
+                                    Swal.fire({
+                                        title: 'Warning',
+                                        text: 'Email already exists',
+                                        icon: 'warning',
+                                        confirmButtonColor: '#00A8FF'
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Patient account has been created successfully',
+                                        icon: 'success',
+                                        confirmButtonColor: '#00A8FF'
+                                    }).then(() => {
+                                        window.location.href = '/patient/home';
+                                    });
+                                }
+                            }
+                        });
+
+                    },
+                    error: function (xhr) {
+                        let msg = 'Invalid email address';
+
+                        if (xhr.responseJSON?.errors?.email) {
+                            msg = xhr.responseJSON.errors.email[0];
                         }
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: msg,
+                            icon: 'error',
+                            confirmButtonColor: '#00A8FF'
+                        });
                     }
                 });
 
-            },
-            error: function (xhr) {
-                let msg = 'Invalid email address';
+            });
 
-                if (xhr.responseJSON?.errors?.email) {
-                    msg = xhr.responseJSON.errors.email[0];
-                }
-
-                Swal.fire({
-                    title: 'Error!',
-                    text: msg,
-                    icon: 'error',
-                    confirmButtonColor: '#00A8FF'
-                });
-            }
         });
-
-    });
-
-});
-</script>
+    </script>
 @endsection
 

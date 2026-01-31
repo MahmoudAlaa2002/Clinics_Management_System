@@ -177,7 +177,7 @@
         <tr>
             <td>
                 <div class="label">DUE DATE</div>
-                <div class="value">{{ $invoice->due_date }}</div>
+                <div class="value">{{ $invoice->due_date ?? '-' }}</div>
             </td>
 
             <td>

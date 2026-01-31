@@ -29,12 +29,14 @@ class PatientRegisteredNotification extends Notification {
 
 
     public function toBroadcast($notifiable) {
+
         return new \Illuminate\Notifications\Messages\BroadcastMessage([
             'type' => 'patient_registered',
             'patient_id'   => $this->patient->id,
             'patient_name' => $this->patient->user->name ?? 'Patient',
             'url' => route('profile_patient', $this->patient->id),
         ]);
+
     }
 
 }
