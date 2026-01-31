@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Shared;
+namespace App\Http\Controllers\Backend\shared;
 
 use App\Models\Clinic;
 use Illuminate\Http\Request;

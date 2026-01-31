@@ -7,10 +7,10 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
-use App\Http\Controllers\Backend\Shared\CommonClinicController;
-use App\Http\Controllers\Backend\Shared\CommonDoctorController;
-use App\Http\Controllers\Backend\Shared\NotificationController;
-use App\Http\Controllers\Backend\Shared\ChatController;
+use App\Http\Controllers\Backend\shared\CommonClinicController;
+use App\Http\Controllers\Backend\shared\CommonDoctorController;
+use App\Http\Controllers\Backend\shared\NotificationController;
+use App\Http\Controllers\Backend\shared\ChatController;
 
 
 use App\Http\Controllers\Backend\Admin\{
