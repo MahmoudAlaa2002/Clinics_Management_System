@@ -260,6 +260,7 @@ class EmployeeController extends Controller{
         // تحقق من عدم وجود محاسب عيادة آخر
         if ($request->job_title === 'Accountant') {
             $accountant = Employee::where('clinic_id', $request->clinic_id)
+                ->where('job_title', 'Accountant')
                 ->where('id', '!=', $employee->id)
                 ->exists();
 
@@ -269,10 +270,11 @@ class EmployeeController extends Controller{
         }
 
 
-        // تحقق من عدم وجود محاسب قسم آخر في نفس العيادة
+        // تحقق من عدم وجود موظف استقبال آخر في نفس القسم
         if ($request->job_title === 'Receptionist') {
             $receptionist = Employee::where('clinic_id', $request->clinic_id)
                 ->where('department_id', $request->department_id)
+                ->where('job_title', 'Receptionist')
                 ->where('id', '!=', $employee->id)
                 ->exists();
 
@@ -280,6 +282,7 @@ class EmployeeController extends Controller{
                 return response()->json(['data' => 3]);
             }
         }
+
 
         $password = $user->password;
         if ($request->filled('password')) {
