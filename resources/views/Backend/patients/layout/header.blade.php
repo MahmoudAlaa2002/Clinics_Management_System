@@ -539,25 +539,22 @@
 </header>
 
 
-<!-- Pusher & Echo Scripts -->
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
 
 <script>
-    // Initialize global variables
     window.CMS = window.CMS || {};
     window.CMS.userId = {{ auth()->id() }};
 
-    // Initialize Pusher & Echo
     window.Pusher = Pusher;
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: "{{ config('broadcasting.connections.pusher.key') }}",
-        cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
+        key: '1fac67dc0f09b838e81c',
+        cluster: 'eu',  // Hardcoded to ensure it's correct
         forceTLS: true,
         encrypted: true,
         enableLogging: true,
-
+        
         authorizer: (channel, options) => {
             return {
                 authorize: (socketId, callback) => {
@@ -572,41 +569,33 @@
                             channel_name: channel.name,
                         })
                     })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            callback(null, data);
-                        })
-                        .catch(error => {
-                            console.error('Broadcasting auth failed:', error);
-                            callback(error);
-                        });
+                    .then(response => response.json())
+                    .then(data => callback(null, data))
+                    .catch(error => {
+                        console.error('Auth error:', error);
+                        callback(error);
+                    });
                 }
             };
         },
     });
+    
+    console.log('✅ Echo initialized with cluster:', window.Echo.connector.pusher.config.cluster);
 
     // Notification dropdown toggle
     document.addEventListener('DOMContentLoaded', function () {
         const bell = document.querySelector('.notification-bell');
         const dropdown = document.querySelector('.notification-dropdown');
-
-        // Toggle when clicking bell
+        
         bell.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdown.classList.toggle('open');
         });
-
-        // Close when clicking outside
+        
         document.addEventListener('click', function () {
             dropdown.classList.remove('open');
         });
-
-        // Prevent closing when clicking inside dropdown
+        
         dropdown.addEventListener('click', function (e) {
             e.stopPropagation();
         });
@@ -615,50 +604,25 @@
     // Listen for real-time notifications
     Echo.private('App.Models.User.' + window.CMS.userId)
         .notification((notification) => {
-            console.log('New notification received:', notification);
-
+            console.log('🔔 New notification received:', notification);
+            
             fetch(`/patient/notifications/render/${notification.id}`)
                 .then(res => res.text())
                 .then(html => {
                     const list = document.querySelector('.notification-list');
                     if (!list) return;
-
-                    // Remove "No notifications yet" message if exists
+                    
                     const empty = list.querySelector('.notification-empty');
-                    if (empty) {
-                        empty.remove();
-                    }
-
-                    // Add new notification at the top
+                    if (empty) empty.remove();
+                    
                     list.insertAdjacentHTML('afterbegin', html);
-
-                    // Update badge counter
+                    
                     const badge = document.querySelector('.notification-badge');
-                    const currentCount = parseInt(badge.innerText || 0);
-                    badge.innerText = currentCount + 1;
+                    badge.innerText = parseInt(badge.innerText || 0) + 1;
                     badge.style.display = 'flex';
-
-                    // Optional: Add animation
-                    const newItem = list.firstElementChild;
-                    newItem.style.animation = 'slideIn 0.3s ease';
                 })
                 .catch(error => {
                     console.error('Error fetching notification:', error);
                 });
         });
 </script>
-
-<!-- Optional: Add CSS animation -->
-<style>
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-</style>
