@@ -203,10 +203,6 @@ Route::prefix('clinics-management')->group(function () {
 //Admin
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
-    Route::get('broadcasting/auth', function (Request $request) {
-        return Broadcast::auth($request);
-    });
-
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('dashboard');
     Route::get('/my_profile', [AdminDashboardController::class, 'myProfile'])->name('my_profile');
