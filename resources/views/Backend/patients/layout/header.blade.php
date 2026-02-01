@@ -539,92 +539,126 @@
 </header>
 
 
-<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1/dist/echo.iife.js"></script>
-
-{{-- @include('Backend.chat.echo-core') --}}
+<!-- Pusher & Echo Scripts -->
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
 
 <script>
+    // Initialize global variables
     window.CMS = window.CMS || {};
     window.CMS.userId = {{ auth()->id() }};
-</script>
 
+    // Initialize Pusher & Echo
+    window.Pusher = Pusher;
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: "{{ config('broadcasting.connections.pusher.key') }}",
+        cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
+        forceTLS: true,
+        encrypted: true,
+        enableLogging: true,
 
-<script>
+        authorizer: (channel, options) => {
+            return {
+                authorize: (socketId, callback) => {
+                    fetch('/broadcasting/auth', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            socket_id: socketId,
+                            channel_name: channel.name,
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            callback(null, data);
+                        })
+                        .catch(error => {
+                            console.error('Broadcasting auth failed:', error);
+                            callback(error);
+                        });
+                }
+            };
+        },
+    });
 
+    // Notification dropdown toggle
     document.addEventListener('DOMContentLoaded', function () {
         const bell = document.querySelector('.notification-bell');
         const dropdown = document.querySelector('.notification-dropdown');
 
-        // toggle when clicking bell
+        // Toggle when clicking bell
         bell.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdown.classList.toggle('open');
         });
 
-        // close when clicking outside
+        // Close when clicking outside
         document.addEventListener('click', function () {
             dropdown.classList.remove('open');
         });
 
-        // prevent closing when clicking inside dropdown
+        // Prevent closing when clicking inside dropdown
         dropdown.addEventListener('click', function (e) {
             e.stopPropagation();
         });
     });
 
-
-    // window.Pusher = Pusher;
-    // window.Echo = new Echo({
-    //     broadcaster: 'pusher',
-    //     key: "{{ config('broadcasting.connections.pusher.key') }}",
-    //     wsHost: "{{ config('broadcasting.connections.pusher.options.host') }}",
-    //     wsPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-    //     wssPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-    //     forceTLS: "{{ config('broadcasting.connections.pusher.options.scheme') }}" === 'https',
-    //     encrypted: true,
-    //     disableStats: true,
-    //     enabledTransports: ['ws', 'wss'],
-    //     cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
-    //     authEndpoint: '/broadcasting/auth',
-    //     auth: {
-    //         headers: {
-    //             'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-    //         }
-    //     }
-    // });
-
-
+    // Listen for real-time notifications
     Echo.private('App.Models.User.' + window.CMS.userId)
         .notification((notification) => {
+            console.log('New notification received:', notification);
 
             fetch(`/patient/notifications/render/${notification.id}`)
                 .then(res => res.text())
                 .then(html => {
-
                     const list = document.querySelector('.notification-list');
                     if (!list) return;
 
-                    // احذف رسالة "No notifications yet" إن وجدت
+                    // Remove "No notifications yet" message if exists
                     const empty = list.querySelector('.notification-empty');
                     if (empty) {
                         empty.remove();
                     }
 
-                    // أضف الإشعار الجديد
+                    // Add new notification at the top
                     list.insertAdjacentHTML('afterbegin', html);
 
-                    // تحديث العداد
+                    // Update badge counter
                     const badge = document.querySelector('.notification-badge');
-                    badge.innerText = parseInt(badge.innerText || 0) + 1;
+                    const currentCount = parseInt(badge.innerText || 0);
+                    badge.innerText = currentCount + 1;
                     badge.style.display = 'flex';
 
-                    // refresh بصري خفيف
-                    list.style.display = 'none';
-                    list.offsetHeight;
-                    list.style.display = 'block';
+                    // Optional: Add animation
+                    const newItem = list.firstElementChild;
+                    newItem.style.animation = 'slideIn 0.3s ease';
+                })
+                .catch(error => {
+                    console.error('Error fetching notification:', error);
                 });
         });
-
-
 </script>
+
+<!-- Optional: Add CSS animation -->
+<style>
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>
