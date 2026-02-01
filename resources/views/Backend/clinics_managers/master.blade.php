@@ -35,7 +35,8 @@
     <script src="{{ asset('assets/js/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('assets/js/Chart.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/chart.js') }}"></script>
-    <script src="{{ asset('assets/js/app.js') }}"></script>
+    @vite(['resources/js/app.js'])
+    <!-- <script src="{{ asset('assets/js/app.js') }}"></script> -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
