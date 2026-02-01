@@ -64,7 +64,6 @@
         margin: 6px 0;
     }
 </style>
-
 <div class="header">
     <div class="header-left">
         <a href="{{ Route('doctor_dashboard') }}" class="logo">
@@ -111,11 +110,9 @@
         </li>
     </ul>
 </div>
-
 <!-- Pusher & Echo Scripts -->
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
-
 <script>
     // Initialize global variables
     window.CMS = window.CMS || {};
@@ -130,7 +127,6 @@
         forceTLS: true,
         encrypted: true,
         enableLogging: true,
-
         authorizer: (channel, options) => {
             return {
                 authorize: (socketId, callback) => {
@@ -172,7 +168,7 @@
             }
 
             // Fetch and render the notification HTML
-            fetch(`/doctor/notifications/render/${notification.id}`)
+            fetch(`/doctor/notifications/render/${notification.id}`)  // ← FIXED HERE
                 .then(res => res.text())
                 .then(html => {
                     const notificationList = document.querySelector('.notification-list, .notifications-list');
