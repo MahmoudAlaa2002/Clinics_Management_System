@@ -11,6 +11,9 @@ use App\Models\Testimonial;
 use App\Jobs\SendContactMessageJob;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\ContactMessage;
+use Illuminate\Support\Facades\Mail;
+
 
 class HomeController extends Controller
 {
@@ -52,7 +55,9 @@ class HomeController extends Controller
         ]);
 
         // إرسال الإيميل عبر الـ Job (Queue)
-        SendContactMessageJob::dispatch($validated);
+        // SendContactMessageJob::dispatch($validated);
+        Mail::to(config('mail.from.address'))
+        ->send(new ContactMessage($validated));
 
         return response()->json(['data' => 1]);
     }
