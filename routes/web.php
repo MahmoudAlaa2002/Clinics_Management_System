@@ -203,8 +203,8 @@ Route::prefix('clinics-management')->group(function () {
 //Admin
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
-    Route::get('/broadcasting/auth', function () {
-        return Broadcast::auth();
+    Route::get('broadcasting/auth', function (Request $request) {
+        return Broadcast::auth($request);
     });
 
     // Dashboard
