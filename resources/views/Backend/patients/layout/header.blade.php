@@ -575,16 +575,17 @@
 
 
     window.Pusher = Pusher;
-
     window.Echo = new Echo({
         broadcaster: 'pusher',
         key: "{{ config('broadcasting.connections.pusher.key') }}",
         wsHost: "{{ config('broadcasting.connections.pusher.options.host') }}",
         wsPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-        forceTLS: true,
+        wssPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
+        forceTLS: "{{ config('broadcasting.connections.pusher.options.scheme') }}" === 'https',
+        encrypted: true,
         disableStats: true,
         enabledTransports: ['ws', 'wss'],
-        withCredentials: true,
+        cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
         authEndpoint: '/broadcasting/auth',
         auth: {
             headers: {
