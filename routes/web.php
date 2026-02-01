@@ -122,11 +122,6 @@ use App\Http\Controllers\Backend\Patient\{
 };
 
 
-
-Route::get('/broadcasting/auth', function () {
-    return Broadcast::auth();
-});
-
 Route::prefix('clinics-management')->group(function () {
 
     //Home
@@ -207,6 +202,10 @@ Route::prefix('clinics-management')->group(function () {
 
 //Admin
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(function () {
+
+    Route::get('/broadcasting/auth', function () {
+        return Broadcast::auth();
+    });
 
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('dashboard');
