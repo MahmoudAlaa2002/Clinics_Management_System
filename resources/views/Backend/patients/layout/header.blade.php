@@ -33,9 +33,12 @@
         border-radius: 999px;
         font-weight: 900;
 
-        font-size: 11px;     /* 🔢 حجم الرقم */
-        width: 18px;        /* 🔴 عرض الدائرة */
-        height: 15px;       /* 🔴 ارتفاع الدائرة */
+        font-size: 11px;
+        /* 🔢 حجم الرقم */
+        width: 18px;
+        /* 🔴 عرض الدائرة */
+        height: 15px;
+        /* 🔴 ارتفاع الدائرة */
 
         display: flex;
         align-items: center;
@@ -52,14 +55,14 @@
         width: 360px;
         background: #fff;
         border-radius: 14px;
-        box-shadow: 0 15px 40px rgba(0,0,0,.15);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .15);
         display: none;
         overflow: hidden;
         z-index: 9999;
     }
 
-    .notification-dropdown{
-        display:none;
+    .notification-dropdown {
+        display: none;
     }
 
     .notification-header {
@@ -120,16 +123,24 @@
     }
 
 
-    .notification-bell i{
+    .notification-bell i {
         font-size: 20px !important;
     }
 
     .notification-bell i {
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
     }
 
-    .notification-list  { max-height: 400px; overflow-y: auto; }
-    .notification-empty { padding: 40px; text-align: center; color: #9ca3af; }
+    .notification-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .notification-empty {
+        padding: 40px;
+        text-align: center;
+        color: #9ca3af;
+    }
 
     .notification-text {
         white-space: normal;
@@ -142,27 +153,27 @@
 
     /* ===== Premium Notification UI ===== */
 
-    .notification-dropdown{
-        background: rgba(255,255,255,0.92);
+    .notification-dropdown {
+        background: rgba(255, 255, 255, 0.92);
         backdrop-filter: blur(14px);
         border-radius: 18px;
         box-shadow:
-            0 30px 80px rgba(0,0,0,.18),
-            0 0 0 1px rgba(255,255,255,.6) inset;
-        border: 1px solid rgba(0,0,0,.04);
+            0 30px 80px rgba(0, 0, 0, .18),
+            0 0 0 1px rgba(255, 255, 255, .6) inset;
+        border: 1px solid rgba(0, 0, 0, .04);
     }
 
-    .notification-header{
+    .notification-header {
         font-size: 15px;
         font-weight: 900;
         letter-spacing: .3px;
-        background: linear-gradient(135deg,#f8fbff,#eef5ff);
+        background: linear-gradient(135deg, #f8fbff, #eef5ff);
         color: #0f172a;
-        border-bottom: 1px solid rgba(0,0,0,.05);
+        border-bottom: 1px solid rgba(0, 0, 0, .05);
     }
 
 
-    .notification-item{
+    .notification-item {
         border-radius: 14px;
         margin: 6px 10px;
         padding: 14px 14px;
@@ -171,32 +182,32 @@
         overflow: hidden;
     }
 
-    .notification-item:hover{
-        background: linear-gradient(135deg,#eef6ff,#f6faff);
-        box-shadow: 0 10px 30px rgba(0,123,255,.08);
+    .notification-item:hover {
+        background: linear-gradient(135deg, #eef6ff, #f6faff);
+        box-shadow: 0 10px 30px rgba(0, 123, 255, .08);
     }
 
     /* Unread highlight */
-    .notification-item.unread{
-        background: linear-gradient(135deg,#e9f2ff,#f4f8ff);
+    .notification-item.unread {
+        background: linear-gradient(135deg, #e9f2ff, #f4f8ff);
         border-left: 4px solid #3b82f6;
     }
 
     /* Icon bubble */
-    .notification-icon{
-        background: linear-gradient(135deg,#dbeafe,#eff6ff);
-        box-shadow: 0 6px 14px rgba(59,130,246,.25);
+    .notification-icon {
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        box-shadow: 0 6px 14px rgba(59, 130, 246, .25);
     }
 
     /* Text */
-    .notification-text{
+    .notification-text {
         font-size: 14px;
         font-weight: 700;
         color: #0f172a;
         line-height: 1.4;
     }
 
-    .notification-time{
+    .notification-time {
         font-size: 11px;
         color: #64748b;
     }
@@ -210,111 +221,111 @@
 
     /* ================= CMS STYLE FOR EXISTING NOTIFICATIONS ================= */
 
-    .notification-dropdown{
-        width:450px !important;
-        border-radius:14px !important;
-        border:1px solid #e6ecf3 !important;
-        box-shadow:0 15px 40px rgba(0,0,0,.12) !important;
-        overflow:hidden;
-        background:#fff;
+    .notification-dropdown {
+        width: 450px !important;
+        border-radius: 14px !important;
+        border: 1px solid #e6ecf3 !important;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, .12) !important;
+        overflow: hidden;
+        background: #fff;
     }
 
     /* Header */
-    .notification-header{
-        padding:16px 18px !important;
-        font-weight:800;
-        background:#f7f9fc !important;
-        border-bottom:1px solid #eaeef6 !important;
-        text-align:center;
-        font-size:16px;
-        letter-spacing:.5px;
+    .notification-header {
+        padding: 16px 18px !important;
+        font-weight: 800;
+        background: #f7f9fc !important;
+        border-bottom: 1px solid #eaeef6 !important;
+        text-align: center;
+        font-size: 16px;
+        letter-spacing: .5px;
     }
 
     /* List */
-    .notification-list{
-        max-height:420px !important;
-        overflow-y:auto;
+    .notification-list {
+        max-height: 420px !important;
+        overflow-y: auto;
     }
 
     /* Item */
-    .notification-item{
-        display:flex;
-        gap:14px;
-        padding:14px 18px !important;
-        text-decoration:none;
-        transition:.25s ease;
-        border-radius:0;
+    .notification-item {
+        display: flex;
+        gap: 14px;
+        padding: 14px 18px !important;
+        text-decoration: none;
+        transition: .25s ease;
+        border-radius: 0;
     }
 
     /* Hover */
-    .notification-item:hover{
-        background:#f1f6ff !important;
+    .notification-item:hover {
+        background: #f1f6ff !important;
     }
 
     /* Unread */
-    .notification-item.unread{
-        background:#f4f8ff !important;
+    .notification-item.unread {
+        background: #f4f8ff !important;
     }
 
     /* Icon */
-    .notification-icon{
-        width:44px !important;
-        height:44px !important;
-        background:#e7f0ff !important;
-        color:#007bff !important;
-        border-radius:50% !important;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:18px !important;
-        flex-shrink:0;
+    .notification-icon {
+        width: 44px !important;
+        height: 44px !important;
+        background: #e7f0ff !important;
+        color: #007bff !important;
+        border-radius: 50% !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px !important;
+        flex-shrink: 0;
     }
 
     /* Text */
-    .notification-text{
-        font-size:14px !important;
-        font-weight:600 !important;
-        color:#1f2937 !important;
+    .notification-text {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #1f2937 !important;
     }
 
     /* Time */
-    .notification-time{
-        font-size:12px !important;
-        color:#6b7280 !important;
-        margin-top:4px;
+    .notification-time {
+        font-size: 12px !important;
+        color: #6b7280 !important;
+        margin-top: 4px;
     }
 
     /* Empty */
-    .notification-empty{
-        padding:50px !important;
-        text-align:center;
-        color:#9ca3af !important;
+    .notification-empty {
+        padding: 50px !important;
+        text-align: center;
+        color: #9ca3af !important;
     }
 
     /* Footer */
-    .notification-footer{
-        display:block;
-        padding:14px !important;
-        text-align:center;
-        background:#f7f9fc !important;
-        border-top:1px solid #eaeef6 !important;
-        font-weight:700;
-        text-decoration:none;
-        color:#007bff !important;
+    .notification-footer {
+        display: block;
+        padding: 14px !important;
+        text-align: center;
+        background: #f7f9fc !important;
+        border-top: 1px solid #eaeef6 !important;
+        font-weight: 700;
+        text-decoration: none;
+        color: #007bff !important;
     }
 
-    .notification-dropdown a.notification-footer{
+    .notification-dropdown a.notification-footer {
         color: #000 !important;
         text-align: center !important;
         display: block;
     }
 
-    .notification-dropdown a.notification-footer:hover{
+    .notification-dropdown a.notification-footer:hover {
         color: #000 !important;
         text-decoration: none !important;
     }
 
-    .notification-icon{
+    .notification-icon {
         width: 50px;
         height: 50px;
         background: #00A8FF !important;
@@ -326,7 +337,7 @@
         position: relative;
     }
 
-    .notification-icon i{
+    .notification-icon i {
         color: #ffffff;
         font-size: 24px !important;
         margin-right: 5px;
@@ -334,16 +345,16 @@
         display: block !important;
         line-height: 1 !important;
         position: relative;
-        top: 1px;   /* تعويض انحراف FontAwesome */
+        top: 1px;
+        /* تعويض انحراف FontAwesome */
     }
-
-
 </style>
 
 <header id="header" class="header sticky-top">
     <div class="branding d-flex align-items-center justify-content-between">
         <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="{{ route('patient.home') }}" class="logo d-flex align-items-center me-auto" style="margin-left: 30px;">
+            <a href="{{ route('patient.home') }}" class="logo d-flex align-items-center me-auto"
+                style="margin-left: 30px;">
                 <img src="{{ asset('patients/img/logo.png') }}" width="40" height="40" alt="">
                 <span style="font-size: 24px;"><strong>Clinics Management</strong></span>
             </a>
@@ -352,37 +363,37 @@
                 <ul>
                     <li>
                         <a class="{{ request()->routeIs('patient.home') ? 'active' : '' }}"
-                           href="{{ route('patient.home') }}">
+                            href="{{ route('patient.home') }}">
                             Home
                         </a>
                     </li>
                     <li>
                         <a class="{{ request()->routeIs('patient.clinics_view') ? 'active' : '' }}"
-                           href="{{ route('patient.clinics_view') }}">
+                            href="{{ route('patient.clinics_view') }}">
                             Clinics
                         </a>
                     </li>
                     <li>
                         <a class="{{ request()->routeIs('patient.doctors_view') ? 'active' : '' }}"
-                           href="{{ route('patient.doctors_view') }}">
+                            href="{{ route('patient.doctors_view') }}">
                             Doctors
                         </a>
                     </li>
                     <li>
                         <a class="{{ request()->routeIs('patient.myAppointments') ? 'active' : '' }}"
-                           href="{{ route('patient.myAppointments') }}">
+                            href="{{ route('patient.myAppointments') }}">
                             My Appointments
                         </a>
                     </li>
                     <li>
                         <a class="{{ request()->routeIs('patient.invoices_view') ? 'active' : '' }}"
-                           href="{{ route('patient.invoices_view') }}">
+                            href="{{ route('patient.invoices_view') }}">
                             Invoices
                         </a>
                     </li>
                     <li>
                         <a class="{{ request()->routeIs('chat_contacts') ? 'active' : '' }}"
-                           href="{{ route('chat_contacts') }}">
+                            href="{{ route('chat_contacts') }}">
                             Chats
                         </a>
                     </li>
@@ -405,18 +416,18 @@
                                         $type = $notification->data['type'] ?? 'default';
 
                                         $icon = match ($type) {
-                                            'appointment_booked'     => 'fa-calendar-plus',
-                                            'appointment_accepted'   => 'fa-calendar-check',
-                                            'appointment_cancelled'  => 'fa-calendar-xmark',
-                                            'appointment_completed'  => 'fa-check-circle',
-                                            'appointment_rejected'   => 'fa-calendar-xmark',
-                                            'invoice_created'        => 'fa-file-invoice',
-                                            'invoice_cancelled'      => 'fa-ban',
-                                            'patient_registered'     => 'fa-user-plus',
-                                            'patient_added'          => 'fa-user-plus',
-                                            'nurse_task_assigned'    => 'fa-tasks',
-                                            'nurse_task_completed'   => 'fa-user-nurse',
-                                            default                  => 'fa-bell',
+                                            'appointment_booked' => 'fa-calendar-plus',
+                                            'appointment_accepted' => 'fa-calendar-check',
+                                            'appointment_cancelled' => 'fa-calendar-xmark',
+                                            'appointment_completed' => 'fa-check-circle',
+                                            'appointment_rejected' => 'fa-calendar-xmark',
+                                            'invoice_created' => 'fa-file-invoice',
+                                            'invoice_cancelled' => 'fa-ban',
+                                            'patient_registered' => 'fa-user-plus',
+                                            'patient_added' => 'fa-user-plus',
+                                            'nurse_task_assigned' => 'fa-tasks',
+                                            'nurse_task_completed' => 'fa-user-nurse',
+                                            default => 'fa-bell',
                                         };
                                     @endphp
 
@@ -447,7 +458,7 @@
 
                                         {{-- إشعار عادي مع رابط --}}
                                         <a href="{{ route('notifications_read', $notification->id) }}"
-                                        class="notification-item {{ $notification->read_at ? 'read' : 'unread' }}">
+                                            class="notification-item {{ $notification->read_at ? 'read' : 'unread' }}">
 
                                             <div class="notification-icon">
                                                 <i class="fa {{ $icon }}"></i>
@@ -495,34 +506,36 @@
 
             <i class="fa-solid fa-circle-user"></i>
             <div class="informationAboutuser">
-              <div class="name">
-                <a href="{{ route('patient.view_profile') }}"><span style="color: #00A8FF;">{{ Auth::user()->name }}</span></a>
-                <i class="fa-solid fa-user"></i>
-              </div>
-              <div class="myAppointment">
-                <span style="color: #00A8FF;"><a href="{{ route('patient.myAppointments') }}">My Appointments</a></span>
-                <i class="fa-solid fa-calendar-check"></i>
-              </div>
-              <div class="settings">
-                <a href="{{ route('patient.settings') }}">
-                    <span style="color: #00A8FF;">
-                        Settings
-                    </span>
-                    <i class="fa-solid fa-gear"></i>
-                </a>
-            </div>
+                <div class="name">
+                    <a href="{{ route('patient.view_profile') }}"><span
+                            style="color: #00A8FF;">{{ Auth::user()->name }}</span></a>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="myAppointment">
+                    <span style="color: #00A8FF;"><a href="{{ route('patient.myAppointments') }}">My
+                            Appointments</a></span>
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="settings">
+                    <a href="{{ route('patient.settings') }}">
+                        <span style="color: #00A8FF;">
+                            Settings
+                        </span>
+                        <i class="fa-solid fa-gear"></i>
+                    </a>
+                </div>
 
-            <div>
-                <a class="dropdown-item" href="#"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <span style="color: #00A8FF;">Logout</span> <i class="fa fa-sign-out"></i>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-                    @csrf
-                </form>
+                <div>
+                    <a class="dropdown-item" href="#"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <span style="color: #00A8FF;">Logout</span> <i class="fa fa-sign-out"></i>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                        @csrf
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 </header>
 
 
@@ -568,9 +581,9 @@
         key: "{{ config('broadcasting.connections.pusher.key') }}",
         wsHost: "{{ config('broadcasting.connections.pusher.options.host') }}",
         wsPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-        forceTLS: false,
+        forceTLS: true,
         disableStats: true,
-        enabledTransports: ['ws'],
+        enabledTransports: ['ws', 'wss'],
         withCredentials: true,
         authEndpoint: '/broadcasting/auth',
         auth: {
