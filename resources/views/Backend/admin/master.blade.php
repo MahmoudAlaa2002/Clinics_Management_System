@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -29,13 +30,15 @@
 
 
     <div class="sidebar-overlay" data-reff=""></div>
+
     <script src="{{ asset('assets/js/jquery-3.2.1.min.js') }}"></script>
-	<script src="{{ asset('assets/js/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('assets/js/Chart.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/chart.js') }}"></script>
-    <script src="{{ asset('assets/js/app.js') }}"></script>
+    @vite(['resources/js/app.js'])
+    <!-- <script src="{{ asset('assets/js/app.js') }}"></script> -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -52,7 +55,7 @@
             });
         }
 
-</script>
+    </script>
 
     @include('Backend.chat.echo-core')
 
@@ -129,10 +132,10 @@
             let avatar = e.sender_image
                 ? `<img src="${e.sender_image}"
                         style="width:44px;height:44px;border-radius:50%;object-fit:cover;">`
-                : e.sender_name.substring(0,2).toUpperCase();
+                : e.sender_name.substring(0, 2).toUpperCase();
 
 
-                let html = `
+            let html = `
                     <a href="/clinics-management/chat/open/${e.sender_id}"
                     class="dropdown-item d-flex align-items-center msg-item"
                     style="padding:12px 14px; transition:.25s;"
@@ -176,6 +179,5 @@
 
     @yield('js')
 </body>
+
 </html>
-
-

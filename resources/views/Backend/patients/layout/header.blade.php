@@ -574,25 +574,25 @@
     });
 
 
-    window.Pusher = Pusher;
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: "{{ config('broadcasting.connections.pusher.key') }}",
-        wsHost: "{{ config('broadcasting.connections.pusher.options.host') }}",
-        wsPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-        wssPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-        forceTLS: "{{ config('broadcasting.connections.pusher.options.scheme') }}" === 'https',
-        encrypted: true,
-        disableStats: true,
-        enabledTransports: ['ws', 'wss'],
-        cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
-        authEndpoint: '/broadcasting/auth',
-        auth: {
-            headers: {
-                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            }
-        }
-    });
+    // window.Pusher = Pusher;
+    // window.Echo = new Echo({
+    //     broadcaster: 'pusher',
+    //     key: "{{ config('broadcasting.connections.pusher.key') }}",
+    //     wsHost: "{{ config('broadcasting.connections.pusher.options.host') }}",
+    //     wsPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
+    //     wssPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
+    //     forceTLS: "{{ config('broadcasting.connections.pusher.options.scheme') }}" === 'https',
+    //     encrypted: true,
+    //     disableStats: true,
+    //     enabledTransports: ['ws', 'wss'],
+    //     cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
+    //     authEndpoint: '/broadcasting/auth',
+    //     auth: {
+    //         headers: {
+    //             'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+    //         }
+    //     }
+    // });
 
 
     Echo.private('App.Models.User.' + window.CMS.userId)
