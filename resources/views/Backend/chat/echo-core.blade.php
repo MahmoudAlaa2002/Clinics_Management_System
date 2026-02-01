@@ -1,334 +1,337 @@
-<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1/dist/echo.iife.js"></script>
-
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
 <script>
-/* =========================
-   🔌 إعداد Echo + Pusher
-   ========================= */
-window.Pusher = Pusher;
+    /* =========================
+       🔌 إعداد Echo + Pusher
+       ========================= */
+    window.Pusher = Pusher;
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: '1fac67dc0f09b838e81c',
+        cluster: 'eu',
+        forceTLS: true,
+        encrypted: true,
+        enableLogging: true,
 
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: "{{ config('broadcasting.connections.pusher.key') }}",
-    wsHost: "{{ config('broadcasting.connections.pusher.options.host') }}",
-    wsPort: "{{ config('broadcasting.connections.pusher.options.port') }}",
-    forceTLS: false,
-    disableStats: true,
-    enabledTransports: ['ws'],
-    withCredentials: true,
-    authEndpoint: '/broadcasting/auth',
-    auth: {
-        headers: {
-            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-        }
-    }
-});
+        authorizer: (channel, options) => {
+            return {
+                authorize: (socketId, callback) => {
+                    fetch('/broadcasting/auth', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            socket_id: socketId,
+                            channel_name: channel.name,
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => callback(null, data))
+                        .catch(error => {
+                            console.error('Broadcasting auth error:', error);
+                            callback(error);
+                        });
+                }
+            };
+        },
+    });
+
+    console.log('✅ Chat Echo initialized with cluster:', window.Echo.connector.pusher.config.cluster);
+</script>
+/* =========================
+🟢 متغيّرات عامة (بدون تكرار)
+========================= */
+const currentUserId = {{ auth()->id() }};
+const userRole = "{{ auth()->user()->role }}";
+const jobTitle = "{{ optional(auth()->user()->employee)->job_title }}";
+const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
 /* =========================
-   🟢 متغيّرات عامة (بدون تكرار)
-   ========================= */
-const currentUserId   = {{ auth()->id() }};
-const userRole        = "{{ auth()->user()->role }}";
-const jobTitle        = "{{ optional(auth()->user()->employee)->job_title }}";
-const csrf            = document.querySelector('meta[name="csrf-token"]').content;
-
-/* =========================
-   👥 حالة الأونلاين
-   ========================= */
+👥 حالة الأونلاين
+========================= */
 Echo.join('online-users');
 
 document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "hidden") {
-        navigator.sendBeacon("{{ url('/clinics-management/set-offline') }}");
-    }
+if (document.visibilityState === "hidden") {
+navigator.sendBeacon("{{ url('/clinics-management/set-offline') }}");
+}
 });
 
 /* =========================
-   🔔 الإشعارات الفورية
-   ========================= */
+🔔 الإشعارات الفورية
+========================= */
 Echo.private(`App.Models.User.${currentUserId}`)
-    .notification((notification) => {
+.notification((notification) => {
 
-        fetch(`/clinics-management/notifications/render/${notification.id}`)
-            .then(res => res.text())
-            .then(html => {
+fetch(`/clinics-management/notifications/render/${notification.id}`)
+.then(res => res.text())
+.then(html => {
 
-                let list = document.querySelector('.notification-list');
-                if (!list) return;
+let list = document.querySelector('.notification-list');
+if (!list) return;
 
-                list.insertAdjacentHTML('afterbegin', html);
+list.insertAdjacentHTML('afterbegin', html);
 
-                let badge = document.querySelector('.fa-bell-o')
-                    ?.parentElement.querySelector('.badge');
+let badge = document.querySelector('.fa-bell-o')
+?.parentElement.querySelector('.badge');
 
-                if (badge) {
-                    let val = parseInt(badge.innerText) || 0;
-                    badge.innerText = val + 1;
-                }
-            });
-    });
+if (badge) {
+let val = parseInt(badge.innerText) || 0;
+badge.innerText = val + 1;
+}
+});
+});
 
 /* =========================
-   🔁 تحديث حالة المواعيد
-   ========================= */
+🔁 تحديث حالة المواعيد
+========================= */
 Echo.private(`App.Models.User.${currentUserId}`)
-    .listen('.AppointmentStatusUpdated', (e) => {
+.listen('.AppointmentStatusUpdated', (e) => {
 
-        let row = document.querySelector(
-            `[data-appointment="${e.appointment.id}"]`
-        );
+let row = document.querySelector(
+`[data-appointment="${e.appointment.id}"]`
+);
 
-        if (!row) return;
+if (!row) return;
 
-        let status = e.appointment.status;
+let status = e.appointment.status;
 
-        let statusCell = row.querySelector('.status-cell');
+let statusCell = row.querySelector('.status-cell');
 
-        const colors = {
-            Pending:  '#ffc107',
-            Accepted: '#189de4',
-            Rejected: '#f90d25',
-            Cancelled:'#6c757d',
-            Completed:'#14ea6d'
-        };
+const colors = {
+Pending: '#ffc107',
+Accepted: '#189de4',
+Rejected: '#f90d25',
+Cancelled:'#6c757d',
+Completed:'#14ea6d'
+};
 
-        statusCell.innerHTML =
-        `<span class="status-badge"
-            style="min-width: 140px; display:inline-block; text-align:center;
+statusCell.innerHTML =
+`<span class="status-badge" style="min-width: 140px; display:inline-block; text-align:center;
             padding:4px 12px; font-size:18px; border-radius:50px;color:white;
             background:${colors[status]}">${status}</span>`;
 
-        let actionCell = row.querySelector('.action-btns .d-flex, .action-btns, td:nth-child(8) .d-flex');
+let actionCell = row.querySelector('.action-btns .d-flex, .action-btns, td:nth-child(8) .d-flex');
 
-        if (!actionCell) return;
+if (!actionCell) return;
 
-        let html = '';
+let html = '';
 
-        /* ===== ADMIN ===== */
-        if (userRole === 'admin') {
-            let details =
-            `<a href="/admin/details/appointment/${e.appointment.id}"
-                class="mr-1 btn btn-outline-success btn-sm">
-                <i class="fa fa-eye"></i>
-            </a>`;
+/* ===== ADMIN ===== */
+if (userRole === 'admin') {
+let details =
+`<a href="/admin/details/appointment/${e.appointment.id}" class="mr-1 btn btn-outline-success btn-sm">
+    <i class="fa fa-eye"></i>
+</a>`;
 
-            let edit =
-            `<a href="/admin/edit/appointment/${e.appointment.id}"
-                class="mr-1 btn btn-outline-primary btn-sm">
-                <i class="fa fa-edit"></i>
-            </a>`;
+let edit =
+`<a href="/admin/edit/appointment/${e.appointment.id}" class="mr-1 btn btn-outline-primary btn-sm">
+    <i class="fa fa-edit"></i>
+</a>`;
 
-            let del =
-            `<button class="btn btn-outline-danger btn-sm delete-appointment"
-                    data-id="${e.appointment.id}">
-                <i class="fa fa-trash"></i>
-            </button>`;
+let del =
+`<button class="btn btn-outline-danger btn-sm delete-appointment" data-id="${e.appointment.id}">
+    <i class="fa fa-trash"></i>
+</button>`;
 
-            if (['Completed','Rejected','Cancelled'].includes(status)) {
-                html = details + del;
-            } else {
-                html = details + edit + del;
-            }
-        }
+if (['Completed','Rejected','Cancelled'].includes(status)) {
+html = details + del;
+} else {
+html = details + edit + del;
+}
+}
 
-        /* ===== DOCTOR ===== */
-        else if (userRole === 'doctor') {
+/* ===== DOCTOR ===== */
+else if (userRole === 'doctor') {
 
-            let details =
-            `<a href="/doctor/appointments/${e.appointment.id}"
-                class="mr-1 btn btn-outline-success btn-sm">
-                <i class="fa fa-eye"></i> Details
-            </a>`;
+let details =
+`<a href="/doctor/appointments/${e.appointment.id}" class="mr-1 btn btn-outline-success btn-sm">
+    <i class="fa fa-eye"></i> Details
+</a>`;
 
-            let records =
-            `<a href="/doctor/patient/${e.appointment.patient_id}/records"
-                class="mr-1 btn btn-sm btn-outline-primary">
-                <i class="fas fa-file-medical"></i> Records
-            </a>`;
+let records =
+`<a href="/doctor/patient/${e.appointment.patient_id}/records" class="mr-1 btn btn-sm btn-outline-primary">
+    <i class="fas fa-file-medical"></i> Records
+</a>`;
 
-            let accept =
-            `<form method="POST" action="/doctor/appointment/${e.appointment.id}/confirm" class="d-inline">
-                <input type="hidden" name="_token" value="${csrf}">
-                <button class="mr-1 btn btn-outline-success btn-sm">
-                    <i class="fa fa-check"></i> Accept
-                </button>
-            </form>`;
+let accept =
+`<form method="POST" action="/doctor/appointment/${e.appointment.id}/confirm" class="d-inline">
+    <input type="hidden" name="_token" value="${csrf}">
+    <button class="mr-1 btn btn-outline-success btn-sm">
+        <i class="fa fa-check"></i> Accept
+    </button>
+</form>`;
 
-            let reject =
-            `<form method="POST" action="/doctor/appointment/${e.appointment.id}/reject" class="d-inline">
-                <input type="hidden" name="_token" value="${csrf}">
-                <button class="mr-1 btn btn-outline-danger btn-sm">
-                    <i class="fa fa-times"></i> Reject
-                </button>
-            </form>`;
+let reject =
+`<form method="POST" action="/doctor/appointment/${e.appointment.id}/reject" class="d-inline">
+    <input type="hidden" name="_token" value="${csrf}">
+    <button class="mr-1 btn btn-outline-danger btn-sm">
+        <i class="fa fa-times"></i> Reject
+    </button>
+</form>`;
 
-            let cancel =
-            `<form method="POST" action="/doctor/appointment/${e.appointment.id}/cancel" class="d-inline">
-                <input type="hidden" name="_token" value="${csrf}">
-                <button class="mr-1 btn btn-outline-warning btn-sm">
-                    <i class="fa fa-ban"></i> Cancel
-                </button>
-            </form>`;
+let cancel =
+`<form method="POST" action="/doctor/appointment/${e.appointment.id}/cancel" class="d-inline">
+    <input type="hidden" name="_token" value="${csrf}">
+    <button class="mr-1 btn btn-outline-warning btn-sm">
+        <i class="fa fa-ban"></i> Cancel
+    </button>
+</form>`;
 
-            if (status === 'Pending') html = details + records + accept + reject;
-            else if (status === 'Accepted') html = details + records + cancel;
-            else html = details + records;
-        }
+if (status === 'Pending') html = details + records + accept + reject;
+else if (status === 'Accepted') html = details + records + cancel;
+else html = details + records;
+}
 
-        /* ===== RECEPTIONIST ===== */
-        else if (userRole === 'employee' && jobTitle === 'Receptionist') {
+/* ===== RECEPTIONIST ===== */
+else if (userRole === 'employee' && jobTitle === 'Receptionist') {
 
-            let details =
-            `<a href="/receptionist/details/appointment/${e.appointment.id}"
-                class="mr-1 btn btn-outline-success btn-sm">
-                <i class="fa fa-eye"></i>
-            </a>`;
+let details =
+`<a href="/receptionist/details/appointment/${e.appointment.id}" class="mr-1 btn btn-outline-success btn-sm">
+    <i class="fa fa-eye"></i>
+</a>`;
 
-            let edit =
-            `<a href="/receptionist/edit/appointment/${e.appointment.id}"
-                class="mr-1 btn btn-outline-primary btn-sm">
-                <i class="fa fa-edit"></i>
-            </a>`;
+let edit =
+`<a href="/receptionist/edit/appointment/${e.appointment.id}" class="mr-1 btn btn-outline-primary btn-sm">
+    <i class="fa fa-edit"></i>
+</a>`;
 
-            let accept =
-            `<button class="mr-1 btn btn-outline-success btn-sm complete-btn"
-                    data-id="${e.appointment.id}">
-                <i class="fas fa-check-circle"></i>
-            </button>`;
+let accept =
+`<button class="mr-1 btn btn-outline-success btn-sm complete-btn" data-id="${e.appointment.id}">
+    <i class="fas fa-check-circle"></i>
+</button>`;
 
-            let reject =
-            `<button class="btn btn-outline-danger btn-sm reject-btn"
-                    data-id="${e.appointment.id}">
-                <i class="fa fa-times"></i>
-            </button>`;
+let reject =
+`<button class="btn btn-outline-danger btn-sm reject-btn" data-id="${e.appointment.id}">
+    <i class="fa fa-times"></i>
+</button>`;
 
-            if (status === 'Pending') html = accept + reject;
-            else if (status === 'Accepted') html = details + edit;
-            else html = details;
-        }
+if (status === 'Pending') html = accept + reject;
+else if (status === 'Accepted') html = details + edit;
+else html = details;
+}
 
-        actionCell.innerHTML = html;
-    });
+actionCell.innerHTML = html;
+});
 
 /* ======================================
-   📅 تحديث قائمة المواعيد (نقل/إخفاء)
-   ====================================== */
+📅 تحديث قائمة المواعيد (نقل/إخفاء)
+====================================== */
 
 function safeSet(row, selector, value, isLink = false, url = null) {
-    const cell = row.querySelector(selector);
-    if (!cell) return;
+const cell = row.querySelector(selector);
+if (!cell) return;
 
-    if (isLink) {
-        cell.innerHTML = `<a href="${url}">${value ?? '—'}</a>`;
-    } else {
-        cell.innerText = value ?? '—';
-    }
+if (isLink) {
+cell.innerHTML = `<a href="${url}">${value ?? '—'}</a>`;
+} else {
+cell.innerText = value ?? '—';
+}
 }
 
 function hideNoAppointments() {
-    const row = document.getElementById('no-appointments-row');
-    if (row) row.remove();
+const row = document.getElementById('no-appointments-row');
+if (row) row.remove();
 }
 
 function showNoAppointmentsIfEmpty() {
-    const tbody = document.querySelector('tbody');
-    if (!tbody) return;
+const tbody = document.querySelector('tbody');
+if (!tbody) return;
 
-    if (tbody.querySelectorAll('tr[data-appointment]').length === 0) {
-        tbody.insertAdjacentHTML('beforeend', `
-            <tr id="no-appointments-row">
-                <td colspan="8" class="text-center">
-                    <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
-                        No appointments found
-                    </div>
-                </td>
-            </tr>
-        `);
-    }
+if (tbody.querySelectorAll('tr[data-appointment]').length === 0) {
+tbody.insertAdjacentHTML('beforeend', `
+<tr id="no-appointments-row">
+    <td colspan="8" class="text-center">
+        <div style="font-weight: bold; font-size: 18px; margin-top:15px;">
+            No appointments found
+        </div>
+    </td>
+</tr>
+`);
+}
 }
 
 function renumberRows() {
-    const rows = document.querySelectorAll('tbody tr[data-appointment]');
-    let i = 1;
-    rows.forEach(row => {
-        const firstCell = row.querySelector('td');
-        if (firstCell) firstCell.innerText = i++;
-    });
+const rows = document.querySelectorAll('tbody tr[data-appointment]');
+let i = 1;
+rows.forEach(row => {
+const firstCell = row.querySelector('td');
+if (firstCell) firstCell.innerText = i++;
+});
 }
 
 function appendAppointmentRow(e) {
 
-    hideNoAppointments();
+hideNoAppointments();
 
-    const tbody = document.querySelector('tbody');
-    if (!tbody) return;
+const tbody = document.querySelector('tbody');
+if (!tbody) return;
 
-    const a = e.appointment;
+const a = e.appointment;
 
-    let statusClasses = {
-        Pending: 'status-pending',
-        Accepted: 'status-accepted',
-        Rejected: 'status-rejected',
-        Cancelled: 'status-cancelled',
-        Completed: 'status-completed'
-    };
+let statusClasses = {
+Pending: 'status-pending',
+Accepted: 'status-accepted',
+Rejected: 'status-rejected',
+Cancelled: 'status-cancelled',
+Completed: 'status-completed'
+};
 
-    let html = `
-        <tr data-appointment="${a.id}">
-            <td>#</td>
+let html = `
+<tr data-appointment="${a.id}">
+    <td>#</td>
 
-            <td data-field="patient">
-                <a href="/doctor/patients/${a.patient?.id}">
-                    ${a.patient?.user?.name ?? '—'}
-                </a>
-            </td>
+    <td data-field="patient">
+        <a href="/doctor/patients/${a.patient?.id}">
+            ${a.patient?.user?.name ?? '—'}
+        </a>
+    </td>
 
-            <td data-field="clinic">${a.clinic?.name ?? '—'}</td>
+    <td data-field="clinic">${a.clinic?.name ?? '—'}</td>
 
-            <td data-field="department">${a.department?.name ?? '—'}</td>
+    <td data-field="department">${a.department?.name ?? '—'}</td>
 
-            <td data-field="date">${a.date}</td>
+    <td data-field="date">${a.date}</td>
 
-            <td data-field="time">${a.time?.slice(0,5) ?? '—'}</td>
+    <td data-field="time">${a.time?.slice(0,5) ?? '—'}</td>
 
-            <td class="status-cell">
-                <span class="status-badge ${statusClasses[a.status] ?? ''}">
-                    ${a.status}
-                </span>
-            </td>
+    <td class="status-cell">
+        <span class="status-badge ${statusClasses[a.status] ?? ''}">
+            ${a.status}
+        </span>
+    </td>
 
-            <td>
-                <div class="d-flex justify-content-center">
-                    <a href="/doctor/appointment/${a.id}"
-                        class="mr-1 btn btn-outline-success btn-sm">
-                        <i class="fa fa-eye"></i> Details
-                    </a>
+    <td>
+        <div class="d-flex justify-content-center">
+            <a href="/doctor/appointment/${a.id}" class="mr-1 btn btn-outline-success btn-sm">
+                <i class="fa fa-eye"></i> Details
+            </a>
 
-                    <a href="/doctor/patient/${a.patient?.id}/records"
-                        class="mr-1 btn btn-sm btn-outline-primary">
-                        <i class="fas fa-file-medical"></i> Records
-                    </a>
-                </div>
-            </td>
-        </tr>
-    `;
+            <a href="/doctor/patient/${a.patient?.id}/records" class="mr-1 btn btn-sm btn-outline-primary">
+                <i class="fas fa-file-medical"></i> Records
+            </a>
+        </div>
+    </td>
+</tr>
+`;
 
-    tbody.insertAdjacentHTML('afterbegin', html);
-    renumberRows();
+tbody.insertAdjacentHTML('afterbegin', html);
+renumberRows();
 }
 
 function renderStatusBadge(status) {
-    const colors = {
-        Pending:  '#ffc107',
-        Accepted: '#189de4',
-        Rejected: '#f90d25',
-        Cancelled:'#6c757d',
-        Completed:'#14ea6d'
-    };
+const colors = {
+Pending: '#ffc107',
+Accepted: '#189de4',
+Rejected: '#f90d25',
+Cancelled:'#6c757d',
+Completed:'#14ea6d'
+};
 
-    return `
-        <span class="status-badge"
-            style="
+return `
+<span class="status-badge" style="
                 min-width:140px;
                 display:inline-block;
                 text-align:center;
@@ -338,17 +341,17 @@ function renderStatusBadge(status) {
                 color:#fff;
                 background:${colors[status] ?? '#6c757d'};
             ">
-            ${status}
-        </span>
-    `;
+    ${status}
+</span>
+`;
 }
 
 
 function fillCell(row, field, value) {
-    const cell = row.querySelector(`[data-field="${field}"]`);
-    if (!cell) return;
+const cell = row.querySelector(`[data-field="${field}"]`);
+if (!cell) return;
 
-    cell.innerText = value ?? '—';
+cell.innerText = value ?? '—';
 }
 
 function renderActions(row, a) {
@@ -361,44 +364,39 @@ let html = '';
 // ADMIN
 if (userRole === 'admin') {
 
-    html += `
-        <a href="/admin/details/appointment/${a.id}"
-           class="mr-1 btn btn-outline-success btn-sm">
-            <i class="fa fa-eye"></i>
-        </a>
-    `;
+html += `
+<a href="/admin/details/appointment/${a.id}" class="mr-1 btn btn-outline-success btn-sm">
+    <i class="fa fa-eye"></i>
+</a>
+`;
 
-    if (!['Completed','Rejected','Cancelled'].includes(a.status)) {
-        html += `
-            <a href="/admin/edit/appointment/${a.id}"
-               class="mr-1 btn btn-outline-primary btn-sm">
-                <i class="fa fa-edit"></i>
-            </a>
-        `;
-    }
+if (!['Completed','Rejected','Cancelled'].includes(a.status)) {
+html += `
+<a href="/admin/edit/appointment/${a.id}" class="mr-1 btn btn-outline-primary btn-sm">
+    <i class="fa fa-edit"></i>
+</a>
+`;
+}
 
-    html += `
-        <button class="btn btn-outline-danger btn-sm delete-appointment"
-            data-id="${a.id}">
-            <i class="fa fa-trash"></i>
-        </button>
-    `;
+html += `
+<button class="btn btn-outline-danger btn-sm delete-appointment" data-id="${a.id}">
+    <i class="fa fa-trash"></i>
+</button>
+`;
 }
 
 // CLINIC MANAGER
 else if (userRole === 'clinic_manager') {
 
-    html += `
-        <a href="/clinic/details/appointment/${a.id}"
-           class="mr-1 btn btn-outline-success btn-sm">
-            <i class="fa fa-eye"></i>
-        </a>
+html += `
+<a href="/clinic/details/appointment/${a.id}" class="mr-1 btn btn-outline-success btn-sm">
+    <i class="fa fa-eye"></i>
+</a>
 
-        <button class="btn btn-outline-danger btn-sm delete-appointment"
-            data-id="${a.id}">
-            <i class="fa fa-trash"></i>
-        </button>
-    `;
+<button class="btn btn-outline-danger btn-sm delete-appointment" data-id="${a.id}">
+    <i class="fa fa-trash"></i>
+</button>
+`;
 }
 
 cell.innerHTML = html;
@@ -406,84 +404,83 @@ cell.innerHTML = html;
 
 function addAppointmentRow(e) {
 
-    hideNoAppointments();
+hideNoAppointments();
 
-    const a = e.appointment;
+const a = e.appointment;
 
-    const tbody = document.querySelector('#appointments_table_body')
-        || document.querySelector('tbody');
+const tbody = document.querySelector('#appointments_table_body')
+|| document.querySelector('tbody');
 
-    if (!tbody) return;
+if (!tbody) return;
 
-    // نصنع صف فيه نفس الأعمدة الحالية
-    let row = document.createElement('tr');
-    row.setAttribute('data-appointment', a.id);
+// نصنع صف فيه نفس الأعمدة الحالية
+let row = document.createElement('tr');
+row.setAttribute('data-appointment', a.id);
 
-    // ننسخ كل الخلايا الموجودة من أول صف (الهيكل فقط)
-    const firstRow = tbody.querySelector('tr');
-    if (firstRow) row.innerHTML = firstRow.innerHTML;
+// ننسخ كل الخلايا الموجودة من أول صف (الهيكل فقط)
+const firstRow = tbody.querySelector('tr');
+if (firstRow) row.innerHTML = firstRow.innerHTML;
 
-    // نملأ القيم حسب data-field
-    fillCell(row, 'id', a.id);
-    fillCell(row, 'patient', a.patient?.user?.name);
-    fillCell(row, 'clinic', a.clinic?.name);
-    fillCell(row, 'department', a.department?.name ?? a.clinicDepartment?.department?.name);
-    fillCell(row, 'doctor', a.doctor?.employee?.user?.name);
-    fillCell(row, 'date', a.date);
-    fillCell(row, 'time', a.time?.slice(0,5));
+// نملأ القيم حسب data-field
+fillCell(row, 'id', a.id);
+fillCell(row, 'patient', a.patient?.user?.name);
+fillCell(row, 'clinic', a.clinic?.name);
+fillCell(row, 'department', a.department?.name ?? a.clinicDepartment?.department?.name);
+fillCell(row, 'doctor', a.doctor?.employee?.user?.name);
+fillCell(row, 'date', a.date);
+fillCell(row, 'time', a.time?.slice(0,5));
 
-    // حالة الموعد
-    const statusCell = row.querySelector('[data-field="status"]');
-    if (statusCell) statusCell.innerHTML = renderStatusBadge(a.status);
+// حالة الموعد
+const statusCell = row.querySelector('[data-field="status"]');
+if (statusCell) statusCell.innerHTML = renderStatusBadge(a.status);
 
-    // الأكشن حسب الدور
-    renderActions(row, a);
+// الأكشن حسب الدور
+renderActions(row, a);
 
-    tbody.prepend(row);
+tbody.prepend(row);
 }
 
 
 
 function appendNurseAppointmentRow(e) {
 
-    hideNoAppointments();
+hideNoAppointments();
 
-    const tbody = document.querySelector('tbody');
-    if (!tbody) return;
+const tbody = document.querySelector('tbody');
+if (!tbody) return;
 
-    const a = e.appointment;
+const a = e.appointment;
 
-    const statusColors = {
-        Pending:  '#ffc107',
-        Accepted: '#189de4',
-        Rejected: '#f90d25',
-        Cancelled:'#6c757d',
-        Completed:'#14ea6d'
-    };
+const statusColors = {
+Pending: '#ffc107',
+Accepted: '#189de4',
+Rejected: '#f90d25',
+Cancelled:'#6c757d',
+Completed:'#14ea6d'
+};
 
-    let html = `
-        <tr data-appointment="${a.id}">
-            <td data-field="id">${a.id}</td>
+let html = `
+<tr data-appointment="${a.id}">
+    <td data-field="id">${a.id}</td>
 
-            <td data-field="patient">
-                ${a.patient?.user?.name ?? '—'}
-            </td>
+    <td data-field="patient">
+        ${a.patient?.user?.name ?? '—'}
+    </td>
 
-            <td data-field="doctor">
-                ${a.doctor?.employee?.user?.name ?? '—'}
-            </td>
+    <td data-field="doctor">
+        ${a.doctor?.employee?.user?.name ?? '—'}
+    </td>
 
-            <td data-field="date">
-                ${a.date}
-            </td>
+    <td data-field="date">
+        ${a.date}
+    </td>
 
-            <td data-field="time">
-                ${a.time?.slice(0,5) ?? '—'}
-            </td>
+    <td data-field="time">
+        ${a.time?.slice(0,5) ?? '—'}
+    </td>
 
-            <td class="status-cell">
-                <span class="status-badge"
-                    style="
+    <td class="status-cell">
+        <span class="status-badge" style="
                         min-width:140px;
                         display:inline-block;
                         text-align:center;
@@ -493,181 +490,178 @@ function appendNurseAppointmentRow(e) {
                         color:#fff;
                         background:${statusColors[a.status] ?? '#6c757d'};
                     ">
-                    ${a.status}
-                </span>
-            </td>
+            ${a.status}
+        </span>
+    </td>
 
-            <td class="action-btns">
-                <div class="d-flex justify-content-center">
+    <td class="action-btns">
+        <div class="d-flex justify-content-center">
 
-                    ${
-                        !a.vital_sign_id
-                        ? `<a href="/nurse/vital-signs/add/${a.id}"
-                            class="btn btn-outline-primary btn-sm"
-                            title="Add Vital Signs">
-                                <i class="fas fa-heartbeat"></i>
-                        </a>`
-                        : `<a href="/nurse/vital-signs/view/${a.id}"
-                            class="btn btn-outline-success btn-sm"
-                            title="View Vital Signs">
-                                <i class="fas fa-heartbeat"></i>
-                        </a>`
-                    }
+            ${
+            !a.vital_sign_id
+            ? `<a href="/nurse/vital-signs/add/${a.id}" class="btn btn-outline-primary btn-sm" title="Add Vital Signs">
+                <i class="fas fa-heartbeat"></i>
+            </a>`
+            : `<a href="/nurse/vital-signs/view/${a.id}" class="btn btn-outline-success btn-sm"
+                title="View Vital Signs">
+                <i class="fas fa-heartbeat"></i>
+            </a>`
+            }
 
-                </div>
-            </td>
-        </tr>
-    `;
+        </div>
+    </td>
+</tr>
+`;
 
-    tbody.insertAdjacentHTML('afterbegin', html);
-    renumberRows();
+tbody.insertAdjacentHTML('afterbegin', html);
+renumberRows();
 }
 
 
 Echo.private(`App.Models.User.${currentUserId}`)
-    .listen('.AppointmentUpdated', (e) => {
+.listen('.AppointmentUpdated', (e) => {
 
-        // نحسب تاريخ اليوم
-        const today = new Date().toISOString().slice(0, 10);
+// نحسب تاريخ اليوم
+const today = new Date().toISOString().slice(0, 10);
 
-        // لو الصفحة هي صفحة الممرض اليومية
-        const isNurseDailyPage = (userRole === 'employee' && jobTitle === 'Nurse');
+// لو الصفحة هي صفحة الممرض اليومية
+const isNurseDailyPage = (userRole === 'employee' && jobTitle === 'Nurse');
 
-        if (isNurseDailyPage) {
+if (isNurseDailyPage) {
 
-            let row = document.querySelector(
-                `[data-appointment="${e.appointment.id}"]`
-            );
+let row = document.querySelector(
+`[data-appointment="${e.appointment.id}"]`
+);
 
-            const today = new Date().toISOString().slice(0, 10);
+const today = new Date().toISOString().slice(0, 10);
 
-            // الموعد لم يعد اليوم → نحذفه
-            if (e.appointment.date !== today) {
-                if (row) row.remove();
-                showNoAppointmentsIfEmpty();
-                renumberRows();
-                return;
-            }
+// الموعد لم يعد اليوم → نحذفه
+if (e.appointment.date !== today) {
+if (row) row.remove();
+showNoAppointmentsIfEmpty();
+renumberRows();
+return;
+}
 
-            // الموعد أصبح اليوم ولم يكن موجود → أضفه بتنسيق nurse
-            if (!row && e.appointment.date === today) {
-                appendNurseAppointmentRow(e);
-                return;
-            }
+// الموعد أصبح اليوم ولم يكن موجود → أضفه بتنسيق nurse
+if (!row && e.appointment.date === today) {
+appendNurseAppointmentRow(e);
+return;
+}
 
-            // لو موجود — نحدّث قيمه فقط
-            if (row) {
-                safeSet(row, '[data-field="patient"]', e.appointment.patient?.user?.name);
-                safeSet(row, '[data-field="doctor"]', e.appointment.doctor?.employee?.user?.name);
-                safeSet(row, '[data-field="date"]', e.appointment.date);
-                safeSet(row, '[data-field="time"]', e.appointment.time?.slice(0,5));
-            }
-        }
-
-
-        const doctorUserId = currentUserId;
-
-        let row = document.querySelector(
-            `[data-appointment="${e.appointment.id}"]`
-        );
-
-        // 👈 الدكتور القديم — احذف السجل
-        if (e.oldDoctorUserId && e.oldDoctorUserId === doctorUserId) {
-            if (row) row.remove();
-            renumberRows();
-            showNoAppointmentsIfEmpty();
-            return;
-        }
-
-        // 👈 الدكتور الجديد — أضف السجل
-        if (!row) {
-            appendAppointmentRow(e);
-            return;
-        }
-
-        // 👈 تحديث السجل الحالي
-        safeSet(
-            row,
-            '[data-field="patient"]',
-            e.appointment.patient?.user?.name,
-            true,
-            `/doctor/patients/${e.appointment.patient?.id}`
-        );
-
-        safeSet(row, '[data-field="clinic"]', e.appointment.clinic?.name);
-        safeSet(row, '[data-field="department"]', e.appointment.department?.name);
-        safeSet(row, '[data-field="date"]', e.appointment.date);
-        safeSet(row, '[data-field="time"]', e.appointment.time?.slice(0,5));
-    });
+// لو موجود — نحدّث قيمه فقط
+if (row) {
+safeSet(row, '[data-field="patient"]', e.appointment.patient?.user?.name);
+safeSet(row, '[data-field="doctor"]', e.appointment.doctor?.employee?.user?.name);
+safeSet(row, '[data-field="date"]', e.appointment.date);
+safeSet(row, '[data-field="time"]', e.appointment.time?.slice(0,5));
+}
+}
 
 
+const doctorUserId = currentUserId;
 
+let row = document.querySelector(
+`[data-appointment="${e.appointment.id}"]`
+);
 
+// 👈 الدكتور القديم — احذف السجل
+if (e.oldDoctorUserId && e.oldDoctorUserId === doctorUserId) {
+if (row) row.remove();
+renumberRows();
+showNoAppointmentsIfEmpty();
+return;
+}
 
+// 👈 الدكتور الجديد — أضف السجل
+if (!row) {
+appendAppointmentRow(e);
+return;
+}
 
+// 👈 تحديث السجل الحالي
+safeSet(
+row,
+'[data-field="patient"]',
+e.appointment.patient?.user?.name,
+true,
+`/doctor/patients/${e.appointment.patient?.id}`
+);
 
-    // إضافة سجل في جدول المواعيد
-    Echo.private(`App.Models.User.${currentUserId}`)
-        .listen('.AppointmentCreated', (e) => {
-            addAppointmentRow(e);
-        });
+safeSet(row, '[data-field="clinic"]', e.appointment.clinic?.name);
+safeSet(row, '[data-field="department"]', e.appointment.department?.name);
+safeSet(row, '[data-field="date"]', e.appointment.date);
+safeSet(row, '[data-field="time"]', e.appointment.time?.slice(0,5));
+});
 
 
 
 
 
 
-    // ✔ جعل الحجوزات فورية في جدول الدكاترة
 
-    Echo.private(`App.Models.User.${currentUserId}`)
-        .listen('.AppointmentCreated', (e) => {
+// إضافة سجل في جدول المواعيد
+Echo.private(`App.Models.User.${currentUserId}`)
+.listen('.AppointmentCreated', (e) => {
+addAppointmentRow(e);
+});
 
-            // لا يوجد جدول ظاهر؟
-            const table = document.querySelector('table');
-            if (!table) return;
 
-            const a = e.appointment;
 
-            // اليوم بالشكل الموجود في الجدول (Saturday / Sunday …)
-            const dayName = new Date(a.date).toLocaleDateString('en-US', {
-                weekday: 'long'
-            });
 
-            // الوقت بنفس تنسيق الجدول H:i
-            const time = a.time.slice(0,5); // 10:30
 
-            // نبحث عن صف اليوم
-            let rows = document.querySelectorAll('tbody tr');
 
-            rows.forEach(row => {
+// ✔ جعل الحجوزات فورية في جدول الدكاترة
 
-                const firstCell = row.querySelector('td');
-                if (!firstCell) return;
+Echo.private(`App.Models.User.${currentUserId}`)
+.listen('.AppointmentCreated', (e) => {
 
-                // هذا ليس نفس اليوم
-                if (firstCell.innerText.trim() !== dayName) return;
+// لا يوجد جدول ظاهر؟
+const table = document.querySelector('table');
+if (!table) return;
 
-                // نجيب كل خلايا الوقت
-                const timeCells = row.querySelectorAll('td');
+const a = e.appointment;
 
-                timeCells.forEach((cell, index) => {
+// اليوم بالشكل الموجود في الجدول (Saturday / Sunday …)
+const dayName = new Date(a.date).toLocaleDateString('en-US', {
+weekday: 'long'
+});
 
-                    // أول خلية هي اسم اليوم — نتخطاها
-                    if (index === 0) return;
+// الوقت بنفس تنسيق الجدول H:i
+const time = a.time.slice(0,5); // 10:30
 
-                    // عنوان العمود (الوقت)
-                    const header = document.querySelectorAll('thead th')[index];
-                    if (!header) return;
+// نبحث عن صف اليوم
+let rows = document.querySelectorAll('tbody tr');
 
-                    if (header.innerText.trim() === time) {
+rows.forEach(row => {
 
-                        cell.innerHTML =
-                            `<span class="text-success" style="font-size: 22px;">&#10004;</span>`;
-                    }
-                });
-            });
+const firstCell = row.querySelector('td');
+if (!firstCell) return;
 
-        });
+// هذا ليس نفس اليوم
+if (firstCell.innerText.trim() !== dayName) return;
+
+// نجيب كل خلايا الوقت
+const timeCells = row.querySelectorAll('td');
+
+timeCells.forEach((cell, index) => {
+
+// أول خلية هي اسم اليوم — نتخطاها
+if (index === 0) return;
+
+// عنوان العمود (الوقت)
+const header = document.querySelectorAll('thead th')[index];
+if (!header) return;
+
+if (header.innerText.trim() === time) {
+
+cell.innerHTML =
+`<span class="text-success" style="font-size: 22px;">&#10004;</span>`;
+}
+});
+});
+
+});
 
 
 

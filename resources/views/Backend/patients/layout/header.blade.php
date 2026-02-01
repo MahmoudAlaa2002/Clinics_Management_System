@@ -550,7 +550,7 @@
     window.Echo = new Echo({
         broadcaster: 'pusher',
         key: '1fac67dc0f09b838e81c',
-        cluster: 'eu',  // Hardcoded to ensure it's correct
+        cluster: 'eu',
         forceTLS: true,
         encrypted: true,
         enableLogging: true,
