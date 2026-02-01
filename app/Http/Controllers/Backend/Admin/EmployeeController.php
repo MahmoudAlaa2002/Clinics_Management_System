@@ -10,6 +10,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller{
 
@@ -31,10 +32,7 @@ class EmployeeController extends Controller{
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/employees'), $imageName);
-            $imagePath = 'assets/img/employees/' . $imageName;
+            $imagePath = $request->file('image')->store('employees', 'public');
         }
 
         $role = match ($request->job_title) {
@@ -217,17 +215,16 @@ class EmployeeController extends Controller{
         }
 
         // معالجة الصورة (إن وجدت)
-        $imagePath = $user->image;
+        $imagePath = $user->image; // الصورة القديمة (إن وجدت)
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمةإن وجدت
-            if ($user->image && file_exists(public_path($user->image))) {
-                @unlink(public_path($user->image));
+
+            // 🔴 حذف الصورة القديمة من storage إن وجدت
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/employees'), $imageName);
-            $newPath = 'assets/img/employees/' . $imageName;
-            $imagePath = $newPath;
+
+            // 🟢 رفع الصورة الجديدة
+            $imagePath = $request->file('image')->store('employees', 'public');
         }
 
         // تحديد الدور بناءً على الوظيفة
