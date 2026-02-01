@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -121,6 +122,11 @@ use App\Http\Controllers\Backend\Patient\{
 };
 
 
+
+Route::get('/broadcasting/auth', function () {
+    return Broadcast::auth();
+});
+
 Route::prefix('clinics-management')->group(function () {
 
     //Home
@@ -204,114 +210,114 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->group(fu
 
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('dashboard');
-    Route::get('/my_profile' , [AdminDashboardController::class , 'myProfile'])->name('my_profile');
-    Route::get('/edit/profile' , [AdminDashboardController::class , 'editProfile'])->name('edit_profile');
-    Route::put('/update/profile' , [AdminDashboardController::class , 'updateProfile'])->name('update_profile');
+    Route::get('/my_profile', [AdminDashboardController::class, 'myProfile'])->name('my_profile');
+    Route::get('/edit/profile', [AdminDashboardController::class, 'editProfile'])->name('edit_profile');
+    Route::put('/update/profile', [AdminDashboardController::class, 'updateProfile'])->name('update_profile');
 
 
     //Clinics
-    Route::get('/add/clinic' ,[AdminClinicController::class , 'addClinic'])->name('add_clinic');
-    Route::post('/store/clinic' ,[AdminClinicController::class , 'storeClinic'])->name('store_clinic');
-    Route::get('/view/clinics' ,[AdminClinicController::class , 'viewClinics'])->name('view_clinics');
-    Route::get('/search/clinics',[AdminClinicController::class , 'searchClinics'])->name('search_clinics');
-    Route::get('/details/clinic/{id}' ,[AdminClinicController::class , 'detailsClinic'])->name('details_clinic');
-    Route::get('/edit/clinic/{id}' ,[AdminClinicController::class , 'editClinic'])->name('edit_clinic');
-    Route::put('/update/clinic/{id}' ,[AdminClinicController::class , 'updateClinic'])->name('update_clinic');
-    Route::delete('/delete/clinic/{id}' ,[AdminClinicController::class , 'deleteClinic'])->name('delete_clinic');
+    Route::get('/add/clinic', [AdminClinicController::class, 'addClinic'])->name('add_clinic');
+    Route::post('/store/clinic', [AdminClinicController::class, 'storeClinic'])->name('store_clinic');
+    Route::get('/view/clinics', [AdminClinicController::class, 'viewClinics'])->name('view_clinics');
+    Route::get('/search/clinics', [AdminClinicController::class, 'searchClinics'])->name('search_clinics');
+    Route::get('/details/clinic/{id}', [AdminClinicController::class, 'detailsClinic'])->name('details_clinic');
+    Route::get('/edit/clinic/{id}', [AdminClinicController::class, 'editClinic'])->name('edit_clinic');
+    Route::put('/update/clinic/{id}', [AdminClinicController::class, 'updateClinic'])->name('update_clinic');
+    Route::delete('/delete/clinic/{id}', [AdminClinicController::class, 'deleteClinic'])->name('delete_clinic');
 
-    Route::get('/view/clinics-managers' ,[AdminClinicController::class , 'viewClinicsManagers'])->name('view_clinics_managers');
-    Route::get('/search/clinics-managers',[AdminClinicController::class , 'searchClinicsManagers'])->name('search_clinics_managers');
-    Route::get('/profile/clinics-managers/{id}',[AdminClinicController::class , 'profileClinicsManagers'])->name('profile_clinics_managers');
-    Route::get('/edit/clinics-managers/{id}' ,[AdminClinicController::class , 'editClinicsManagers'])->name('edit_clinics_managers');
-    Route::put('/update/clinics-managers/{id}' ,[AdminClinicController::class , 'updateClinicsManagers'])->name('update_clinics_managers');
-    Route::delete('/delete/clinics-managers/{id}' ,[AdminClinicController::class , 'deleteClinicsManagers'])->name('delete_clinics_managers');
+    Route::get('/view/clinics-managers', [AdminClinicController::class, 'viewClinicsManagers'])->name('view_clinics_managers');
+    Route::get('/search/clinics-managers', [AdminClinicController::class, 'searchClinicsManagers'])->name('search_clinics_managers');
+    Route::get('/profile/clinics-managers/{id}', [AdminClinicController::class, 'profileClinicsManagers'])->name('profile_clinics_managers');
+    Route::get('/edit/clinics-managers/{id}', [AdminClinicController::class, 'editClinicsManagers'])->name('edit_clinics_managers');
+    Route::put('/update/clinics-managers/{id}', [AdminClinicController::class, 'updateClinicsManagers'])->name('update_clinics_managers');
+    Route::delete('/delete/clinics-managers/{id}', [AdminClinicController::class, 'deleteClinicsManagers'])->name('delete_clinics_managers');
 
     //Departments
-    Route::get('/add/department' ,[AdminDepartmentController::class , 'addDepartment'])->name('add_department');
-    Route::post('/store/department' ,[AdminDepartmentController::class , 'storeDepartment'])->name('store_department');
-    Route::get('/view/departments' ,[AdminDepartmentController::class , 'viewDepartments'])->name('view_departments');
-    Route::get('/details/department/{id}' ,[AdminDepartmentController::class , 'detailsDepartment'])->name('details_department');
-    Route::get('/edit/department/{id}' ,[AdminDepartmentController::class , 'editDepartment'])->name('edit_department');
-    Route::put('/update/department/{id}' ,[AdminDepartmentController::class , 'updateDepartment'])->name('update_department');
-    Route::delete('/delete/department/{id}' ,[AdminDepartmentController::class , 'deleteDepartment'])->name('delete_department');
+    Route::get('/add/department', [AdminDepartmentController::class, 'addDepartment'])->name('add_department');
+    Route::post('/store/department', [AdminDepartmentController::class, 'storeDepartment'])->name('store_department');
+    Route::get('/view/departments', [AdminDepartmentController::class, 'viewDepartments'])->name('view_departments');
+    Route::get('/details/department/{id}', [AdminDepartmentController::class, 'detailsDepartment'])->name('details_department');
+    Route::get('/edit/department/{id}', [AdminDepartmentController::class, 'editDepartment'])->name('edit_department');
+    Route::put('/update/department/{id}', [AdminDepartmentController::class, 'updateDepartment'])->name('update_department');
+    Route::delete('/delete/department/{id}', [AdminDepartmentController::class, 'deleteDepartment'])->name('delete_department');
 
     Route::get('/view/departments-managers', [AdminDepartmentController::class, 'viewDepartmentsManagers'])->name('view_departments_managers');
-    Route::get('/search/departments-managers',[AdminDepartmentController::class , 'searchDepartmentsManagers'])->name('search_departments_managers');
-    Route::get('/profile/department-manager/{id}',[AdminDepartmentController::class , 'profileDepartmentManager'])->name('profile_department_manager');
-    Route::get('/edit/department-manager/{id}' ,[AdminDepartmentController::class , 'editDepartmentManager'])->name('edit_department_manager');
-    Route::put('/update/department-manager/{id}' ,[AdminDepartmentController::class , 'updateDepartmentManager'])->name('update_department_manager');
-    Route::delete('/delete/department-manager/{id}' ,[AdminDepartmentController::class , 'deleteDepartmentManager'])->name('delete_department_manager');
+    Route::get('/search/departments-managers', [AdminDepartmentController::class, 'searchDepartmentsManagers'])->name('search_departments_managers');
+    Route::get('/profile/department-manager/{id}', [AdminDepartmentController::class, 'profileDepartmentManager'])->name('profile_department_manager');
+    Route::get('/edit/department-manager/{id}', [AdminDepartmentController::class, 'editDepartmentManager'])->name('edit_department_manager');
+    Route::put('/update/department-manager/{id}', [AdminDepartmentController::class, 'updateDepartmentManager'])->name('update_department_manager');
+    Route::delete('/delete/department-manager/{id}', [AdminDepartmentController::class, 'deleteDepartmentManager'])->name('delete_department_manager');
 
 
 
     //Employee
-    Route::get('/add/employee' ,[AdminEmployeeController::class , 'addEmployee'])->name('add_employee');
-    Route::post('/store/employee',[AdminEmployeeController::class , 'storeEmployee'])->name('store_employee');
-    Route::get('/view/employees' ,[AdminEmployeeController::class , 'viewEmployees'])->name('view_employees');
-    Route::get('/search/employees',[AdminEmployeeController::class , 'searchEmployees'])->name('search_employees');
-    Route::get('/profile/employee/{id}',[AdminEmployeeController::class , 'profileEmployee'])->name('profile_employee');
-    Route::get('/edit/employee/{id}' ,[AdminEmployeeController::class , 'editEmployee'])->name('edit_employee');
-    Route::put('/update/employee/{id}' ,[AdminEmployeeController::class , 'updateEmployee'])->name('update_employee');
-    Route::delete('/delete/employee/{id}' ,[AdminEmployeeController::class , 'deleteEmployee'])->name('delete_employee');
+    Route::get('/add/employee', [AdminEmployeeController::class, 'addEmployee'])->name('add_employee');
+    Route::post('/store/employee', [AdminEmployeeController::class, 'storeEmployee'])->name('store_employee');
+    Route::get('/view/employees', [AdminEmployeeController::class, 'viewEmployees'])->name('view_employees');
+    Route::get('/search/employees', [AdminEmployeeController::class, 'searchEmployees'])->name('search_employees');
+    Route::get('/profile/employee/{id}', [AdminEmployeeController::class, 'profileEmployee'])->name('profile_employee');
+    Route::get('/edit/employee/{id}', [AdminEmployeeController::class, 'editEmployee'])->name('edit_employee');
+    Route::put('/update/employee/{id}', [AdminEmployeeController::class, 'updateEmployee'])->name('update_employee');
+    Route::delete('/delete/employee/{id}', [AdminEmployeeController::class, 'deleteEmployee'])->name('delete_employee');
 
     Route::post('/check-job-requires-department', [AdminEmployeeController::class, 'checkJobRequiresDepartment'])->name('check_job_requires_department');
 
 
     //Doctor
-    Route::get('/add/doctor' ,[AdminDoctorController::class , 'addDoctor'])->name('add_doctor');
-    Route::post('/store/doctor',[AdminDoctorController::class , 'storeDoctor'])->name('store_doctor');
-    Route::get('/view/doctors' ,[AdminDoctorController::class , 'viewDoctors'])->name('view_doctors');
-    Route::get('/search/doctors',[AdminDoctorController::class , 'searchDoctors'])->name('search_doctors');
-    Route::get('/profile/doctor/{id}',[AdminDoctorController::class , 'profileDoctor'])->name('profile_doctor');
-    Route::get('/edit/doctor/{id}' ,[AdminDoctorController::class , 'editDoctor'])->name('edit_doctor');
-    Route::put('/update/doctor/{id}' ,[AdminDoctorController::class , 'updateDoctor'])->name('update_doctor');
-    Route::delete('/delete/doctor/{id}' ,[AdminDoctorController::class , 'deleteDoctor'])->name('delete_doctor');
+    Route::get('/add/doctor', [AdminDoctorController::class, 'addDoctor'])->name('add_doctor');
+    Route::post('/store/doctor', [AdminDoctorController::class, 'storeDoctor'])->name('store_doctor');
+    Route::get('/view/doctors', [AdminDoctorController::class, 'viewDoctors'])->name('view_doctors');
+    Route::get('/search/doctors', [AdminDoctorController::class, 'searchDoctors'])->name('search_doctors');
+    Route::get('/profile/doctor/{id}', [AdminDoctorController::class, 'profileDoctor'])->name('profile_doctor');
+    Route::get('/edit/doctor/{id}', [AdminDoctorController::class, 'editDoctor'])->name('edit_doctor');
+    Route::put('/update/doctor/{id}', [AdminDoctorController::class, 'updateDoctor'])->name('update_doctor');
+    Route::delete('/delete/doctor/{id}', [AdminDoctorController::class, 'deleteDoctor'])->name('delete_doctor');
 
-    Route::get('/search/schedules',[AdminDoctorController::class ,  'searchSchedules'])->name('search_schedules');
-    Route::post('/search/doctor/schedule',[AdminDoctorController::class , 'searchDoctSchedule'])->name('search_doctor_schedule');
+    Route::get('/search/schedules', [AdminDoctorController::class, 'searchSchedules'])->name('search_schedules');
+    Route::post('/search/doctor/schedule', [AdminDoctorController::class, 'searchDoctSchedule'])->name('search_doctor_schedule');
 
 
     //Patient
-    Route::get('/add/patient' ,[AdminPatientController::class , 'addPatient'])->name('add_patient');
-    Route::post('/store/patient',[AdminPatientController::class , 'storePatient'])->name('store_patient');
-    Route::get('/view/patients' ,[AdminPatientController::class , 'viewPatients'])->name('view_patients');
-    Route::get('/search/patients' ,[AdminPatientController::class , 'searchPatients'])->name('search_patients');
-    Route::get('/profile/patient/{id}',[AdminPatientController::class , 'profilePatient'])->name('profile_patient');
-    Route::get('/edit/patient/{id}' ,[AdminPatientController::class , 'editPatient'])->name('edit_patient');
-    Route::put('/update/patient/{id}' ,[AdminPatientController::class , 'updatePatient'])->name('update_patient');
-    Route::delete('/delete/patient/{id}' ,[AdminPatientController::class , 'deletePatient'])->name('delete_patient');
+    Route::get('/add/patient', [AdminPatientController::class, 'addPatient'])->name('add_patient');
+    Route::post('/store/patient', [AdminPatientController::class, 'storePatient'])->name('store_patient');
+    Route::get('/view/patients', [AdminPatientController::class, 'viewPatients'])->name('view_patients');
+    Route::get('/search/patients', [AdminPatientController::class, 'searchPatients'])->name('search_patients');
+    Route::get('/profile/patient/{id}', [AdminPatientController::class, 'profilePatient'])->name('profile_patient');
+    Route::get('/edit/patient/{id}', [AdminPatientController::class, 'editPatient'])->name('edit_patient');
+    Route::put('/update/patient/{id}', [AdminPatientController::class, 'updatePatient'])->name('update_patient');
+    Route::delete('/delete/patient/{id}', [AdminPatientController::class, 'deletePatient'])->name('delete_patient');
 
 
     //Appointment
-    Route::get('/add/appointment' ,[AdminAppointmentController::class , 'addAppointment'])->name('add_appointment');
-    Route::post('/store/appointment',[AdminAppointmentController::class , 'storeAppointment'])->name('store_appointment');
-    Route::get('/view/appointments' ,[AdminAppointmentController::class , 'viewAppointments'])->name('view_appointments');
-    Route::get('/search/appointments',[AdminAppointmentController::class , 'searchAppointments'])->name('search_appointments');
-    Route::get('/details/appointment/{id}',[AdminAppointmentController::class , 'detailsAppointment'])->name('details_appointment');
-    Route::get('/edit/appointment/{id}' ,[AdminAppointmentController::class , 'editAppointment'])->name('edit_appointment');
-    Route::put('/update/appointment/{id}' ,[AdminAppointmentController::class , 'updateAppointment'])->name('update_appointment');
+    Route::get('/add/appointment', [AdminAppointmentController::class, 'addAppointment'])->name('add_appointment');
+    Route::post('/store/appointment', [AdminAppointmentController::class, 'storeAppointment'])->name('store_appointment');
+    Route::get('/view/appointments', [AdminAppointmentController::class, 'viewAppointments'])->name('view_appointments');
+    Route::get('/search/appointments', [AdminAppointmentController::class, 'searchAppointments'])->name('search_appointments');
+    Route::get('/details/appointment/{id}', [AdminAppointmentController::class, 'detailsAppointment'])->name('details_appointment');
+    Route::get('/edit/appointment/{id}', [AdminAppointmentController::class, 'editAppointment'])->name('edit_appointment');
+    Route::put('/update/appointment/{id}', [AdminAppointmentController::class, 'updateAppointment'])->name('update_appointment');
 
-    Route::delete('/delete/appointment/{id}' ,[AdminAppointmentController::class ,'deleteAppointment'])->name('delete_appointment');
-    Route::get('/appointments-trash',[AdminAppointmentController::class, 'trash'])->name('appointments_trash');   // عرض سلة محذوفات المواعيد
+    Route::delete('/delete/appointment/{id}', [AdminAppointmentController::class, 'deleteAppointment'])->name('delete_appointment');
+    Route::get('/appointments-trash', [AdminAppointmentController::class, 'trash'])->name('appointments_trash');   // عرض سلة محذوفات المواعيد
     Route::get('/appointments-trash/search', [AdminAppointmentController::class, 'searchAppointmentsTrash'])->name('appointments_trash_search');
-    Route::post('/appointments/restore/{id}',[AdminAppointmentController::class, 'restore'])->name('appointment_restore');   // استرجاع موعد من سلة المحذوفات
-    Route::delete('/appointments/force-delete/{id}',[AdminAppointmentController::class, 'forceDelete'])->name('appointment_forceDelete');  // حذف نهائي من سلة المحذوفات
+    Route::post('/appointments/restore/{id}', [AdminAppointmentController::class, 'restore'])->name('appointment_restore');   // استرجاع موعد من سلة المحذوفات
+    Route::delete('/appointments/force-delete/{id}', [AdminAppointmentController::class, 'forceDelete'])->name('appointment_forceDelete');  // حذف نهائي من سلة المحذوفات
 
 
     //Medical Records
-    Route::get('/view/medical-records' ,[AdminMedicalRecordController::class , 'viewMedicalRecords'])->name('view_medical_records');
-    Route::get('/search/medical-records',[AdminMedicalRecordController::class , 'searchMedicalRecords'])->name('search_medical_records');
-    Route::get('/details/medical-record/{id}',[AdminMedicalRecordController::class , 'detailsMedicalRecord'])->name('details_medical_record');
+    Route::get('/view/medical-records', [AdminMedicalRecordController::class, 'viewMedicalRecords'])->name('view_medical_records');
+    Route::get('/search/medical-records', [AdminMedicalRecordController::class, 'searchMedicalRecords'])->name('search_medical_records');
+    Route::get('/details/medical-record/{id}', [AdminMedicalRecordController::class, 'detailsMedicalRecord'])->name('details_medical_record');
 
 
     //Invoices
-    Route::get('/view/invoices' ,[AdminInvoiceController::class , 'viewInvoices'])->name('view_invoices');
-    Route::get('/search/invoices',[AdminInvoiceController::class , 'searchInvoices'])->name('search_invoices');
-    Route::get('/details/invoice/{id}',[AdminInvoiceController::class , 'detailsInvoice'])->name('details_invoice');
-    Route::get('/details/refund-invoice/{id}',[AdminInvoiceController::class , 'detailsRefundInvoice'])->name('details_refund_invoice');
-    Route::get('/edit/invoice/{id}' ,[AdminInvoiceController::class , 'editInvoice'])->name('edit_invoice');
-    Route::put('/update/invoice/{id}' ,[AdminInvoiceController::class , 'updateInvoice'])->name('update_invoice');
-    Route::delete('/delete/invoice/{id}' ,[AdminInvoiceController::class ,'deleteInvoice'])->name('delete_invoice');
+    Route::get('/view/invoices', [AdminInvoiceController::class, 'viewInvoices'])->name('view_invoices');
+    Route::get('/search/invoices', [AdminInvoiceController::class, 'searchInvoices'])->name('search_invoices');
+    Route::get('/details/invoice/{id}', [AdminInvoiceController::class, 'detailsInvoice'])->name('details_invoice');
+    Route::get('/details/refund-invoice/{id}', [AdminInvoiceController::class, 'detailsRefundInvoice'])->name('details_refund_invoice');
+    Route::get('/edit/invoice/{id}', [AdminInvoiceController::class, 'editInvoice'])->name('edit_invoice');
+    Route::put('/update/invoice/{id}', [AdminInvoiceController::class, 'updateInvoice'])->name('update_invoice');
+    Route::delete('/delete/invoice/{id}', [AdminInvoiceController::class, 'deleteInvoice'])->name('delete_invoice');
 
 
     Route::get('/invoice-pdf/view/{id}', [AdminInvoiceController::class, 'invoicePDF'])->name('invoice_pdf');
@@ -389,9 +395,9 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
 
     //Dashboard
     Route::get('/dashboard', [ClinicManagerDashboardController::class, 'clinicManagerDashboard'])->name('clinic_manager_dashboard');
-    Route::get('/profile' , [ClinicManagerDashboardController::class , 'clinicManagerProfile'])->name('clinic_manager_profile');
-    Route::get('/edit/profile' , [ClinicManagerDashboardController::class , 'clinicManagerEditProfile'])->name('clinic_manager_edit_profile');
-    Route::put('/update/profile' , [ClinicManagerDashboardController::class , 'clinicManagerUpdateProfile'])->name('clinic_manager_update_profile');
+    Route::get('/profile', [ClinicManagerDashboardController::class, 'clinicManagerProfile'])->name('clinic_manager_profile');
+    Route::get('/edit/profile', [ClinicManagerDashboardController::class, 'clinicManagerEditProfile'])->name('clinic_manager_edit_profile');
+    Route::put('/update/profile', [ClinicManagerDashboardController::class, 'clinicManagerUpdateProfile'])->name('clinic_manager_update_profile');
 
 
     //Clinics
@@ -401,81 +407,81 @@ Route::prefix('clinic-manager')->middleware(['auth', 'verified', 'role:clinic_ma
 
 
     //Departments
-    Route::get('/view/departments' ,[ClinicManagerDepartmentController::class , 'viewDepartments'])->name('clinic.view_departments');
-    Route::get('/add/department/toClinic' ,[ClinicManagerDepartmentController::class , 'addDepartmentToClinic'])->name('clinic.add_department');
-    Route::post('/store/department/toClinic' ,[ClinicManagerDepartmentController::class , 'storeDepartmentToClinic'])->name('clinic.store_department');
-    Route::get('/details/department/{id}' ,[ClinicManagerDepartmentController::class , 'detailsDepartment'])->name('clinic.details_department');
-    Route::delete('/delete/department/{id}' ,[ClinicManagerDepartmentController::class , 'deleteDepartment'])->name('clinic.delete_department');
+    Route::get('/view/departments', [ClinicManagerDepartmentController::class, 'viewDepartments'])->name('clinic.view_departments');
+    Route::get('/add/department/toClinic', [ClinicManagerDepartmentController::class, 'addDepartmentToClinic'])->name('clinic.add_department');
+    Route::post('/store/department/toClinic', [ClinicManagerDepartmentController::class, 'storeDepartmentToClinic'])->name('clinic.store_department');
+    Route::get('/details/department/{id}', [ClinicManagerDepartmentController::class, 'detailsDepartment'])->name('clinic.details_department');
+    Route::delete('/delete/department/{id}', [ClinicManagerDepartmentController::class, 'deleteDepartment'])->name('clinic.delete_department');
 
     Route::get('/view/departments-managers', [ClinicManagerDepartmentController::class, 'viewDepartmentsManagers'])->name('clinic.view_departments_managers');
-    Route::get('/search/departments-managers',[ClinicManagerDepartmentController::class , 'searchDepartmentsManagers'])->name('clinic.search_departments_managers');
-    Route::get('/profile/department-manager/{id}',[ClinicManagerDepartmentController::class , 'profileDepartmentManager'])->name('clinic.profile_department_manager');
-    Route::get('/edit/department-manager/{id}' ,[ClinicManagerDepartmentController::class , 'editDepartmentManager'])->name('clinic.edit_department_manager');
-    Route::put('/update/department-manager/{id}' ,[ClinicManagerDepartmentController::class , 'updateDepartmentManager'])->name('clinic.update_department_manager');
-    Route::delete('/delete/department-manager/{id}' ,[ClinicManagerDepartmentController::class , 'deleteDepartmentManager'])->name('clinic.delete_department_manager');
+    Route::get('/search/departments-managers', [ClinicManagerDepartmentController::class, 'searchDepartmentsManagers'])->name('clinic.search_departments_managers');
+    Route::get('/profile/department-manager/{id}', [ClinicManagerDepartmentController::class, 'profileDepartmentManager'])->name('clinic.profile_department_manager');
+    Route::get('/edit/department-manager/{id}', [ClinicManagerDepartmentController::class, 'editDepartmentManager'])->name('clinic.edit_department_manager');
+    Route::put('/update/department-manager/{id}', [ClinicManagerDepartmentController::class, 'updateDepartmentManager'])->name('clinic.update_department_manager');
+    Route::delete('/delete/department-manager/{id}', [ClinicManagerDepartmentController::class, 'deleteDepartmentManager'])->name('clinic.delete_department_manager');
 
 
     //Employees
-    Route::get('/add/employee' ,[ClinicManagerEmployeeController::class , 'addEmployee'])->name('clinic.add_employee');
-    Route::post('/store/employee',[ClinicManagerEmployeeController::class , 'storeEmployee'])->name('clinic.store_employee');
-    Route::get('/view/employees' ,[ClinicManagerEmployeeController::class , 'viewEmployees'])->name('clinic.view_employees');
-    Route::get('/search/employees',[ClinicManagerEmployeeController::class , 'searchEmployees'])->name('clinic.search_employees');
-    Route::get('/profile/employee/{id}',[ClinicManagerEmployeeController::class , 'profileEmployee'])->name('clinic.profile_employee');
-    Route::get('/edit/employee/{id}' ,[ClinicManagerEmployeeController::class , 'editEmployee'])->name('clinic.edit_employee');
-    Route::put('/update/employee/{id}' ,[ClinicManagerEmployeeController::class , 'updateEmployee'])->name('clinic.update_employee');
-    Route::delete('/delete/employee/{id}' ,[ClinicManagerEmployeeController::class , 'deleteEmployee'])->name('clinic.delete_employee');
+    Route::get('/add/employee', [ClinicManagerEmployeeController::class, 'addEmployee'])->name('clinic.add_employee');
+    Route::post('/store/employee', [ClinicManagerEmployeeController::class, 'storeEmployee'])->name('clinic.store_employee');
+    Route::get('/view/employees', [ClinicManagerEmployeeController::class, 'viewEmployees'])->name('clinic.view_employees');
+    Route::get('/search/employees', [ClinicManagerEmployeeController::class, 'searchEmployees'])->name('clinic.search_employees');
+    Route::get('/profile/employee/{id}', [ClinicManagerEmployeeController::class, 'profileEmployee'])->name('clinic.profile_employee');
+    Route::get('/edit/employee/{id}', [ClinicManagerEmployeeController::class, 'editEmployee'])->name('clinic.edit_employee');
+    Route::put('/update/employee/{id}', [ClinicManagerEmployeeController::class, 'updateEmployee'])->name('clinic.update_employee');
+    Route::delete('/delete/employee/{id}', [ClinicManagerEmployeeController::class, 'deleteEmployee'])->name('clinic.delete_employee');
 
 
     //Doctors
-    Route::get('/add/doctor' ,[ClinicManagerDoctorController::class , 'addDoctor'])->name('clinic.add_doctor');
-    Route::post('/store/doctor',[ClinicManagerDoctorController::class , 'storeDoctor'])->name('clinic.store_doctor');
-    Route::get('/view/doctors' ,[ClinicManagerDoctorController::class , 'viewDoctors'])->name('clinic.view_doctors');
-    Route::get('/search/doctors',[ClinicManagerDoctorController::class , 'searchDoctors'])->name('clinic.search_doctors');
-    Route::get('/profile/doctor/{id}',[ClinicManagerDoctorController::class , 'profileDoctor'])->name('clinic.profile_doctor');
-    Route::get('/edit/doctor/{id}' ,[ClinicManagerDoctorController::class , 'editDoctor'])->name('clinic.edit_doctor');
-    Route::put('/update/doctor/{id}' ,[ClinicManagerDoctorController::class , 'updateDoctor'])->name('clinic.update_doctor');
-    Route::delete('/delete/doctor/{id}' ,[ClinicManagerDoctorController::class , 'deleteDoctor'])->name('clinic.delete_doctor');
+    Route::get('/add/doctor', [ClinicManagerDoctorController::class, 'addDoctor'])->name('clinic.add_doctor');
+    Route::post('/store/doctor', [ClinicManagerDoctorController::class, 'storeDoctor'])->name('clinic.store_doctor');
+    Route::get('/view/doctors', [ClinicManagerDoctorController::class, 'viewDoctors'])->name('clinic.view_doctors');
+    Route::get('/search/doctors', [ClinicManagerDoctorController::class, 'searchDoctors'])->name('clinic.search_doctors');
+    Route::get('/profile/doctor/{id}', [ClinicManagerDoctorController::class, 'profileDoctor'])->name('clinic.profile_doctor');
+    Route::get('/edit/doctor/{id}', [ClinicManagerDoctorController::class, 'editDoctor'])->name('clinic.edit_doctor');
+    Route::put('/update/doctor/{id}', [ClinicManagerDoctorController::class, 'updateDoctor'])->name('clinic.update_doctor');
+    Route::delete('/delete/doctor/{id}', [ClinicManagerDoctorController::class, 'deleteDoctor'])->name('clinic.delete_doctor');
 
-    Route::get('/search/schedules',[ClinicManagerDoctorController::class ,  'searchSchedules'])->name('clinic.search_schedules');
-    Route::post('/search/doctor/schedule',[ClinicManagerDoctorController::class , 'searchDoctchedule'])->name('clinic.search_doctor_schedule');
+    Route::get('/search/schedules', [ClinicManagerDoctorController::class, 'searchSchedules'])->name('clinic.search_schedules');
+    Route::post('/search/doctor/schedule', [ClinicManagerDoctorController::class, 'searchDoctchedule'])->name('clinic.search_doctor_schedule');
 
 
     //Patient
-    Route::get('/add/patient' ,[ClinicManagerPatientController::class , 'addPatient'])->name('clinic.add_patient');
-    Route::post('/store/patient',[ClinicManagerPatientController::class , 'storePatient'])->name('clinic.store_patient');
-    Route::get('/view/patients' ,[ClinicManagerPatientController::class , 'viewPatients'])->name('clinic.view_patients');
-    Route::get('/search/patients' ,[ClinicManagerPatientController::class , 'searchPatients'])->name('clinic.search_patients');
-    Route::get('/profile/patient/{id}',[ClinicManagerPatientController::class , 'profilePatient'])->name('clinic.profile_patient');
-    Route::get('/edit/patient/{id}' ,[ClinicManagerPatientController::class , 'editPatient'])->name('clinic.edit_patient');
-    Route::put('/update/patient/{id}' ,[ClinicManagerPatientController::class , 'updatePatient'])->name('clinic.update_patient');
-    Route::delete('/delete/patient/{id}' ,[ClinicManagerPatientController::class , 'deletePatient'])->name('clinic.delete_patient');
+    Route::get('/add/patient', [ClinicManagerPatientController::class, 'addPatient'])->name('clinic.add_patient');
+    Route::post('/store/patient', [ClinicManagerPatientController::class, 'storePatient'])->name('clinic.store_patient');
+    Route::get('/view/patients', [ClinicManagerPatientController::class, 'viewPatients'])->name('clinic.view_patients');
+    Route::get('/search/patients', [ClinicManagerPatientController::class, 'searchPatients'])->name('clinic.search_patients');
+    Route::get('/profile/patient/{id}', [ClinicManagerPatientController::class, 'profilePatient'])->name('clinic.profile_patient');
+    Route::get('/edit/patient/{id}', [ClinicManagerPatientController::class, 'editPatient'])->name('clinic.edit_patient');
+    Route::put('/update/patient/{id}', [ClinicManagerPatientController::class, 'updatePatient'])->name('clinic.update_patient');
+    Route::delete('/delete/patient/{id}', [ClinicManagerPatientController::class, 'deletePatient'])->name('clinic.delete_patient');
 
 
     //Appointment
-    Route::get('/view/appointments' ,[ClinicManagerAppointmentController::class , 'viewAppointments'])->name('clinic.view_appointments');
-    Route::get('/search/appointments',[ClinicManagerAppointmentController::class , 'searchAppointments'])->name('clinic.search_appointments');
-    Route::get('/details/appointment/{id}',[ClinicManagerAppointmentController::class , 'detailsAppointment'])->name('clinic.details_appointment');
+    Route::get('/view/appointments', [ClinicManagerAppointmentController::class, 'viewAppointments'])->name('clinic.view_appointments');
+    Route::get('/search/appointments', [ClinicManagerAppointmentController::class, 'searchAppointments'])->name('clinic.search_appointments');
+    Route::get('/details/appointment/{id}', [ClinicManagerAppointmentController::class, 'detailsAppointment'])->name('clinic.details_appointment');
 
-    Route::delete('/delete/appointment/{id}' ,[ClinicManagerAppointmentController::class ,'deleteAppointment'])->name('clinic.delete_appointment');
-    Route::get('/appointments-trash',[ClinicManagerAppointmentController::class, 'trash'])->name('clinic.appointments_trash');   // عرض سلة محذوفات المواعيد
+    Route::delete('/delete/appointment/{id}', [ClinicManagerAppointmentController::class, 'deleteAppointment'])->name('clinic.delete_appointment');
+    Route::get('/appointments-trash', [ClinicManagerAppointmentController::class, 'trash'])->name('clinic.appointments_trash');   // عرض سلة محذوفات المواعيد
     Route::get('/appointments-trash/search', [ClinicManagerAppointmentController::class, 'searchAppointmentsTrash'])->name('clinic.appointments_trash_search');
-    Route::post('/appointments/restore/{id}',[ClinicManagerAppointmentController::class, 'restore'])->name('clinic.appointment_restore');   // استرجاع موعد من سلة المحذوفات
-    Route::delete('/appointments/force-delete/{id}',[ClinicManagerAppointmentController::class, 'forceDelete'])->name('clinic.appointment_forceDelete');  // حذف نهائي من سلة المحذوفات
+    Route::post('/appointments/restore/{id}', [ClinicManagerAppointmentController::class, 'restore'])->name('clinic.appointment_restore');   // استرجاع موعد من سلة المحذوفات
+    Route::delete('/appointments/force-delete/{id}', [ClinicManagerAppointmentController::class, 'forceDelete'])->name('clinic.appointment_forceDelete');  // حذف نهائي من سلة المحذوفات
 
 
     //Reports
-    Route::get('/view/reports' ,[ClinicManagerReportController::class , 'viewReports'])->name('clinic.view_reports');
-    Route::get('/details/patients-reports' ,[ClinicManagerReportController::class , 'detailsPatientsReports'])->name('clinic.details_patients_reports');
-    Route::get('/details/appointments-reports' ,[ClinicManagerReportController::class , 'detailsAppointmentsReports'])->name('clinic.details_appointments_reports');
-    Route::get('/details/invoices-reports' ,[ClinicManagerReportController::class , 'detailsInvoicesReports'])->name('clinic.details_invoices_reports');
-    Route::get('/details/doctors-reports' ,[ClinicManagerReportController::class , 'detailsDoctorsReports'])->name('clinic.details_doctors_reports');
+    Route::get('/view/reports', [ClinicManagerReportController::class, 'viewReports'])->name('clinic.view_reports');
+    Route::get('/details/patients-reports', [ClinicManagerReportController::class, 'detailsPatientsReports'])->name('clinic.details_patients_reports');
+    Route::get('/details/appointments-reports', [ClinicManagerReportController::class, 'detailsAppointmentsReports'])->name('clinic.details_appointments_reports');
+    Route::get('/details/invoices-reports', [ClinicManagerReportController::class, 'detailsInvoicesReports'])->name('clinic.details_invoices_reports');
+    Route::get('/details/doctors-reports', [ClinicManagerReportController::class, 'detailsDoctorsReports'])->name('clinic.details_doctors_reports');
 
 
     //Invoices
-    Route::get('/view/invoices' ,[ClinicManagerInvoiceController::class , 'viewInvoices'])->name('clinic.view_invoices');
-    Route::get('/search/invoices',[ClinicManagerInvoiceController::class , 'searchInvoices'])->name('clinic.search_invoices');
-    Route::get('/details/invoice/{id}',[ClinicManagerInvoiceController::class , 'detailsInvoice'])->name('clinic.details_invoice');
-    Route::get('/details/refund-invoice/{id}',[ClinicManagerInvoiceController::class , 'detailsRefundInvoice'])->name('clinic.details_refund_invoice');
+    Route::get('/view/invoices', [ClinicManagerInvoiceController::class, 'viewInvoices'])->name('clinic.view_invoices');
+    Route::get('/search/invoices', [ClinicManagerInvoiceController::class, 'searchInvoices'])->name('clinic.search_invoices');
+    Route::get('/details/invoice/{id}', [ClinicManagerInvoiceController::class, 'detailsInvoice'])->name('clinic.details_invoice');
+    Route::get('/details/refund-invoice/{id}', [ClinicManagerInvoiceController::class, 'detailsRefundInvoice'])->name('clinic.details_refund_invoice');
 
     Route::get('/invoice-pdf/view/{id}', [ClinicManagerInvoiceController::class, 'invoicePDF'])->name('clinic.invoice_pdf');
     Route::get('/invoice-pdf/raw/{id}', [ClinicManagerInvoiceController::class, 'invoicePDFRaw'])->name('clinic.invoice_pdf_raw');
@@ -499,9 +505,9 @@ Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:depar
 
     // Dashboard
     Route::get('/dashboard', [DepartmentManagerDashboardController::class, 'departmentManagerDashboard'])->name('department_manager_dashboard');
-    Route::get('/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerProfile'])->name('department_manager_profile');
-    Route::get('/edit/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerEditProfile'])->name('department_manager_edit_profile');
-    Route::put('/update/profile' , [DepartmentManagerDashboardController::class , 'departmentManagerUpdateProfile'])->name('department_manager_update_profile');
+    Route::get('/profile', [DepartmentManagerDashboardController::class, 'departmentManagerProfile'])->name('department_manager_profile');
+    Route::get('/edit/profile', [DepartmentManagerDashboardController::class, 'departmentManagerEditProfile'])->name('department_manager_edit_profile');
+    Route::put('/update/profile', [DepartmentManagerDashboardController::class, 'departmentManagerUpdateProfile'])->name('department_manager_update_profile');
     Route::delete('/delete', [DepartmentManagerDashboardController::class, 'departmentManagerDelete'])->name('department_manager_delete');
 
 
@@ -516,38 +522,38 @@ Route::prefix('department-manager')->middleware(['auth', 'verified', 'role:depar
 
 
     //Employees
-    Route::get('/view/employees' ,[DepartmentManagerEmployeeController::class , 'viewEmployees'])->name('department.view_employees');
-    Route::get('/search/employees',[DepartmentManagerEmployeeController::class , 'searchEmployees'])->name('department.search_employees');
-    Route::get('/profile/employee/{id}',[DepartmentManagerEmployeeController::class , 'profileEmployee'])->name('department.profile_employee');
+    Route::get('/view/employees', [DepartmentManagerEmployeeController::class, 'viewEmployees'])->name('department.view_employees');
+    Route::get('/search/employees', [DepartmentManagerEmployeeController::class, 'searchEmployees'])->name('department.search_employees');
+    Route::get('/profile/employee/{id}', [DepartmentManagerEmployeeController::class, 'profileEmployee'])->name('department.profile_employee');
 
 
     //Doctors
-    Route::get('/view/doctors' ,[DepartmentManagerDoctorController::class , 'viewDoctors'])->name('department.view_doctors');
-    Route::get('/search/doctors',[DepartmentManagerDoctorController::class , 'searchDoctors'])->name('department.search_doctors');
-    Route::get('/profile/doctor/{id}',[DepartmentManagerDoctorController::class , 'profileDoctor'])->name('department.profile_doctor');
+    Route::get('/view/doctors', [DepartmentManagerDoctorController::class, 'viewDoctors'])->name('department.view_doctors');
+    Route::get('/search/doctors', [DepartmentManagerDoctorController::class, 'searchDoctors'])->name('department.search_doctors');
+    Route::get('/profile/doctor/{id}', [DepartmentManagerDoctorController::class, 'profileDoctor'])->name('department.profile_doctor');
 
-    Route::get('/search/schedules',[DepartmentManagerDoctorController::class ,  'searchSchedules'])->name('department.search_schedules');
-    Route::post('/search/doctor/schedule',[DepartmentManagerDoctorController::class , 'searchDoctchedule'])->name('department.search_doctor_schedule');
+    Route::get('/search/schedules', [DepartmentManagerDoctorController::class, 'searchSchedules'])->name('department.search_schedules');
+    Route::post('/search/doctor/schedule', [DepartmentManagerDoctorController::class, 'searchDoctchedule'])->name('department.search_doctor_schedule');
 
 
     //Patient
-    Route::get('/view/patients' ,[DepartmentManagerPatientController::class , 'viewPatients'])->name('department.view_patients');
-    Route::get('/search/patients' ,[DepartmentManagerPatientController::class , 'searchPatients'])->name('department.search_patients');
-    Route::get('/profile/patient/{id}',[DepartmentManagerPatientController::class , 'profilePatient'])->name('department.profile_patient');
+    Route::get('/view/patients', [DepartmentManagerPatientController::class, 'viewPatients'])->name('department.view_patients');
+    Route::get('/search/patients', [DepartmentManagerPatientController::class, 'searchPatients'])->name('department.search_patients');
+    Route::get('/profile/patient/{id}', [DepartmentManagerPatientController::class, 'profilePatient'])->name('department.profile_patient');
 
 
     //Appointment
-    Route::get('/view/appointments' ,[DepartmentManagerAppointmentController::class , 'viewAppointments'])->name('department.view_appointments');
-    Route::get('/search/appointments',[DepartmentManagerAppointmentController::class , 'searchAppointments'])->name('department.search_appointments');
-    Route::get('/details/appointment/{id}',[DepartmentManagerAppointmentController::class , 'detailsAppointment'])->name('department.details_appointment');
+    Route::get('/view/appointments', [DepartmentManagerAppointmentController::class, 'viewAppointments'])->name('department.view_appointments');
+    Route::get('/search/appointments', [DepartmentManagerAppointmentController::class, 'searchAppointments'])->name('department.search_appointments');
+    Route::get('/details/appointment/{id}', [DepartmentManagerAppointmentController::class, 'detailsAppointment'])->name('department.details_appointment');
 
 
     //Reports
-    Route::get('/view/reports' ,[DepartmentManagerReportController::class , 'viewReports'])->name('department.view_reports');
-    Route::get('/details/patients-reports' ,[DepartmentManagerReportController::class , 'detailsPatientsReports'])->name('department.details_patients_reports');
-    Route::get('/details/appointments-reports' ,[DepartmentManagerReportController::class , 'detailsAppointmentsReports'])->name('department.details_appointments_reports');
-    Route::get('/details/invoices-reports' ,[DepartmentManagerReportController::class , 'detailsInvoicesReports'])->name('department.details_invoices_reports');
-    Route::get('/details/doctors-reports' ,[DepartmentManagerReportController::class , 'detailsDoctorsReports'])->name('department.details_doctors_reports');
+    Route::get('/view/reports', [DepartmentManagerReportController::class, 'viewReports'])->name('department.view_reports');
+    Route::get('/details/patients-reports', [DepartmentManagerReportController::class, 'detailsPatientsReports'])->name('department.details_patients_reports');
+    Route::get('/details/appointments-reports', [DepartmentManagerReportController::class, 'detailsAppointmentsReports'])->name('department.details_appointments_reports');
+    Route::get('/details/invoices-reports', [DepartmentManagerReportController::class, 'detailsInvoicesReports'])->name('department.details_invoices_reports');
+    Route::get('/details/doctors-reports', [DepartmentManagerReportController::class, 'detailsDoctorsReports'])->name('department.details_doctors_reports');
 
 
     //Chart
@@ -566,7 +572,7 @@ Route::prefix('doctor')->middleware(['auth', 'verified', 'role:doctor'])->group(
 
     // Dashboard
     Route::get('/dashboard', [DoctorDashboardController::class, 'doctorDashboard'])->name('doctor_dashboard');
-    Route::get('/profile' , [DoctorProfileController::class , 'profile'])->name('doctor_profile');
+    Route::get('/profile', [DoctorProfileController::class, 'profile'])->name('doctor_profile');
     Route::get('/profile/edit', [DoctorProfileController::class, 'edit'])->name('doctor.profile.edit');
     Route::put('/profile/update', [DoctorProfileController::class, 'update'])->name('doctor_update_profile');
     Route::get('/profile/settings', [DoctorProfileController::class, 'settings'])->name('doctor.profile.settings');
@@ -621,9 +627,9 @@ Route::prefix('employee/nurse')->middleware(['auth', 'verified', 'role:employee'
 
     //Dashboard
     Route::get('/dashboard', [NurseDashboardController::class, 'nurseDashboard'])->name('nurse_dashboard');
-    Route::get('/profile' , [NurseDashboardController::class , 'nurseProfile'])->name('nurse_profile');
-    Route::get('/edit/profile' , [NurseDashboardController::class , 'nurseEditProfile'])->name('nurse_edit_profile');
-    Route::put('/update/profile' , [NurseDashboardController::class , 'nurseUpdateProfile'])->name('nurse_update_profile');
+    Route::get('/profile', [NurseDashboardController::class, 'nurseProfile'])->name('nurse_profile');
+    Route::get('/edit/profile', [NurseDashboardController::class, 'nurseEditProfile'])->name('nurse_edit_profile');
+    Route::put('/update/profile', [NurseDashboardController::class, 'nurseUpdateProfile'])->name('nurse_update_profile');
 
 
     //Clinic
@@ -635,45 +641,45 @@ Route::prefix('employee/nurse')->middleware(['auth', 'verified', 'role:employee'
 
 
     //Doctors
-    Route::get('/view/doctors' ,[NurseDoctorController::class , 'viewDoctors'])->name('nurse.view_doctors');
-    Route::get('/search/doctors',[NurseDoctorController::class , 'searchDoctors'])->name('nurse.search_doctors');
-    Route::get('/profile/doctor/{id}',[NurseDoctorController::class , 'profileDoctor'])->name('nurse.profile_doctor');
+    Route::get('/view/doctors', [NurseDoctorController::class, 'viewDoctors'])->name('nurse.view_doctors');
+    Route::get('/search/doctors', [NurseDoctorController::class, 'searchDoctors'])->name('nurse.search_doctors');
+    Route::get('/profile/doctor/{id}', [NurseDoctorController::class, 'profileDoctor'])->name('nurse.profile_doctor');
 
-    Route::get('/search/schedules',[NurseDoctorController::class ,  'searchSchedules'])->name('nurse.search_schedules');
-    Route::post('/search/doctor/schedule',[NurseDoctorController::class , 'searchDoctchedule'])->name('nurse.search_doctor_schedule');
+    Route::get('/search/schedules', [NurseDoctorController::class, 'searchSchedules'])->name('nurse.search_schedules');
+    Route::post('/search/doctor/schedule', [NurseDoctorController::class, 'searchDoctchedule'])->name('nurse.search_doctor_schedule');
 
 
     //Patient
-    Route::get('/view/patients' ,[NursePatientController::class , 'viewPatients'])->name('nurse.view_patients');
-    Route::get('/search/patients' ,[NursePatientController::class , 'searchPatients'])->name('nurse.search_patients');
-    Route::get('/profile/patient/{id}',[NursePatientController::class , 'profilePatient'])->name('nurse.profile_patient');
+    Route::get('/view/patients', [NursePatientController::class, 'viewPatients'])->name('nurse.view_patients');
+    Route::get('/search/patients', [NursePatientController::class, 'searchPatients'])->name('nurse.search_patients');
+    Route::get('/profile/patient/{id}', [NursePatientController::class, 'profilePatient'])->name('nurse.profile_patient');
 
 
     //Appointment
-    Route::get('/view/appointments' ,[NurseAppointmentController::class , 'viewAppointments'])->name('nurse.view_appointments');
-    Route::get('/search/appointments',[NurseAppointmentController::class , 'searchAppointments'])->name('nurse.search_appointments');
+    Route::get('/view/appointments', [NurseAppointmentController::class, 'viewAppointments'])->name('nurse.view_appointments');
+    Route::get('/search/appointments', [NurseAppointmentController::class, 'searchAppointments'])->name('nurse.search_appointments');
 
 
     //Vital Signs
-    Route::get('/add/vital-signs/{appointment_id}' ,[NurseVitalSignsController::class , 'addVitalSigns'])->name('nurse.add_vital_signs');
-    Route::post('/store/vital-signs' ,[NurseVitalSignsController::class , 'storeVitalSigns'])->name('nurse.store_vital_signs');
-    Route::get('/view/vital-signs/{appointment_id}' ,[NurseVitalSignsController::class , 'viewVitalSigns'])->name('nurse.view_vital_signs');
-    Route::get('/search/vital-signs',[NurseVitalSignsController::class , 'searchVitalSigns'])->name('nurse.search_vital_signs');
-    Route::get('/edit/vital-signs/{id}' ,[NurseVitalSignsController::class , 'editVitalSigns'])->name('nurse.edit_vital_signs');
-    Route::put('/update/vital-signs/{id}' ,[NurseVitalSignsController::class , 'updateVitalSigns'])->name('nurse.update_vital_signs');
+    Route::get('/add/vital-signs/{appointment_id}', [NurseVitalSignsController::class, 'addVitalSigns'])->name('nurse.add_vital_signs');
+    Route::post('/store/vital-signs', [NurseVitalSignsController::class, 'storeVitalSigns'])->name('nurse.store_vital_signs');
+    Route::get('/view/vital-signs/{appointment_id}', [NurseVitalSignsController::class, 'viewVitalSigns'])->name('nurse.view_vital_signs');
+    Route::get('/search/vital-signs', [NurseVitalSignsController::class, 'searchVitalSigns'])->name('nurse.search_vital_signs');
+    Route::get('/edit/vital-signs/{id}', [NurseVitalSignsController::class, 'editVitalSigns'])->name('nurse.edit_vital_signs');
+    Route::put('/update/vital-signs/{id}', [NurseVitalSignsController::class, 'updateVitalSigns'])->name('nurse.update_vital_signs');
 
 
     //Medical Record
-    Route::get('/view/medical-records' ,[NurseMedicalRecordController::class , 'viewMedicalRecords'])->name('nurse.view_medical_records');
-    Route::get('/search/medical-records',[NurseMedicalRecordController::class , 'searchMedicalRecords'])->name('nurse.search_medical_records');
-    Route::get('/details/medical-record/{id}' ,[NurseMedicalRecordController::class , 'detailsMedicalRecord'])->name('nurse.details_medical_record');
+    Route::get('/view/medical-records', [NurseMedicalRecordController::class, 'viewMedicalRecords'])->name('nurse.view_medical_records');
+    Route::get('/search/medical-records', [NurseMedicalRecordController::class, 'searchMedicalRecords'])->name('nurse.search_medical_records');
+    Route::get('/details/medical-record/{id}', [NurseMedicalRecordController::class, 'detailsMedicalRecord'])->name('nurse.details_medical_record');
 
 
     //Nurse Tasks
-    Route::get('/view/nurse-tasks' ,[NurseTaskController::class , 'viewNurseTasks'])->name('nurse.view_nurse_tasks');
-    Route::get('/search/nurse-tasks',[NurseTaskController::class , 'searchNurseTasks'])->name('nurse.search_nurse_tasks');
-    Route::get('/details/nurse-task/{id}' ,[NurseTaskController::class , 'detailsNurseTask'])->name('nurse.details_nurse_task');
-    Route::post('/completed/nurse-task/{id}' ,[NurseTaskController::class , 'completedNurseTask'])->name('nurse.completed_nurse_task');
+    Route::get('/view/nurse-tasks', [NurseTaskController::class, 'viewNurseTasks'])->name('nurse.view_nurse_tasks');
+    Route::get('/search/nurse-tasks', [NurseTaskController::class, 'searchNurseTasks'])->name('nurse.search_nurse_tasks');
+    Route::get('/details/nurse-task/{id}', [NurseTaskController::class, 'detailsNurseTask'])->name('nurse.details_nurse_task');
+    Route::post('/completed/nurse-task/{id}', [NurseTaskController::class, 'completedNurseTask'])->name('nurse.completed_nurse_task');
 
 });
 
@@ -686,9 +692,9 @@ Route::prefix('employee/receptionist')->middleware(['auth', 'verified', 'role:em
 
     //Dashboard
     Route::get('/dashboard', [ReceptionistDashboardController::class, 'receptionistDashboard'])->name('receptionist_dashboard');
-    Route::get('/profile' , [ReceptionistDashboardController::class , 'receptionistProfile'])->name('receptionist_profile');
-    Route::get('/edit/profile' , [ReceptionistDashboardController::class , 'receptionistEditProfile'])->name('receptionist_edit_profile');
-    Route::put('/update/profile' , [ReceptionistDashboardController::class , 'receptionistUpdateProfile'])->name('receptionist_update_profile');
+    Route::get('/profile', [ReceptionistDashboardController::class, 'receptionistProfile'])->name('receptionist_profile');
+    Route::get('/edit/profile', [ReceptionistDashboardController::class, 'receptionistEditProfile'])->name('receptionist_edit_profile');
+    Route::put('/update/profile', [ReceptionistDashboardController::class, 'receptionistUpdateProfile'])->name('receptionist_update_profile');
 
 
     //Clinic
@@ -700,42 +706,42 @@ Route::prefix('employee/receptionist')->middleware(['auth', 'verified', 'role:em
 
 
     //Doctors
-    Route::get('/view/doctors' ,[ReceptionistDoctorController::class , 'viewDoctors'])->name('receptionist.view_doctors');
-    Route::get('/search/doctors',[ReceptionistDoctorController::class , 'searchDoctors'])->name('receptionist.search_doctors');
-    Route::get('/profile/doctor/{id}',[ReceptionistDoctorController::class , 'profileDoctor'])->name('receptionist.profile_doctor');
+    Route::get('/view/doctors', [ReceptionistDoctorController::class, 'viewDoctors'])->name('receptionist.view_doctors');
+    Route::get('/search/doctors', [ReceptionistDoctorController::class, 'searchDoctors'])->name('receptionist.search_doctors');
+    Route::get('/profile/doctor/{id}', [ReceptionistDoctorController::class, 'profileDoctor'])->name('receptionist.profile_doctor');
 
-    Route::get('/search/schedules',[ReceptionistDoctorController::class ,  'searchSchedules'])->name('receptionist.search_schedules');
-    Route::post('/search/doctor/schedule',[ReceptionistDoctorController::class , 'searchDoctchedule'])->name('receptionist.search_doctor_schedule');
+    Route::get('/search/schedules', [ReceptionistDoctorController::class, 'searchSchedules'])->name('receptionist.search_schedules');
+    Route::post('/search/doctor/schedule', [ReceptionistDoctorController::class, 'searchDoctchedule'])->name('receptionist.search_doctor_schedule');
 
 
     //Patient
-    Route::get('/add/patient' ,[ReceptionistPatientController::class , 'addPatient'])->name('receptionist.add_patient');
-    Route::post('/store/patient' ,[ReceptionistPatientController::class , 'storePatient'])->name('receptionist.store_patient');
-    Route::get('/view/patients' ,[ReceptionistPatientController::class , 'viewPatients'])->name('receptionist.view_patients');
-    Route::get('/search/patients' ,[ReceptionistPatientController::class , 'searchPatients'])->name('receptionist.search_patients');
-    Route::get('/profile/patient/{id}',[ReceptionistPatientController::class , 'profilePatient'])->name('receptionist.profile_patient');
-    Route::get('/edit/patient/{id}' ,[ReceptionistPatientController::class , 'editPatient'])->name('receptionist.edit_patient');
-    Route::put('/update/patient/{id}' ,[ReceptionistPatientController::class , 'updatePatient'])->name('receptionist.update_patient');
-    Route::delete('/delete/patient/{id}' ,[ReceptionistPatientController::class , 'deletePatient'])->name('receptionist.delete_patient');
+    Route::get('/add/patient', [ReceptionistPatientController::class, 'addPatient'])->name('receptionist.add_patient');
+    Route::post('/store/patient', [ReceptionistPatientController::class, 'storePatient'])->name('receptionist.store_patient');
+    Route::get('/view/patients', [ReceptionistPatientController::class, 'viewPatients'])->name('receptionist.view_patients');
+    Route::get('/search/patients', [ReceptionistPatientController::class, 'searchPatients'])->name('receptionist.search_patients');
+    Route::get('/profile/patient/{id}', [ReceptionistPatientController::class, 'profilePatient'])->name('receptionist.profile_patient');
+    Route::get('/edit/patient/{id}', [ReceptionistPatientController::class, 'editPatient'])->name('receptionist.edit_patient');
+    Route::put('/update/patient/{id}', [ReceptionistPatientController::class, 'updatePatient'])->name('receptionist.update_patient');
+    Route::delete('/delete/patient/{id}', [ReceptionistPatientController::class, 'deletePatient'])->name('receptionist.delete_patient');
 
 
     //Appointment
-    Route::get('/add/appointment' ,[ReceptionistAppointmentController::class , 'addAppointment'])->name('receptionist.add_appointment');
-    Route::post('/store/appointment',[ReceptionistAppointmentController::class , 'storeAppointment'])->name('receptionist.store_appointment');
-    Route::get('/view/appointments' ,[ReceptionistAppointmentController::class , 'viewAppointments'])->name('receptionist.view_appointments');
-    Route::get('/search/appointments',[ReceptionistAppointmentController::class , 'searchAppointments'])->name('receptionist.search_appointments');
-    Route::get('/details/appointment/{id}',[ReceptionistAppointmentController::class , 'detailsAppointment'])->name('receptionist.details_appointment');
-    Route::get('/edit/appointment/{id}' ,[ReceptionistAppointmentController::class , 'editAppointment'])->name('receptionist.edit_appointment');
-    Route::put('/update/appointment/{id}' ,[ReceptionistAppointmentController::class , 'updateAppointment'])->name('receptionist.update_appointment');
+    Route::get('/add/appointment', [ReceptionistAppointmentController::class, 'addAppointment'])->name('receptionist.add_appointment');
+    Route::post('/store/appointment', [ReceptionistAppointmentController::class, 'storeAppointment'])->name('receptionist.store_appointment');
+    Route::get('/view/appointments', [ReceptionistAppointmentController::class, 'viewAppointments'])->name('receptionist.view_appointments');
+    Route::get('/search/appointments', [ReceptionistAppointmentController::class, 'searchAppointments'])->name('receptionist.search_appointments');
+    Route::get('/details/appointment/{id}', [ReceptionistAppointmentController::class, 'detailsAppointment'])->name('receptionist.details_appointment');
+    Route::get('/edit/appointment/{id}', [ReceptionistAppointmentController::class, 'editAppointment'])->name('receptionist.edit_appointment');
+    Route::put('/update/appointment/{id}', [ReceptionistAppointmentController::class, 'updateAppointment'])->name('receptionist.update_appointment');
 
     Route::post('/appointments/update-status/{id}', [ReceptionistAppointmentController::class, 'updateStatus']);
     Route::post('/check-appointment', [ReceptionistAppointmentController::class, 'checkAppointment'])->name('receptionist.check_appointment');
 
 
     //Invoices
-    Route::get('/view/invoices' ,[ReceptionistInvoiceController::class , 'viewInvoices'])->name('receptionist.view_invoices');
-    Route::get('/search/invoices',[ReceptionistInvoiceController::class , 'searchInvoices'])->name('receptionist.search_invoices');
-    Route::get('/details/invoice/{id}',[ReceptionistInvoiceController::class , 'detailsInvoice'])->name('receptionist.details_invoice');
+    Route::get('/view/invoices', [ReceptionistInvoiceController::class, 'viewInvoices'])->name('receptionist.view_invoices');
+    Route::get('/search/invoices', [ReceptionistInvoiceController::class, 'searchInvoices'])->name('receptionist.search_invoices');
+    Route::get('/details/invoice/{id}', [ReceptionistInvoiceController::class, 'detailsInvoice'])->name('receptionist.details_invoice');
 
     Route::get('/invoice-pdf/view/{id}', [ReceptionistInvoiceController::class, 'invoicePDF'])->name('receptionist.invoice_pdf');
     Route::get('/invoice-pdf/raw/{id}', [ReceptionistInvoiceController::class, 'invoicePDFRaw'])->name('receptionist.invoice_pdf_raw');
@@ -751,9 +757,9 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
 
     //Dashboard
     Route::get('/dashboard', [AccountantDashboardController::class, 'accountantDashboard'])->name('accountant_dashboard');
-    Route::get('/profile' , [AccountantDashboardController::class , 'accountantProfile'])->name('accountant_profile');
-    Route::get('/edit/profile' , [AccountantDashboardController::class , 'accountantEditProfile'])->name('accountant_edit_profile');
-    Route::put('/update/profile' , [AccountantDashboardController::class , 'accountantUpdateProfile'])->name('accountant_update_profile');
+    Route::get('/profile', [AccountantDashboardController::class, 'accountantProfile'])->name('accountant_profile');
+    Route::get('/edit/profile', [AccountantDashboardController::class, 'accountantEditProfile'])->name('accountant_edit_profile');
+    Route::put('/update/profile', [AccountantDashboardController::class, 'accountantUpdateProfile'])->name('accountant_update_profile');
 
 
     //Clinic
@@ -765,37 +771,37 @@ Route::prefix('employee/accountant')->middleware(['auth', 'verified', 'role:empl
 
 
     //Doctors
-    Route::get('/view/doctors' ,[AccountantDoctorController::class , 'viewDoctors'])->name('accountant.view_doctors');
-    Route::get('/search/doctors',[AccountantDoctorController::class , 'searchDoctors'])->name('accountant.search_doctors');
-    Route::get('/profile/doctor/{id}',[AccountantDoctorController::class , 'profileDoctor'])->name('accountant.profile_doctor');
+    Route::get('/view/doctors', [AccountantDoctorController::class, 'viewDoctors'])->name('accountant.view_doctors');
+    Route::get('/search/doctors', [AccountantDoctorController::class, 'searchDoctors'])->name('accountant.search_doctors');
+    Route::get('/profile/doctor/{id}', [AccountantDoctorController::class, 'profileDoctor'])->name('accountant.profile_doctor');
 
 
 
     //Patient
-    Route::get('/view/patients' ,[AccountantPatientController::class , 'viewPatients'])->name('accountant.view_patients');
-    Route::get('/search/patients' ,[AccountantPatientController::class , 'searchPatients'])->name('accountant.search_patients');
-    Route::get('/profile/patient/{id}',[AccountantPatientController::class , 'profilePatient'])->name('accountant.profile_patient');
-    Route::get('/view/invoices-patients/{id}' ,[AccountantPatientController::class , 'viewInvoicesPatients'])->name('accountant.view_invoices_patients');
-    Route::get('/search/invoices-patients/{id}' ,[AccountantPatientController::class , 'searchInvoicesPatients'])->name('accountant.search_invoices_patients');
+    Route::get('/view/patients', [AccountantPatientController::class, 'viewPatients'])->name('accountant.view_patients');
+    Route::get('/search/patients', [AccountantPatientController::class, 'searchPatients'])->name('accountant.search_patients');
+    Route::get('/profile/patient/{id}', [AccountantPatientController::class, 'profilePatient'])->name('accountant.profile_patient');
+    Route::get('/view/invoices-patients/{id}', [AccountantPatientController::class, 'viewInvoicesPatients'])->name('accountant.view_invoices_patients');
+    Route::get('/search/invoices-patients/{id}', [AccountantPatientController::class, 'searchInvoicesPatients'])->name('accountant.search_invoices_patients');
 
 
 
     //Appointment
-    Route::get('/view/appointments' ,[AccountantAppointmentController::class , 'viewAppointments'])->name('accountant.view_appointments');
-    Route::get('/search/appointments',[AccountantAppointmentController::class , 'searchAppointments'])->name('accountant.search_appointments');
-    Route::get('/details/appointment/{id}',[AccountantAppointmentController::class , 'detailsAppointment'])->name('accountant.details_appointment');
+    Route::get('/view/appointments', [AccountantAppointmentController::class, 'viewAppointments'])->name('accountant.view_appointments');
+    Route::get('/search/appointments', [AccountantAppointmentController::class, 'searchAppointments'])->name('accountant.search_appointments');
+    Route::get('/details/appointment/{id}', [AccountantAppointmentController::class, 'detailsAppointment'])->name('accountant.details_appointment');
 
 
     //Invoices
-    Route::get('/view/invoices' ,[AccountantInvoiceController::class , 'viewInvoices'])->name('accountant.view_invoices');
-    Route::get('/search/invoices',[AccountantInvoiceController::class , 'searchInvoices'])->name('accountant.search_invoices');
-    Route::get('/details/invoice/{id}',[AccountantInvoiceController::class , 'detailsInvoice'])->name('accountant.details_invoice');
-    Route::get('/edit/invoice/{id}' ,[AccountantInvoiceController::class , 'editInvoice'])->name('accountant.edit_invoice');
-    Route::put('/update/invoice/{id}' ,[AccountantInvoiceController::class , 'updateInvoice'])->name('accountant.update_invoice');
+    Route::get('/view/invoices', [AccountantInvoiceController::class, 'viewInvoices'])->name('accountant.view_invoices');
+    Route::get('/search/invoices', [AccountantInvoiceController::class, 'searchInvoices'])->name('accountant.search_invoices');
+    Route::get('/details/invoice/{id}', [AccountantInvoiceController::class, 'detailsInvoice'])->name('accountant.details_invoice');
+    Route::get('/edit/invoice/{id}', [AccountantInvoiceController::class, 'editInvoice'])->name('accountant.edit_invoice');
+    Route::put('/update/invoice/{id}', [AccountantInvoiceController::class, 'updateInvoice'])->name('accountant.update_invoice');
 
-    Route::get('/details/refund-invoice/{id}',[AccountantInvoiceController::class , 'detailsRefundInvoice'])->name('accountant.details_refund_invoice');
-    Route::get('/refund-confirm/{id}' ,[AccountantInvoiceController::class , 'refundConfirmation'])->name('accountant.refund_confirm');
-    Route::put('/update/refund-confirm/{id}' ,[AccountantInvoiceController::class , 'updateRefundConfirmation'])->name('accountant.update_refund_confirm');
+    Route::get('/details/refund-invoice/{id}', [AccountantInvoiceController::class, 'detailsRefundInvoice'])->name('accountant.details_refund_invoice');
+    Route::get('/refund-confirm/{id}', [AccountantInvoiceController::class, 'refundConfirmation'])->name('accountant.refund_confirm');
+    Route::put('/update/refund-confirm/{id}', [AccountantInvoiceController::class, 'updateRefundConfirmation'])->name('accountant.update_refund_confirm');
 
 
     Route::get('/invoice-pdf/view/{id}', [AccountantInvoiceController::class, 'invoicePDF'])->name('accountant.invoice_pdf');
@@ -841,11 +847,11 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
 
 
     //Profile
-    Route::get('/profile' , [PatientProfileController::class , 'ViewProfile'])->name('patient.view_profile');
-    Route::get('/edit/profile' , [PatientProfileController::class , 'editProfile'])->name('patient.edit_profile');
-    Route::put('/update/profile' , [PatientProfileController::class , 'updateProfile'])->name('patient.update_profile');
-    Route::get('/edit/password' , [PatientProfileController::class , 'editPassword'])->name('patient.edit_password');
-    Route::put('/update-password', [PatientProfileController::class,'updatePassword'])->name('patient.update_password');
+    Route::get('/profile', [PatientProfileController::class, 'ViewProfile'])->name('patient.view_profile');
+    Route::get('/edit/profile', [PatientProfileController::class, 'editProfile'])->name('patient.edit_profile');
+    Route::put('/update/profile', [PatientProfileController::class, 'updateProfile'])->name('patient.update_profile');
+    Route::get('/edit/password', [PatientProfileController::class, 'editPassword'])->name('patient.edit_password');
+    Route::put('/update-password', [PatientProfileController::class, 'updatePassword'])->name('patient.update_password');
 
 
     // Settings
@@ -867,17 +873,17 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     Route::get('/my-appointments', [PatientAppointmentController::class, 'myAppointments'])->name('patient.myAppointments');
     Route::get('/details/appointment/{id}', [PatientAppointmentController::class, 'detailsAppointment'])->name('patient.details_appointment');
 
-    Route::get('/appointment/book/clinic/{clinic}',[PatientAppointmentController::class, 'appointmentBookClinic'])->name('patient.appointment_book_clinic');
-    Route::get('/appointment/book/doctor/{doctor}',[PatientAppointmentController::class, 'appointmentBookDoctor'])->name('patient.appointment_book_doctor');
+    Route::get('/appointment/book/clinic/{clinic}', [PatientAppointmentController::class, 'appointmentBookClinic'])->name('patient.appointment_book_clinic');
+    Route::get('/appointment/book/doctor/{doctor}', [PatientAppointmentController::class, 'appointmentBookDoctor'])->name('patient.appointment_book_doctor');
 
     Route::post('/appointment/hold', [PatientAppointmentController::class, 'createHold'])->name('patient.appointment_hold');
     Route::get('/payment/{hold}', [PatientPaymentController::class, 'chooseMethod'])->name('patient.choose_payment');
 
 
     //Bank
-    Route::get('/bank-qr/pay/{hold}', [PatientPaymentController::class,'bankQr'])->name('patient.bank.qr');
-    Route::get('/bank-qr/upload/{hold}', [PatientPaymentController::class,'uploadReceipt'])->name('patient.bank.qr.upload');
-    Route::post('/bank-qr/store/{hold}', [PatientPaymentController::class,'storeReceipt'])->name('patient.bank.qr.store');
+    Route::get('/bank-qr/pay/{hold}', [PatientPaymentController::class, 'bankQr'])->name('patient.bank.qr');
+    Route::get('/bank-qr/upload/{hold}', [PatientPaymentController::class, 'uploadReceipt'])->name('patient.bank.qr.upload');
+    Route::post('/bank-qr/store/{hold}', [PatientPaymentController::class, 'storeReceipt'])->name('patient.bank.qr.store');
 
     //PayPal
     Route::get('/paypal/pay/{hold}', [PatientPaymentController::class, 'payHold'])->name('paypal.hold.pay');
@@ -888,7 +894,7 @@ Route::prefix('patient')->middleware(['auth', 'verified', 'role:patient'])->grou
     //Invoices
     Route::get('/invoices/view', [PatientInvoiceController::class, 'invoicesView'])->name('patient.invoices_view');
     Route::get('/details/invoice/{id}', [PatientInvoiceController::class, 'detailsInvoice'])->name('patient.details_invoice');
-    Route::get('/details/refund-invoice/{id}',[PatientInvoiceController::class , 'detailsRefundInvoice'])->name('patient.details_refund_invoice');
+    Route::get('/details/refund-invoice/{id}', [PatientInvoiceController::class, 'detailsRefundInvoice'])->name('patient.details_refund_invoice');
 
     Route::get('/invoice-pdf/view/{id}', [PatientInvoiceController::class, 'invoicePDF'])->name('patient.invoice_pdf');
     Route::get('/invoice-pdf/raw/{id}', [PatientInvoiceController::class, 'invoicePDFRaw'])->name('patient.invoice_pdf_raw');
