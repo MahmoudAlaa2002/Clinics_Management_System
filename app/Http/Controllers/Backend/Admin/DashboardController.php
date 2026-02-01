@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller{
 
@@ -71,16 +72,16 @@ class DashboardController extends Controller{
             $password = Hash::make($request->password);
         }
 
-        $imagePath = $user->image;
+        $imagePath = $user->image; // الصورة الحالية
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمةإن وجدت
-            if ($user->image && file_exists(public_path($user->image))) {
-                @unlink(public_path($user->image));
+
+            // 🔴 حذف الصورة القديمة من storage إن وجدت
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/admin'), $imageName);
-            $imagePath = 'assets/img/admin/' . $imageName;
+
+            // 🟢 رفع الصورة الجديدة
+            $imagePath = $request->file('image')->store('admin', 'public');
         }
 
         $user->update([

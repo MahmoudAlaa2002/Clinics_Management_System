@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\ClinicDepartment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ClinicController extends Controller{
 
@@ -28,12 +29,9 @@ class ClinicController extends Controller{
             return response()->json(['data' => 0]);
         }
 
-        $imagePath = null;
+        $qrImagePath = null;
         if ($request->hasFile('qr_image')) {
-            $file = $request->file('qr_image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/payments'), $imageName);
-            $imagePath = 'assets/img/payments/' . $imageName;
+            $qrImagePath = $request->file('qr_image')->store('payments', 'public');
         }
 
         $clinic = Clinic::create([
@@ -45,7 +43,7 @@ class ClinicController extends Controller{
             'closing_time'  => $request->closing_time,
             'working_days'  => $request->working_days,
             'description'   => $request->description,
-            'qr_image'      => $imagePath,
+            'qr_image'      => $qrImagePath,
             'status'        => $request->status,
         ]);
 
@@ -152,18 +150,19 @@ class ClinicController extends Controller{
 
         $clinic = Clinic::findOrFail($id);
 
-        $imagePath = $clinic->qr_image;
+        $imagePath = $clinic->qr_image; // الصورة القديمة
+
         if ($request->hasFile('qr_image')) {
-            // حذف الصورة القديمةإن وجدت
-            if ($clinic->qr_image && file_exists(public_path($clinic->qr_image))) {
-                @unlink(public_path($clinic->qr_image));
+
+            // حذف الصورة القديمة من storage إن وجدت
+            if ($clinic->qr_image && Storage::disk('public')->exists($clinic->qr_image)) {
+                Storage::disk('public')->delete($clinic->qr_image);
             }
-            $file = $request->file('qr_image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/payments'), $imageName);
-            $newPath = 'assets/img/payments/' . $imageName;
-            $imagePath = $newPath;
+
+            // رفع الصورة الجديدة
+            $imagePath = $request->file('qr_image')->store('payments', 'public');
         }
+
         $clinic->update([
             'name'          => $request->name,
             'location'      => $request->location,
