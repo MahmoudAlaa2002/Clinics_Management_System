@@ -56,7 +56,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <label>Clinic Name T <span class="text-danger">*</span></label>
+                                    <label>Clinic Name <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-hospital-alt"></i></span>
