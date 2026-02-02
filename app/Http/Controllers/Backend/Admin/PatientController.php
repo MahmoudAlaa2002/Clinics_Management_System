@@ -26,11 +26,17 @@ class PatientController extends Controller{
             return response()->json(['data' => 0]); // موجود مسبقاً
         }
 
+        // if ($request->hasFile('image')) {
+            //     $imagePath = $request->file('image')->store('patients', 'public');
+            // }
+            
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('patients', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('patients'), $filename);
+            $imagePath = 'patients/' . $filename;
         }
-
 
         $user = User::create([
             'name'         => $request->name,
@@ -58,7 +64,7 @@ class PatientController extends Controller{
     }
 
 
-
+  
 
 
 
