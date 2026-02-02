@@ -5,7 +5,7 @@
             <div class="card doctor-card h-100">
 
                 <div class="cardHeader">
-                    <img src="{{ asset($doctor->employee->user->image ?? 'assets/img/user.jpg') }}"
+                    <img src="{{ asset('storage/'.$doctor->employee->user->image ?? 'assets/img/user.jpg') }}"
                         class="card-img-top" alt="{{ $doctor->employee->user->name }}">
 
                     <div>
@@ -75,7 +75,7 @@
                         {{-- Doctor Header --}}
                         <div class="doctor-info d-flex gap-3 align-items-center">
 
-                            <img src="{{ asset($doctor->employee->user->image ?? 'assets/img/user.jpg') }}"
+                            <img src="{{ asset('storage/'.$doctor->employee->user->image ?? 'assets/img/user.jpg') }}"
                                  style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:3px solid #eaeaea;"
                                  alt="{{ $doctor->employee->user->name }}">
 

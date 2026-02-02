@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller{
 
@@ -92,20 +93,12 @@ class DashboardController extends Controller{
             $password = Hash::make($request->password);
         }
 
-        $imagePath = $department_manager->image;
+        $imagePath = $department_manager->image; // الصورة القديمة
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $newPath = 'assets/img/department_manager/' . $imageName;
-
-
-            $file->move(public_path('assets/img/department_manager'), $imageName);
-
-            if (!empty($imagePath) && file_exists(public_path($imagePath))) {
-                @unlink(public_path($imagePath));
+            if ($department_manager->image && Storage::disk('public')->exists($department_manager->image)) {
+                Storage::disk('public')->delete($department_manager->image);
             }
-
-            $imagePath = $newPath;
+            $imagePath = $request->file('image')->store('departments_managers', 'public');
         }
 
         $department_manager->update([

@@ -124,7 +124,7 @@
 
         {{-- PHOTO --}}
         <div class="avatar-box">
-            <img src="{{ asset(auth()->user()->image ?? 'assets/img/user.jpg') }}"
+            <img src="{{ asset('storage/'.auth()->user()->image ?? 'assets/img/user.jpg') }}"
                 class="avatar-preview">
 
             <div>

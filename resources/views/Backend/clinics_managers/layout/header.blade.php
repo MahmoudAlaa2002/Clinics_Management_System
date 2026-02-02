@@ -90,8 +90,13 @@
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($clinicManager?->image ?? 'assets/img/user.jpg') }}" alt="">
+                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;"
+                         src="{{ $clinicManager?->image
+                            ? asset('storage/'.$clinicManager->image)
+                            : asset('assets/img/user.jpg') }}"
+                         alt="">
                 </span>
+
                 <span>
                     Clinic Manager
                 </span>
@@ -101,11 +106,11 @@
                     <div class="user-name">{{ auth()->user()->name ?? 'User' }}</div>
                     <div class="user-role">Clinic Manager</div>
                 </div>
-            
+
                 <a class="dropdown-item" href="{{ route('home') }}"><i class="fa fa-home"></i> Home</a>
                 <a class="dropdown-item" href="{{ route('clinic_manager_profile') }}"><i class="fa fa-user"></i> My Profile</a>
                 <a class="dropdown-item" href="{{ route('clinic_manager_edit_profile') }}"><i class="fa fa-edit"></i> Edit Profile</a>
-            
+
                 <div class="dropdown-divider"></div>
 
                 <a class="dropdown-item" href="#"

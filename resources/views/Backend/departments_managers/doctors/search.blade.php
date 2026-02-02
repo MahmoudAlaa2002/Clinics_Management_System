@@ -6,7 +6,7 @@
                 <div class="doctor-img">
                     <a class="avatar" href="{{ route('department.profile_doctor', $doctor->id) }}">
                         <img src="{{ optional(optional($doctor->employee)->user)->image
-                            ? asset($doctor->employee->user->image)
+                            ? asset('storage/'.$doctor->employee->user->image)
                             : asset('assets/img/user.jpg') }}">
                     </a>
                 </div>

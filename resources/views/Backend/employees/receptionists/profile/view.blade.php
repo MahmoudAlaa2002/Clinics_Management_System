@@ -58,7 +58,7 @@
             <div class="col-lg-8">
                 <div class="p-4 profile-card">
                     <div class="mb-4 text-center">
-                        <img src="{{ asset($receptionist->image ?? 'assets/img/user.jpg') }}" alt=""
+                        <img src="{{ asset('storage/'.$receptionist->image ?? 'assets/img/user.jpg') }}" alt=""
                             class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
                             <h2 class="mt-3 mb-0">{{ $receptionist->name }}</h2>
                         <p class="text-muted">Receptionist</p>

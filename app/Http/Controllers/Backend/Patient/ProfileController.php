@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller {
 
@@ -33,21 +34,21 @@ class ProfileController extends Controller {
         }
 
         // image
+        $imagePath = $user->image; // الصورة القديمة
         if ($request->hasFile('image')) {
-            if ($user->image && file_exists(public_path($user->image))) {
-                unlink(public_path($user->image));
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-            $file = $request->file('image');
-            $name = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('assets/img/patient'), $name);
-            $user->image = 'assets/img/patient/'.$name;
+            $imagePath = $request->file('image')->store('patients', 'public');
         }
 
+
         $user->update([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'phone'=>$request->phone,
-            'address'=>$request->address,
+            'name'   =>$request->name,
+            'email'  =>$request->email,
+            'phone'  =>$request->phone,
+            'image'  =>$imagePath,
+            'address' =>$request->address,
             'gender'=>$request->gender,
             'date_of_birth'=>$request->date_of_birth
         ]);

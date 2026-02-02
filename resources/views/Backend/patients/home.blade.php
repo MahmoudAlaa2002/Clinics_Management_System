@@ -284,7 +284,7 @@
                         <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
                             <div class="team-member d-flex align-items-start">
                                 <div class="pic"><img
-                                        src="{{ asset($doctor->employee?->user?->image ?? 'assets/img/user.jpg') }}"
+                                        src="{{ asset('storage/'.$doctor->employee?->user?->image ?? 'assets/img/user.jpg') }}"
                                         class="img-fluid" alt=""></div>
                                 <div class="member-info">
                                     <h4>{{ $doctor->employee->user->name }}</h4>

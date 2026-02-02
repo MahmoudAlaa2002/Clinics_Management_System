@@ -6,7 +6,7 @@
             <td data-field="amount">$ {{ $payment->hold->amount }}</td>
             <td data-field="reference_number">{{ $payment->reference_number }}</td>
             <td data-field="receipt">
-                <img src="{{ asset($payment->receipt) }}"
+                <img src="{{ asset('storage/'.$payment->receipt) }}"
                      data-id="{{ $payment->id }}"
                      data-ref="{{ $payment->reference_number }}"
                      data-amount="{{ $payment->hold->amount }}"

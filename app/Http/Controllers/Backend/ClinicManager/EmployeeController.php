@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller{
 
@@ -39,10 +40,7 @@ class EmployeeController extends Controller{
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/employees'), $imageName);
-            $imagePath = 'assets/img/employees/' . $imageName;
+            $imagePath = $request->file('image')->store('employees', 'public');
         }
 
         $role = match ($request->job_title) {
@@ -223,19 +221,12 @@ class EmployeeController extends Controller{
             return response()->json(['data' => 0]); // موجود مسبقا
         }
 
-        $imagePath = $user->image;
+        $imagePath = $user->image; // الصورة القديمة
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/employees'), $imageName);
-            $newPath = 'assets/img/employees/' . $imageName;
-
-            // حذف القديمة إذا كانت موجودة
-            if ($user->image && file_exists(public_path($user->image))) {
-                @unlink(public_path($user->image));
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-
-            $imagePath = $newPath;
+            $imagePath = $request->file('image')->store('employees', 'public');
         }
 
         $role = match ($request->job_title) {

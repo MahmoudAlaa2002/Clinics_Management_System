@@ -68,7 +68,7 @@
                         <div class="profile-widget">
                             <div class="doctor-img">
                                 <a class="avatar" href="{{ Route('accountant.profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
-                                    ? asset(optional($doctor->employee->user)->image)
+                                    ? asset(optional('storage/'.$doctor->employee->user)->image)
                                     : asset('assets/img/user.jpg') }}"></a>
                             </div>
 

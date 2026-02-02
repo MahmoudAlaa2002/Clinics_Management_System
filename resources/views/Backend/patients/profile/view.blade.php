@@ -223,7 +223,7 @@
                     <div class="pp-sidebar h-100">
 
                         <div class="text-center mb-3">
-                            <img src="{{ asset(auth()->user()->image ?? 'assets/img/user.jpg') }}"
+                            <img src="{{ asset('storage/'.auth()->user()->image ?? 'assets/img/user.jpg') }}"
                                  class="pp-avatar" alt="Patient Avatar">
 
                             <div class="pp-name">

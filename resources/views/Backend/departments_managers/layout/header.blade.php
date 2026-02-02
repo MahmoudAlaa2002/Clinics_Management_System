@@ -89,8 +89,14 @@
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($departmentManager?->image ?? 'assets/img/user.jpg') }}" alt="">
+                    <img class="rounded-circle"
+                         style="width: 40px; height:40px; margin-right:5px;"
+                         src="{{ $departmentManager?->image
+                            ? asset('storage/'.$departmentManager->image)
+                            : asset('assets/img/user.jpg') }}"
+                         alt="">
                 </span>
+
                 <span>
                     Department Manager
                 </span>

@@ -23,7 +23,7 @@
             </td>
 
             <td data-field="receipt">
-                <img src="{{ asset($payment->receipt) }}"
+                <img src="{{ asset('storage/'.$payment->receipt) }}"
                     data-id="{{ $payment->id }}"
                     data-ref="{{ $payment->reference_number }}"
                     data-amount="{{ $source->amount ?? $source->consultation_fee }}"

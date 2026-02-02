@@ -127,7 +127,7 @@
                                             <label>Avatar</label>
                                             <div class="profile-upload">
                                                 <div class="upload-img">
-                                                    <img alt="patient image" src="{{ asset($patient->user->image ?? 'assets/img/user.jpg') }}">
+                                                    <img alt="patient image" src="{{ asset('storage/'.$patient->user->image ?? 'assets/img/user.jpg') }}">
                                                 </div>
                                                 <div class="upload-input">
                                                     <input type="file" class="form-control" id="image" name="image">

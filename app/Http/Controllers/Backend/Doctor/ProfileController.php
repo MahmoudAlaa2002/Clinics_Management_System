@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backend\Doctor;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -33,18 +34,10 @@ class ProfileController extends Controller
 
         $imagePath = $doctor->image; // الصورة القديمة
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $newPath = 'assets/img/doctor/' . $imageName;
-
-
-            $file->move(public_path('assets/img/doctor'), $imageName);
-
-            if (!empty($imagePath) && file_exists(public_path($imagePath))) {
-                @unlink(public_path($imagePath));
+            if ($doctor->image && Storage::disk('public')->exists($doctor->image)) {
+                Storage::disk('public')->delete($doctor->image);
             }
-
-            $imagePath = $newPath;
+            $imagePath = $request->file('image')->store('doctors', 'public');
         }
 
         $doctor->update([

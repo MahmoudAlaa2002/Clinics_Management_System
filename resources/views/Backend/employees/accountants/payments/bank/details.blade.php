@@ -111,7 +111,7 @@
 
                         {{-- LEFT: Receipt --}}
                         <div class="receipt-box">
-                            <img src="{{ asset($payment->receipt) }}">
+                            <img src="{{ asset('storage/'.$payment->receipt) }}">
                             <p class="mt-3 text-muted">Uploaded Payment Receipt</p>
                         </div>
 

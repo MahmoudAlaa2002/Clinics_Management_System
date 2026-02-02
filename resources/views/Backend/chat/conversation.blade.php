@@ -226,7 +226,7 @@
                             <div class="avatar-wrapper">
                                 <div class="avatar">
                                     @if($target->image)
-                                        <img src="{{ asset($target->image) }}">
+                                        <img src="{{ asset('storage/'.$target->image) }}">
                                     @else
                                         {{ strtoupper(substr($target->name,0,2)) }}
                                     @endif

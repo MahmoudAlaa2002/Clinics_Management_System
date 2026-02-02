@@ -5,7 +5,7 @@
             <div class="card clinic-card h-100">
 
                 <div class="cardHeader">
-                    <img src="{{ asset($clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
+                    <img src="{{ asset('storage/'.$clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
                          class="card-img-top" alt="{{ $clinic->name }}">
                 </div>
 
@@ -67,7 +67,7 @@
 
                     <div class="modal-body">
                         <div class="clinic-info">
-                            <img src="{{ asset($clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
+                            <img src="{{ asset('storage/'.$clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
                                 class="mb-3 img-fluid" alt="{{ $clinic->name }}">
 
                             <div>

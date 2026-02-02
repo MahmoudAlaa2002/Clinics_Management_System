@@ -19,7 +19,7 @@
     {{-- QR الخاص بالعيادة --}}
     <div style="margin:30px auto">
         @if(!empty($clinic->qr_image))
-            <img src="{{ asset($clinic->qr_image) }}" width="300" alt="Clinic Bank QR">
+            <img src="{{ asset('storage/'.$clinic->qr_image) }}" width="300" alt="Clinic Bank QR">
         @else
             <div style="border:2px dashed #cbd5e1; padding:30px; border-radius:12px;
                     color:#475569; font-size:16px; background:#f8fafc;">

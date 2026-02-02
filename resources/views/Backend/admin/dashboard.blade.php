@@ -340,7 +340,7 @@
                                                 <div class="contact-cont">
                                                     <div class="float-left user-img m-r-10">
                                                         <a href="{{ route('profile_doctor' , ['id' => $doctor->id]) }}" title="{{ $doctor->employee->user->name }}">
-                                                            <img src="{{ asset($doctor->employee->user->image ?? 'assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle">
+                                                            <img src="{{ asset('storage/'.$doctor->employee->user->image ?? 'assets/img/user.jpg') }}" alt="" class="w-40 rounded-circle">
                                                         </a>
                                                     </div>
                                                     <div class="contact-info">
@@ -392,7 +392,7 @@
                                                 @foreach ($patients as $patient)
                                                     <tr>
                                                         <td>
-                                                            <img width="34" height="34" class="rounded-circle" src="{{ asset($patient->user->image ?? 'assets/img/user.jpg') }}" alt="">
+                                                            <img width="34" height="34" class="rounded-circle" src="{{ asset('storage/'.$patient->user->image ?? 'assets/img/user.jpg') }}" alt="">
                                                             <h2>{{ $patient->user->name }}</h2>
                                                         </td>
                                                         <td>{{ $patient->user->email }}</td>

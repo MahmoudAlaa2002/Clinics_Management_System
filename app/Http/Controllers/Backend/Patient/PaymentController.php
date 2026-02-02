@@ -43,12 +43,11 @@ class PaymentController extends Controller {
     public function storeReceipt(Request $request, $holdId) {
         $hold = AppointmentHold::findOrFail($holdId);
 
-        if ($request->hasFile('receipt')) {
-            $file = $request->file('receipt');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/payments'), $imageName);
-            $imagePath = 'assets/img/payments/' . $imageName;
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('payments', 'public');
         }
+
 
         BankPayment::create([
             'hold_id' => $hold->id,

@@ -112,7 +112,7 @@
 
                 <div class="card-body text-center">
 
-                    <img src="{{ asset(auth()->user()->image ?? 'assets/img/user.jpg') }}" class="profile-img mb-3">
+                    <img src="{{ asset('storage/'.auth()->user()->image ?? 'assets/img/user.jpg') }}" class="profile-img mb-3">
 
                     <h5>{{ auth()->user()->name ?? 'Patient Name' }}</h5>
 

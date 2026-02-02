@@ -57,7 +57,7 @@
             <div class="col-lg-8">
                 <div class="p-4 profile-card">
                     <div class="mb-4 text-center">
-                        <img src="{{ asset($user->image) }}" alt="Admin Image"
+                        <img src="{{ asset('storage/'.$user->image) }}" alt="Admin Image"
                             class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
                             <h2 class="mt-3 mb-0">{{ $user->name }}</h2>
                         <p class="text-muted">admin</p>

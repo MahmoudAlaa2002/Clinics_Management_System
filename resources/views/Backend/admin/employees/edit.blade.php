@@ -96,7 +96,7 @@
                                     <label>Avatar</label>
                                     <div class="profile-upload">
                                         <div class="mb-2 upload-img">
-                                            <img alt="employee" src="{{ asset($employee->user->image ?? 'assets/img/user.jpg') }}">
+                                            <img alt="employee" src="{{ asset('storage/'.$employee->user->image ?? 'assets/img/user.jpg') }}">
                                         </div>
                                         <input type="file" class="form-control" id="image" accept="image/*">
                                     </div>

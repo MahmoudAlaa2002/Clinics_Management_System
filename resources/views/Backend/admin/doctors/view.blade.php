@@ -72,8 +72,9 @@
                         <div class="profile-widget">
                             <div class="doctor-img">
                                 <a class="avatar" href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
-                                    ? asset(optional($doctor->employee->user)->image)
-                                    : asset('assets/img/user.jpg') }}"></a>
+                                    ? asset('storage/'.optional($doctor->employee->user)->image)
+                                    : asset('assets/img/user.jpg') }}">
+
                             </div>
                             <div class="dropdown profile-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>

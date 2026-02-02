@@ -130,7 +130,7 @@
                                     <div class="avatar-wrapper">
                                         <div class="avatar">
                                             @if($user->image)
-                                                <img src="{{ asset($user->image) }}">
+                                                <img src="{{ asset('storage/'.$user->image) }}">
                                             @else
                                                 @php
                                                     $abbr = match ($user->role) {
@@ -147,7 +147,7 @@
                                                 @endphp
 
                                                 @if($user->image)
-                                                    <img src="{{ asset($user->image) }}">
+                                                    <img src="{{ asset('storage/'.$user->image) }}">
                                                 @else
                                                     {{ $abbr }}
                                                 @endif

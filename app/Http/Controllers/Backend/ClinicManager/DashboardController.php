@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller{
 
@@ -78,20 +79,13 @@ class DashboardController extends Controller{
             $password = Hash::make($request->password);
         }
 
-        $imagePath = $clinicManager->image; // الصورة القديمة
+
+        $imagePath = $clinicManager->image; // الصورة الحالية
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $newPath = 'assets/img/clinic_manager/' . $imageName;
-
-
-            $file->move(public_path('assets/img/clinic_manager'), $imageName);
-
-            if (!empty($imagePath) && file_exists(public_path($imagePath))) {
-                @unlink(public_path($imagePath));
+            if ($clinicManager->image && Storage::disk('public')->exists($clinicManager->image)) {
+                Storage::disk('public')->delete($clinicManager->image);
             }
-
-            $imagePath = $newPath;
+            $imagePath = $request->file('image')->store('clinic_manager', 'public');
         }
 
         $clinicManager->update([

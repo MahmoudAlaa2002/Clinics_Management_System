@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DoctorController extends Controller{
 
@@ -38,13 +39,9 @@ class DoctorController extends Controller{
             return response()->json(['data' => 0]);
         } else {
 
+            $imagePath = null;
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('assets/img/doctors'), $imageName);
-                $imagePath = 'assets/img/doctors/' . $imageName;
-            } else {
-                $imagePath = null;
+                $imagePath = $request->file('image')->store('doctors', 'public');
             }
 
             $user = User::create([
@@ -233,18 +230,12 @@ class DoctorController extends Controller{
             return response()->json(['data' => 0]); // موجود مسبقاً
         }
 
-        $imagePath = $user->image;
+        $imagePath = $user->image; // الصورة القديمة
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/doctors'), $imageName);
-            $newPath = 'assets/img/doctors/' . $imageName;
-
-            // حذف الصورة القديمة إذا وجدت
-            if ($user->image && file_exists(public_path($user->image))) {
-                @unlink(public_path($user->image));
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-            $imagePath = $newPath;
+            $imagePath = $request->file('image')->store('doctors', 'public');
         }
 
         $password = $user->password;

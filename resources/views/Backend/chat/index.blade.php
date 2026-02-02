@@ -75,7 +75,7 @@
 
                     <div class="mr-3">
                         @if($target->image)
-                            <img src="{{ asset($target->image) }}"
+                            <img src="{{ asset('storage/'.$target->image) }}"
                                  style="width:44px;height:44px;border-radius:50%;
                                  object-fit:cover; box-shadow:0 4px 14px rgba(0,0,0,.10);">
                         @else

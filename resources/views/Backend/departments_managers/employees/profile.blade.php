@@ -26,7 +26,7 @@
         <div class="card-box">
             <div class="row">
                 <div class="text-center col-md-4">
-                    <img src="{{ $employee->user->image ? asset($employee->user->image) : asset('assets/img/user.jpg') }}" alt=""
+                    <img src="{{ $employee->user->image ? asset('storage/'.$employee->user->image) : asset('assets/img/user.jpg') }}" alt=""
                             class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
                     <h4 class="mt-3">{{ $employee->user->name }}</h4>
                 </div>

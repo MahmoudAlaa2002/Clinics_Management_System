@@ -91,7 +91,7 @@
         <li class="nav-item dropdown has-arrow">
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset($receptionist?->image ?? 'assets/img/user.jpg') }}" alt="">
+                    <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;" src="{{ asset('storage/'.$receptionist?->image ?? 'assets/img/user.jpg') }}" alt="">
                 </span>
                 <span>
                     Receptionist

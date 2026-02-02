@@ -93,7 +93,7 @@
             <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                 <span class="user-img">
                     <img class="rounded-circle" style="width: 40px; height:40px; margin-right:5px;"
-                         src="{{ asset($admin?->image ?? 'assets/img/user.jpg') }}" alt="">
+                        src="{{ $admin?->image ? asset('storage/'.$admin->image) : asset('assets/img/user.jpg') }}" alt="">
                 </span>
                 <span>Admin</span>
             </a>

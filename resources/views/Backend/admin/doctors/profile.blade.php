@@ -52,7 +52,7 @@
                 <div class="col-lg-8">
                     <div class="p-4 profile-card">
                         <div class="mb-4 text-center">
-                            <img src="{{ $doctor->employee->user->image ? asset($doctor->employee->user->image) : asset('assets/img/user.jpg') }}" alt="Doctor Image"
+                            <img src="{{ $doctor->employee->user->image ? asset('storage/'.$doctor->employee->user->image) : asset('assets/img/user.jpg') }}" alt="Doctor Image"
                                 class="profile-image img-fluid rounded-circle" style="width: 150px; height:150px;">
                             <h2 class="mt-3 mb-0">{{ $doctor->employee->user->name }}</h2>
                             <p class="text-muted">Doctor</p>

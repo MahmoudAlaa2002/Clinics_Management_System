@@ -11,6 +11,7 @@ use App\Models\ClinicPatient;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\admin\PatientAddByReceptionist;
 
@@ -46,15 +47,11 @@ class PatientController extends Controller{
         }
 
         // 2) غير موجود في كلا الجدولين → إنشاء جديد
-
+        $imagePath = null;
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/patients'), $imageName);
-            $imagePath = 'assets/img/patients/' . $imageName;
-        } else {
-            $imagePath = null;
+            $imagePath = $request->file('image')->store('patients', 'public');
         }
+
 
         $user = User::create([
             'name'          => $request->name,
@@ -199,18 +196,14 @@ class PatientController extends Controller{
             }
         }
 
+        $imagePath = $user->image; // الصورة القديمة
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/patients'), $imageName);
-            $imagePath = 'assets/img/patients/' . $imageName;
-
-            if ($user->image && file_exists(public_path($user->image))) {
-                unlink(public_path($user->image));
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
-        } else {
-            $imagePath = $user->image;
+            $imagePath = $request->file('image')->store('patients', 'public');
         }
+
 
         $user->update([
             'phone'         => $request->phone,

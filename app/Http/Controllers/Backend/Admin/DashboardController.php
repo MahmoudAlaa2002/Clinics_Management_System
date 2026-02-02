@@ -74,13 +74,9 @@ class DashboardController extends Controller{
 
         $imagePath = $user->image; // الصورة الحالية
         if ($request->hasFile('image')) {
-
-            // 🔴 حذف الصورة القديمة من storage إن وجدت
             if ($user->image && Storage::disk('public')->exists($user->image)) {
                 Storage::disk('public')->delete($user->image);
             }
-
-            // 🟢 رفع الصورة الجديدة
             $imagePath = $request->file('image')->store('admin', 'public');
         }
 
