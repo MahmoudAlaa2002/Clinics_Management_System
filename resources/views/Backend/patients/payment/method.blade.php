@@ -110,7 +110,7 @@
             <!-- Bank of Palestine -->
             <div class="payment-card" onclick="payWith('bank')">
                 <div class="payment-icon bank">
-                    <img src="{{ asset('assets/img/payments/bank.png') }}">
+                    <img src="{{ asset('storage/payments/bank.png') }}">
                 </div>
                 <div class="payment-name">Bank Palestine</div>
                 <div class="payment-desc">

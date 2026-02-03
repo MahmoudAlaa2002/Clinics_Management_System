@@ -44,8 +44,8 @@ class PaymentController extends Controller {
         $hold = AppointmentHold::findOrFail($holdId);
 
         $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('payments', 'public');
+        if ($request->hasFile('receipt')) {
+            $imagePath = $request->file('receipt')->store('payments', 'public');
         }
 
 

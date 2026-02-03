@@ -214,7 +214,7 @@
 
                                     <div class="qr-upload">
                                         <div class="mb-2 upload-img">
-                                            <img id="qrPreview" src="{{ $clinic->qr_image ? asset('storage/'.$clinic->qr_image) : asset('assets/img/qr-placeholder.png') }}" alt="QR Preview">
+                                            <img id="qrPreview" src="{{ $clinic->qr_image ? asset('storage/'.$clinic->qr_image) : asset('assets/img/qr-placeholder.png') }}" alt="">
                                         </div>
 
                                         <input type="file" name="qr_image" id="qr_image" class="form-control" accept="image/*">

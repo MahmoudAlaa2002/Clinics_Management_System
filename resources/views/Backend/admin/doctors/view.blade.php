@@ -71,10 +71,16 @@
                     <div class="col-md-4 col-sm-4 col-lg-3">
                         <div class="profile-widget">
                             <div class="doctor-img">
-                                <a class="avatar" href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
+                                {{-- <a class="avatar" href="{{ Route('profile_doctor' , ['id' => $doctor->id]) }}"> <img src="{{ optional(optional($doctor->employee)->user)->image
                                     ? asset('storage/'.optional($doctor->employee->user)->image)
-                                    : asset('assets/img/user.jpg') }}">
+                                    : asset('assets/img/user.jpg') }}"> --}}
 
+                                <a class="avatar" href="{{ route('profile_doctor', ['id' => $doctor->id]) }}">
+                                    <img src="{{ $doctor->employee->user->image
+                                        ? asset('storage/'.$doctor->employee->user->image)
+                                        : asset('assets/img/user.jpg') }}"
+                                        alt="">
+                                </a>
                             </div>
                             <div class="dropdown profile-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>

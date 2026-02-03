@@ -6,7 +6,7 @@
 
                 <div class="cardHeader">
                     <img src="{{ asset('storage/'.$clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
-                         class="card-img-top" alt="{{ $clinic->name }}">
+                         class="card-img-top" alt="">
                 </div>
 
                 <div class="card-body">
@@ -68,7 +68,7 @@
                     <div class="modal-body">
                         <div class="clinic-info">
                             <img src="{{ asset('storage/'.$clinic->image ?? 'patients/img/clinics/care-center.jpg') }}"
-                                class="mb-3 img-fluid" alt="{{ $clinic->name }}">
+                                class="mb-3 img-fluid" alt="">
 
                             <div>
                                 <h3>{{ $clinic->name }}</h3>

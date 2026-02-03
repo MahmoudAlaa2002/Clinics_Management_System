@@ -6,7 +6,7 @@
 
                 <div class="cardHeader">
                     <img src="{{ asset('storage/'.$doctor->employee->user->image ?? 'assets/img/user.jpg') }}"
-                        class="card-img-top" alt="{{ $doctor->employee->user->name }}">
+                        class="card-img-top" alt="">
 
                     <div>
                         <h5 class="card-title">
@@ -77,7 +77,7 @@
 
                             <img src="{{ asset('storage/'.$doctor->employee->user->image ?? 'assets/img/user.jpg') }}"
                                  style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:3px solid #eaeaea;"
-                                 alt="{{ $doctor->employee->user->name }}">
+                                 alt="">
 
                             <div>
                                 <h4>{{ $doctor->employee->user->name }}</h4>
